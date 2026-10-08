@@ -61,7 +61,7 @@ ctest --test-dir build -C RelWithDebInfo
 | Option | Default | |
 |---|---|---|
 | `ESPER_BUILD_TESTS` | ON when top-level | `esper-test`, the synthetic-fixture test suite (registered with CTest) |
-| `ESPER_BUILD_TOOLS` | OFF | `roundtrip-gate`, the real-data gate |
+| `ESPER_BUILD_TOOLS` | OFF | `roundtrip-gate` (the real-data gate) and `esm-dump` (a read-only record dumper) |
 
 `roundtrip-gate <Data folder>` parses the five vanilla masters and requires each to re-emit
 byte-identically; it needs a local game install, so it is not part of CTest.

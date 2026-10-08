@@ -75,11 +75,16 @@ if(ESPER_BUILD_TESTS)
     add_test(NAME esper-test COMMAND esper-test)
 endif()
 
-# ── Tools: the real-data round-trip gate (needs game masters; not a ctest) ────
+# ── Tools (need game data; not ctests) ────────────────────────────────────────
+#   roundtrip-gate — the real-data round-trip gate over the vanilla masters
+#   esm-dump       — read-only research dumper (GRUP tree, records by sig/FormID)
 if(ESPER_BUILD_TOOLS)
-    add_executable(roundtrip-gate tools/roundtrip_gate.cpp)
-    target_link_libraries(roundtrip-gate PRIVATE esper::esper)
-    if(MSVC)
-        target_compile_options(roundtrip-gate PRIVATE /utf-8)
-    endif()
+    foreach(_tool IN ITEMS roundtrip-gate esm-dump)
+        string(REPLACE "-" "_" _src "${_tool}")
+        add_executable(${_tool} tools/${_src}.cpp)
+        target_link_libraries(${_tool} PRIVATE esper::esper)
+        if(MSVC)
+            target_compile_options(${_tool} PRIVATE /utf-8)
+        endif()
+    endforeach()
 endif()

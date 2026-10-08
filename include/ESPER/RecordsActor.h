@@ -203,8 +203,9 @@ inline const auto kNpcSchema = MakeSchema<NpcRec>("NPC_",
 // skeleton paths, MODL model paths under both the body-data and behavior-graph
 // sections, HEAD/INDX runs under NAM0 blocks). Rows collect occurrences in
 // encounter order; `layout` preserves the sectioning, so semantic helpers
-// interpret positions while byte fidelity is structural. The big DATA block
-// and the attack/tint complexes ride through as passthrough this wave.
+// interpret positions while byte fidelity is structural. The tint-layer complex
+// (TINI/TINT/TINP/TIND/TINC/TINV/TIRS) is now typed — see RaceTintLayers() below;
+// the big DATA block and the attack complex still ride through as passthrough.
 
 struct RaceRec : RecordExtras {
     std::optional<std::string>          editorId;       // EDID
@@ -223,6 +224,20 @@ struct RaceRec : RecordExtras {
     std::optional<std::vector<FormRef>> decapArmors;    // DNAM (male+female)
     std::optional<std::vector<FormRef>> defaultHairColors; // HCLF (male+female)
     std::optional<uint16_t>             tintCount;      // TINL
+    // RACE tint-layer array — a contiguous run of subrecords, modeled as flat
+    // parallel vectors (the schema binds one subrecord per row; layer grouping is
+    // reconstructed positionally by RaceTintLayers() below). Per layer: TINI opens
+    // it, TINT/TINP/TIND describe it (TINP and TIND are BOTH optional per layer,
+    // so the vectors are NOT index-aligned to tintLayerIndex), then a run of
+    // TINC/TINV/TIRS preset triples. TINC/TIND are FormIDs (CLFM colour refs) —
+    // unlike NPC_ TINC, which is a packed 4-byte RGBA.
+    std::vector<uint16_t>               tintLayerIndex;    // TINI (one per layer)
+    std::vector<std::string>            tintLayerTexture;  // TINT (one per layer)
+    std::vector<uint16_t>               tintLayerMaskType; // TINP (optional per layer)
+    std::vector<FormRef>                tintLayerDefault;  // TIND (optional per layer; CLFM)
+    std::vector<FormRef>                tintPresetColor;   // TINC (CLFM, per preset)
+    std::vector<float>                  tintPresetValue;   // TINV (per preset)
+    std::vector<uint16_t>               tintPresetId;      // TIRS (per preset)
     std::optional<float>                facegenMainClamp; // PNAM
     std::optional<float>                facegenFaceClamp; // UNAM
     std::optional<FormRef>              attackRace;     // ATKR
@@ -279,6 +294,13 @@ inline const auto kRaceSchema = MakeSchema<RaceRec>("RACE",
     Field<&RaceRec::decapArmors, FormRefArray>("DNAM"),
     Field<&RaceRec::defaultHairColors, FormRefArray>("HCLF"),
     Field<&RaceRec::tintCount, U16v>("TINL"),
+    Repeated<&RaceRec::tintLayerIndex, U16v>("TINI"),
+    Repeated<&RaceRec::tintLayerTexture, ZString>("TINT"),
+    Repeated<&RaceRec::tintLayerMaskType, U16v>("TINP"),
+    Repeated<&RaceRec::tintLayerDefault, FormRefCodec>("TIND"),
+    Repeated<&RaceRec::tintPresetColor, FormRefCodec>("TINC"),
+    Repeated<&RaceRec::tintPresetValue, F32>("TINV"),
+    Repeated<&RaceRec::tintPresetId, U16v>("TIRS"),
     Field<&RaceRec::facegenMainClamp, F32>("PNAM"),
     Field<&RaceRec::facegenFaceClamp, F32>("UNAM"),
     Field<&RaceRec::attackRace, FormRefCodec>("ATKR"),
@@ -305,5 +327,63 @@ inline const auto kRaceSchema = MakeSchema<RaceRec>("RACE",
     Field<&RaceRec::baseMoveSneak, FormRefCodec>("SPMV"),
     Repeated<&RaceRec::headParts, FormRefCodec>("HEAD"),
     Field<&RaceRec::armorRace, FormRefCodec>("RNAM"));
+
+// ── RACE tint-layer reconstruction ───────────────────────────────────────────
+// One tint layer, regrouped from the flat parallel vectors on RaceRec. This is
+// what an NPC's TINI index selects: `texture` is the mask .dds the game
+// composites, `maskType` (TINP) is the blend category, and `presets` are the
+// CLFM colour choices offered for it (an NPC picks one and supplies its own
+// TINC/TINV). Grouping is positional — TINP and TIND are optional per layer, so
+// the vectors are NOT index-aligned; we walk RaceRec::layout (decode order) and
+// draw each value from its vector by a running counter.
+struct RaceTintLayer {
+    uint16_t                index = 0;         // TINI — the index NPC_ TINI matches
+    std::string             texture;           // TINT — mask .dds (data-relative)
+    std::optional<uint16_t> maskType;          // TINP — blend/mask category
+    std::optional<FormRef>  defaultColor;      // TIND — default CLFM colour
+    struct Preset { FormRef color; float value = 0.f; uint16_t id = 0; };
+    std::vector<Preset>     presets;           // TINC + TINV + TIRS triples
+};
+
+inline std::vector<RaceTintLayer> RaceTintLayers(const RaceRec& r) {
+    std::vector<RaceTintLayer> out;
+    size_t ci = 0, vi = 0, ii = 0;   // preset color / value / id cursors
+    size_t xi = 0, ti = 0, pi = 0, di = 0;  // index / texture / maskType / default cursors
+    static const uint32_t sTINI = Sig4("TINI"), sTINT = Sig4("TINT"),
+                          sTINP = Sig4("TINP"), sTIND = Sig4("TIND"),
+                          sTINC = Sig4("TINC"), sTINV = Sig4("TINV"), sTIRS = Sig4("TIRS");
+    for (const RecordExtras::LayoutEntry& e : r.layout) {
+        if (e.binder < 0) continue;
+        const uint32_t sig = kRaceSchema.rows[static_cast<size_t>(e.binder)].sig;
+        if (sig == sTINI) {
+            RaceTintLayer l;
+            if (xi < r.tintLayerIndex.size()) l.index = r.tintLayerIndex[xi];
+            ++xi;
+            out.push_back(std::move(l));
+        } else if (sig == sTINT) {
+            if (!out.empty() && ti < r.tintLayerTexture.size()) out.back().texture = r.tintLayerTexture[ti];
+            ++ti;
+        } else if (sig == sTINP) {
+            if (!out.empty() && pi < r.tintLayerMaskType.size()) out.back().maskType = r.tintLayerMaskType[pi];
+            ++pi;
+        } else if (sig == sTIND) {
+            if (!out.empty() && di < r.tintLayerDefault.size()) out.back().defaultColor = r.tintLayerDefault[di];
+            ++di;
+        } else if (sig == sTINC) {
+            if (!out.empty() && ci < r.tintPresetColor.size())
+                out.back().presets.push_back(RaceTintLayer::Preset{ r.tintPresetColor[ci], 0.f, 0 });
+            ++ci;
+        } else if (sig == sTINV) {
+            if (!out.empty() && !out.back().presets.empty() && vi < r.tintPresetValue.size())
+                out.back().presets.back().value = r.tintPresetValue[vi];
+            ++vi;
+        } else if (sig == sTIRS) {
+            if (!out.empty() && !out.back().presets.empty() && ii < r.tintPresetId.size())
+                out.back().presets.back().id = r.tintPresetId[ii];
+            ++ii;
+        }
+    }
+    return out;
+}
 
 } // namespace esper
