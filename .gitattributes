@@ -1,0 +1,25 @@
+# Normalize text to LF in the repo; let git auto-detect text vs binary otherwise.
+* text=auto eol=lf
+
+# Windows-only scripts stay CRLF on checkout.
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
+
+*.c     text
+*.cpp   text
+*.h     text
+*.cmake text
+*.txt   text
+*.md    text
+*.json  text
+*.yml   text
+*.yaml  text
+
+# Bethesda plugin files (test fixtures, if any are ever tracked): binary records
+# with internal offsets — never EOL-convert or textually merge.
+*.esm      binary
+*.esp      binary
+*.esl      binary
+*.strings  binary
+*.ilstrings binary
+*.dlstrings binary
