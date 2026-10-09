@@ -5,7 +5,31 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
 
 ## Open
 
-*(none)*
+### FormID remap silently skips FormIDs inside `Blob`-bound subrecords — OPEN
+- **Symptom:** `SchemaOps::remapIds` accepts records whose opaque blobs contain FormIDs, visits none of
+  those FormIDs, and returns success. Every caller that renumbers masters, including
+  `EnsureMaster`/`SelfIndexBump`, then leaves those references pointing at the old master index.
+  The result is a silently wrong reference. Reproduced 2026-10-08 with ECZN: `DATA` = owner
+  `0x01000ABC` + location `0x01000DEF`, and a remap of index 1 → 2 gives
+  `accepted=1 visited=0`, with the bytes unchanged.
+- **Root cause:** `Blob` and `ClmtBlob` always decode successfully, so the subrecord counts as
+  *consumed*, not unknown. Their rows have no `visitIds` and no `remapSafe` hook.
+  `RemapIdsImpl` ([SchemaRegistry.cpp](../cpp/schema/SchemaRegistry.cpp)) refuses only on unknown
+  subrecords or a `remapSafe` failure, so it treats these records as fully visited. The header
+  comments for these rows say "→ passthrough (so remap refuses)", but the code binds them as `Blob`.
+- **Affected rows:**
+  - confirmed by repro: [RecordsSystem.h:243](../include/ESPER/RecordsSystem.h) ECZN `DATA`;
+  - FormIDs per the code's own comments:
+    - [RecordsMore.h:408](../include/ESPER/RecordsMore.h) RELA `DATA`
+    - [RecordsMore.h:436](../include/ESPER/RecordsMore.h) PWAT `DNAM`
+    - [RecordsMore.h:466](../include/ESPER/RecordsMore.h) NAVM `NVNM`
+    - [RecordsSystem.h:289](../include/ESPER/RecordsSystem.h) CLMT `WLST` (`ClmtBlob`)
+  - The other ~110 `Blob` rows have not been audited.
+- **Fix direction:**
+  - Short term: an opaque-blob binder whose `remapSafe` returns false whenever the field is
+    present, used for every blob not known to be FormID-free.
+  - Schema design: a non-empty `bytes` field is remap-unsafe unless the descriptor declares
+    `formIds: none` (see [schema-design.md](schema-design.md)).
 
 ## Fixed
 
