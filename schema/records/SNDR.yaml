@@ -7,7 +7,7 @@ members:
   - { sig: GNAM, name: category, type: formid }   # GNAM (SNCT)
   - { sig: SNAM, name: altSound, type: formid }   # SNAM
   - { sig: ANAM, name: soundFiles, type: zstring, repeat: true }   # ANAM
-  - { sig: ONAM, name: outputData, type: bytes }   # ONAM
+  - { sig: ONAM, name: outputModel, type: formid, to: [SOPM] }
   - { sig: LNAM, name: flags, type: u32 }   # LNAM
-  - { sig: BNAM, name: values, type: bytes }   # BNAM (loop/rumble values)
+  - { sig: BNAM, name: values, fields: [ { name: frequencyShift, type: i8 }, { name: frequencyVariance, type: i8 }, { name: priority, type: u8 }, { name: dbVariance, type: u8 }, { name: staticAttenuation, type: u16 } ] }
   - { use: Condition, name: conditions, repeat: true }

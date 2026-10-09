@@ -9,3 +9,5 @@ members:
   - { sig: NAM1, name: muzzleModel, type: zstring }   # NAM1
   - { sig: NAM2, name: muzzleData, type: bytes }   # NAM2
   - { sig: VNAM, name: soundLevel, type: u32 }   # VNAM
+  # step 4, tools/schema-probe evidence:
+  - { use: Destructible, name: destructible }

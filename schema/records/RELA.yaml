@@ -3,4 +3,4 @@ record: RELA
 name: Relationship
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: DATA, name: data, type: bytes }   # DATA (parent/child FormIDs interleaved with rank/flags)
+  - { sig: DATA, name: data, type: RelationshipData }

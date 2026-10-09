@@ -6,3 +6,6 @@ members:
   - { sig: QNAM, name: quest, type: formid }   # QNAM
   - { sig: BNAM, name: branches, type: formid, repeat: true }   # BNAM
   - { sig: TNAM, name: topics, type: formid, repeat: true }   # TNAM
+  # step 4, tools/schema-probe evidence:
+  - { sig: DNAM, name: showAllText, type: u8 }
+  - { sig: ENAM, name: unknownEnam, type: u32 }

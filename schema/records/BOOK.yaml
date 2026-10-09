@@ -16,3 +16,5 @@ members:
   - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
   - { sig: INAM, name: inventoryArt, type: formid }   # INAM
   - { sig: CNAM, name: description, type: lstring, table: dlstrings }   # CNAM (inventory description)
+  # step 4, tools/schema-probe evidence:
+  - { sig: DATA, name: data, type: BookData }

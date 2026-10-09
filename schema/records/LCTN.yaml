@@ -9,3 +9,6 @@ members:
   - { sig: FNAM, name: unreported, type: formid }   # FNAM
   - { sig: MNAM, name: worldLocMarker, type: formid }   # MNAM
   - { sig: RNAM, name: worldLocRadius, type: f32 }   # RNAM
+  # step 4, tools/schema-probe evidence:
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords, type: "formid[]", to: [KYWD] }

@@ -1,0 +1,10 @@
+# ECZN DATA; two vanilla records carry the older 8-byte form.
+struct: EncounterZoneData
+fields:
+  - { name: owner,    type: formid, to: [FACT, NPC_] }
+  - { name: location, type: formid, to: [LCTN] }
+  - { break: true }
+  - { name: rank,     type: i8 }
+  - { name: minLevel, type: i8 }
+  - { name: flags,    type: u8 }
+  - { name: maxLevel, type: i8 }

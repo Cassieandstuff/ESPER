@@ -1,0 +1,12 @@
+# Destruction data: a header, then one group per stage (DSTF ends a stage).
+group: Destructible
+members:
+  - { sig: DEST, name: header, type: DestructibleHeader }
+  - group: stages
+    repeat: true
+    members:
+      - { sig: DSTD, name: data,     type: DestructionStage }
+      - { sig: DMDL, name: model,    type: zstring }
+      - { sig: DMDT, name: hashes,   type: bytes, formIds: none }
+      - { sig: DMDS, name: textures, type: "AlternateTexture[count: u32]" }
+      - { sig: DSTF, name: end,      type: marker }

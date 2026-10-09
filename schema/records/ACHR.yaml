@@ -6,8 +6,27 @@ members:
   - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: NAME, name: base, type: formid }   # NAME (NPC_)
   - { sig: XEZN, name: encounterZone, type: formid }   # XEZN
-  - { sig: XRGD, name: ragdollData, type: bytes }   # XRGD
-  - { sig: XRGB, name: ragdollBiped, type: bytes }   # XRGB
+  - { sig: XRGD, name: ragdollData, type: "RagdollBone[]" }
+  - { sig: XRGB, name: ragdollBiped, type: "f32[3]" }
+  # step 4, from tools/schema-probe evidence (every `to:` verified by the gate)
+  - sig: XLKR
+    name: linkedRefs
+    repeat: true
+    union:
+      by: size
+      cases:
+        - { when: 8, name: keyed, fields: [ { name: keyword, type: formid, to: [KYWD] }, { name: ref, type: formid, to: [REFR, ACHR, PGRE, PHZD] } ] }
+        - { when: 4, name: plain, type: formid, to: [REFR, ACHR, PGRE, PHZD] }
+  - { sig: XLCN, name: location,         type: formid, to: [LCTN] }
+  - { sig: XLRT, name: locationRefTypes, type: formid, repeat: true, to: [LCRT] }
+  - { sig: XAPD, name: activateParentFlags, type: u8 }
+  - { sig: XAPR, name: activateParents,  repeat: true, fields: [ { name: ref, type: formid, to: [REFR, ACHR] }, { name: delay, type: f32 } ] }
+  - { sig: XPRD, name: patrolIdleTime,   type: f32 }
+  - { sig: XPPA, name: patrolScriptMarker, type: marker }
+  - { sig: INAM, name: imageSpace,       type: formid, to: [IMGS] }
+  - { sig: PDTO, name: patrolTopic,      type: TopicData }
+  - { sig: XHOR, name: horse,            type: formid, to: [ACHR] }
+  - { sig: XIS2, name: ignoredBySandbox, type: marker }
   - { sig: XLCM, name: levelModifier, type: i32 }   # XLCM
   - { sig: XOWN, name: owner, type: formid }   # XOWN
   - { sig: XESP, name: enableParent, type: EnableParent }   # XESP

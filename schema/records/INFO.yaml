@@ -20,3 +20,8 @@ members:
   - { sig: ONAM, name: audioOverride, type: formid }   # ONAM
   - { sig: RNAM, name: prompt, type: lstring, table: strings }   # RNAM
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: DATA, name: data, fields: [ { name: unknown0, type: u16 }, { name: unknown2, type: u16 }, { name: unknown4, type: u32 } ] }
+  - { sig: QNAM, name: quests, type: formid, repeat: true, to: [QUST] }
+  - { sig: SCHR, name: scriptHeaders, type: "u32[5]", repeat: true }
+  - { sig: NEXT, name: next, type: marker }

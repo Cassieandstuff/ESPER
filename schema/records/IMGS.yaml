@@ -4,7 +4,7 @@ name: ImageSpace
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
   - { sig: ENAM, name: enam, type: bytes }   # ENAM
-  - { sig: HNAM, name: hdr, type: bytes }   # HNAM
-  - { sig: CNAM, name: cinematic, type: bytes }   # CNAM
-  - { sig: TNAM, name: tint, type: bytes }   # TNAM
-  - { sig: DNAM, name: dof, type: bytes }   # DNAM
+  - { sig: HNAM, name: hdr, type: "f32[9]" }
+  - { sig: CNAM, name: cinematic, type: "f32[3]" }
+  - { sig: TNAM, name: tint, type: "f32[4]" }
+  - { sig: DNAM, name: dof, fields: [ { name: strength, type: f32 }, { name: distance, type: u32 }, { name: range, type: f32 }, { break: true }, { name: unknown, type: f32 } ] }

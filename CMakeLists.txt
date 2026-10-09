@@ -160,8 +160,9 @@ endif()
 #   roundtrip-gate — the real-data round-trip gate over the vanilla masters
 #   esm-dump       — read-only research dumper (GRUP tree, records by sig/FormID)
 #   loadorder-smoke — LoadOrderDocument over a real Data folder
+#   schema-probe   — clean-room layout research: per-column profile of a subrecord
 if(ESPER_BUILD_TOOLS)
-    set(_esper_tools roundtrip-gate esm-dump)
+    set(_esper_tools roundtrip-gate esm-dump schema-probe)
     if(ESPER_BUILD_LOADORDER)
         list(APPEND _esper_tools loadorder-smoke)
     endif()

@@ -24,9 +24,8 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
     - [RecordsMore.h:436](../include/ESPER/RecordsMore.h) PWAT `DNAM`
     - [RecordsMore.h:466](../include/ESPER/RecordsMore.h) NAVM `NVNM`
     - [RecordsSystem.h:289](../include/ESPER/RecordsSystem.h) CLMT `WLST` (`ClmtBlob`)
-  - suspected, unverified: the `MODS`/`MO2S`/`MO4S` alternate-texture blobs (the typed path's
-    `modelSwap` rows). The schema engine treats them as opaque bytes and refuses remap on at least 149
-    vanilla records that carry them. Whether they hold FormIDs is not yet verified on real data.
+  - the `MODS`/`MO2S`/`MO4S` alternate-texture blobs (the typed path's `modelSwap` rows): confirmed,
+    see Measured below.
   - The other ~110 `Blob` rows have not been audited.
 - **Scale (2026-10-09, `roundtrip-gate --schema` over the five vanilla masters):** the typed path
   would remap **98,384** vanilla records that the schema engine refuses, because they carry
@@ -40,6 +39,20 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
   against the typed path. The engine's remap refusals fell to **68,299**, and every remaining
   blocker is an unchecked `Blob`: `MHDT` 24,019, `NVNM` 19,440, `TVDT` 8,595, then
   `DATA`/`DNAM`/`ONAM`/`MODS`/`MNAM`.
+- **Measured (2026-10-09, step 4 research).** The schema now models these subrecords with typed
+  FormID fields, and every `to:` target is verified on the vanilla masters. `roundtrip-gate --schema`
+  compares their FormIDs with what the typed path's remap visits. On the vanilla masters the typed
+  path **silently skips 7,250 FormIDs in 5,590 records**:
+
+  | Rows | Records | FormIDs skipped | What they reference |
+  |---|---|---|---|
+  | SNDR `ONAM` | 3,197 | 3,197 | SOPM (output model) |
+  | RELA `DATA` | 673 | 1,776 | NPC_ parent and child, ASTP association type |
+  | `MODS`/`MO2S`/`MO4S` in STAT, ARMO, ARMA, ALCH, MISC, WEAP | 1,382 | 1,938 | TXST (alternate textures) |
+  | ECZN `DATA` | 338 | 339 | FACT/NPC_ owner, LCTN location |
+
+  NAVM `NVNM` and CLMT `WLST` are still opaque in the schema too, so the engine refuses to remap
+  them, and they aren't counted here.
 - **Fix direction:**
   - Short term: an opaque-blob binder whose `remapSafe` returns false whenever the field is
     present, used for every blob not known to be FormID-free.

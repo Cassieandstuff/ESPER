@@ -53,6 +53,16 @@ and its current step. Spec: [docs/schema-language.md](docs/schema-language.md).
 - **Claims about data:** `to:` and `formIds: none` describe the data, so add them only when the
   gate confirms them on the vanilla masters. Clean-room: never take layouts from xEdit or
   Mutagen definitions.
+- **Layout research** uses `schema-probe` (`-DESPER_BUILD_TOOLS=ON`). Declare a FormID only when
+  all of these hold:
+  - at least 95% of its non-zero vanilla values resolve as big references;
+  - the target types fit the field's meaning;
+  - the cardinality looks like references, not constants. Constant byte patterns can resolve by
+    chance, because Skyrim.esm's FormID space is dense.
+
+  Declare a value FormID-free (a non-`formid` type, or `formIds: none`) only when no aligned or
+  unaligned offset (`--scan`) resolves like a reference, or every hit is explained by the
+  structure. When in doubt, leave it opaque: it costs remap refusal, never corruption.
 - **Language changes** (a new construct, or a changed meaning) update the spec, the generator's
   validation, the engine and `tests/schema` together, and bump `LANGUAGE_VERSION`.
 

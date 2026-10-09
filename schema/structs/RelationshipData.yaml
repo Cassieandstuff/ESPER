@@ -1,0 +1,10 @@
+struct: RelationshipData
+size: 16
+fields:
+  - { name: parent,          type: formid, to: [NPC_] }
+  - { name: child,           type: formid, to: [NPC_] }
+  - { name: rank,            type: u8 }
+  - { name: unknown,         type: u8 }
+  - { name: flags,           type: u8 }
+  - { name: unknown2,        type: u8 }
+  - { name: associationType, type: formid, to: [ASTP] }

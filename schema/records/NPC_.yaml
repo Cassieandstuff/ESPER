@@ -59,3 +59,5 @@ members:
   - { sig: DATA, name: dataMarker, type: marker }   # DATA (zero-size marker)
   - { sig: DNAM, name: skills, type: NpcSkills }   # DNAM
   - { sig: QNAM, name: skinTone, type: SkinTone }   # QNAM
+  # step 4, tools/schema-probe evidence:
+  - { use: Destructible, name: destructible }

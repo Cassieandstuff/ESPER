@@ -5,8 +5,8 @@ members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
   - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
-  - { sig: DNAM, name: data, type: bytes }   # DNAM (flags/priority/delay)
-  - { sig: ENAM, name: eventName, type: bytes }   # ENAM (4-char story event)
+  - { sig: DNAM, name: data, type: QuestData }
+  - { sig: ENAM, name: event, type: sig4 }
   - { sig: QTGL, name: displayGlobals, type: formid }   # QTGL
   - { sig: FLTR, name: objectWindowFilter, type: zstring }   # FLTR
   - { sig: INDX, name: stageIndices, type: QuestStageIndex, repeat: true }   # INDX
@@ -14,3 +14,6 @@ members:
   - { sig: CNAM, name: logEntries, type: lstring, table: dlstrings, repeat: true }   # CNAM (per stage, DL)
   - { sig: NNAM, name: objectiveTexts, type: lstring, table: strings, repeat: true }   # NNAM
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: ANAM, name: nextAliasId, type: u32 }
+  - { sig: NEXT, name: next, type: marker }

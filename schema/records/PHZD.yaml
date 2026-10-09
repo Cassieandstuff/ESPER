@@ -6,3 +6,6 @@ members:
   - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: NAME, name: base, type: formid }   # NAME
   - { sig: XSCL, name: scale, type: f32 }   # XSCL
+  # step 4, tools/schema-probe evidence:
+  - { sig: XESP, name: enableParent, type: EnableParent }
+  - { sig: DATA, name: placement, type: Placement }

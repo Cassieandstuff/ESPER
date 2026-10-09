@@ -1,0 +1,37 @@
+# WEAP DNAM. No FormIDs: the only column that resolves like one (offset 24) is
+# the constant bytes 00 FF 01 00 (two distinct values in 3,293 records), and
+# offset 74 straddles a zero word and a small int. Names are given where the
+# meaning is clear; the rest are named by offset.
+struct: WeaponData
+size: 100
+fields:
+  - { name: animationType,   type: u8 }
+  - { name: pad1,            type: "u8[3]" }
+  - { name: speed,           type: f32 }
+  - { name: reach,           type: f32 }
+  - { name: flags,           type: u16 }
+  - { name: unknown14,       type: u16 }
+  - { name: sightFov,        type: f32 }
+  - { name: unknown20,       type: u32 }
+  - { name: vatsToHitChance, type: u8 }
+  - { name: attackAnimation, type: u8 }
+  - { name: projectileCount, type: u8 }
+  - { name: embeddedWeaponAv, type: u8 }
+  - { name: minRange,        type: f32 }
+  - { name: maxRange,        type: f32 }
+  - { name: unknown36,       type: u32 }
+  - { name: flags2,          type: u32 }
+  - { name: unknown44,       type: f32 }
+  - { name: unknown48,       type: f32 }
+  - { name: unknown52,       type: f32 }
+  - { name: unknown56,       type: f32 }
+  - { name: unknown60,       type: f32 }
+  - { name: unknown64,       type: u32 }
+  - { name: unknown68,       type: u32 }
+  - { name: unknown72,       type: u32 }
+  - { name: skill,           type: i32 }
+  - { name: unknown80,       type: u32 }
+  - { name: unknown84,       type: u32 }
+  - { name: resist,          type: i32 }
+  - { name: unknown92,       type: u32 }
+  - { name: stagger,         type: f32 }

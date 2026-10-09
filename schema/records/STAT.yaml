@@ -6,4 +6,4 @@ members:
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { use: Model, name: model }
   - { sig: DNAM, name: data, type: StatData }   # DNAM
-  - { sig: MNAM, name: lodNames, type: bytes }   # MNAM
+  - { sig: MNAM, name: lodNames, fields: [ { name: lod0, type: bytes, size: 260, formIds: none }, { name: lod1, type: bytes, size: 260, formIds: none }, { name: lod2, type: bytes, size: 260, formIds: none }, { name: lod3, type: bytes, size: 260, formIds: none } ] }   # NUL-padded model paths

@@ -1,0 +1,7 @@
+# One XRGD entry (the subrecord is an array of these).
+struct: RagdollBone
+size: 28
+fields:
+  - { name: header,   type: "u8[4]" }
+  - { name: position, type: "f32[3]" }
+  - { name: rotation, type: "f32[3]" }

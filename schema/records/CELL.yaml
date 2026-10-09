@@ -12,9 +12,24 @@ members:
         - { when: 1, name: byte, type: u8 }
         - { when: 2, name: word, type: u16 }
   - { sig: XCLC, name: grid, type: CellGrid }   # XCLC (exterior only)
-  - { sig: XCLL, name: lighting, type: bytes }   # XCLL
+  - { sig: XCLL, name: lighting, type: CellLighting }
   - { sig: TVDT, name: occlusion, type: bytes }   # TVDT
-  - { sig: MHDT, name: maxHeight, type: bytes }   # MHDT
+  # step 4, from tools/schema-probe evidence:
+  - sig: MHDT
+    name: maxHeight
+    fields:
+      - { name: offset,  type: f32 }
+      - { name: heights, type: "u8[1024]" }     # 32x32 grid
+  - { sig: LNAM, name: lightingInherits, type: u32 }
+  - { sig: XWCN, name: waterCurrentCount, type: u32 }
+  - { sig: XWCS, name: waterCurrentSize, type: u32 }
+  - sig: XWCU
+    name: waterVelocity
+    union:
+      by: size
+      cases:
+        - { when: 48, name: v48, type: "f32[12]" }
+        - { when: 64, name: v64, type: "f32[16]" }
   - { sig: LTMP, name: lightingTemplate, type: formid }   # LTMP
   - { sig: XCLW, name: waterHeight, type: f32 }   # XCLW
   - { sig: XNAM, name: waterNoise, type: zstring }   # XNAM

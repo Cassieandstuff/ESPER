@@ -6,3 +6,9 @@ members:
   - { sig: NNAM, name: staticNif, type: formid }   # NNAM
   - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: ONAM, name: rotationLimits, fields: [ { name: min, type: i16 }, { name: max, type: i16 } ] }
+  - { sig: RNAM, name: initialRotation, type: "i16[3]" }
+  - { sig: SNAM, name: initialScale, type: f32 }
+  - { sig: XNAM, name: initialTranslation, type: "f32[3]" }
+  - { sig: MOD2, name: cameraPath, type: zstring }

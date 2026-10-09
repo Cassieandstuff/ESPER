@@ -1,0 +1,5 @@
+struct: MagicEffectSound
+size: 8
+fields:
+  - { name: type,  type: u32 }
+  - { name: sound, type: formid, to: [SNDR] }

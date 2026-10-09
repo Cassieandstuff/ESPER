@@ -1,0 +1,11 @@
+# PDTO: a dialogue topic, given either as a DIAL FormID or as a subtype signature.
+struct: TopicData
+size: 8
+fields:
+  - { name: type, type: u32 }
+  - name: topic
+    union:
+      by: { field: type }
+      cases:
+        - { when: 0, name: ref,     type: formid, to: [DIAL] }
+        - { when: 1, name: subtype, type: sig4 }

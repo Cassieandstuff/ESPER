@@ -1,0 +1,11 @@
+# DSTD. Words 2 and 3 resolve to EXPL / DEBR in every non-zero vanilla value.
+struct: DestructionStage
+size: 20
+fields:
+  - { name: healthPercent, type: u16 }
+  - { name: index,         type: u8 }
+  - { name: damageStage,   type: u8 }
+  - { name: data,          type: "u8[4]" }
+  - { name: explosion,     type: formid, to: [EXPL] }
+  - { name: debris,        type: formid, to: [DEBR] }
+  - { name: debrisCount,   type: i32 }

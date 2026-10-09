@@ -1,0 +1,15 @@
+# FACT CRVA in its three vanilla sizes (12, 16, 20 bytes).
+struct: CrimeValues
+fields:
+  - { name: arrest,       type: u8 }
+  - { name: attackOnSight, type: u8 }
+  - { name: murder,       type: u16 }
+  - { name: assault,      type: u16 }
+  - { name: trespass,     type: u16 }
+  - { name: pickpocket,   type: u16 }
+  - { name: unknown,      type: u16 }
+  - { break: true }
+  - { name: stealMult,    type: f32 }
+  - { break: true }
+  - { name: escape,       type: u16 }
+  - { name: werewolf,     type: u16 }

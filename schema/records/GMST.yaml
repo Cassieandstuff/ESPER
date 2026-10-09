@@ -3,4 +3,10 @@ record: GMST
 name: GameSetting
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: DATA, name: data, type: bytes }   # DATA (typed by EDID prefix)
+  - sig: DATA
+    name: value               # by the EditorID's prefix: f float, i int, b bool, s string
+    union:
+      by: size
+      cases:
+        - { when: 4, name: word, type: u32 }   # float / int / bool, or a localized string id
+      default: { name: text, type: zstring }  # a string GMST in a non-localized plugin

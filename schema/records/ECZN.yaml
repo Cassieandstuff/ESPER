@@ -3,4 +3,4 @@ record: ECZN
 name: EncounterZone
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: DATA, name: data, type: bytes }   # DATA (owner+location FormIDs, size-variant)
+  - { sig: DATA, name: data, type: EncounterZoneData }

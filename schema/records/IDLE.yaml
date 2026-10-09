@@ -5,5 +5,5 @@ members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
   - { sig: ENAM, name: animEvent, type: zstring }   # ENAM
   - { sig: ANAM, name: related, type: "formid[]" }   # ANAM (parent + previous)
-  - { sig: DATA, name: data, type: bytes }   # DATA (loop/flags)
+  - { sig: DATA, name: data, fields: [ { name: loopMin, type: u8 }, { name: loopMax, type: u8 }, { name: flags, type: u8 }, { name: animGroupSection, type: u8 }, { name: replayDelay, type: u16 } ] }
   - { use: Condition, name: conditions, repeat: true }

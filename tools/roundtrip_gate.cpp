@@ -266,6 +266,8 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
         size_t records = 0, subs = 0, raw = 0, oldUnknown = 0;
         size_t decodeFail = 0, verbatimFail = 0, forcedFail = 0, rawWorse = 0;
         size_t idsCompared = 0, idsMismatch = 0, newRefuses = 0, newAccepts = 0;
+        size_t typedMissed = 0, typedMissedIds = 0;   // FormIDs only the schema sees
+        std::string firstTypedMiss;
         size_t linksChecked = 0, linksUnresolved = 0, linksWrong = 0;
         std::map<std::string, size_t> refuseWhy;
         std::string firstProblem;
@@ -342,12 +344,25 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
                 std::sort(oldIds.begin(), oldIds.end());
                 std::sort(newIds.begin(), newIds.end());
                 if (oldIds != newIds) {
-                    ++st.idsMismatch;
                     std::vector<uint32_t> onlyNew, onlyOld;
                     std::set_difference(newIds.begin(), newIds.end(), oldIds.begin(), oldIds.end(),
                                         std::back_inserter(onlyNew));
                     std::set_difference(oldIds.begin(), oldIds.end(), newIds.begin(), newIds.end(),
                                         std::back_inserter(onlyOld));
+                    // FormIDs only the schema sees are ones the typed path skipped
+                    // (its opaque Blob rows); reported, not failed. A FormID only
+                    // the typed path sees is one the schema would miss: a failure.
+                    if (onlyOld.empty()) {
+                        ++st.typedMissed;
+                        st.typedMissedIds += onlyNew.size();
+                        if (st.firstTypedMiss.empty()) {
+                            char m[96];
+                            std::snprintf(m, sizeof(m), "%s %08X: e.g. %08X", p->filename.c_str(), raw, onlyNew[0]);
+                            st.firstTypedMiss = m;
+                        }
+                        continue;
+                    }
+                    ++st.idsMismatch;
                     char buf[160];
                     std::snprintf(buf, sizeof(buf),
                                   "FormID sets differ from the typed path (new-only %zu, e.g. %08X; "
@@ -380,6 +395,9 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
                     st.idsCompared, st.idsMismatch, st.newRefuses, st.newAccepts);
         for (const auto& [why, n] : st.refuseWhy)
             std::printf("           refuses %zu: %s\n", n, why.c_str());
+        if (st.typedMissed)
+            std::printf("         typed path missed %zu FormID(s) in %zu record(s) (first: %s)\n",
+                        st.typedMissedIds, st.typedMissed, st.firstTypedMiss.c_str());
         std::printf("         links: %zu checked, %zu unresolved, %zu wrong\n",
                     st.linksChecked, st.linksUnresolved, st.linksWrong);
         if (!st.firstProblem.empty()) std::printf("         first problem: %s\n", st.firstProblem.c_str());

@@ -1,0 +1,16 @@
+# BOOK DATA. Word 1 is -1 (teaches nothing), a skill index, or — exactly in the
+# records with flag 0x04 set — a SPEL FormID.
+struct: BookData
+size: 16
+fields:
+  - { name: flags,   type: u8 }
+  - { name: type,    type: u8 }
+  - { name: unknown, type: u16 }
+  - name: teaches
+    union:
+      by: { field: flags, mask: 0x04 }
+      cases:
+        - { when: 0x04, name: spell, type: formid, to: [SPEL] }
+      default: { name: skill, type: i32 }
+  - { name: value,   type: u32 }
+  - { name: weight,  type: f32 }

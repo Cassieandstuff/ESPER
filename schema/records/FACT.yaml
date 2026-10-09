@@ -19,3 +19,5 @@ members:
   - { sig: VENC, name: vendorContainer, type: formid }   # VENC
   - { sig: VENV, name: vendorValues, type: VendorValues }   # VENV
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: CRVA, name: crimeValues, type: CrimeValues }

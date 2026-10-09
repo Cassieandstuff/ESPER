@@ -10,3 +10,5 @@ members:
   - { sig: TNAM, name: displayTime, type: u32 }   # TNAM
   - { sig: ITXT, name: buttonText, type: lstring, table: strings, repeat: true }   # ITXT
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: INAM, name: icon, type: u32 }

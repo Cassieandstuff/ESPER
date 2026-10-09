@@ -5,5 +5,5 @@ members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { sig: FNAM, name: soundFile, type: zstring }   # FNAM (legacy)
-  - { sig: SNDD, name: soundData, type: bytes }   # SNDD (legacy)
+  - { sig: SNDD, name: soundData, type: bytes, size: 36, formIds: none }   # packed small ints; no column resolves like a FormID (probe)
   - { sig: SDSC, name: descriptor, type: formid }   # SDSC (SNDR)

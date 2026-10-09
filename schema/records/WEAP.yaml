@@ -27,7 +27,7 @@ members:
   - { sig: NAM9, name: equipSound, type: formid }   # NAM9
   - { sig: NAM8, name: unequipSound, type: formid }   # NAM8
   - { sig: DATA, name: basic, type: WeaponBasic }   # DATA
-  - { sig: DNAM, name: dnam, type: bytes }   # DNAM (100B block, opaque)
+  - { sig: DNAM, name: weaponData, type: WeaponData }
   - { sig: CRDT, name: crit, type: WeaponCrit }   # CRDT
   - { sig: VNAM, name: detectionLevel, type: u32 }   # VNAM
   - { sig: CNAM, name: templateWeapon, type: formid }   # CNAM

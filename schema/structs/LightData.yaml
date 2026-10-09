@@ -1,0 +1,15 @@
+struct: LightData
+size: 48
+fields:
+  - { name: time,          type: i32 }
+  - { name: radius,        type: u32 }
+  - { name: color,         type: ColorRgba }
+  - { name: flags,         type: u32 }
+  - { name: falloff,       type: f32 }
+  - { name: fov,           type: f32 }
+  - { name: nearClip,      type: f32 }
+  - { name: period,        type: f32 }
+  - { name: intensityAmplitude, type: f32 }
+  - { name: movementAmplitude,  type: f32 }
+  - { name: value,         type: u32 }
+  - { name: weight,        type: f32 }

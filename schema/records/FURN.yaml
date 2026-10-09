@@ -3,6 +3,17 @@ record: FURN
 name: Furniture
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: Vmad }   # step 4: the typed path never bound VMAD here
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { use: Model, name: model }
+  # step 4, tools/schema-probe evidence:
+  - { sig: FNAM, name: flags, type: u16 }
+  - { sig: MNAM, name: activeMarkers, type: u32 }
+  - { sig: PNAM, name: unknownPnam, type: u32 }
+  - { sig: WBDT, name: workbench, fields: [ { name: benchType, type: u8 }, { name: usesSkill, type: i8 } ] }
+  - { sig: FNPR, name: markerEntries, repeat: true, fields: [ { name: markerType, type: u16 }, { name: entryPoints, type: u16 } ] }
+  - { sig: KNAM, name: interactionKeyword, type: formid, to: [KYWD] }
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords, type: "formid[]", to: [KYWD] }
+  - { use: Destructible, name: destructible }

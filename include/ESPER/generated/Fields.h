@@ -15,7 +15,16 @@ using ::esper::schema::SigOf;
 // RELA — Relationship
 namespace RELA {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("RELA"), { { 0 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("RELA"), { { 1 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("RELA"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> parent{ SigOf("RELA"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> child{ SigOf("RELA"), { { 1, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> rank{ SigOf("RELA"), { { 1, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> unknown{ SigOf("RELA"), { { 1, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("RELA"), { { 1, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> unknown2{ SigOf("RELA"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> associationType{ SigOf("RELA"), { { 1, 6 }, 1, 2 } };
+    }
 }
 
 // ARMA — ArmorAddon
@@ -42,25 +51,25 @@ namespace ARMA {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMA"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMA"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMA"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMA"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMA"), { { 4, 2 }, 2, 2 } };
     }
     namespace femaleModel {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMA"), { { 5 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMA"), { { 5, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMA"), { { 5, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMA"), { { 5, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMA"), { { 5, 2 }, 2, 2 } };
     }
     namespace male1stModel {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMA"), { { 6 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMA"), { { 6, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMA"), { { 6, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMA"), { { 6, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMA"), { { 6, 2 }, 2, 2 } };
     }
     namespace female1stModel {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMA"), { { 7 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMA"), { { 7, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMA"), { { 7, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMA"), { { 7, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMA"), { { 7, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> maleSkinTexture{ SigOf("ARMA"), { { 8 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> femaleSkinTexture{ SigOf("ARMA"), { { 9 }, 1, 1 } };
@@ -69,6 +78,13 @@ namespace ARMA {
     inline constexpr ::esper::FieldRef<::esper::FormId> additionalRaces{ SigOf("ARMA"), { { 12 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> footstepSound{ SigOf("ARMA"), { { 13 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> artObject{ SigOf("ARMA"), { { 14 }, 1, 1 } };
+    namespace legacyBiped {
+        inline constexpr ::esper::StructRef self{ SigOf("ARMA"), { { 15 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> bipedFlags{ SigOf("ARMA"), { { 15, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> generalFlags{ SigOf("ARMA"), { { 15, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("ARMA"), { { 15, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> armorType{ SigOf("ARMA"), { { 15, 3 }, 1, 2 } };
+    }
 }
 
 // APPA — Apparatus
@@ -88,7 +104,7 @@ namespace APPA {
         inline constexpr ::esper::GroupRef self{ SigOf("APPA"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("APPA"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("APPA"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("APPA"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("APPA"), { { 3, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("APPA"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> pickupSound{ SigOf("APPA"), { { 5 }, 1, 1 } };
@@ -165,7 +181,7 @@ namespace MISC {
         inline constexpr ::esper::GroupRef self{ SigOf("MISC"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("MISC"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("MISC"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("MISC"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("MISC"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("MISC"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> msgIcon{ SigOf("MISC"), { { 6 }, 1, 1 } };
@@ -290,7 +306,7 @@ namespace BPTD {
         inline constexpr ::esper::GroupRef self{ SigOf("BPTD"), { { 1 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("BPTD"), { { 1, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("BPTD"), { { 1, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("BPTD"), { { 1, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("BPTD"), { { 1, 2 }, 2, 2 } };
     }
 }
 
@@ -323,7 +339,7 @@ namespace HAZD {
         inline constexpr ::esper::GroupRef self{ SigOf("HAZD"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("HAZD"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("HAZD"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("HAZD"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("HAZD"), { { 3, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> imageSpaceMod{ SigOf("HAZD"), { { 4 }, 1, 1 } };
     namespace data {
@@ -362,6 +378,20 @@ namespace PHZD {
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> base{ SigOf("PHZD"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<float> scale{ SigOf("PHZD"), { { 3 }, 1, 1 } };
+    namespace enableParent {
+        inline constexpr ::esper::StructRef self{ SigOf("PHZD"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("PHZD"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("PHZD"), { { 4, 1 }, 1, 2 } };
+    }
+    namespace placement {
+        inline constexpr ::esper::StructRef self{ SigOf("PHZD"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> posX{ SigOf("PHZD"), { { 5, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posY{ SigOf("PHZD"), { { 5, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("PHZD"), { { 5, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("PHZD"), { { 5, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("PHZD"), { { 5, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("PHZD"), { { 5, 5 }, 1, 2 } };
+    }
 }
 
 // RACE — Race
@@ -444,7 +474,7 @@ namespace TREE {
         inline constexpr ::esper::GroupRef self{ SigOf("TREE"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("TREE"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("TREE"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("TREE"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("TREE"), { { 3, 2 }, 2, 2 } };
     }
 }
 
@@ -453,7 +483,14 @@ namespace IDLE {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("IDLE"), { { 0 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> animEvent{ SigOf("IDLE"), { { 1 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> related{ SigOf("IDLE"), { { 2 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("IDLE"), { { 3 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("IDLE"), { { 3 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> loopMin{ SigOf("IDLE"), { { 3, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> loopMax{ SigOf("IDLE"), { { 3, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("IDLE"), { { 3, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> animGroupSection{ SigOf("IDLE"), { { 3, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> replayDelay{ SigOf("IDLE"), { { 3, 4 }, 1, 2 } };
+    }
     namespace conditions {
         inline constexpr ::esper::GroupRef self{ SigOf("IDLE"), { { 4 }, 1, 1 } };
         namespace data {
@@ -521,6 +558,20 @@ namespace PGRE {
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> base{ SigOf("PGRE"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<float> scale{ SigOf("PGRE"), { { 3 }, 1, 1 } };
+    namespace enableParent {
+        inline constexpr ::esper::StructRef self{ SigOf("PGRE"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("PGRE"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("PGRE"), { { 4, 1 }, 1, 2 } };
+    }
+    namespace placement {
+        inline constexpr ::esper::StructRef self{ SigOf("PGRE"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> posX{ SigOf("PGRE"), { { 5, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posY{ SigOf("PGRE"), { { 5, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("PGRE"), { { 5, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("PGRE"), { { 5, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("PGRE"), { { 5, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("PGRE"), { { 5, 5 }, 1, 2 } };
+    }
 }
 
 // MGEF — MagicEffect
@@ -591,6 +642,49 @@ namespace MGEF {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("MGEF"), { { 7, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("MGEF"), { { 7, 2 }, 2, 2 } };
     }
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("MGEF"), { { 8 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("MGEF"), { { 8, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> baseCost{ SigOf("MGEF"), { { 8, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> relatedItem{ SigOf("MGEF"), { { 8, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> magicSkill{ SigOf("MGEF"), { { 8, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> resistValue{ SigOf("MGEF"), { { 8, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> counterEffectCount{ SigOf("MGEF"), { { 8, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown22{ SigOf("MGEF"), { { 8, 6 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> light{ SigOf("MGEF"), { { 8, 7 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> taperWeight{ SigOf("MGEF"), { { 8, 8 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> hitShader{ SigOf("MGEF"), { { 8, 9 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> enchantShader{ SigOf("MGEF"), { { 8, 10 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> minimumSkill{ SigOf("MGEF"), { { 8, 11 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> spellmakingArea{ SigOf("MGEF"), { { 8, 12 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> spellmakingCastingTime{ SigOf("MGEF"), { { 8, 13 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> taperCurve{ SigOf("MGEF"), { { 8, 14 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> taperDuration{ SigOf("MGEF"), { { 8, 15 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> secondAvWeight{ SigOf("MGEF"), { { 8, 16 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> archetype{ SigOf("MGEF"), { { 8, 17 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> actorValue{ SigOf("MGEF"), { { 8, 18 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> projectile{ SigOf("MGEF"), { { 8, 19 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("MGEF"), { { 8, 20 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> castingType{ SigOf("MGEF"), { { 8, 21 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> delivery{ SigOf("MGEF"), { { 8, 22 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> secondActorValue{ SigOf("MGEF"), { { 8, 23 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> castingArt{ SigOf("MGEF"), { { 8, 24 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> hitEffectArt{ SigOf("MGEF"), { { 8, 25 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> impactData{ SigOf("MGEF"), { { 8, 26 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> skillUsageMult{ SigOf("MGEF"), { { 8, 27 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> dualCast{ SigOf("MGEF"), { { 8, 28 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> dualCastScale{ SigOf("MGEF"), { { 8, 29 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> enchantArt{ SigOf("MGEF"), { { 8, 30 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown120{ SigOf("MGEF"), { { 8, 31 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown124{ SigOf("MGEF"), { { 8, 32 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> equipAbility{ SigOf("MGEF"), { { 8, 33 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> imageSpaceMod{ SigOf("MGEF"), { { 8, 34 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> perk{ SigOf("MGEF"), { { 8, 35 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> castingSoundLevel{ SigOf("MGEF"), { { 8, 36 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> scriptAiScore{ SigOf("MGEF"), { { 8, 37 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> scriptAiDelay{ SigOf("MGEF"), { { 8, 38 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> sounds{ SigOf("MGEF"), { { 9 }, 1, 1 } };
 }
 
 // AVIF — ActorValueInfo
@@ -654,6 +748,7 @@ namespace MESG {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("MESG"), { { 7, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("MESG"), { { 7, 2 }, 2, 2 } };
     }
+    inline constexpr ::esper::FieldRef<uint32_t> icon{ SigOf("MESG"), { { 8 }, 1, 1 } };
 }
 
 // ALCH — Ingestible
@@ -675,7 +770,7 @@ namespace ALCH {
         inline constexpr ::esper::GroupRef self{ SigOf("ALCH"), { { 5 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ALCH"), { { 5, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ALCH"), { { 5, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ALCH"), { { 5, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ALCH"), { { 5, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("ALCH"), { { 6 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> msgIcon{ SigOf("ALCH"), { { 7 }, 1, 1 } };
@@ -824,21 +919,59 @@ namespace ENCH {
 // LIGH — Light
 namespace LIGH {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("LIGH"), { { 0 }, 1, 1 } };
-    namespace bounds {
+    namespace vmad {
         inline constexpr ::esper::StructRef self{ SigOf("LIGH"), { { 1 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("LIGH"), { { 1, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("LIGH"), { { 1, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("LIGH"), { { 1, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("LIGH"), { { 1, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("LIGH"), { { 1, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("LIGH"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("LIGH"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> objFormat{ SigOf("LIGH"), { { 1, 1 }, 1, 2 } };
+        namespace body {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("LIGH"), { { 1, 2 }, 1, 2 } };
+            namespace supported {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("LIGH"), { { 1, 2, 0 }, 1, 3 } };
+                namespace scripts {
+                    inline constexpr ::esper::StructRef self{ SigOf("LIGH"), { { 1, 2, 0, 0 }, 1, 4 } };
+                    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> scripts{ SigOf("LIGH"), { { 1, 2, 0, 0, 0 }, 1, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fragments{ SigOf("LIGH"), { { 1, 2, 0, 0, 1 }, 1, 5 } };
+                }
+            }
+        }
     }
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("LIGH"), { { 2 }, 1, 1 } };
+    namespace bounds {
+        inline constexpr ::esper::StructRef self{ SigOf("LIGH"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("LIGH"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("LIGH"), { { 2, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("LIGH"), { { 2, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("LIGH"), { { 2, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("LIGH"), { { 2, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("LIGH"), { { 2, 5 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("LIGH"), { { 3 }, 1, 1 } };
     namespace model {
-        inline constexpr ::esper::GroupRef self{ SigOf("LIGH"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("LIGH"), { { 3, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("LIGH"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("LIGH"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("LIGH"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("LIGH"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("LIGH"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("LIGH"), { { 4, 2 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<float> fadeValue{ SigOf("LIGH"), { { 5 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("LIGH"), { { 6 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int32_t> time{ SigOf("LIGH"), { { 6, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> radius{ SigOf("LIGH"), { { 6, 1 }, 1, 2 } };
+        namespace color {
+            inline constexpr ::esper::StructRef self{ SigOf("LIGH"), { { 6, 2 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("LIGH"), { { 6, 2, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("LIGH"), { { 6, 2, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("LIGH"), { { 6, 2, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("LIGH"), { { 6, 2, 3 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("LIGH"), { { 6, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> falloff{ SigOf("LIGH"), { { 6, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> fov{ SigOf("LIGH"), { { 6, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> nearClip{ SigOf("LIGH"), { { 6, 6 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> period{ SigOf("LIGH"), { { 6, 7 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> intensityAmplitude{ SigOf("LIGH"), { { 6, 8 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> movementAmplitude{ SigOf("LIGH"), { { 6, 9 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("LIGH"), { { 6, 10 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> weight{ SigOf("LIGH"), { { 6, 11 }, 1, 2 } };
     }
 }
 
@@ -936,28 +1069,82 @@ namespace LVLI {
         inline constexpr ::esper::GroupRef self{ SigOf("LVLI"), { { 7 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("LVLI"), { { 7, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("LVLI"), { { 7, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("LVLI"), { { 7, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("LVLI"), { { 7, 2 }, 2, 2 } };
     }
 }
 
 // ACTI — Activator
 namespace ACTI {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("ACTI"), { { 0 }, 1, 1 } };
-    namespace bounds {
+    namespace vmad {
         inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 1 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("ACTI"), { { 1, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("ACTI"), { { 1, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("ACTI"), { { 1, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("ACTI"), { { 1, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("ACTI"), { { 1, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("ACTI"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("ACTI"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> objFormat{ SigOf("ACTI"), { { 1, 1 }, 1, 2 } };
+        namespace body {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("ACTI"), { { 1, 2 }, 1, 2 } };
+            namespace supported {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("ACTI"), { { 1, 2, 0 }, 1, 3 } };
+                namespace scripts {
+                    inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 1, 2, 0, 0 }, 1, 4 } };
+                    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> scripts{ SigOf("ACTI"), { { 1, 2, 0, 0, 0 }, 1, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fragments{ SigOf("ACTI"), { { 1, 2, 0, 0, 1 }, 1, 5 } };
+                }
+            }
+        }
     }
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("ACTI"), { { 2 }, 1, 1 } };
+    namespace bounds {
+        inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("ACTI"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("ACTI"), { { 2, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("ACTI"), { { 2, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("ACTI"), { { 2, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("ACTI"), { { 2, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("ACTI"), { { 2, 5 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("ACTI"), { { 3 }, 1, 1 } };
     namespace model {
-        inline constexpr ::esper::GroupRef self{ SigOf("ACTI"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ACTI"), { { 3, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ACTI"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ACTI"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("ACTI"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ACTI"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ACTI"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ACTI"), { { 4, 2 }, 2, 2 } };
+    }
+    namespace markerColor {
+        inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("ACTI"), { { 5, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("ACTI"), { { 5, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("ACTI"), { { 5, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("ACTI"), { { 5, 3 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint16_t> flags{ SigOf("ACTI"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> activateTextOverride{ SigOf("ACTI"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("ACTI"), { { 8 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("ACTI"), { { 9 }, 1, 1 } };
+    namespace destructible {
+        inline constexpr ::esper::GroupRef self{ SigOf("ACTI"), { { 10 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 10, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> health{ SigOf("ACTI"), { { 10, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> stageCount{ SigOf("ACTI"), { { 10, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("ACTI"), { { 10, 0, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("ACTI"), { { 10, 0, 3 }, 2, 3 } };
+        }
+        namespace stages {
+            inline constexpr ::esper::GroupRef self{ SigOf("ACTI"), { { 10, 1 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("ACTI"), { { 10, 1, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint16_t> healthPercent{ SigOf("ACTI"), { { 10, 1, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("ACTI"), { { 10, 1, 0, 1 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> damageStage{ SigOf("ACTI"), { { 10, 1, 0, 2 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ACTI"), { { 10, 1, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("ACTI"), { { 10, 1, 0, 4 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> debris{ SigOf("ACTI"), { { 10, 1, 0, 5 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> debrisCount{ SigOf("ACTI"), { { 10, 1, 0, 6 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> model{ SigOf("ACTI"), { { 10, 1, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hashes{ SigOf("ACTI"), { { 10, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> textures{ SigOf("ACTI"), { { 10, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("ACTI"), { { 10, 1, 4 }, 3, 3 } };
+        }
     }
 }
 
@@ -1047,11 +1234,38 @@ namespace PROJ {
         inline constexpr ::esper::GroupRef self{ SigOf("PROJ"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("PROJ"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("PROJ"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("PROJ"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("PROJ"), { { 3, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> muzzleModel{ SigOf("PROJ"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> muzzleData{ SigOf("PROJ"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<uint32_t> soundLevel{ SigOf("PROJ"), { { 6 }, 1, 1 } };
+    namespace destructible {
+        inline constexpr ::esper::GroupRef self{ SigOf("PROJ"), { { 7 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("PROJ"), { { 7, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> health{ SigOf("PROJ"), { { 7, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> stageCount{ SigOf("PROJ"), { { 7, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("PROJ"), { { 7, 0, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("PROJ"), { { 7, 0, 3 }, 2, 3 } };
+        }
+        namespace stages {
+            inline constexpr ::esper::GroupRef self{ SigOf("PROJ"), { { 7, 1 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("PROJ"), { { 7, 1, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint16_t> healthPercent{ SigOf("PROJ"), { { 7, 1, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("PROJ"), { { 7, 1, 0, 1 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> damageStage{ SigOf("PROJ"), { { 7, 1, 0, 2 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("PROJ"), { { 7, 1, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("PROJ"), { { 7, 1, 0, 4 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> debris{ SigOf("PROJ"), { { 7, 1, 0, 5 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> debrisCount{ SigOf("PROJ"), { { 7, 1, 0, 6 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> model{ SigOf("PROJ"), { { 7, 1, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hashes{ SigOf("PROJ"), { { 7, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> textures{ SigOf("PROJ"), { { 7, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("PROJ"), { { 7, 1, 4 }, 3, 3 } };
+        }
+    }
 }
 
 // PACK — Package
@@ -1160,7 +1374,7 @@ namespace BOOK {
         inline constexpr ::esper::GroupRef self{ SigOf("BOOK"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("BOOK"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("BOOK"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("BOOK"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("BOOK"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<::esper::LocalizedString> bookText{ SigOf("BOOK"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("BOOK"), { { 6 }, 1, 1 } };
@@ -1171,6 +1385,19 @@ namespace BOOK {
     inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("BOOK"), { { 11 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> inventoryArt{ SigOf("BOOK"), { { 12 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::LocalizedString> description{ SigOf("BOOK"), { { 13 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("BOOK"), { { 14 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("BOOK"), { { 14, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> type{ SigOf("BOOK"), { { 14, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("BOOK"), { { 14, 2 }, 1, 2 } };
+        namespace teaches {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("BOOK"), { { 14, 3 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> spell{ SigOf("BOOK"), { { 14, 3, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> skill{ SigOf("BOOK"), { { 14, 3, 1 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("BOOK"), { { 14, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> weight{ SigOf("BOOK"), { { 14, 5 }, 1, 2 } };
+    }
 }
 
 // PERK — Perk
@@ -1304,7 +1531,7 @@ namespace SPEL {
         inline constexpr ::esper::GroupRef self{ SigOf("SPEL"), { { 8 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("SPEL"), { { 8, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("SPEL"), { { 8, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("SPEL"), { { 8, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("SPEL"), { { 8, 2 }, 2, 2 } };
     }
     namespace valueWeight {
         inline constexpr ::esper::StructRef self{ SigOf("SPEL"), { { 9 }, 1, 1 } };
@@ -1391,23 +1618,85 @@ namespace CELL {
         inline constexpr ::esper::FieldRef<int32_t> y{ SigOf("CELL"), { { 3, 1 }, 1, 2 } };
         inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("CELL"), { { 3, 2 }, 1, 2 } };
     }
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lighting{ SigOf("CELL"), { { 4 }, 1, 1 } };
+    namespace lighting {
+        inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4 }, 1, 1 } };
+        namespace ambient {
+            inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4, 0 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("CELL"), { { 4, 0, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("CELL"), { { 4, 0, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("CELL"), { { 4, 0, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("CELL"), { { 4, 0, 3 }, 1, 3 } };
+        }
+        namespace directional {
+            inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4, 1 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("CELL"), { { 4, 1, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("CELL"), { { 4, 1, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("CELL"), { { 4, 1, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("CELL"), { { 4, 1, 3 }, 1, 3 } };
+        }
+        namespace fogNearColor {
+            inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4, 2 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("CELL"), { { 4, 2, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("CELL"), { { 4, 2, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("CELL"), { { 4, 2, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("CELL"), { { 4, 2, 3 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<float> fogNear{ SigOf("CELL"), { { 4, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> fogFar{ SigOf("CELL"), { { 4, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> rotationXY{ SigOf("CELL"), { { 4, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> rotationZ{ SigOf("CELL"), { { 4, 6 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> directionalFade{ SigOf("CELL"), { { 4, 7 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> fogClipDistance{ SigOf("CELL"), { { 4, 8 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> fogPower{ SigOf("CELL"), { { 4, 9 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> directionalAmbient{ SigOf("CELL"), { { 4, 10 }, 1, 2 } };
+        namespace specular {
+            inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4, 11 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("CELL"), { { 4, 11, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("CELL"), { { 4, 11, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("CELL"), { { 4, 11, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("CELL"), { { 4, 11, 3 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<float> fresnelPower{ SigOf("CELL"), { { 4, 12 }, 1, 2 } };
+        namespace fogFarColor {
+            inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 4, 13 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("CELL"), { { 4, 13, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("CELL"), { { 4, 13, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("CELL"), { { 4, 13, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("CELL"), { { 4, 13, 3 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<float> fogMax{ SigOf("CELL"), { { 4, 14 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> lightFadeBegin{ SigOf("CELL"), { { 4, 15 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> lightFadeEnd{ SigOf("CELL"), { { 4, 16 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> inherits{ SigOf("CELL"), { { 4, 17 }, 1, 2 } };
+    }
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> occlusion{ SigOf("CELL"), { { 5 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> maxHeight{ SigOf("CELL"), { { 6 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> lightingTemplate{ SigOf("CELL"), { { 7 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<float> waterHeight{ SigOf("CELL"), { { 8 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::string> waterNoise{ SigOf("CELL"), { { 9 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> regions{ SigOf("CELL"), { { 10 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> location{ SigOf("CELL"), { { 11 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> water{ SigOf("CELL"), { { 12 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("CELL"), { { 13 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> lockList{ SigOf("CELL"), { { 14 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::string> waterEnvMap{ SigOf("CELL"), { { 15 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> climate{ SigOf("CELL"), { { 16 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> acousticSpace{ SigOf("CELL"), { { 17 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> encounterZone{ SigOf("CELL"), { { 18 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> music{ SigOf("CELL"), { { 19 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> imageSpace{ SigOf("CELL"), { { 20 }, 1, 1 } };
+    namespace maxHeight {
+        inline constexpr ::esper::StructRef self{ SigOf("CELL"), { { 6 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> offset{ SigOf("CELL"), { { 6, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> heights{ SigOf("CELL"), { { 6, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint32_t> lightingInherits{ SigOf("CELL"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> waterCurrentCount{ SigOf("CELL"), { { 8 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> waterCurrentSize{ SigOf("CELL"), { { 9 }, 1, 1 } };
+    namespace waterVelocity {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("CELL"), { { 10 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> v48{ SigOf("CELL"), { { 10, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> v64{ SigOf("CELL"), { { 10, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> lightingTemplate{ SigOf("CELL"), { { 11 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> waterHeight{ SigOf("CELL"), { { 12 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::string> waterNoise{ SigOf("CELL"), { { 13 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> regions{ SigOf("CELL"), { { 14 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> location{ SigOf("CELL"), { { 15 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> water{ SigOf("CELL"), { { 16 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("CELL"), { { 17 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> lockList{ SigOf("CELL"), { { 18 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::string> waterEnvMap{ SigOf("CELL"), { { 19 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> climate{ SigOf("CELL"), { { 20 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> acousticSpace{ SigOf("CELL"), { { 21 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> encounterZone{ SigOf("CELL"), { { 22 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> music{ SigOf("CELL"), { { 23 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> imageSpace{ SigOf("CELL"), { { 24 }, 1, 1 } };
 }
 
 // COLL — CollisionLayer
@@ -1445,7 +1734,7 @@ namespace EXPL {
         inline constexpr ::esper::GroupRef self{ SigOf("EXPL"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("EXPL"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("EXPL"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("EXPL"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("EXPL"), { { 3, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> enchantment{ SigOf("EXPL"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> imageSpaceMod{ SigOf("EXPL"), { { 5 }, 1, 1 } };
@@ -1473,7 +1762,7 @@ namespace SCRL {
         inline constexpr ::esper::GroupRef self{ SigOf("SCRL"), { { 8 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("SCRL"), { { 8, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("SCRL"), { { 8, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("SCRL"), { { 8, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("SCRL"), { { 8, 2 }, 2, 2 } };
     }
     namespace valueWeight {
         inline constexpr ::esper::StructRef self{ SigOf("SCRL"), { { 9 }, 1, 1 } };
@@ -1592,7 +1881,7 @@ namespace SLGM {
         inline constexpr ::esper::GroupRef self{ SigOf("SLGM"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("SLGM"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("SLGM"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("SLGM"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("SLGM"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("SLGM"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> msgIcon{ SigOf("SLGM"), { { 6 }, 1, 1 } };
@@ -1682,7 +1971,7 @@ namespace KEYM {
         inline constexpr ::esper::GroupRef self{ SigOf("KEYM"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("KEYM"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("KEYM"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("KEYM"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("KEYM"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("KEYM"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> msgIcon{ SigOf("KEYM"), { { 6 }, 1, 1 } };
@@ -1771,7 +2060,7 @@ namespace ADDN {
         inline constexpr ::esper::GroupRef self{ SigOf("ADDN"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ADDN"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ADDN"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ADDN"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ADDN"), { { 2, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<int32_t> nodeIndex{ SigOf("ADDN"), { { 3 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> sound{ SigOf("ADDN"), { { 4 }, 1, 1 } };
@@ -1908,7 +2197,13 @@ namespace SMEN {
 // REGN — Region
 namespace REGN {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("REGN"), { { 0 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> color{ SigOf("REGN"), { { 1 }, 1, 1 } };
+    namespace color {
+        inline constexpr ::esper::StructRef self{ SigOf("REGN"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> r{ SigOf("REGN"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> g{ SigOf("REGN"), { { 1, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> b{ SigOf("REGN"), { { 1, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> a{ SigOf("REGN"), { { 1, 3 }, 1, 2 } };
+    }
     inline constexpr ::esper::FieldRef<::esper::FormId> worldspace{ SigOf("REGN"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> areaData{ SigOf("REGN"), { { 3 }, 1, 1 } };
 }
@@ -1939,7 +2234,7 @@ namespace LVLN {
         inline constexpr ::esper::GroupRef self{ SigOf("LVLN"), { { 7 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("LVLN"), { { 7, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("LVLN"), { { 7, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("LVLN"), { { 7, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("LVLN"), { { 7, 2 }, 2, 2 } };
     }
 }
 
@@ -2001,21 +2296,80 @@ namespace SMQN {
 // FURN — Furniture
 namespace FURN {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("FURN"), { { 0 }, 1, 1 } };
-    namespace bounds {
+    namespace vmad {
         inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 1 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("FURN"), { { 1, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("FURN"), { { 1, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("FURN"), { { 1, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("FURN"), { { 1, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("FURN"), { { 1, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("FURN"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("FURN"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> objFormat{ SigOf("FURN"), { { 1, 1 }, 1, 2 } };
+        namespace body {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("FURN"), { { 1, 2 }, 1, 2 } };
+            namespace supported {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("FURN"), { { 1, 2, 0 }, 1, 3 } };
+                namespace scripts {
+                    inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 1, 2, 0, 0 }, 1, 4 } };
+                    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> scripts{ SigOf("FURN"), { { 1, 2, 0, 0, 0 }, 1, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fragments{ SigOf("FURN"), { { 1, 2, 0, 0, 1 }, 1, 5 } };
+                }
+            }
+        }
     }
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("FURN"), { { 2 }, 1, 1 } };
+    namespace bounds {
+        inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("FURN"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("FURN"), { { 2, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("FURN"), { { 2, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("FURN"), { { 2, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("FURN"), { { 2, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("FURN"), { { 2, 5 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("FURN"), { { 3 }, 1, 1 } };
     namespace model {
-        inline constexpr ::esper::GroupRef self{ SigOf("FURN"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("FURN"), { { 3, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("FURN"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("FURN"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("FURN"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("FURN"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("FURN"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("FURN"), { { 4, 2 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint16_t> flags{ SigOf("FURN"), { { 5 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> activeMarkers{ SigOf("FURN"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> unknownPnam{ SigOf("FURN"), { { 7 }, 1, 1 } };
+    namespace workbench {
+        inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 8 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> benchType{ SigOf("FURN"), { { 8, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int8_t> usesSkill{ SigOf("FURN"), { { 8, 1 }, 1, 2 } };
+    }
+    namespace markerEntries {
+        inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 9 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> markerType{ SigOf("FURN"), { { 9, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> entryPoints{ SigOf("FURN"), { { 9, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> interactionKeyword{ SigOf("FURN"), { { 10 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("FURN"), { { 11 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("FURN"), { { 12 }, 1, 1 } };
+    namespace destructible {
+        inline constexpr ::esper::GroupRef self{ SigOf("FURN"), { { 13 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 13, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> health{ SigOf("FURN"), { { 13, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> stageCount{ SigOf("FURN"), { { 13, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("FURN"), { { 13, 0, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("FURN"), { { 13, 0, 3 }, 2, 3 } };
+        }
+        namespace stages {
+            inline constexpr ::esper::GroupRef self{ SigOf("FURN"), { { 13, 1 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("FURN"), { { 13, 1, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint16_t> healthPercent{ SigOf("FURN"), { { 13, 1, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("FURN"), { { 13, 1, 0, 1 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> damageStage{ SigOf("FURN"), { { 13, 1, 0, 2 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("FURN"), { { 13, 1, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("FURN"), { { 13, 1, 0, 4 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> debris{ SigOf("FURN"), { { 13, 1, 0, 5 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> debrisCount{ SigOf("FURN"), { { 13, 1, 0, 6 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> model{ SigOf("FURN"), { { 13, 1, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hashes{ SigOf("FURN"), { { 13, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> textures{ SigOf("FURN"), { { 13, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("FURN"), { { 13, 1, 4 }, 3, 3 } };
+        }
     }
 }
 
@@ -2028,6 +2382,8 @@ namespace LCTN {
     inline constexpr ::esper::FieldRef<::esper::FormId> unreported{ SigOf("LCTN"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> worldLocMarker{ SigOf("LCTN"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<float> worldLocRadius{ SigOf("LCTN"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("LCTN"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("LCTN"), { { 8 }, 1, 1 } };
 }
 
 // SOUN — SoundMarker
@@ -2050,7 +2406,15 @@ namespace SOUN {
 // ECZN — EncounterZone
 namespace ECZN {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("ECZN"), { { 0 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ECZN"), { { 1 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("ECZN"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("ECZN"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> location{ SigOf("ECZN"), { { 1, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int8_t> rank{ SigOf("ECZN"), { { 1, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int8_t> minLevel{ SigOf("ECZN"), { { 1, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("ECZN"), { { 1, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int8_t> maxLevel{ SigOf("ECZN"), { { 1, 5 }, 1, 2 } };
+    }
 }
 
 // INFO — DialogResponses
@@ -2145,6 +2509,15 @@ namespace INFO {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("INFO"), { { 17, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("INFO"), { { 17, 2 }, 2, 2 } };
     }
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("INFO"), { { 18 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown0{ SigOf("INFO"), { { 18, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown2{ SigOf("INFO"), { { 18, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown4{ SigOf("INFO"), { { 18, 2 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> quests{ SigOf("INFO"), { { 19 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeaders{ SigOf("INFO"), { { 20 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> next{ SigOf("INFO"), { { 21 }, 1, 1 } };
 }
 
 // ANIO — AnimatedObject
@@ -2154,7 +2527,7 @@ namespace ANIO {
         inline constexpr ::esper::GroupRef self{ SigOf("ANIO"), { { 1 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ANIO"), { { 1, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ANIO"), { { 1, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ANIO"), { { 1, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ANIO"), { { 1, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> unloadEvent{ SigOf("ANIO"), { { 2 }, 1, 1 } };
 }
@@ -2176,7 +2549,7 @@ namespace AMMO {
         inline constexpr ::esper::GroupRef self{ SigOf("AMMO"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("AMMO"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("AMMO"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("AMMO"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("AMMO"), { { 3, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("AMMO"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> msgIcon{ SigOf("AMMO"), { { 5 }, 1, 1 } };
@@ -2230,7 +2603,7 @@ namespace ARMO {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMO"), { { 6 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMO"), { { 6, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMO"), { { 6, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMO"), { { 6, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMO"), { { 6, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> maleIcon{ SigOf("ARMO"), { { 7 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> maleMsgIcon{ SigOf("ARMO"), { { 8 }, 1, 1 } };
@@ -2238,7 +2611,7 @@ namespace ARMO {
         inline constexpr ::esper::GroupRef self{ SigOf("ARMO"), { { 9 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARMO"), { { 9, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARMO"), { { 9, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARMO"), { { 9, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARMO"), { { 9, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> femaleIcon{ SigOf("ARMO"), { { 10 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> femaleMsgIcon{ SigOf("ARMO"), { { 11 }, 1, 1 } };
@@ -2291,7 +2664,7 @@ namespace ARTO {
         inline constexpr ::esper::GroupRef self{ SigOf("ARTO"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("ARTO"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("ARTO"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("ARTO"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("ARTO"), { { 2, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<uint32_t> artType{ SigOf("ARTO"), { { 3 }, 1, 1 } };
 }
@@ -2329,7 +2702,7 @@ namespace WEAP {
         inline constexpr ::esper::GroupRef self{ SigOf("WEAP"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("WEAP"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("WEAP"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("WEAP"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("WEAP"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> enchantment{ SigOf("WEAP"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<uint16_t> enchantAmount{ SigOf("WEAP"), { { 6 }, 1, 1 } };
@@ -2356,7 +2729,39 @@ namespace WEAP {
         inline constexpr ::esper::FieldRef<float> weight{ SigOf("WEAP"), { { 24, 1 }, 1, 2 } };
         inline constexpr ::esper::FieldRef<int16_t> damage{ SigOf("WEAP"), { { 24, 2 }, 1, 2 } };
     }
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> dnam{ SigOf("WEAP"), { { 25 }, 1, 1 } };
+    namespace weaponData {
+        inline constexpr ::esper::StructRef self{ SigOf("WEAP"), { { 25 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> animationType{ SigOf("WEAP"), { { 25, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad1{ SigOf("WEAP"), { { 25, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> speed{ SigOf("WEAP"), { { 25, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> reach{ SigOf("WEAP"), { { 25, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> flags{ SigOf("WEAP"), { { 25, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown14{ SigOf("WEAP"), { { 25, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> sightFov{ SigOf("WEAP"), { { 25, 6 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown20{ SigOf("WEAP"), { { 25, 7 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> vatsToHitChance{ SigOf("WEAP"), { { 25, 8 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> attackAnimation{ SigOf("WEAP"), { { 25, 9 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> projectileCount{ SigOf("WEAP"), { { 25, 10 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> embeddedWeaponAv{ SigOf("WEAP"), { { 25, 11 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> minRange{ SigOf("WEAP"), { { 25, 12 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> maxRange{ SigOf("WEAP"), { { 25, 13 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown36{ SigOf("WEAP"), { { 25, 14 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags2{ SigOf("WEAP"), { { 25, 15 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown44{ SigOf("WEAP"), { { 25, 16 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown48{ SigOf("WEAP"), { { 25, 17 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown52{ SigOf("WEAP"), { { 25, 18 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown56{ SigOf("WEAP"), { { 25, 19 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown60{ SigOf("WEAP"), { { 25, 20 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown64{ SigOf("WEAP"), { { 25, 21 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown68{ SigOf("WEAP"), { { 25, 22 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown72{ SigOf("WEAP"), { { 25, 23 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> skill{ SigOf("WEAP"), { { 25, 24 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown80{ SigOf("WEAP"), { { 25, 25 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown84{ SigOf("WEAP"), { { 25, 26 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> resist{ SigOf("WEAP"), { { 25, 27 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown92{ SigOf("WEAP"), { { 25, 28 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> stagger{ SigOf("WEAP"), { { 25, 29 }, 1, 2 } };
+    }
     namespace crit {
         inline constexpr ::esper::StructRef self{ SigOf("WEAP"), { { 26 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<uint16_t> critDamage{ SigOf("WEAP"), { { 26, 0 }, 1, 2 } };
@@ -2404,7 +2809,7 @@ namespace LVSP {
         inline constexpr ::esper::GroupRef self{ SigOf("LVSP"), { { 7 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("LVSP"), { { 7, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("LVSP"), { { 7, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("LVSP"), { { 7, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("LVSP"), { { 7, 2 }, 2, 2 } };
     }
 }
 
@@ -2501,6 +2906,15 @@ namespace LSCR {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("LSCR"), { { 3, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("LSCR"), { { 3, 2 }, 2, 2 } };
     }
+    namespace rotationLimits {
+        inline constexpr ::esper::StructRef self{ SigOf("LSCR"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> min{ SigOf("LSCR"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> max{ SigOf("LSCR"), { { 4, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<std::vector<int16_t>> initialRotation{ SigOf("LSCR"), { { 5 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> initialScale{ SigOf("LSCR"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> initialTranslation{ SigOf("LSCR"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::string> cameraPath{ SigOf("LSCR"), { { 8 }, 1, 1 } };
 }
 
 // SNDR — SoundDescriptor
@@ -2510,9 +2924,16 @@ namespace SNDR {
     inline constexpr ::esper::FieldRef<::esper::FormId> category{ SigOf("SNDR"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> altSound{ SigOf("SNDR"), { { 3 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> soundFiles{ SigOf("SNDR"), { { 4 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> outputData{ SigOf("SNDR"), { { 5 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> outputModel{ SigOf("SNDR"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("SNDR"), { { 6 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> values{ SigOf("SNDR"), { { 7 }, 1, 1 } };
+    namespace values {
+        inline constexpr ::esper::StructRef self{ SigOf("SNDR"), { { 7 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int8_t> frequencyShift{ SigOf("SNDR"), { { 7, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int8_t> frequencyVariance{ SigOf("SNDR"), { { 7, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> priority{ SigOf("SNDR"), { { 7, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> dbVariance{ SigOf("SNDR"), { { 7, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> staticAttenuation{ SigOf("SNDR"), { { 7, 4 }, 1, 2 } };
+    }
     namespace conditions {
         inline constexpr ::esper::GroupRef self{ SigOf("SNDR"), { { 8 }, 1, 1 } };
         namespace data {
@@ -2579,36 +3000,148 @@ namespace REFR {
         }
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> base{ SigOf("REFR"), { { 2 }, 1, 1 } };
-    namespace teleport {
-        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<::esper::FormId> door{ SigOf("REFR"), { { 3, 0 }, 1, 2 } };
-        namespace placement {
-            inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 3, 1 }, 1, 2 } };
-            inline constexpr ::esper::FieldRef<float> posX{ SigOf("REFR"), { { 3, 1, 0 }, 1, 3 } };
-            inline constexpr ::esper::FieldRef<float> posY{ SigOf("REFR"), { { 3, 1, 1 }, 1, 3 } };
-            inline constexpr ::esper::FieldRef<float> posZ{ SigOf("REFR"), { { 3, 1, 2 }, 1, 3 } };
-            inline constexpr ::esper::FieldRef<float> rotX{ SigOf("REFR"), { { 3, 1, 3 }, 1, 3 } };
-            inline constexpr ::esper::FieldRef<float> rotY{ SigOf("REFR"), { { 3, 1, 4 }, 1, 3 } };
-            inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("REFR"), { { 3, 1, 5 }, 1, 3 } };
-        }
-        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("REFR"), { { 3, 2 }, 1, 2 } };
-    }
-    namespace enableParent {
+    inline constexpr ::esper::FieldRef<std::vector<float>> boundHalfExtents{ SigOf("REFR"), { { 3 }, 1, 1 } };
+    namespace primitive {
         inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 4 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("REFR"), { { 4, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("REFR"), { { 4, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> bounds{ SigOf("REFR"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> color{ SigOf("REFR"), { { 4, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown{ SigOf("REFR"), { { 4, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("REFR"), { { 4, 3 }, 1, 2 } };
     }
-    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("REFR"), { { 5 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> emittedLight{ SigOf("REFR"), { { 6 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<float> scale{ SigOf("REFR"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> occlusionPlane{ SigOf("REFR"), { { 5 }, 1, 1 } };
+    namespace portal {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 6 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> origin{ SigOf("REFR"), { { 6, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> destination{ SigOf("REFR"), { { 6, 1 }, 1, 2 } };
+    }
+    namespace roomMarker {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 7 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> linkedRooms{ SigOf("REFR"), { { 7, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("REFR"), { { 7, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> linkedRooms{ SigOf("REFR"), { { 8 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> multiBoundPrimitive{ SigOf("REFR"), { { 9 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> radius{ SigOf("REFR"), { { 10 }, 1, 1 } };
+    namespace light {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("REFR"), { { 11 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> v16{ SigOf("REFR"), { { 11, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<float>> v20{ SigOf("REFR"), { { 11, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> emittedLight{ SigOf("REFR"), { { 12 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> lightingTemplate{ SigOf("REFR"), { { 13 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> imageSpace{ SigOf("REFR"), { { 14 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> waterReflections{ SigOf("REFR"), { { 15 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> litWater{ SigOf("REFR"), { { 16 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> waterCurrentCount{ SigOf("REFR"), { { 17 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> waterVelocity{ SigOf("REFR"), { { 18 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> unknownXcvl{ SigOf("REFR"), { { 19 }, 1, 1 } };
+    namespace teleport {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 20 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> door{ SigOf("REFR"), { { 20, 0 }, 1, 2 } };
+        namespace placement {
+            inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 20, 1 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<float> posX{ SigOf("REFR"), { { 20, 1, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<float> posY{ SigOf("REFR"), { { 20, 1, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<float> posZ{ SigOf("REFR"), { { 20, 1, 2 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<float> rotX{ SigOf("REFR"), { { 20, 1, 3 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<float> rotY{ SigOf("REFR"), { { 20, 1, 4 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("REFR"), { { 20, 1, 5 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("REFR"), { { 20, 2 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> teleportMessage{ SigOf("REFR"), { { 21 }, 1, 1 } };
+    namespace navmeshDoor {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 22 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> navmesh{ SigOf("REFR"), { { 22, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> triangle{ SigOf("REFR"), { { 22, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("REFR"), { { 22, 2 }, 1, 2 } };
+    }
+    namespace lock {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 23 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> level{ SigOf("REFR"), { { 23, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad0{ SigOf("REFR"), { { 23, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> key{ SigOf("REFR"), { { 23, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("REFR"), { { 23, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad1{ SigOf("REFR"), { { 23, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown0{ SigOf("REFR"), { { 23, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown1{ SigOf("REFR"), { { 23, 6 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint8_t> activateParentFlags{ SigOf("REFR"), { { 24 }, 1, 1 } };
+    namespace activateParents {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 25 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("REFR"), { { 25, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> delay{ SigOf("REFR"), { { 25, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint32_t> actionFlags{ SigOf("REFR"), { { 26 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> attachRef{ SigOf("REFR"), { { 27 }, 1, 1 } };
+    namespace enableParent {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 28 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("REFR"), { { 28, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("REFR"), { { 28, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("REFR"), { { 29 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<int32_t> factionRank{ SigOf("REFR"), { { 30 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> encounterZone{ SigOf("REFR"), { { 31 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> location{ SigOf("REFR"), { { 32 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> locationRefTypes{ SigOf("REFR"), { { 33 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<int32_t> levelModifier{ SigOf("REFR"), { { 34 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> leveledItemBase{ SigOf("REFR"), { { 35 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<int32_t> count{ SigOf("REFR"), { { 36 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> spawnContainer{ SigOf("REFR"), { { 37 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> currentZoneCell{ SigOf("REFR"), { { 38 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> currentZoneAction{ SigOf("REFR"), { { 39 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> multiBoundRef{ SigOf("REFR"), { { 40 }, 1, 1 } };
+    namespace linkedRefs {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("REFR"), { { 41 }, 1, 1 } };
+        namespace keyed {
+            inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 41, 0 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("REFR"), { { 41, 0, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("REFR"), { { 41, 0, 1 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<::esper::FormId> plain{ SigOf("REFR"), { { 41, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<float> patrolIdleTime{ SigOf("REFR"), { { 42 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> patrolScriptMarker{ SigOf("REFR"), { { 43 }, 1, 1 } };
+    namespace patrolTopic {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 44 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("REFR"), { { 44, 0 }, 1, 2 } };
+        namespace topic {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("REFR"), { { 44, 1 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("REFR"), { { 44, 1, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("REFR"), { { 44, 1, 1 }, 1, 3 } };
+        }
+    }
+    inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("REFR"), { { 45 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptSource{ SigOf("REFR"), { { 46 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> mapMarker{ SigOf("REFR"), { { 47 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint8_t> mapMarkerFlags{ SigOf("REFR"), { { 48 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> mapMarkerName{ SigOf("REFR"), { { 49 }, 1, 1 } };
+    namespace mapMarkerType {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 50 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> type{ SigOf("REFR"), { { 50, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> unused{ SigOf("REFR"), { { 50, 1 }, 1, 2 } };
+    }
+    namespace alpha {
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 51 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> cutoff{ SigOf("REFR"), { { 51, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> base{ SigOf("REFR"), { { 51, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> ragdollData{ SigOf("REFR"), { { 52 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> ragdollBiped{ SigOf("REFR"), { { 53 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> headTrackingWeight{ SigOf("REFR"), { { 54 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> favorCost{ SigOf("REFR"), { { 55 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> collisionLayer{ SigOf("REFR"), { { 56 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> openByDefault{ SigOf("REFR"), { { 57 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> ignoredBySandbox{ SigOf("REFR"), { { 58 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> scale{ SigOf("REFR"), { { 59 }, 1, 1 } };
     namespace placement {
-        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 8 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<float> posX{ SigOf("REFR"), { { 8, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> posY{ SigOf("REFR"), { { 8, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("REFR"), { { 8, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("REFR"), { { 8, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("REFR"), { { 8, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("REFR"), { { 8, 5 }, 1, 2 } };
+        inline constexpr ::esper::StructRef self{ SigOf("REFR"), { { 60 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> posX{ SigOf("REFR"), { { 60, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posY{ SigOf("REFR"), { { 60, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("REFR"), { { 60, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("REFR"), { { 60, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("REFR"), { { 60, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("REFR"), { { 60, 5 }, 1, 2 } };
     }
 }
 
@@ -2647,7 +3180,7 @@ namespace INGR {
         inline constexpr ::esper::GroupRef self{ SigOf("INGR"), { { 6 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("INGR"), { { 6, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("INGR"), { { 6, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("INGR"), { { 6, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("INGR"), { { 6, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::string> icon{ SigOf("INGR"), { { 7 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> pickupSound{ SigOf("INGR"), { { 8 }, 1, 1 } };
@@ -2737,24 +3270,55 @@ namespace ACHR {
     }
     inline constexpr ::esper::FieldRef<::esper::FormId> base{ SigOf("ACHR"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> encounterZone{ SigOf("ACHR"), { { 3 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> ragdollData{ SigOf("ACHR"), { { 4 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> ragdollBiped{ SigOf("ACHR"), { { 5 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<int32_t> levelModifier{ SigOf("ACHR"), { { 6 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("ACHR"), { { 7 }, 1, 1 } };
-    namespace enableParent {
-        inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 8 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("ACHR"), { { 8, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("ACHR"), { { 8, 1 }, 1, 2 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> ragdollData{ SigOf("ACHR"), { { 4 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> ragdollBiped{ SigOf("ACHR"), { { 5 }, 1, 1 } };
+    namespace linkedRefs {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("ACHR"), { { 6 }, 1, 1 } };
+        namespace keyed {
+            inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 6, 0 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("ACHR"), { { 6, 0, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("ACHR"), { { 6, 0, 1 }, 1, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<::esper::FormId> plain{ SigOf("ACHR"), { { 6, 1 }, 1, 2 } };
     }
-    inline constexpr ::esper::FieldRef<float> scale{ SigOf("ACHR"), { { 9 }, 1, 1 } };
-    namespace placement {
+    inline constexpr ::esper::FieldRef<::esper::FormId> location{ SigOf("ACHR"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> locationRefTypes{ SigOf("ACHR"), { { 8 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint8_t> activateParentFlags{ SigOf("ACHR"), { { 9 }, 1, 1 } };
+    namespace activateParents {
         inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 10 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<float> posX{ SigOf("ACHR"), { { 10, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> posY{ SigOf("ACHR"), { { 10, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("ACHR"), { { 10, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("ACHR"), { { 10, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("ACHR"), { { 10, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("ACHR"), { { 10, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("ACHR"), { { 10, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> delay{ SigOf("ACHR"), { { 10, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<float> patrolIdleTime{ SigOf("ACHR"), { { 11 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> patrolScriptMarker{ SigOf("ACHR"), { { 12 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> imageSpace{ SigOf("ACHR"), { { 13 }, 1, 1 } };
+    namespace patrolTopic {
+        inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 14 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("ACHR"), { { 14, 0 }, 1, 2 } };
+        namespace topic {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("ACHR"), { { 14, 1 }, 1, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("ACHR"), { { 14, 1, 0 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("ACHR"), { { 14, 1, 1 }, 1, 3 } };
+        }
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> horse{ SigOf("ACHR"), { { 15 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> ignoredBySandbox{ SigOf("ACHR"), { { 16 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<int32_t> levelModifier{ SigOf("ACHR"), { { 17 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> owner{ SigOf("ACHR"), { { 18 }, 1, 1 } };
+    namespace enableParent {
+        inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 19 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("ACHR"), { { 19, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("ACHR"), { { 19, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<float> scale{ SigOf("ACHR"), { { 20 }, 1, 1 } };
+    namespace placement {
+        inline constexpr ::esper::StructRef self{ SigOf("ACHR"), { { 21 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> posX{ SigOf("ACHR"), { { 21, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posY{ SigOf("ACHR"), { { 21, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> posZ{ SigOf("ACHR"), { { 21, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotX{ SigOf("ACHR"), { { 21, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotY{ SigOf("ACHR"), { { 21, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> rotZ{ SigOf("ACHR"), { { 21, 5 }, 1, 2 } };
     }
 }
 
@@ -2798,7 +3362,7 @@ namespace FLOR {
         inline constexpr ::esper::GroupRef self{ SigOf("FLOR"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("FLOR"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("FLOR"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("FLOR"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("FLOR"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("FLOR"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("FLOR"), { { 6 }, 1, 1 } };
@@ -2812,22 +3376,39 @@ namespace FLOR {
 // DOOR — Door
 namespace DOOR {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("DOOR"), { { 0 }, 1, 1 } };
-    namespace bounds {
+    namespace vmad {
         inline constexpr ::esper::StructRef self{ SigOf("DOOR"), { { 1 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("DOOR"), { { 1, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("DOOR"), { { 1, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("DOOR"), { { 1, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("DOOR"), { { 1, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("DOOR"), { { 1, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("DOOR"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("DOOR"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> objFormat{ SigOf("DOOR"), { { 1, 1 }, 1, 2 } };
+        namespace body {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("DOOR"), { { 1, 2 }, 1, 2 } };
+            namespace supported {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("DOOR"), { { 1, 2, 0 }, 1, 3 } };
+                namespace scripts {
+                    inline constexpr ::esper::StructRef self{ SigOf("DOOR"), { { 1, 2, 0, 0 }, 1, 4 } };
+                    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> scripts{ SigOf("DOOR"), { { 1, 2, 0, 0, 0 }, 1, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fragments{ SigOf("DOOR"), { { 1, 2, 0, 0, 1 }, 1, 5 } };
+                }
+            }
+        }
     }
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("DOOR"), { { 2 }, 1, 1 } };
+    namespace bounds {
+        inline constexpr ::esper::StructRef self{ SigOf("DOOR"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("DOOR"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("DOOR"), { { 2, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("DOOR"), { { 2, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("DOOR"), { { 2, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("DOOR"), { { 2, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("DOOR"), { { 2, 5 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("DOOR"), { { 3 }, 1, 1 } };
     namespace model {
-        inline constexpr ::esper::GroupRef self{ SigOf("DOOR"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("DOOR"), { { 3, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("DOOR"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("DOOR"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("DOOR"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("DOOR"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("DOOR"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("DOOR"), { { 4, 2 }, 2, 2 } };
     }
+    inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("DOOR"), { { 5 }, 1, 1 } };
 }
 
 // WATR — Water
@@ -2868,7 +3449,7 @@ namespace GRAS {
         inline constexpr ::esper::GroupRef self{ SigOf("GRAS"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("GRAS"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("GRAS"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("GRAS"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("GRAS"), { { 2, 2 }, 2, 2 } };
     }
     namespace data {
         inline constexpr ::esper::StructRef self{ SigOf("GRAS"), { { 3 }, 1, 1 } };
@@ -2910,10 +3491,16 @@ namespace EYES {
 namespace IMGS {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("IMGS"), { { 0 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> enam{ SigOf("IMGS"), { { 1 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hdr{ SigOf("IMGS"), { { 2 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> cinematic{ SigOf("IMGS"), { { 3 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> tint{ SigOf("IMGS"), { { 4 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> dof{ SigOf("IMGS"), { { 5 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> hdr{ SigOf("IMGS"), { { 2 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> cinematic{ SigOf("IMGS"), { { 3 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<float>> tint{ SigOf("IMGS"), { { 4 }, 1, 1 } };
+    namespace dof {
+        inline constexpr ::esper::StructRef self{ SigOf("IMGS"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<float> strength{ SigOf("IMGS"), { { 5, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> distance{ SigOf("IMGS"), { { 5, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> range{ SigOf("IMGS"), { { 5, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> unknown{ SigOf("IMGS"), { { 5, 3 }, 1, 2 } };
+    }
 }
 
 // CAMS — CameraShot
@@ -2923,7 +3510,7 @@ namespace CAMS {
         inline constexpr ::esper::GroupRef self{ SigOf("CAMS"), { { 1 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("CAMS"), { { 1, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("CAMS"), { { 1, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("CAMS"), { { 1, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("CAMS"), { { 1, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("CAMS"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> imageSpaceMod{ SigOf("CAMS"), { { 3 }, 1, 1 } };
@@ -2952,14 +3539,21 @@ namespace STAT {
         inline constexpr ::esper::GroupRef self{ SigOf("STAT"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("STAT"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("STAT"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("STAT"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("STAT"), { { 2, 2 }, 2, 2 } };
     }
     namespace data {
         inline constexpr ::esper::StructRef self{ SigOf("STAT"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<float> maxAngle{ SigOf("STAT"), { { 3, 0 }, 1, 2 } };
         inline constexpr ::esper::FieldRef<::esper::FormId> material{ SigOf("STAT"), { { 3, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown{ SigOf("STAT"), { { 3, 2 }, 1, 2 } };
     }
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lodNames{ SigOf("STAT"), { { 4 }, 1, 1 } };
+    namespace lodNames {
+        inline constexpr ::esper::StructRef self{ SigOf("STAT"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lod0{ SigOf("STAT"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lod1{ SigOf("STAT"), { { 4, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lod2{ SigOf("STAT"), { { 4, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> lod3{ SigOf("STAT"), { { 4, 3 }, 1, 2 } };
+    }
 }
 
 // PWAT — PlaceableWater
@@ -2978,7 +3572,7 @@ namespace PWAT {
         inline constexpr ::esper::GroupRef self{ SigOf("PWAT"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("PWAT"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("PWAT"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("PWAT"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("PWAT"), { { 2, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("PWAT"), { { 3 }, 1, 1 } };
 }
@@ -3070,6 +3664,19 @@ namespace FACT {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("FACT"), { { 16, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("FACT"), { { 16, 2 }, 2, 2 } };
     }
+    namespace crimeValues {
+        inline constexpr ::esper::StructRef self{ SigOf("FACT"), { { 17 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> arrest{ SigOf("FACT"), { { 17, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> attackOnSight{ SigOf("FACT"), { { 17, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> murder{ SigOf("FACT"), { { 17, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> assault{ SigOf("FACT"), { { 17, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> trespass{ SigOf("FACT"), { { 17, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> pickpocket{ SigOf("FACT"), { { 17, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("FACT"), { { 17, 6 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> stealMult{ SigOf("FACT"), { { 17, 7 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> escape{ SigOf("FACT"), { { 17, 8 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> werewolf{ SigOf("FACT"), { { 17, 9 }, 1, 2 } };
+    }
 }
 
 // TACT — TalkingActivator
@@ -3105,7 +3712,7 @@ namespace TACT {
         inline constexpr ::esper::GroupRef self{ SigOf("TACT"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("TACT"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("TACT"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("TACT"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("TACT"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("TACT"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> voiceType{ SigOf("TACT"), { { 6 }, 1, 1 } };
@@ -3140,7 +3747,7 @@ namespace IPCT {
         inline constexpr ::esper::GroupRef self{ SigOf("IPCT"), { { 1 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("IPCT"), { { 1, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("IPCT"), { { 1, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("IPCT"), { { 1, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("IPCT"), { { 1, 2 }, 2, 2 } };
     }
     namespace data {
         inline constexpr ::esper::StructRef self{ SigOf("IPCT"), { { 2 }, 1, 1 } };
@@ -3190,7 +3797,7 @@ namespace CLMT {
         inline constexpr ::esper::GroupRef self{ SigOf("CLMT"), { { 4 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("CLMT"), { { 4, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("CLMT"), { { 4, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("CLMT"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("CLMT"), { { 4, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> timing{ SigOf("CLMT"), { { 5 }, 1, 1 } };
 }
@@ -3198,21 +3805,48 @@ namespace CLMT {
 // CONT — Container
 namespace CONT {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("CONT"), { { 0 }, 1, 1 } };
-    namespace bounds {
+    namespace vmad {
         inline constexpr ::esper::StructRef self{ SigOf("CONT"), { { 1 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("CONT"), { { 1, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("CONT"), { { 1, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("CONT"), { { 1, 2 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("CONT"), { { 1, 3 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("CONT"), { { 1, 4 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("CONT"), { { 1, 5 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("CONT"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> objFormat{ SigOf("CONT"), { { 1, 1 }, 1, 2 } };
+        namespace body {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("CONT"), { { 1, 2 }, 1, 2 } };
+            namespace supported {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("CONT"), { { 1, 2, 0 }, 1, 3 } };
+                namespace scripts {
+                    inline constexpr ::esper::StructRef self{ SigOf("CONT"), { { 1, 2, 0, 0 }, 1, 4 } };
+                    inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> scripts{ SigOf("CONT"), { { 1, 2, 0, 0, 0 }, 1, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fragments{ SigOf("CONT"), { { 1, 2, 0, 0, 1 }, 1, 5 } };
+                }
+            }
+        }
     }
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("CONT"), { { 2 }, 1, 1 } };
+    namespace bounds {
+        inline constexpr ::esper::StructRef self{ SigOf("CONT"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> x1{ SigOf("CONT"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y1{ SigOf("CONT"), { { 2, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z1{ SigOf("CONT"), { { 2, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> x2{ SigOf("CONT"), { { 2, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> y2{ SigOf("CONT"), { { 2, 4 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int16_t> z2{ SigOf("CONT"), { { 2, 5 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("CONT"), { { 3 }, 1, 1 } };
     namespace model {
-        inline constexpr ::esper::GroupRef self{ SigOf("CONT"), { { 3 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("CONT"), { { 3, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("CONT"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("CONT"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("CONT"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> path{ SigOf("CONT"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("CONT"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("CONT"), { { 4, 2 }, 2, 2 } };
+    }
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("CONT"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("CONT"), { { 5, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> weight{ SigOf("CONT"), { { 5, 1 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint32_t> itemCount{ SigOf("CONT"), { { 6 }, 1, 1 } };
+    namespace items {
+        inline constexpr ::esper::StructRef self{ SigOf("CONT"), { { 7 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> item{ SigOf("CONT"), { { 7, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> count{ SigOf("CONT"), { { 7, 1 }, 1, 2 } };
     }
 }
 
@@ -3224,7 +3858,7 @@ namespace HDPT {
         inline constexpr ::esper::GroupRef self{ SigOf("HDPT"), { { 2 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("HDPT"), { { 2, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("HDPT"), { { 2, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("HDPT"), { { 2, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("HDPT"), { { 2, 2 }, 2, 2 } };
     }
     inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("HDPT"), { { 3 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("HDPT"), { { 4 }, 1, 1 } };
@@ -3257,7 +3891,11 @@ namespace FLST {
 // GMST — GameSetting
 namespace GMST {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("GMST"), { { 0 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("GMST"), { { 1 }, 1, 1 } };
+    namespace value {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("GMST"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> word{ SigOf("GMST"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> text{ SigOf("GMST"), { { 1, 1 }, 1, 2 } };
+    }
 }
 
 // MUST — MusicTrack
@@ -3338,8 +3976,15 @@ namespace QUST {
         }
     }
     inline constexpr ::esper::FieldRef<::esper::LocalizedString> fullName{ SigOf("QUST"), { { 2 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("QUST"), { { 3 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> eventName{ SigOf("QUST"), { { 4 }, 1, 1 } };
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 3 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> flags{ SigOf("QUST"), { { 3, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> priority{ SigOf("QUST"), { { 3, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> unknown3{ SigOf("QUST"), { { 3, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknown4{ SigOf("QUST"), { { 3, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("QUST"), { { 3, 4 }, 1, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint32_t> event{ SigOf("QUST"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> displayGlobals{ SigOf("QUST"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> objectWindowFilter{ SigOf("QUST"), { { 6 }, 1, 1 } };
     namespace stageIndices {
@@ -3395,6 +4040,8 @@ namespace QUST {
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 11, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 11, 2 }, 2, 2 } };
     }
+    inline constexpr ::esper::FieldRef<uint32_t> nextAliasId{ SigOf("QUST"), { { 12 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> next{ SigOf("QUST"), { { 13 }, 1, 1 } };
 }
 
 // TXST — TextureSet
@@ -3462,7 +4109,35 @@ namespace MSTT {
         inline constexpr ::esper::GroupRef self{ SigOf("MSTT"), { { 3 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> path{ SigOf("MSTT"), { { 3, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("MSTT"), { { 3, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> swap{ SigOf("MSTT"), { { 3, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> swap{ SigOf("MSTT"), { { 3, 2 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("MSTT"), { { 4 }, 1, 1 } };
+    namespace destructible {
+        inline constexpr ::esper::GroupRef self{ SigOf("MSTT"), { { 5 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("MSTT"), { { 5, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> health{ SigOf("MSTT"), { { 5, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> stageCount{ SigOf("MSTT"), { { 5, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("MSTT"), { { 5, 0, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("MSTT"), { { 5, 0, 3 }, 2, 3 } };
+        }
+        namespace stages {
+            inline constexpr ::esper::GroupRef self{ SigOf("MSTT"), { { 5, 1 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("MSTT"), { { 5, 1, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint16_t> healthPercent{ SigOf("MSTT"), { { 5, 1, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("MSTT"), { { 5, 1, 0, 1 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> damageStage{ SigOf("MSTT"), { { 5, 1, 0, 2 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("MSTT"), { { 5, 1, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("MSTT"), { { 5, 1, 0, 4 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> debris{ SigOf("MSTT"), { { 5, 1, 0, 5 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> debrisCount{ SigOf("MSTT"), { { 5, 1, 0, 6 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> model{ SigOf("MSTT"), { { 5, 1, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hashes{ SigOf("MSTT"), { { 5, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> textures{ SigOf("MSTT"), { { 5, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("MSTT"), { { 5, 1, 4 }, 3, 3 } };
+        }
     }
 }
 
@@ -3497,6 +4172,8 @@ namespace DLVW {
     inline constexpr ::esper::FieldRef<::esper::FormId> quest{ SigOf("DLVW"), { { 1 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> branches{ SigOf("DLVW"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> topics{ SigOf("DLVW"), { { 3 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint8_t> showAllText{ SigOf("DLVW"), { { 4 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> unknownEnam{ SigOf("DLVW"), { { 5 }, 1, 1 } };
 }
 
 // LTEX — LandscapeTexture
@@ -3674,6 +4351,33 @@ namespace NPC_ {
         inline constexpr ::esper::FieldRef<float> r{ SigOf("NPC_"), { { 49, 0 }, 1, 2 } };
         inline constexpr ::esper::FieldRef<float> g{ SigOf("NPC_"), { { 49, 1 }, 1, 2 } };
         inline constexpr ::esper::FieldRef<float> b{ SigOf("NPC_"), { { 49, 2 }, 1, 2 } };
+    }
+    namespace destructible {
+        inline constexpr ::esper::GroupRef self{ SigOf("NPC_"), { { 50 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("NPC_"), { { 50, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> health{ SigOf("NPC_"), { { 50, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> stageCount{ SigOf("NPC_"), { { 50, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("NPC_"), { { 50, 0, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> unknown{ SigOf("NPC_"), { { 50, 0, 3 }, 2, 3 } };
+        }
+        namespace stages {
+            inline constexpr ::esper::GroupRef self{ SigOf("NPC_"), { { 50, 1 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("NPC_"), { { 50, 1, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint16_t> healthPercent{ SigOf("NPC_"), { { 50, 1, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("NPC_"), { { 50, 1, 0, 1 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> damageStage{ SigOf("NPC_"), { { 50, 1, 0, 2 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("NPC_"), { { 50, 1, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> explosion{ SigOf("NPC_"), { { 50, 1, 0, 4 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> debris{ SigOf("NPC_"), { { 50, 1, 0, 5 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> debrisCount{ SigOf("NPC_"), { { 50, 1, 0, 6 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> model{ SigOf("NPC_"), { { 50, 1, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hashes{ SigOf("NPC_"), { { 50, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> textures{ SigOf("NPC_"), { { 50, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("NPC_"), { { 50, 1, 4 }, 3, 3 } };
+        }
     }
 }
 

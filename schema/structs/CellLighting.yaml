@@ -1,0 +1,23 @@
+# XCLL. One vanilla record carries the older 64-byte form, which ends after the
+# directional ambient colors.
+struct: CellLighting
+fields:
+  - { name: ambient,            type: ColorRgba }
+  - { name: directional,        type: ColorRgba }
+  - { name: fogNearColor,       type: ColorRgba }
+  - { name: fogNear,            type: f32 }
+  - { name: fogFar,             type: f32 }
+  - { name: rotationXY,         type: i32 }
+  - { name: rotationZ,          type: i32 }
+  - { name: directionalFade,    type: f32 }
+  - { name: fogClipDistance,    type: f32 }
+  - { name: fogPower,           type: f32 }
+  - { name: directionalAmbient, type: "ColorRgba[6]" }
+  - { break: true }
+  - { name: specular,           type: ColorRgba }
+  - { name: fresnelPower,       type: f32 }
+  - { name: fogFarColor,        type: ColorRgba }
+  - { name: fogMax,             type: f32 }
+  - { name: lightFadeBegin,     type: f32 }
+  - { name: lightFadeEnd,       type: f32 }
+  - { name: inherits,           type: u32 }

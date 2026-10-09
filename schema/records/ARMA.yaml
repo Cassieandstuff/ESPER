@@ -17,3 +17,5 @@ members:
   - { sig: MODL, name: additionalRaces, type: formid, repeat: true }   # MODL (repeated FormRef!)
   - { sig: SNDD, name: footstepSound, type: formid }   # SNDD
   - { sig: ONAM, name: artObject, type: formid }   # ONAM
+  # step 4, tools/schema-probe evidence:
+  - { sig: BODT, name: legacyBiped, fields: [ { name: bipedFlags, type: u32 }, { name: generalFlags, type: u8 }, { name: pad, type: "u8[3]" }, { name: armorType, type: u32 } ] }

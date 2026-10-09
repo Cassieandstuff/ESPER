@@ -1,0 +1,7 @@
+# One MODS/MO2S/... entry: a 3D shape name (u32 length + bytes), the TXST that
+# replaces its texture set, and the shape index.
+struct: AlternateTexture
+fields:
+  - { name: name,    type: "u8[count: u32]" }
+  - { name: texture, type: formid, to: [TXST] }
+  - { name: index,   type: i32 }

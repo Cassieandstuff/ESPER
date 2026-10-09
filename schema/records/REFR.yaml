@@ -1,13 +1,94 @@
-# Seeded from the typed path (RefrRec, include/ESPER/Records*.h) in migration step 2.
+# Seeded from the typed path (RefrRec) in migration step 2; the X* subrecords
+# were added in step 4 from tools/schema-probe evidence on the vanilla masters
+# (every `to:` is verified by roundtrip-gate --schema).
 record: REFR
 name: PlacedObject
 members:
-  - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: Vmad }
-  - { sig: NAME, name: base, type: formid }   # NAME
-  - { sig: XTEL, name: teleport, type: TeleportDest }   # XTEL
-  - { sig: XESP, name: enableParent, type: EnableParent }   # XESP
-  - { sig: XOWN, name: owner, type: formid }   # XOWN
-  - { sig: XEMI, name: emittedLight, type: formid }   # XEMI
-  - { sig: XSCL, name: scale, type: f32 }   # XSCL
-  - { sig: DATA, name: placement, type: Placement }   # DATA
+  - { sig: EDID, name: editorId,         type: zstring }
+  - { sig: VMAD, name: vmad,             type: Vmad }
+  - { sig: NAME, name: base,             type: formid }
+  # primitive / bounds
+  - { sig: XMBO, name: boundHalfExtents, type: "f32[3]" }
+  - sig: XPRM
+    name: primitive
+    fields:
+      - { name: bounds,  type: "f32[3]" }
+      - { name: color,   type: "f32[3]" }
+      - { name: unknown, type: f32 }
+      - { name: type,    type: u32 }
+  - { sig: XOCP, name: occlusionPlane,   type: "f32[9]" }
+  - { sig: XPOD, name: portal,           fields: [ { name: origin, type: formid, to: [REFR] }, { name: destination, type: formid, to: [REFR] } ] }
+  - { sig: XRMR, name: roomMarker,       fields: [ { name: linkedRooms, type: u8 }, { name: unknown, type: "u8[3]" } ] }
+  - { sig: XLRM, name: linkedRooms,      type: formid, repeat: true, to: [REFR] }
+  - { sig: XMBP, name: multiBoundPrimitive, type: marker }
+  # lights, water
+  - { sig: XRDS, name: radius,           type: f32 }
+  - sig: XLIG
+    name: light
+    union:
+      by: size
+      cases:
+        - { when: 16, name: v16, type: "f32[4]" }
+        - { when: 20, name: v20, type: "f32[5]" }
+  - { sig: XEMI, name: emittedLight,     type: formid }
+  - { sig: LNAM, name: lightingTemplate, type: formid, to: [LGTM] }
+  - { sig: INAM, name: imageSpace,       type: formid, to: [IMGS] }
+  - { sig: XPWR, name: waterReflections, type: formid, repeat: true, to: [REFR] }
+  - { sig: XLTW, name: litWater,         type: formid, to: [REFR] }
+  - { sig: XWCN, name: waterCurrentCount, type: u32 }
+  - { sig: XWCU, name: waterVelocity,    type: "f32[12]" }
+  - { sig: XCVL, name: unknownXcvl,      type: "f32[3]" }
+  # teleport, locks, activation
+  - { sig: XTEL, name: teleport,         type: TeleportDest }
+  - { sig: XTNM, name: teleportMessage,  type: formid, to: [MESG] }
+  - { sig: XNDP, name: navmeshDoor,      fields: [ { name: navmesh, type: formid, to: [NAVM] }, { name: triangle, type: u16 }, { name: unknown, type: u16 } ] }
+  - { sig: XLOC, name: lock,             type: LockData }
+  - { sig: XAPD, name: activateParentFlags, type: u8 }
+  - { sig: XAPR, name: activateParents,  repeat: true, fields: [ { name: ref, type: formid, to: [REFR, ACHR] }, { name: delay, type: f32 } ] }
+  - { sig: XACT, name: actionFlags,      type: u32 }
+  - { sig: XATR, name: attachRef,        type: formid, to: [REFR] }
+  - { sig: XESP, name: enableParent,     type: EnableParent }
+  # ownership, location, encounter
+  - { sig: XOWN, name: owner,            type: formid }
+  - { sig: XRNK, name: factionRank,      type: i32 }
+  - { sig: XEZN, name: encounterZone,    type: formid, to: [ECZN] }
+  - { sig: XLCN, name: location,         type: formid, to: [LCTN] }
+  - { sig: XLRT, name: locationRefTypes, type: formid, repeat: true, to: [LCRT] }
+  - { sig: XLCM, name: levelModifier,    type: i32 }
+  - { sig: XLIB, name: leveledItemBase,  type: formid, to: [LVLI] }
+  - { sig: XCNT, name: count,            type: i32 }
+  - { sig: XSPC, name: spawnContainer,   type: formid, to: [REFR] }
+  - { sig: XCZC, name: currentZoneCell,  type: formid, to: [CELL] }
+  - { sig: XCZA, name: currentZoneAction, type: u32 }
+  - { sig: XMBR, name: multiBoundRef,    type: formid, to: [REFR] }
+  # linked references
+  - sig: XLKR
+    name: linkedRefs
+    repeat: true
+    union:
+      by: size
+      cases:
+        - { when: 8, name: keyed, fields: [ { name: keyword, type: formid, to: [KYWD] }, { name: ref, type: formid, to: [REFR, ACHR, PGRE, PHZD] } ] }
+        - { when: 4, name: plain, type: formid, to: [REFR, ACHR, PGRE, PHZD] }
+  # patrol
+  - { sig: XPRD, name: patrolIdleTime,   type: f32 }
+  - { sig: XPPA, name: patrolScriptMarker, type: marker }
+  - { sig: PDTO, name: patrolTopic,      type: TopicData }
+  - { sig: SCHR, name: scriptHeader,     type: "u32[5]" }
+  - { sig: SCTX, name: scriptSource,     type: marker }
+  # map marker
+  - { sig: XMRK, name: mapMarker,        type: marker }
+  - { sig: FNAM, name: mapMarkerFlags,   type: u8 }
+  - { sig: FULL, name: mapMarkerName,    type: lstring, table: strings }
+  - { sig: TNAM, name: mapMarkerType,    fields: [ { name: type, type: u8 }, { name: unused, type: u8 } ] }
+  # misc
+  - { sig: XALP, name: alpha,            fields: [ { name: cutoff, type: u8 }, { name: base, type: u8 } ] }
+  - { sig: XRGD, name: ragdollData,      type: "RagdollBone[]" }
+  - { sig: XRGB, name: ragdollBiped,     type: "f32[3]" }
+  - { sig: XHTW, name: headTrackingWeight, type: f32 }
+  - { sig: XFVC, name: favorCost,        type: f32 }
+  - { sig: XTRI, name: collisionLayer,   type: u32 }
+  - { sig: ONAM, name: openByDefault,    type: marker }
+  - { sig: XIS2, name: ignoredBySandbox, type: marker }
+  - { sig: XSCL, name: scale,            type: f32 }
+  - { sig: DATA, name: placement,        type: Placement }

@@ -10,3 +10,6 @@ members:
   - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
   - { sig: DNAM, name: description, type: lstring, table: dlstrings }   # DNAM
   - { use: Condition, name: conditions, repeat: true }
+  # step 4, tools/schema-probe evidence:
+  - { sig: DATA, name: data, type: MagicEffectData }
+  - { sig: SNDD, name: sounds, type: "MagicEffectSound[]" }

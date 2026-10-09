@@ -1,0 +1,9 @@
+# QUST DNAM. The unaligned hit at offset 6 is the zero word joined to the small type.
+struct: QuestData
+size: 12
+fields:
+  - { name: flags,    type: u16 }
+  - { name: priority, type: u8 }
+  - { name: unknown3, type: u8 }
+  - { name: unknown4, type: u32 }
+  - { name: type,     type: u32 }

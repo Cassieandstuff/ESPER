@@ -4,4 +4,4 @@ group: Model
 members:
   - { sig: MODL, name: path, type: zstring }
   - { sig: MODT, name: data, type: bytes, formIds: none }   # texture hashes
-  - { sig: MODS, name: swap, type: bytes }                  # alternate textures (opaque)
+  - { sig: MODS, name: swap, type: "AlternateTexture[count: u32]" }   # alternate textures

@@ -1,0 +1,44 @@
+# MGEF DATA. The fourteen FormID columns are exactly the ones the probe found
+# (each >= 95% of non-zero values resolve, to the listed types).
+struct: MagicEffectData
+size: 152
+fields:
+  - { name: flags,             type: u32 }
+  - { name: baseCost,          type: f32 }
+  - { name: relatedItem,       type: formid }
+  - { name: magicSkill,        type: i32 }
+  - { name: resistValue,       type: i32 }
+  - { name: counterEffectCount, type: u16 }
+  - { name: unknown22,         type: u16 }
+  - { name: light,             type: formid, to: [LIGH] }
+  - { name: taperWeight,       type: f32 }
+  - { name: hitShader,         type: formid, to: [EFSH] }
+  - { name: enchantShader,     type: formid, to: [EFSH] }
+  - { name: minimumSkill,      type: i32 }
+  - { name: spellmakingArea,   type: i32 }
+  - { name: spellmakingCastingTime, type: f32 }
+  - { name: taperCurve,        type: f32 }
+  - { name: taperDuration,     type: f32 }
+  - { name: secondAvWeight,    type: f32 }
+  - { name: archetype,         type: u32 }
+  - { name: actorValue,        type: i32 }
+  - { name: projectile,        type: formid, to: [PROJ] }
+  - { name: explosion,         type: formid, to: [EXPL] }
+  - { name: castingType,       type: u32 }
+  - { name: delivery,          type: u32 }
+  - { name: secondActorValue,  type: i32 }
+  - { name: castingArt,        type: formid, to: [ARTO] }
+  - { name: hitEffectArt,      type: formid, to: [ARTO] }
+  - { name: impactData,        type: formid, to: [IPDS] }
+  - { name: skillUsageMult,    type: f32 }
+  - { name: dualCast,          type: formid, to: [DUAL] }
+  - { name: dualCastScale,     type: f32 }
+  - { name: enchantArt,        type: formid, to: [ARTO] }
+  - { name: unknown120,        type: u32 }
+  - { name: unknown124,        type: u32 }
+  - { name: equipAbility,      type: formid, to: [SPEL] }
+  - { name: imageSpaceMod,     type: formid, to: [IMAD] }
+  - { name: perk,              type: formid, to: [PERK] }
+  - { name: castingSoundLevel, type: u32 }
+  - { name: scriptAiScore,     type: f32 }
+  - { name: scriptAiDelay,     type: f32 }

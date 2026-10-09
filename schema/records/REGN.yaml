@@ -3,6 +3,6 @@ record: REGN
 name: Region
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: RCLR, name: color, type: bytes }   # RCLR
+  - { sig: RCLR, name: color, type: ColorRgba }
   - { sig: WNAM, name: worldspace, type: formid }   # WNAM
   - { sig: RPLI, name: areaData, type: bytes }   # RPLI/RPLD via passthrough

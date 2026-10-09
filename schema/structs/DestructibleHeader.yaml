@@ -1,0 +1,7 @@
+struct: DestructibleHeader
+size: 8
+fields:
+  - { name: health,      type: i32 }
+  - { name: stageCount,  type: u8 }
+  - { name: flags,       type: u8 }
+  - { name: unknown,     type: u16 }

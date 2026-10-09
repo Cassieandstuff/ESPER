@@ -526,6 +526,27 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    - the size-variant blobs: `XCLL`, WRLD `MNAM`, EXPL/PROJ `DATA`, ECZN `DATA`, FACT
      `CRVA`/`PLVD`;
    - the largest opaque blockers: `MHDT`, `NVNM`, `TVDT`.
+
+   **Research round 1 (2026-10-09).** Layouts were derived from vanilla data with `schema-probe`,
+   which profiles each subrecord column by column. Modeled:
+   - every REFR, ACHR and CELL subrecord except `TVDT`;
+   - MGEF `DATA` (14 FormID fields);
+   - WEAP `DNAM`, BOOK `DATA` (a spell-or-skill union), FACT `CRVA` (three sizes), ECZN/RELA/SNDR
+     data, `MODS` alternate textures, destruction data (a reusable `Destructible` group), and more.
+
+   Gate result:
+   - 85.76% of subrecords modeled (from 81.85%);
+   - remap refusals 29,119 (from 68,299);
+   - 104,539 records remap-safe that the typed path couldn't remap;
+   - 201,287 typed links verified, 0 wrong;
+   - FormID parity with 0 cases of the schema missing what the typed path saw. The 7,250
+     FormIDs the typed path skipped are logged in bugs.md.
+
+   Still opaque:
+   - NAVM `NVNM` (19,440 records): navmesh geometry, a complex variable layout;
+   - CELL `TVDT` (8,595): unexplained unaligned hits, so not provably FormID-free;
+   - sectioned records QUST, SCEN, PACK and PERK, which need `open:`/`end:` group markers;
+   - a long tail of small subrecords.
 5. **Done (2026-10-09). `esper::loadorder`.** `LoadOrderDocument` wraps
    `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex`. It adds:
    - `Resolve` (winner/origin) and `Follow` (FormIDs and typed links);

@@ -6,3 +6,6 @@ members:
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { use: Model, name: model }
+  # step 4, tools/schema-probe evidence:
+  - { sig: DATA, name: flags, type: u8 }
+  - { use: Destructible, name: destructible }
