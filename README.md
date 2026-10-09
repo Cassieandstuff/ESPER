@@ -66,11 +66,41 @@ ctest --test-dir build -C RelWithDebInfo
 `roundtrip-gate <Data folder>` parses the five vanilla masters and requires each to re-emit
 byte-identically; it needs a local game install, so it is not part of CTest.
 
+## The schema
+
+Record layouts are described once, as YAML, in [`schema/`](schema). The descriptor language is
+specified in [docs/schema-language.md](docs/schema-language.md). `tools/schemagen` compiles the
+schema into:
+
+- [`schema.json`](schema.json), the whole schema resolved into one file, for tools in any language;
+- `include/ESPER/generated/`, the engine's tables plus typed handles (`esper::fields`) and typed
+  views (`esper::view`).
+
+All of these are committed, so consumers never need Python. To change the schema, you need
+Python 3 and PyYAML:
+
+```
+# edit schema/..., then:
+cmake --build build --target esper-schemagen      # regenerate (commit the result)
+ctest --test-dir build -C RelWithDebInfo          # includes the freshness + validation checks
+roundtrip-gate --schema "<Skyrim>/Data"           # the real-data gate (ESPER_BUILD_TOOLS=ON)
+```
+
+```cpp
+esper::Record rec;
+esper::Record::Decode(plugin, node, rec);
+esper::view::Armor armor(rec);
+if (auto slot = armor.MaleModel()) use(slot->Path());
+armor.SetEditorId("MyArmor");                      // only that subrecord is re-encoded
+esper::Record::Commit(plugin, node, rec);
+```
+
 ## Status
 
-The schema system is moving from hand-written typed record structs to a fully schema-driven
-model (record and subrecord layouts described once as data, compiled into the library). The
-public API will change while that lands.
+ESPER is moving from hand-written typed record structs (`Records*.h`) to the schema-driven
+engine (`esper::Record`); the plan is in [docs/schema-design.md](docs/schema-design.md). Both
+paths ship side by side until the migration completes. The schema currently covers KYWD, GLOB,
+TXST, MISC and ARMO. The public API will change while the rest lands.
 
 ## License
 

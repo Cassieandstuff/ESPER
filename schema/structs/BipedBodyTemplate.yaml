@@ -1,0 +1,6 @@
+# BOD2, SSE form.
+struct: BipedBodyTemplate
+size: 8
+fields:
+  - { name: bipedFlags, type: u32 }   # slot mask
+  - { name: armorType,  type: u32 }   # 0 light, 1 heavy, 2 clothing

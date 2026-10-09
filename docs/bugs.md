@@ -24,6 +24,9 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
     - [RecordsMore.h:436](../include/ESPER/RecordsMore.h) PWAT `DNAM`
     - [RecordsMore.h:466](../include/ESPER/RecordsMore.h) NAVM `NVNM`
     - [RecordsSystem.h:289](../include/ESPER/RecordsSystem.h) CLMT `WLST` (`ClmtBlob`)
+  - suspected, unverified: the `MODS`/`MO2S`/`MO4S` alternate-texture blobs (the typed path's
+    `modelSwap` rows). The schema engine treats them as opaque bytes and refuses remap on at least 149
+    vanilla records that carry them. Whether they hold FormIDs is not yet verified on real data.
   - The other ~110 `Blob` rows have not been audited.
 - **Fix direction:**
   - Short term: an opaque-blob binder whose `remapSafe` returns false whenever the field is

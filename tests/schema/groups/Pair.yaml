@@ -1,0 +1,4 @@
+group: Pair
+members:
+  - { sig: PRA1, name: first,  type: zstring }
+  - { sig: PRA2, name: second, type: u8 }

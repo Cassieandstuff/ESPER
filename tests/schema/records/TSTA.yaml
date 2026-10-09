@@ -1,0 +1,33 @@
+record: TSTA
+name: TestAlpha
+members:
+  - { sig: EDID, name: editorId,     type: zstring }
+  - { sig: FULL, name: fullName,     type: lstring, table: strings }
+  - { sig: VERS, name: versioned,    type: Versioned }
+  - { sig: OUTR, name: outer,        type: Outer }
+  - { sig: FIXD, name: fixed,        type: "u16[3]" }
+  - { sig: PRFX, name: prefixed,     type: "u32[count: u16]" }
+  - { sig: WSTR, name: wide,         type: wstring }
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords,     type: "formid[]", to: [TSTB] }
+  - { sig: REFS, name: refs,         type: formid, repeat: true }
+  - { sig: BLOB, name: blob,         type: bytes }
+  - { sig: HASH, name: hash,         type: bytes, formIds: none }
+  - { sig: FXSZ, name: fixedBytes,   type: bytes, size: 4, formIds: none }
+  - group: layers
+    repeat: true
+    members:
+      - { sig: LIDX, name: index,   type: u16, optional: true }
+      - { sig: LTEX, name: texture, type: zstring }
+      - group: presets
+        repeat: true
+        members:
+          - { sig: PCOL, name: color, type: formid }
+          - { sig: PVAL, name: value, type: f32 }
+  - { use: Pair, name: first }
+  - { use: Pair, name: second, sigs: { PRA1: PRB1, PRA2: PRB2 } }
+  - sig: DATA
+    name: data
+    fields:
+      - { name: value,  type: i32 }
+      - { name: weight, type: f32 }

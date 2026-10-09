@@ -1,0 +1,4 @@
+record: TSTB
+name: TestBeta
+members:
+  - { sig: EDID, name: editorId, type: zstring }

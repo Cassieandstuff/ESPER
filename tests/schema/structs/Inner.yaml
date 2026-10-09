@@ -1,0 +1,5 @@
+struct: Inner
+size: 6
+fields:
+  - { name: a, type: u16 }
+  - { name: b, type: i32 }

@@ -1,0 +1,9 @@
+struct: ObjectBounds
+size: 12
+fields:
+  - { name: x1, type: i16 }
+  - { name: y1, type: i16 }
+  - { name: z1, type: i16 }
+  - { name: x2, type: i16 }
+  - { name: y2, type: i16 }
+  - { name: z2, type: i16 }

@@ -1,0 +1,32 @@
+# ARMO quirk: MODL here is a repeated FormID (the ARMA armature list); the
+# world-model paths are the MOD2 (male) / MOD4 (female) model slots.
+record: ARMO
+name: Armor
+members:
+  - { sig: EDID, name: editorId,        type: zstring }
+  - { sig: VMAD, name: vmad,            type: bytes }       # modeled in language 0.2 (unions)
+  - { sig: OBND, name: bounds,          type: ObjectBounds }
+  - { sig: FULL, name: fullName,        type: lstring, table: strings }
+  - { sig: EITM, name: enchantment,     type: formid, to: [ENCH] }
+  - { sig: EAMT, name: enchantAmount,   type: u16 }
+  - { use: Model, name: maleModel,   sigs: { MODL: MOD2, MODT: MO2T, MODS: MO2S } }
+  - { sig: ICON, name: maleIcon,        type: zstring }
+  - { sig: MICO, name: maleMsgIcon,     type: zstring }
+  - { use: Model, name: femaleModel, sigs: { MODL: MOD4, MODT: MO4T, MODS: MO4S } }
+  - { sig: ICO2, name: femaleIcon,      type: zstring }
+  - { sig: MIC2, name: femaleMsgIcon,   type: zstring }
+  - { sig: BOD2, name: biped,           type: BipedBodyTemplate }
+  - { sig: YNAM, name: pickupSound,     type: formid, to: [SNDR] }
+  - { sig: ZNAM, name: dropSound,       type: formid, to: [SNDR] }
+  - { sig: BMCT, name: ragdollTemplate, type: zstring }
+  - { sig: ETYP, name: equipType,       type: formid, to: [EQUP] }
+  - { sig: BIDS, name: bashImpact,      type: formid, to: [IPDS] }
+  - { sig: BAMT, name: bashMaterial,    type: formid, to: [MATT] }
+  - { sig: RNAM, name: race,            type: formid, to: [RACE] }
+  - { sig: KSIZ, name: keywordCount,    type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords,        type: "formid[]", to: [KYWD] }
+  - { sig: DESC, name: description,     type: lstring, table: dlstrings }
+  - { sig: MODL, name: armatures,       type: formid, repeat: true, to: [ARMA] }
+  - { sig: DATA, name: valueWeight,     type: ItemValueWeight }
+  - { sig: DNAM, name: armorRating,     type: u32 }          # rating x100
+  - { sig: TNAM, name: templateArmor,   type: formid, to: [ARMO] }

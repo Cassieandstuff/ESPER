@@ -1,0 +1,5 @@
+struct: ItemValueWeight
+size: 8
+fields:
+  - { name: value,  type: i32 }
+  - { name: weight, type: f32 }

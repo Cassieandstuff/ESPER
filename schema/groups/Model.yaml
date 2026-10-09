@@ -1,0 +1,7 @@
+# A model slot: path, texture hashes, alternate textures. Applied with `sigs:`
+# remapping where a record carries several slots (ARMO MOD2/MOD4, ...).
+group: Model
+members:
+  - { sig: MODL, name: path, type: zstring }
+  - { sig: MODT, name: data, type: bytes, formIds: none }   # texture hashes
+  - { sig: MODS, name: swap, type: bytes }                  # alternate textures (opaque)

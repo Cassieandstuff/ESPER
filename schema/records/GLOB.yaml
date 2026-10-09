@@ -1,0 +1,6 @@
+record: GLOB
+name: Global
+members:
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: FNAM, name: type,     type: u8 }      # 's' short, 'l' long, 'f' float
+  - { sig: FLTV, name: value,    type: f32 }

@@ -9,12 +9,14 @@
 //      carry their raw bytes through, so this holds for them too).
 //
 // Opt-in target: configure with -DESPER_BUILD_TOOLS=ON.
+//   roundtrip-gate --schema <DataFolder>  the schema-driven engine on real data
 //   roundtrip-gate <DataFolder>            gate the five vanilla masters
 //   roundtrip-gate <plugin.es[mpl]> ...    gate specific plugin files
 // ---------------------------------------------------------------------------
 #include <ESPER/CtdaFunctions.h>
 #include <ESPER/Plugin.h>
 #include <ESPER/PluginFlags.h>
+#include <ESPER/Record.h>
 #include <ESPER/RecordsWorld.h>
 #include <ESPER/SchemaRegistry.h>
 #include <ESPER/Subrecords.h>
@@ -22,11 +24,14 @@
 #include <ESPER/Writer.h>
 
 #include <algorithm>
+#include <cctype>
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
 #include <map>
+#include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -217,10 +222,163 @@ static int GateOne(const fs::path& path) {
     return schemaFailures ? 1 : 0;
 }
 
+// ── Schema gate: the schema-driven engine (esper::Record) on real data ───────
+//
+// For every record whose sig the generated schema covers:
+//   1. decode succeeds;
+//   2. encode reproduces the payload, both verbatim and with every modeled
+//      subrecord forcibly re-encoded (proves each layout is exact);
+//   3. raw subrecords: no more than the typed path's unknown-passthrough count;
+//   4. FormIDs: when both paths consider the record remap-safe, they see the
+//      same multiset of FormIDs;
+//   5. typed links: every `to:`-declared FormID that resolves within the gated
+//      plugins points at a record of a declared type.
+// 1, 2, 3, 4-mismatch and 5-mismatch fail the gate; remap-safety differences
+// between the paths are reported by reason.
+static int SchemaGate(const std::vector<fs::path>& targets) {
+    std::vector<std::unique_ptr<Plugin>> plugins;
+    for (const fs::path& t : targets) {
+        auto p = std::make_unique<Plugin>();
+        char err[512] = {};
+        if (!p->Load(t.string(), err, sizeof(err))) {
+            std::printf("FAIL  %s: %s\n", t.filename().string().c_str(), err);
+            return 1;
+        }
+        p->filename = t.filename().string();
+        plugins.push_back(std::move(p));
+    }
+
+    auto lower = [](std::string s) {
+        for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+        return s;
+    };
+    // FormKey → record sig across the gated plugins (overrides share the sig).
+    std::unordered_map<std::string, uint32_t> sigOf;
+    for (const auto& p : plugins)
+        for (const auto& [raw, node] : p->index) {
+            const FormKey k = p->FormIdToKey(raw);
+            sigOf[lower(k.plugin) + "|" + std::to_string(k.localId & 0xFFFFFFu)] = node->header.sig;
+        }
+
+    const schema::SchemaSet& set = schema::Main();
+    struct SigStats {
+        size_t records = 0, subs = 0, raw = 0, oldUnknown = 0;
+        size_t decodeFail = 0, verbatimFail = 0, forcedFail = 0, rawWorse = 0;
+        size_t idsCompared = 0, idsMismatch = 0, newRefuses = 0, newAccepts = 0;
+        size_t linksChecked = 0, linksUnresolved = 0, linksWrong = 0;
+        std::map<std::string, size_t> refuseWhy;
+        std::string firstProblem;
+    };
+    std::map<std::string, SigStats> stats;
+    auto sigText = [](uint32_t sig) { std::string s(4, ' '); std::memcpy(s.data(), &sig, 4); return s; };
+
+    for (const auto& p : plugins) {
+        SchemaCtx oldCtx;
+        oldCtx.localized = p->localized;
+        for (const auto& [raw, node] : p->index) {
+            const uint32_t sig = node->header.sig;
+            if (!set.Find(sig)) continue;
+            SigStats& st = stats[sigText(sig)];
+            auto note = [&](const char* what) {
+                if (st.firstProblem.empty()) {
+                    char buf[160];
+                    std::snprintf(buf, sizeof(buf), "%s %08X: %s", p->filename.c_str(), raw, what);
+                    st.firstProblem = buf;
+                }
+            };
+            ++st.records;
+            char err[256] = {};
+            const std::span<const uint8_t> payload = node->Payload(err, sizeof(err));
+            Record rec;
+            std::string why;
+            if (payload.data() == nullptr || !Record::Decode(*p, *node, rec, &why)) {
+                ++st.decodeFail;
+                note("decode failed");
+                continue;
+            }
+            st.subs += rec.SubrecordCount();
+            st.raw  += rec.RawCount();
+            const std::vector<uint8_t> want(payload.begin(), payload.end());
+            if (rec.Encode(false) != want) { ++st.verbatimFail; note("verbatim encode differs"); }
+            if (rec.Encode(true) != want)  { ++st.forcedFail;   note("forced re-encode differs"); }
+
+            // Old typed path, for parity.
+            const SchemaOps* ops = FindSchema(sig);
+            size_t oldTotal = 0, oldUnknown = 0;
+            std::string oldWhy;
+            if (ops && ops->roundtrip(payload, oldCtx, oldTotal, oldUnknown, oldWhy)) {
+                st.oldUnknown += oldUnknown;
+                if (rec.RawCount() > oldUnknown) { ++st.rawWorse; note("more raw subrecords than the typed path"); }
+            }
+            std::vector<uint32_t> oldIds;
+            std::vector<uint8_t> scratch;
+            const bool oldSafe = ops && ops->remapIds(payload, oldCtx,
+                [](uint32_t& id, void* c) { static_cast<std::vector<uint32_t>*>(c)->push_back(id); },
+                &oldIds, scratch, oldWhy);
+            std::string newWhy;
+            const bool newSafe = rec.RemapSafe(&newWhy);
+            std::vector<uint32_t> newIds;
+            rec.ForEachFormId([&](uint32_t id, std::span<const uint32_t> to) {
+                newIds.push_back(id);
+                if (to.empty() || id == 0) return;
+                ++st.linksChecked;
+                const FormKey k = p->FormIdToKey(id);
+                const auto it = sigOf.find(lower(k.plugin) + "|" + std::to_string(k.localId & 0xFFFFFFu));
+                if (it == sigOf.end()) { ++st.linksUnresolved; return; }
+                if (std::find(to.begin(), to.end(), it->second) == to.end()) {
+                    ++st.linksWrong;
+                    char buf[96];
+                    std::snprintf(buf, sizeof(buf), "link %08X points at a %s", id, sigText(it->second).c_str());
+                    note(buf);
+                }
+            });
+            if (oldSafe && newSafe) {
+                ++st.idsCompared;
+                std::sort(oldIds.begin(), oldIds.end());
+                std::sort(newIds.begin(), newIds.end());
+                if (oldIds != newIds) { ++st.idsMismatch; note("FormID sets differ from the typed path"); }
+            } else if (oldSafe && !newSafe) {
+                ++st.newRefuses;
+                ++st.refuseWhy[newWhy];
+            } else if (!oldSafe && newSafe) {
+                ++st.newAccepts;
+            }
+        }
+    }
+
+    int failures = 0;
+    std::printf("\nSchema gate (esper::Record, schema %s, language %s):\n",
+                set.schemaVersion, set.languageVersion);
+    for (const auto& [sig, st] : stats) {
+        const bool bad = st.decodeFail || st.verbatimFail || st.forcedFail || st.rawWorse ||
+                         st.idsMismatch || st.linksWrong;
+        failures += bad ? 1 : 0;
+        std::printf("  %s %s  %zu record(s), %zu subrecord(s), %zu raw (typed path: %zu unknown)\n",
+                    bad ? "FAIL" : "ok  ", sig.c_str(), st.records, st.subs, st.raw, st.oldUnknown);
+        std::printf("         decode-fail %zu, verbatim-diff %zu, forced-diff %zu, raw-worse %zu\n",
+                    st.decodeFail, st.verbatimFail, st.forcedFail, st.rawWorse);
+        std::printf("         FormIDs: %zu compared, %zu mismatched; new refuses %zu, new accepts %zu\n",
+                    st.idsCompared, st.idsMismatch, st.newRefuses, st.newAccepts);
+        for (const auto& [why, n] : st.refuseWhy)
+            std::printf("           refuses %zu: %s\n", n, why.c_str());
+        std::printf("         links: %zu checked, %zu unresolved, %zu wrong\n",
+                    st.linksChecked, st.linksUnresolved, st.linksWrong);
+        if (!st.firstProblem.empty()) std::printf("         first problem: %s\n", st.firstProblem.c_str());
+    }
+    std::printf("%s\n", failures ? "SCHEMA GATE: FAIL" : "SCHEMA GATE: PASS");
+    return failures ? 1 : 0;
+}
+
 int main(int argc, char** argv) {
+    bool schemaMode = false;
+    if (argc >= 2 && std::string(argv[1]) == "--schema") {
+        schemaMode = true;
+        --argc;
+        ++argv;
+    }
     if (argc < 2) {
-        std::printf("usage: roundtrip-gate <DataFolder>\n"
-                    "       roundtrip-gate <plugin.esm|esp|esl> ...\n");
+        std::printf("usage: roundtrip-gate [--schema] <DataFolder>\n"
+                    "       roundtrip-gate [--schema] <plugin.esm|esp|esl> ...\n");
         return 2;
     }
 
@@ -245,6 +403,8 @@ int main(int argc, char** argv) {
         std::printf("FAIL  nothing to gate\n");
         return 1;
     }
+
+    if (schemaMode) return SchemaGate(targets);
 
     int failures = 0;
     for (const fs::path& t : targets) failures += GateOne(t);

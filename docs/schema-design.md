@@ -1,6 +1,7 @@
 # ESPER — schema-first design
 
-Status: **draft for review** (revised 2026-10-09). Nothing here is implemented yet.
+Status: **step 1 implemented** (2026-10-09). See Migration plan for progress; the normative spec is
+[schema-language.md](schema-language.md).
 
 ## What ESPER is
 
@@ -467,10 +468,19 @@ Mutagen (C#) was studied for **mechanism only**. Its record definitions were not
 
 Each step ships on its own. The typed `Records*.h` path keeps working until step 7.
 
-1. **Spec, generator, engine skeleton.** Write `docs/schema-language.md` v0, and the generator with
+1. **Done (2026-10-09). Spec, generator, engine skeleton.** Write `docs/schema-language.md` v0, and the generator with
    validation and all four outputs (`schema.json`, handles, views, tables). Build the engine for
    scalars, structs (including `break`), members and arrays. Bring five simple records (KYWD, GLOB,
    TXST, MISC, ARMO) through it, with unit tests. ARMO exercises reusable groups and sig remapping.
+
+   Result on the five vanilla masters (`roundtrip-gate --schema`):
+   - 7,943 records decode, and re-encode byte-exactly both verbatim and forced;
+   - raw subrecords exactly match the typed path's unknowns;
+   - FormID sets are identical on all 7,209 records both paths can remap;
+   - all 31,876 `to:` link targets are verified.
+
+   The new path refuses remap on 724 records the typed path accepted: opaque `VMAD` (language 0.2)
+   and `MODS`/`MO2S`/`MO4S`, which the typed path assumed were FormID-free (see bugs.md).
 2. **Seed the descriptors.** A one-shot script converts the existing `Field<>`/`Repeated<>` rows and
    packed structs into YAML. The rest is hand-fixed.
 3. **Parity oracle.** `roundtrip-gate --parity` runs the old and new paths over every vanilla record

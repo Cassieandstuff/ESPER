@@ -1,0 +1,801 @@
+{
+  "schemaVersion": "0.1.0",
+  "languageVersion": "0.1",
+  "game": "Skyrim Special Edition",
+  "records": [
+    {
+      "sig": "GLOB",
+      "name": "Global",
+      "members": [
+        {
+          "name": "editorId",
+          "sig": "EDID",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "type",
+          "sig": "FNAM",
+          "type": {
+            "kind": "u8"
+          }
+        },
+        {
+          "name": "value",
+          "sig": "FLTV",
+          "type": {
+            "kind": "f32"
+          }
+        }
+      ]
+    },
+    {
+      "sig": "MISC",
+      "name": "MiscItem",
+      "members": [
+        {
+          "name": "editorId",
+          "sig": "EDID",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "vmad",
+          "sig": "VMAD",
+          "type": {
+            "kind": "bytes"
+          }
+        },
+        {
+          "name": "bounds",
+          "sig": "OBND",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "x1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "x2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z2",
+                "type": {
+                  "kind": "i16"
+                }
+              }
+            ],
+            "name": "ObjectBounds"
+          }
+        },
+        {
+          "name": "fullName",
+          "sig": "FULL",
+          "type": {
+            "kind": "lstring",
+            "table": "strings"
+          }
+        },
+        {
+          "name": "model",
+          "group": "Model",
+          "members": [
+            {
+              "name": "path",
+              "sig": "MODL",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "MODT",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "swap",
+              "sig": "MODS",
+              "type": {
+                "kind": "bytes"
+              }
+            }
+          ]
+        },
+        {
+          "name": "icon",
+          "sig": "ICON",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "msgIcon",
+          "sig": "MICO",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "pickupSound",
+          "sig": "YNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "SNDR"
+            ]
+          }
+        },
+        {
+          "name": "dropSound",
+          "sig": "ZNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "SNDR"
+            ]
+          }
+        },
+        {
+          "name": "keywordCount",
+          "sig": "KSIZ",
+          "type": {
+            "kind": "u32"
+          },
+          "countOf": "keywords"
+        },
+        {
+          "name": "keywords",
+          "sig": "KWDA",
+          "type": {
+            "kind": "array",
+            "element": {
+              "kind": "formid",
+              "to": [
+                "KYWD"
+              ]
+            }
+          }
+        },
+        {
+          "name": "valueWeight",
+          "sig": "DATA",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "i32"
+                }
+              },
+              {
+                "name": "weight",
+                "type": {
+                  "kind": "f32"
+                }
+              }
+            ],
+            "name": "ItemValueWeight"
+          }
+        }
+      ]
+    },
+    {
+      "sig": "KYWD",
+      "name": "Keyword",
+      "members": [
+        {
+          "name": "editorId",
+          "sig": "EDID",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "color",
+          "sig": "CNAM",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "r",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "g",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "b",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "a",
+                "type": {
+                  "kind": "u8"
+                }
+              }
+            ],
+            "name": "ColorRgba"
+          }
+        }
+      ]
+    },
+    {
+      "sig": "ARMO",
+      "name": "Armor",
+      "members": [
+        {
+          "name": "editorId",
+          "sig": "EDID",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "vmad",
+          "sig": "VMAD",
+          "type": {
+            "kind": "bytes"
+          }
+        },
+        {
+          "name": "bounds",
+          "sig": "OBND",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "x1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "x2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z2",
+                "type": {
+                  "kind": "i16"
+                }
+              }
+            ],
+            "name": "ObjectBounds"
+          }
+        },
+        {
+          "name": "fullName",
+          "sig": "FULL",
+          "type": {
+            "kind": "lstring",
+            "table": "strings"
+          }
+        },
+        {
+          "name": "enchantment",
+          "sig": "EITM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "ENCH"
+            ]
+          }
+        },
+        {
+          "name": "enchantAmount",
+          "sig": "EAMT",
+          "type": {
+            "kind": "u16"
+          }
+        },
+        {
+          "name": "maleModel",
+          "group": "Model",
+          "members": [
+            {
+              "name": "path",
+              "sig": "MOD2",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "MO2T",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "swap",
+              "sig": "MO2S",
+              "type": {
+                "kind": "bytes"
+              }
+            }
+          ]
+        },
+        {
+          "name": "maleIcon",
+          "sig": "ICON",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "maleMsgIcon",
+          "sig": "MICO",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "femaleModel",
+          "group": "Model",
+          "members": [
+            {
+              "name": "path",
+              "sig": "MOD4",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "MO4T",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "swap",
+              "sig": "MO4S",
+              "type": {
+                "kind": "bytes"
+              }
+            }
+          ]
+        },
+        {
+          "name": "femaleIcon",
+          "sig": "ICO2",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "femaleMsgIcon",
+          "sig": "MIC2",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "biped",
+          "sig": "BOD2",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "bipedFlags",
+                "type": {
+                  "kind": "u32"
+                }
+              },
+              {
+                "name": "armorType",
+                "type": {
+                  "kind": "u32"
+                }
+              }
+            ],
+            "name": "BipedBodyTemplate"
+          }
+        },
+        {
+          "name": "pickupSound",
+          "sig": "YNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "SNDR"
+            ]
+          }
+        },
+        {
+          "name": "dropSound",
+          "sig": "ZNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "SNDR"
+            ]
+          }
+        },
+        {
+          "name": "ragdollTemplate",
+          "sig": "BMCT",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "equipType",
+          "sig": "ETYP",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "EQUP"
+            ]
+          }
+        },
+        {
+          "name": "bashImpact",
+          "sig": "BIDS",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "IPDS"
+            ]
+          }
+        },
+        {
+          "name": "bashMaterial",
+          "sig": "BAMT",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "MATT"
+            ]
+          }
+        },
+        {
+          "name": "race",
+          "sig": "RNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "RACE"
+            ]
+          }
+        },
+        {
+          "name": "keywordCount",
+          "sig": "KSIZ",
+          "type": {
+            "kind": "u32"
+          },
+          "countOf": "keywords"
+        },
+        {
+          "name": "keywords",
+          "sig": "KWDA",
+          "type": {
+            "kind": "array",
+            "element": {
+              "kind": "formid",
+              "to": [
+                "KYWD"
+              ]
+            }
+          }
+        },
+        {
+          "name": "description",
+          "sig": "DESC",
+          "type": {
+            "kind": "lstring",
+            "table": "dlstrings"
+          }
+        },
+        {
+          "name": "armatures",
+          "sig": "MODL",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "ARMA"
+            ]
+          },
+          "repeat": true
+        },
+        {
+          "name": "valueWeight",
+          "sig": "DATA",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "i32"
+                }
+              },
+              {
+                "name": "weight",
+                "type": {
+                  "kind": "f32"
+                }
+              }
+            ],
+            "name": "ItemValueWeight"
+          }
+        },
+        {
+          "name": "armorRating",
+          "sig": "DNAM",
+          "type": {
+            "kind": "u32"
+          }
+        },
+        {
+          "name": "templateArmor",
+          "sig": "TNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "ARMO"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sig": "TXST",
+      "name": "TextureSet",
+      "members": [
+        {
+          "name": "editorId",
+          "sig": "EDID",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "bounds",
+          "sig": "OBND",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "x1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z1",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "x2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "y2",
+                "type": {
+                  "kind": "i16"
+                }
+              },
+              {
+                "name": "z2",
+                "type": {
+                  "kind": "i16"
+                }
+              }
+            ],
+            "name": "ObjectBounds"
+          }
+        },
+        {
+          "name": "tx00",
+          "sig": "TX00",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx01",
+          "sig": "TX01",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx02",
+          "sig": "TX02",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx03",
+          "sig": "TX03",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx04",
+          "sig": "TX04",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx05",
+          "sig": "TX05",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx06",
+          "sig": "TX06",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "tx07",
+          "sig": "TX07",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
+          "name": "decal",
+          "sig": "DODT",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "minWidth",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "maxWidth",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "minHeight",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "maxHeight",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "depth",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "shininess",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "parallaxScale",
+                "type": {
+                  "kind": "f32"
+                }
+              },
+              {
+                "name": "parallaxPasses",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "flags",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "pad",
+                "type": {
+                  "kind": "u16"
+                }
+              },
+              {
+                "name": "color",
+                "type": {
+                  "kind": "u32"
+                }
+              }
+            ],
+            "name": "DecalData"
+          }
+        },
+        {
+          "name": "flags",
+          "sig": "DNAM",
+          "type": {
+            "kind": "u16"
+          }
+        }
+      ]
+    }
+  ]
+}

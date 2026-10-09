@@ -1,0 +1,5 @@
+record: KYWD
+name: Keyword
+members:
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: CNAM, name: color,    type: ColorRgba }

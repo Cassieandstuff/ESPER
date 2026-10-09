@@ -63,6 +63,41 @@ endif()
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ESPER_SOURCES} ${ESPER_HEADERS})
 
+# ── Schema generator (contributors only) ──────────────────────────────────────
+# schema/ is compiled into schema.json + include/ESPER/generated/*.h by
+# tools/schemagen. The output is committed, so consumers never need Python;
+# these targets exist only where Python 3 + PyYAML are available.
+set(ESPER_SCHEMAGEN_AVAILABLE OFF)
+if(PROJECT_IS_TOP_LEVEL)
+    find_package(Python3 COMPONENTS Interpreter QUIET)
+    if(Python3_Interpreter_FOUND)
+        execute_process(COMMAND "${Python3_EXECUTABLE}" -c "import yaml"
+                        RESULT_VARIABLE _esper_yaml_rc OUTPUT_QUIET ERROR_QUIET)
+        if(_esper_yaml_rc EQUAL 0)
+            set(ESPER_SCHEMAGEN_AVAILABLE ON)
+        endif()
+    endif()
+endif()
+
+set(_ESPER_SCHEMAGEN "${CMAKE_CURRENT_SOURCE_DIR}/tools/schemagen/schemagen.py")
+set(_ESPER_GEN_MAIN
+    --schema "${CMAKE_CURRENT_SOURCE_DIR}/schema"
+    --out "${CMAKE_CURRENT_SOURCE_DIR}/include/ESPER/generated"
+    --json "${CMAKE_CURRENT_SOURCE_DIR}/schema.json")
+set(_ESPER_GEN_TEST
+    --schema "${CMAKE_CURRENT_SOURCE_DIR}/tests/schema"
+    --out "${CMAKE_CURRENT_SOURCE_DIR}/tests/generated"
+    --tables-ns esper_test::tables --fields-ns esper_test::fields --views-ns esper_test::view)
+
+if(ESPER_SCHEMAGEN_AVAILABLE)
+    add_custom_target(esper-schemagen
+        COMMAND "${Python3_EXECUTABLE}" -I "${_ESPER_SCHEMAGEN}" ${_ESPER_GEN_MAIN}
+        COMMAND "${Python3_EXECUTABLE}" -I "${_ESPER_SCHEMAGEN}" ${_ESPER_GEN_TEST}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMENT "Regenerating ESPER schema outputs"
+        VERBATIM)
+endif()
+
 # ── Tests ─────────────────────────────────────────────────────────────────────
 if(ESPER_BUILD_TESTS)
     enable_testing()
@@ -73,6 +108,25 @@ if(ESPER_BUILD_TESTS)
         target_compile_options(esper-test PRIVATE /utf-8)
     endif()
     add_test(NAME esper-test COMMAND esper-test)
+
+    # The schema engine, driven by a test-only schema (tests/schema) that
+    # exercises every language-0.1 construct, plus the real schema's records.
+    add_executable(esper-schema-test tests/schema_test.cpp)
+    target_link_libraries(esper-schema-test PRIVATE esper::esper)
+    target_include_directories(esper-schema-test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    if(MSVC)
+        target_compile_options(esper-schema-test PRIVATE /W4 /wd4100 /utf-8)
+    endif()
+    add_test(NAME esper-schema-test COMMAND esper-schema-test)
+
+    if(ESPER_SCHEMAGEN_AVAILABLE)
+        add_test(NAME esper-schema-fresh
+            COMMAND "${Python3_EXECUTABLE}" -I "${_ESPER_SCHEMAGEN}" ${_ESPER_GEN_MAIN} --check)
+        add_test(NAME esper-test-schema-fresh
+            COMMAND "${Python3_EXECUTABLE}" -I "${_ESPER_SCHEMAGEN}" ${_ESPER_GEN_TEST} --check)
+        add_test(NAME esper-schemagen-test
+            COMMAND "${Python3_EXECUTABLE}" -I "${CMAKE_CURRENT_SOURCE_DIR}/tests/schemagen_test.py")
+    endif()
 endif()
 
 # ── Tools (need game data; not ctests) ────────────────────────────────────────

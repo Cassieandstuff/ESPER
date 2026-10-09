@@ -12,3 +12,6 @@ CMakeUserPresets.json
 # Local tooling
 /.claude/settings.local.json
 /.claude/worktrees/
+
+# Python bytecode (tools/schemagen, tests)
+__pycache__/

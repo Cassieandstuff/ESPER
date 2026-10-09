@@ -1,0 +1,8 @@
+# A struct with a truncated older form: the payload may end at the break.
+struct: Versioned
+fields:
+  - { name: flags,   type: u32 }
+  - { name: radius,  type: f32 }
+  - { break: true }
+  - { name: falloff, type: f32 }
+  - { name: target,  type: formid, to: [TSTB] }

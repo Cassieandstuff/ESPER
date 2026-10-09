@@ -25,15 +25,34 @@ namespace) with fresh history. GPL-3.0-or-later.
 - `esper-test` (synthetic fixtures, CTest) proves the code; `roundtrip-gate <Data>`
   (`-DESPER_BUILD_TOOLS=ON`) proves it on real masters. Schema changes must pass both.
 
-## Direction: schema-driven (option B)
+## Direction: schema-first
 
-The current `Records*.h` family is hand-written structs bound to schema tables by member pointer,
-with subrecord internals as `#pragma pack` structs and FormID offsets listed by hand. The target:
-record AND subrecord layouts described once as data (in-repo descriptor files), compiled into
-constexpr tables at build time, interpreted by one generic decode/encode/visit engine over a
-dynamic record model. No runtime schema files and no new consumer-facing dependencies. Unions
-(layouts chosen by size, form version, or a sibling value) need first-class expression in the
-descriptor language. Typed accessors, if any, are generated from the same descriptors.
+ESPER's product is a language-neutral schema of the plugin format. The C++ engine is its
+reference implementation and lives in the same repo, because the engine's gate is what verifies
+the schema. Design: [docs/schema-design.md](docs/schema-design.md), including the migration plan
+and its current step. Spec: [docs/schema-language.md](docs/schema-language.md).
+
+- **Engine:** `esper::Record` (`include/ESPER/Record.h`, `cpp/engine/`) interprets generated
+  tables. It's one generic engine; never add per-record code to it.
+- **Old path:** the typed `Records*.h` path still ships until the migration's final step. Don't
+  extend it; new coverage goes in `schema/`.
+- **No host-language escape hatches.** If the language can't express something, the language
+  grows (spec + generator + engine).
+
+## Schema workflow
+
+- **Source of truth:** `schema/` (YAML) plus `docs/schema-language.md` (the spec). Never edit
+  `include/ESPER/generated/`, `tests/generated/` or `schema.json` by hand. Regenerate them with
+  the `esper-schemagen` target and commit them in the same change as the YAML. CTest's
+  `*-fresh` checks fail on stale output.
+- **Real-data gate:** a descriptor change must pass `roundtrip-gate --schema <Data>`. That means
+  byte-exact decode and encode (verbatim and forced re-encode), no more raw subrecords than the
+  typed path, FormID parity with the typed path, and every `to:` link target verified.
+- **Claims about data:** `to:` and `formIds: none` describe the data, so add them only when the
+  gate confirms them on the vanilla masters. Clean-room: never take layouts from xEdit or
+  Mutagen definitions.
+- **Language changes** (a new construct, or a changed meaning) update the spec, the generator's
+  validation, the engine and `tests/schema` together, and bump `LANGUAGE_VERSION`.
 
 ## Bug log — sync is mandatory
 

@@ -1,0 +1,7 @@
+struct: ColorRgba
+size: 4
+fields:
+  - { name: r, type: u8 }
+  - { name: g, type: u8 }
+  - { name: b, type: u8 }
+  - { name: a, type: u8 }

@@ -1,0 +1,15 @@
+# DODT (TXST).
+struct: DecalData
+size: 36
+fields:
+  - { name: minWidth,       type: f32 }
+  - { name: maxWidth,       type: f32 }
+  - { name: minHeight,      type: f32 }
+  - { name: maxHeight,      type: f32 }
+  - { name: depth,          type: f32 }
+  - { name: shininess,      type: f32 }
+  - { name: parallaxScale,  type: f32 }
+  - { name: parallaxPasses, type: u8 }
+  - { name: flags,          type: u8 }
+  - { name: pad,            type: u16 }
+  - { name: color,          type: u32 }

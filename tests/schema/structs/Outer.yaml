@@ -1,0 +1,5 @@
+struct: Outer
+size: 10
+fields:
+  - { name: inner, type: Inner }
+  - { name: ref,   type: formid }

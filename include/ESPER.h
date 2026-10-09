@@ -64,3 +64,10 @@
 
 // Write / mutation API
 #include <ESPER/Writer.h>
+
+// Schema-driven records (the successor to the typed Records*.h family; both
+// coexist until the migration in docs/schema-design.md completes):
+// esper::Record + generated handles (esper::fields) + typed views (esper::view).
+#include <ESPER/Record.h>
+#include <ESPER/generated/Fields.h>
+#include <ESPER/generated/Views.h>

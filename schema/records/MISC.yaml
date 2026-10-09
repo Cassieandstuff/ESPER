@@ -1,0 +1,15 @@
+record: MISC
+name: MiscItem
+members:
+  - { sig: EDID, name: editorId,     type: zstring }
+  - { sig: VMAD, name: vmad,         type: bytes }          # modeled in language 0.2 (unions)
+  - { sig: OBND, name: bounds,       type: ObjectBounds }
+  - { sig: FULL, name: fullName,     type: lstring, table: strings }
+  - { use: Model, name: model }
+  - { sig: ICON, name: icon,         type: zstring }
+  - { sig: MICO, name: msgIcon,      type: zstring }
+  - { sig: YNAM, name: pickupSound,  type: formid, to: [SNDR] }
+  - { sig: ZNAM, name: dropSound,    type: formid, to: [SNDR] }
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords,     type: "formid[]", to: [KYWD] }
+  - { sig: DATA, name: valueWeight,  type: ItemValueWeight }

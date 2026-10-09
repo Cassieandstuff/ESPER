@@ -1,0 +1,15 @@
+record: TXST
+name: TextureSet
+members:
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: OBND, name: bounds,   type: ObjectBounds }
+  - { sig: TX00, name: tx00,     type: zstring }   # diffuse
+  - { sig: TX01, name: tx01,     type: zstring }   # normal/gloss
+  - { sig: TX02, name: tx02,     type: zstring }   # environment mask / subsurface
+  - { sig: TX03, name: tx03,     type: zstring }   # glow / detail
+  - { sig: TX04, name: tx04,     type: zstring }   # height
+  - { sig: TX05, name: tx05,     type: zstring }   # environment
+  - { sig: TX06, name: tx06,     type: zstring }   # multilayer
+  - { sig: TX07, name: tx07,     type: zstring }   # backlight mask / specular
+  - { sig: DODT, name: decal,    type: DecalData }
+  - { sig: DNAM, name: flags,    type: u16 }
