@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct LandAlphaCell) in migration step 2.
+struct: LandAlphaCell
+size: 8
+fields:
+  - { name: position, type: u16 }
+  - { name: pad, type: "u8[2]" }
+  - { name: opacity, type: f32 }

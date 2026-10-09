@@ -1,0 +1,12 @@
+# Seeded from the typed path (DialRec, include/ESPER/Records*.h) in migration step 2.
+record: DIAL
+name: DialogTopic
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: PNAM, name: priority, type: f32 }   # PNAM
+  - { sig: BNAM, name: branch, type: formid }   # BNAM
+  - { sig: QNAM, name: quest, type: formid }   # QNAM
+  - { sig: DATA, name: data, type: DialData }   # DATA
+  - { sig: SNAM, name: subtypeName, type: u32 }   # SNAM (FourCC)
+  - { sig: TIFC, name: infoCount, type: u32 }   # TIFC

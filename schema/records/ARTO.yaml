@@ -1,0 +1,8 @@
+# Seeded from the typed path (ArtoRec, include/ESPER/Records*.h) in migration step 2.
+record: ARTO
+name: ArtObject
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { use: Model, name: model }
+  - { sig: DNAM, name: artType, type: u32 }   # DNAM

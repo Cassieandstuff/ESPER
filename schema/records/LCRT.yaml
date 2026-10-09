@@ -1,0 +1,6 @@
+# Seeded from the typed path (KywdRec, include/ESPER/Records*.h) in migration step 2.
+record: LCRT
+name: LocationReferenceType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: CNAM, name: color, type: ColorRgba }   # CNAM

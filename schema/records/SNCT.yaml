@@ -1,0 +1,10 @@
+# Seeded from the typed path (SnctRec, include/ESPER/Records*.h) in migration step 2.
+record: SNCT
+name: SoundCategory
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: FNAM, name: flags, type: u32 }   # FNAM
+  - { sig: PNAM, name: parent, type: formid }   # PNAM
+  - { sig: VNAM, name: staticVol, type: u16 }   # VNAM
+  - { sig: UNAM, name: defaultMenuVol, type: u16 }   # UNAM

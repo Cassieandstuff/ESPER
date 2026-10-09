@@ -1,0 +1,10 @@
+# Seeded from the typed path (ImgsRec, include/ESPER/Records*.h) in migration step 2.
+record: IMGS
+name: ImageSpace
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: ENAM, name: enam, type: bytes }   # ENAM
+  - { sig: HNAM, name: hdr, type: bytes }   # HNAM
+  - { sig: CNAM, name: cinematic, type: bytes }   # CNAM
+  - { sig: TNAM, name: tint, type: bytes }   # TNAM
+  - { sig: DNAM, name: dof, type: bytes }   # DNAM

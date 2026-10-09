@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct StatData) in migration step 2.
+struct: StatData
+size: 8
+fields:
+  - { name: maxAngle, type: f32 }
+  - { name: material, type: formid, to: [MATO] }   # MATO FormID

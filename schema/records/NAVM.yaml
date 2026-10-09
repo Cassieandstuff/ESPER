@@ -1,0 +1,5 @@
+# Seeded from the typed path (NavmRec, include/ESPER/Records*.h) in migration step 2.
+record: NAVM
+name: NavigationMesh
+members:
+  - { sig: NVNM, name: geometry, type: bytes }   # NVNM

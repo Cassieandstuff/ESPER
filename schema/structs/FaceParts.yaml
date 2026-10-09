@@ -1,0 +1,8 @@
+# Seeded from the typed path (struct FaceParts) in migration step 2.
+struct: FaceParts
+size: 16
+fields:
+  - { name: nose, type: i32 }
+  - { name: unknown, type: i32 }
+  - { name: eyes, type: i32 }
+  - { name: mouth, type: i32 }

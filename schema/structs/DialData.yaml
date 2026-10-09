@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct DialData) in migration step 2.
+struct: DialData
+size: 4
+fields:
+  - { name: unknown, type: u8 }
+  - { name: category, type: u8 }   # 0 topic 1 favor 2 scene 3 combat …
+  - { name: subtype, type: u16 }

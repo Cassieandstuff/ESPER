@@ -1,0 +1,8 @@
+# Seeded from the typed path (MatoRec, include/ESPER/Records*.h) in migration step 2.
+record: MATO
+name: MaterialObject
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: MODL, name: model, type: zstring }   # MODL
+  - { sig: DNAM, name: properties, type: bytes, repeat: true }   # DNAM (repeated blocks)
+  - { sig: DATA, name: data, type: bytes }   # DATA (directional material)

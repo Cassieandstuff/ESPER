@@ -1,0 +1,8 @@
+# Seeded from the typed path (struct LandBaseTexture) in migration step 2.
+struct: LandBaseTexture
+size: 8
+fields:
+  - { name: landTexture, type: formid }   # LTEX FormID
+  - { name: quadrant, type: u8 }   # 0=BL 1=BR 2=TL 3=TR
+  - { name: pad, type: u8 }
+  - { name: pad2, type: u16 }

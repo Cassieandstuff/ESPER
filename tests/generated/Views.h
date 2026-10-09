@@ -185,19 +185,23 @@ public:
     std::optional<std::vector<uint8_t>> FixedBytes() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 12 }, 1, 1 }); }
     void SetFixedBytes(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
     void ClearFixedBytes() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
+    // MARK
+    bool Flagged() const { return c_.Has(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void SetFlagged(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 13 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void ClearFlagged() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
     // group layers
-    std::vector<::esper_test::view::TestAlphaLayers> Layers() const { std::vector<::esper_test::view::TestAlphaLayers> o; for (auto c : c_.Groups(::esper::RelPath{ { 13 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper_test::view::TestAlphaLayers AddLayers() const { return ::esper_test::view::TestAlphaLayers(c_.AddGroup(::esper::RelPath{ { 13 }, 1, 1 })); }
+    std::vector<::esper_test::view::TestAlphaLayers> Layers() const { std::vector<::esper_test::view::TestAlphaLayers> o; for (auto c : c_.Groups(::esper::RelPath{ { 14 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestAlphaLayers AddLayers() const { return ::esper_test::view::TestAlphaLayers(c_.AddGroup(::esper::RelPath{ { 14 }, 1, 1 })); }
     // group first
-    std::optional<::esper_test::view::Pair> First() const { auto g = c_.Groups(::esper::RelPath{ { 14 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper_test::view::Pair(g.front()); }
-    ::esper_test::view::Pair EnsureFirst() const { return ::esper_test::view::Pair(c_.EnsureGroup(::esper::RelPath{ { 14 }, 1, 1 })); }
+    std::optional<::esper_test::view::Pair> First() const { auto g = c_.Groups(::esper::RelPath{ { 15 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper_test::view::Pair(g.front()); }
+    ::esper_test::view::Pair EnsureFirst() const { return ::esper_test::view::Pair(c_.EnsureGroup(::esper::RelPath{ { 15 }, 1, 1 })); }
     // group second
-    std::optional<::esper_test::view::Pair> Second() const { auto g = c_.Groups(::esper::RelPath{ { 15 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper_test::view::Pair(g.front()); }
-    ::esper_test::view::Pair EnsureSecond() const { return ::esper_test::view::Pair(c_.EnsureGroup(::esper::RelPath{ { 15 }, 1, 1 })); }
+    std::optional<::esper_test::view::Pair> Second() const { auto g = c_.Groups(::esper::RelPath{ { 16 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper_test::view::Pair(g.front()); }
+    ::esper_test::view::Pair EnsureSecond() const { return ::esper_test::view::Pair(c_.EnsureGroup(::esper::RelPath{ { 16 }, 1, 1 })); }
     // DATA
     ::esper_test::view::TestAlphaData Data() const;
-    bool HasData() const { return c_.Has(::esper::RelPath{ { 16 }, 1, 1 }); }
-    void ClearData() const { c_.Clear(::esper::RelPath{ { 16 }, 1, 1 }); }
+    bool HasData() const { return c_.Has(::esper::RelPath{ { 17 }, 1, 1 }); }
+    void ClearData() const { c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
 };
@@ -219,6 +223,6 @@ private:
 
 inline ::esper_test::view::Versioned TestAlpha::Versioned() const { return ::esper_test::view::Versioned(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper_test::view::Outer TestAlpha::Outer() const { return ::esper_test::view::Outer(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper_test::view::TestAlphaData TestAlpha::Data() const { return ::esper_test::view::TestAlphaData(::esper::StructCursor{ c_, ::esper::RelPath{ { 16 }, 1, 1 } }); }
+inline ::esper_test::view::TestAlphaData TestAlpha::Data() const { return ::esper_test::view::TestAlphaData(::esper::StructCursor{ c_, ::esper::RelPath{ { 17 }, 1, 1 } }); }
 
 } // namespace esper_test::view

@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct ContainerEntry) in migration step 2.
+struct: ContainerEntry
+size: 8
+fields:
+  - { name: item, type: formid }   # FormID
+  - { name: count, type: i32 }

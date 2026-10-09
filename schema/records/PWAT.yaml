@@ -1,0 +1,8 @@
+# Seeded from the typed path (PwatRec, include/ESPER/Records*.h) in migration step 2.
+record: PWAT
+name: PlaceableWater
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { use: Model, name: model }
+  - { sig: DNAM, name: data, type: bytes }   # DNAM (flags + water FormID; size-variant)

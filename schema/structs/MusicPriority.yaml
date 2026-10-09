@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct MusicPriority) in migration step 2.
+struct: MusicPriority
+size: 4
+fields:
+  - { name: priority, type: u16 }
+  - { name: ducking, type: u16 }   # dB ×100

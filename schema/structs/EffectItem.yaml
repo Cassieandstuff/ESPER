@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct EffectItem) in migration step 2.
+struct: EffectItem
+size: 12
+fields:
+  - { name: magnitude, type: f32 }
+  - { name: area, type: u32 }
+  - { name: duration, type: u32 }

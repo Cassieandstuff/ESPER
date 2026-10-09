@@ -1,0 +1,10 @@
+# Seeded from the typed path (struct DualData) in migration step 2.
+struct: DualData
+size: 24
+fields:
+  - { name: projectile, type: formid }   # FormID
+  - { name: explosion, type: formid }   # FormID
+  - { name: effectShader, type: formid }   # FormID
+  - { name: hitEffectArt, type: formid }   # FormID
+  - { name: impactData, type: formid }   # FormID
+  - { name: inheritFlags, type: u32 }

@@ -1,0 +1,18 @@
+# Seeded from the typed path (BookRec, include/ESPER/Records*.h) in migration step 2.
+record: BOOK
+name: Book
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: DESC, name: bookText, type: lstring, table: dlstrings }   # DESC (the book body)
+  - { sig: ICON, name: icon, type: zstring }   # ICON
+  - { sig: MICO, name: msgIcon, type: zstring }   # MICO
+  - { sig: YNAM, name: pickupSound, type: formid }   # YNAM
+  - { sig: ZNAM, name: dropSound, type: formid }   # ZNAM
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: INAM, name: inventoryArt, type: formid }   # INAM
+  - { sig: CNAM, name: description, type: lstring, table: dlstrings }   # CNAM (inventory description)

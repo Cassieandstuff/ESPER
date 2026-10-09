@@ -1,0 +1,7 @@
+# Seeded from the typed path (FstsRec, include/ESPER/Records*.h) in migration step 2.
+record: FSTS
+name: FootstepSet
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: XCNT, name: counts, type: bytes }   # XCNT (5 u32)
+  - { sig: DATA, name: footsteps, type: "formid[]" }   # DATA (FSTP array)

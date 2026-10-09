@@ -1,0 +1,9 @@
+# Seeded from the typed path (SopmRec, include/ESPER/Records*.h) in migration step 2.
+record: SOPM
+name: SoundOutputModel
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: NAM1, name: data, type: bytes }   # NAM1
+  - { sig: MNAM, name: type, type: u32 }   # MNAM
+  - { sig: ONAM, name: channels, type: bytes }   # ONAM (output channels)
+  - { sig: ANAM, name: attenuation, type: bytes }   # ANAM

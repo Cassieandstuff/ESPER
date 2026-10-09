@@ -1,0 +1,8 @@
+# Seeded from the typed path (LscrRec, include/ESPER/Records*.h) in migration step 2.
+record: LSCR
+name: LoadScreen
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: NNAM, name: staticNif, type: formid }   # NNAM
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { use: Condition, name: conditions, repeat: true }

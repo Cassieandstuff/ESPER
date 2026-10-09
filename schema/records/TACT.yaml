@@ -1,0 +1,12 @@
+# Seeded from the typed path (TactRec, include/ESPER/Records*.h) in migration step 2.
+record: TACT
+name: TalkingActivator
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: FNAM, name: flags, type: u32 }   # FNAM
+  - { sig: VNAM, name: voiceType, type: formid }   # VNAM
+  - { sig: SNAM, name: loopSound, type: formid }   # SNAM

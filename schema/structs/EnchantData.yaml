@@ -1,0 +1,13 @@
+# Seeded from the typed path (struct EnchantData) in migration step 2.
+struct: EnchantData
+size: 36
+fields:
+  - { name: cost, type: i32 }
+  - { name: flags, type: u32 }
+  - { name: castType, type: u32 }
+  - { name: amount, type: i32 }
+  - { name: delivery, type: u32 }
+  - { name: type, type: u32 }
+  - { name: chargeTime, type: f32 }
+  - { name: baseEnchantment, type: formid }   # FormID
+  - { name: wornRestrictions, type: formid }   # FormID

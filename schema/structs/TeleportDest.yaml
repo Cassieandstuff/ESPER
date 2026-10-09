@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct TeleportDest) in migration step 2.
+struct: TeleportDest
+size: 32
+fields:
+  - { name: door, type: formid }   # FormID
+  - { name: placement, type: Placement }
+  - { name: flags, type: u32 }

@@ -1,0 +1,5 @@
+# Seeded from the typed path (ImadRec, include/ESPER/Records*.h) in migration step 2.
+record: IMAD
+name: ImageSpaceAdapter
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID

@@ -1,0 +1,13 @@
+# Seeded from the typed path (SndrRec, include/ESPER/Records*.h) in migration step 2.
+record: SNDR
+name: SoundDescriptor
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: CNAM, name: type, type: u32 }   # CNAM
+  - { sig: GNAM, name: category, type: formid }   # GNAM (SNCT)
+  - { sig: SNAM, name: altSound, type: formid }   # SNAM
+  - { sig: ANAM, name: soundFiles, type: zstring, repeat: true }   # ANAM
+  - { sig: ONAM, name: outputData, type: bytes }   # ONAM
+  - { sig: LNAM, name: flags, type: u32 }   # LNAM
+  - { sig: BNAM, name: values, type: bytes }   # BNAM (loop/rumble values)
+  - { use: Condition, name: conditions, repeat: true }

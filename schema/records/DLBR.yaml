@@ -1,0 +1,9 @@
+# Seeded from the typed path (DlbrRec, include/ESPER/Records*.h) in migration step 2.
+record: DLBR
+name: DialogBranch
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: QNAM, name: quest, type: formid }   # QNAM
+  - { sig: TNAM, name: category, type: u32 }   # TNAM
+  - { sig: DNAM, name: flags, type: u32 }   # DNAM
+  - { sig: SNAM, name: startingTopic, type: formid }   # SNAM

@@ -1,6 +1,6 @@
 # ESPER schema language — specification
 
-**Language version 0.1.** This document is normative. It defines what a descriptor in `schema/`
+**Language version 0.2.** This document is normative. It defines what a descriptor in `schema/`
 means, so that any implementation can decode and encode Skyrim SE/AE plugin records exactly as
 ESPER's engine does. When this document and the code disagree, that is a bug in one of them.
 `tools/schemagen` is the reference validator, and `esper::Record` is the reference engine. The
@@ -51,6 +51,7 @@ A `type` is a base type, optionally followed by an array suffix.
 | `wstring` | u16 byte length, then that many bytes | |
 | `lstring` | in a **localized** plugin: u32 string id. Otherwise: as `zstring` | `table: strings \| dlstrings \| ilstrings` (required) |
 | `bytes` | opaque bytes: exactly `size` if given, otherwise the rest of the subrecord | `size: N`, `formIds: none` (§8) |
+| `marker` | zero bytes: the subrecord's presence is its value. A non-empty payload is refused. | |
 | *StructName* | the named struct's layout (§4) | |
 
 ### 3.2 Array suffixes
@@ -262,8 +263,8 @@ consumers never run the generator.
 
 ## 10. Reserved for later versions
 
-These constructs come from the design in [schema-design.md](schema-design.md). Language 0.1
-rejects them by name.
+These constructs come from the design in [schema-design.md](schema-design.md). The current
+language version rejects them by name.
 
 | Construct | Purpose |
 |---|---|
@@ -280,3 +281,8 @@ rejects them by name.
   major change.
 - `languageVersion` is this document's version. It changes only when a construct is added or its
   meaning changes.
+
+| Version | Change |
+|---|---|
+| 0.1 | Initial: scalars, strings, bytes, structs with breaks, arrays, groups (ordinal rule, reuse with remapping), `countOf`, `to:`, `formIds: none` |
+| 0.2 | adds `marker` |

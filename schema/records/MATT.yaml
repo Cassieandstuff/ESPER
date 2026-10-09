@@ -1,0 +1,11 @@
+# Seeded from the typed path (MattRec, include/ESPER/Records*.h) in migration step 2.
+record: MATT
+name: MaterialType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: PNAM, name: parent, type: formid }   # PNAM
+  - { sig: MNAM, name: name, type: zstring }   # MNAM
+  - { sig: CNAM, name: displayColor, type: bytes }   # CNAM (3 floats)
+  - { sig: BNAM, name: buoyancy, type: f32 }   # BNAM
+  - { sig: FNAM, name: flags, type: u32 }   # FNAM
+  - { sig: HNAM, name: havokImpact, type: formid }   # HNAM

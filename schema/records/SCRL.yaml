@@ -1,0 +1,18 @@
+# Seeded from the typed path (SpellRec, include/ESPER/Records*.h) in migration step 2.
+record: SCRL
+name: Scroll
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: MDOB, name: menuDisplayObject, type: formid }   # MDOB
+  - { sig: ETYP, name: equipType, type: formid }   # ETYP
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { use: Model, name: model }
+  - { sig: DATA, name: valueWeight, type: ItemValueWeight }   # DATA (scrolls)
+  - { sig: SPIT, name: spit, type: SpellData }   # SPIT
+  - { sig: EFID, name: effects, type: formid, repeat: true }   # EFID
+  - { sig: EFIT, name: effectItems, type: EffectItem, repeat: true }   # EFIT
+  - { use: Condition, name: conditions, repeat: true }

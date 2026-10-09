@@ -1,0 +1,10 @@
+# Seeded from the typed path (AddnRec, include/ESPER/Records*.h) in migration step 2.
+record: ADDN
+name: AddonNode
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { use: Model, name: model }
+  - { sig: DATA, name: nodeIndex, type: i32 }   # DATA
+  - { sig: SNAM, name: sound, type: formid }   # SNAM
+  - { sig: DNAM, name: flags, type: AddonFlags }   # DNAM

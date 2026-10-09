@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct ImpactMapping) in migration step 2.
+struct: ImpactMapping
+size: 8
+fields:
+  - { name: material, type: formid }   # MATT FormID
+  - { name: impact, type: formid }   # IPCT FormID

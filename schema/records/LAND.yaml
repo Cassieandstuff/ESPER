@@ -1,0 +1,11 @@
+# Seeded from the typed path (LandRec, include/ESPER/Records*.h) in migration step 2.
+record: LAND
+name: Landscape
+members:
+  - { sig: DATA, name: flags, type: u32 }   # DATA
+  - { sig: VNML, name: normals, type: LandVertexTriples }   # VNML
+  - { sig: VHGT, name: heights, type: LandHeights }   # VHGT
+  - { sig: VCLR, name: colors, type: LandVertexTriples }   # VCLR
+  - { sig: BTXT, name: baseTextures, type: LandBaseTexture, repeat: true }   # BTXT
+  - { sig: ATXT, name: alphaTextures, type: LandAlphaTexture, repeat: true }   # ATXT
+  - { sig: VTXT, name: alphaCells, type: "LandAlphaCell[]", repeat: true }   # VTXT (parallel to alphaTextures)

@@ -1,0 +1,11 @@
+# Seeded from the typed path (EnchRec, include/ESPER/Records*.h) in migration step 2.
+record: ENCH
+name: ObjectEffect
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: ENIT, name: data, type: EnchantData }   # ENIT
+  - { sig: EFID, name: effects, type: formid, repeat: true }   # EFID
+  - { sig: EFIT, name: effectItems, type: EffectItem, repeat: true }   # EFIT
+  - { use: Condition, name: conditions, repeat: true }

@@ -1,0 +1,7 @@
+# Seeded from the typed path (FstpRec, include/ESPER/Records*.h) in migration step 2.
+record: FSTP
+name: Footstep
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DATA, name: impactSet, type: formid }   # DATA (IPDS)
+  - { sig: ANAM, name: tag, type: zstring }   # ANAM

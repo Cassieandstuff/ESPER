@@ -1,0 +1,19 @@
+# Seeded from the typed path (ArmaRec, include/ESPER/Records*.h) in migration step 2.
+record: ARMA
+name: ArmorAddon
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: BOD2, name: biped, type: BipedBodyTemplate }   # BOD2
+  - { sig: RNAM, name: race, type: formid }   # RNAM
+  - { sig: DNAM, name: data, type: ArmaDnam }   # DNAM
+  - { use: Model, name: maleModel, sigs: { MODL: MOD2, MODT: MO2T, MODS: MO2S } }
+  - { use: Model, name: femaleModel, sigs: { MODL: MOD3, MODT: MO3T, MODS: MO3S } }
+  - { use: Model, name: male1stModel, sigs: { MODL: MOD4, MODT: MO4T, MODS: MO4S } }
+  - { use: Model, name: female1stModel, sigs: { MODL: MOD5, MODT: MO5T, MODS: MO5S } }
+  - { sig: NAM0, name: maleSkinTexture, type: formid }   # NAM0
+  - { sig: NAM1, name: femaleSkinTexture, type: formid }   # NAM1
+  - { sig: NAM2, name: maleSkinSwapList, type: formid }   # NAM2
+  - { sig: NAM3, name: femaleSkinSwapList, type: formid }   # NAM3
+  - { sig: MODL, name: additionalRaces, type: formid, repeat: true }   # MODL (repeated FormRef!)
+  - { sig: SNDD, name: footstepSound, type: formid }   # SNDD
+  - { sig: ONAM, name: artObject, type: formid }   # ONAM

@@ -1,0 +1,13 @@
+# Seeded from the typed path (IpctRec, include/ESPER/Records*.h) in migration step 2.
+record: IPCT
+name: Impact
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { use: Model, name: model }
+  - { sig: DATA, name: data, type: ImpactData }   # DATA
+  - { sig: DODT, name: decal, type: DecalData }   # DODT
+  - { sig: DNAM, name: textureSet, type: formid }   # DNAM
+  - { sig: ENAM, name: secondaryTextureSet, type: formid }   # ENAM
+  - { sig: SNAM, name: sound1, type: formid }   # SNAM
+  - { sig: NAM1, name: sound2, type: formid }   # NAM1
+  - { sig: NAM2, name: hazard, type: formid }   # NAM2

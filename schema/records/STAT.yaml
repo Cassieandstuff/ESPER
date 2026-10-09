@@ -1,0 +1,9 @@
+# Seeded from the typed path (StatRec, include/ESPER/Records*.h) in migration step 2.
+record: STAT
+name: Static
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { use: Model, name: model }
+  - { sig: DNAM, name: data, type: StatData }   # DNAM
+  - { sig: MNAM, name: lodNames, type: bytes }   # MNAM

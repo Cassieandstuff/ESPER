@@ -1,0 +1,11 @@
+# Seeded from the typed path (LctnRec, include/ESPER/Records*.h) in migration step 2.
+record: LCTN
+name: Location
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: PNAM, name: parentLocation, type: formid }   # PNAM
+  - { sig: NAM1, name: music, type: formid }   # NAM1
+  - { sig: FNAM, name: unreported, type: formid }   # FNAM
+  - { sig: MNAM, name: worldLocMarker, type: formid }   # MNAM
+  - { sig: RNAM, name: worldLocRadius, type: f32 }   # RNAM

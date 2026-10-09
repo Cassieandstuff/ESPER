@@ -1,0 +1,22 @@
+# Seeded from the typed path (InfoRec, include/ESPER/Records*.h) in migration step 2.
+record: INFO
+name: DialogResponses
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD (fragments → passthrough) — VMAD: modeled once unions land
+  - { sig: ENAM, name: flags, type: InfoFlags }   # ENAM
+  - { sig: PNAM, name: previousInfo, type: formid }   # PNAM
+  - { sig: CNAM, name: favorLevel, type: u8 }   # CNAM
+  - { sig: TCLT, name: linkTo, type: formid, repeat: true }   # TCLT
+  - { sig: DNAM, name: responseData, type: formid }   # DNAM (shared info)
+  - { sig: TRDT, name: responses, type: ResponseData, repeat: true }   # TRDT
+  - { sig: NAM1, name: responseTexts, type: lstring, table: ilstrings, repeat: true }   # NAM1 (IL — dialogue lines)
+  - { sig: NAM2, name: scriptNotes, type: zstring, repeat: true }   # NAM2
+  - { sig: NAM3, name: edits, type: zstring, repeat: true }   # NAM3
+  - { sig: SNAM, name: speakerIdles, type: formid, repeat: true }   # SNAM
+  - { sig: LNAM, name: listenIdle, type: formid }   # LNAM
+  - { sig: ANAM, name: speaker, type: formid }   # ANAM
+  - { sig: TWAT, name: walkAwayTopic, type: formid }   # TWAT
+  - { sig: ONAM, name: audioOverride, type: formid }   # ONAM
+  - { sig: RNAM, name: prompt, type: lstring, table: strings }   # RNAM
+  - { use: Condition, name: conditions, repeat: true }

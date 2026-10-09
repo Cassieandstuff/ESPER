@@ -1,0 +1,13 @@
+# Seeded from the typed path (struct NpcSkills) in migration step 2.
+struct: NpcSkills
+size: 52
+fields:
+  - { name: skillValues, type: "u8[18]" }
+  - { name: skillOffsets, type: "u8[18]" }
+  - { name: health, type: u16 }
+  - { name: magicka, type: u16 }
+  - { name: stamina, type: u16 }
+  - { name: pad, type: u16 }
+  - { name: lightingLevel, type: f32 }
+  - { name: attackAngle, type: u16 }   # far-away model distance? kept raw
+  - { name: pad2, type: u16 }

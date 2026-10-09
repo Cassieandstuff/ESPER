@@ -1,0 +1,15 @@
+# Seeded from the typed path (struct AiData) in migration step 2.
+struct: AiData
+size: 20
+fields:
+  - { name: aggression, type: u8 }
+  - { name: confidence, type: u8 }
+  - { name: energy, type: u8 }
+  - { name: morality, type: u8 }
+  - { name: mood, type: u8 }
+  - { name: assistance, type: u8 }
+  - { name: flags, type: u8 }
+  - { name: pad, type: u8 }
+  - { name: warn, type: u32 }
+  - { name: warnAttack, type: u32 }
+  - { name: attack, type: u32 }

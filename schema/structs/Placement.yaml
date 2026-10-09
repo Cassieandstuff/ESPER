@@ -1,0 +1,10 @@
+# Seeded from the typed path (struct Placement) in migration step 2.
+struct: Placement
+size: 24
+fields:
+  - { name: posX, type: f32 }
+  - { name: posY, type: f32 }
+  - { name: posZ, type: f32 }
+  - { name: rotX, type: f32 }
+  - { name: rotY, type: f32 }
+  - { name: rotZ, type: f32 }

@@ -1,0 +1,5 @@
+# Seeded from the typed path (struct MovementSpeeds) in migration step 2.
+struct: MovementSpeeds
+size: 44
+fields:
+  - { name: values, type: "f32[11]" }

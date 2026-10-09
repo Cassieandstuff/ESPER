@@ -1,0 +1,7 @@
+# Seeded from the typed path (WthrRec, include/ESPER/Records*.h) in migration step 2.
+record: WTHR
+name: Weather
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: GNAM, name: sunGlare, type: formid }   # GNAM? kept as edge
+  - { sig: MNAM, name: precipArt, type: formid }   # MNAM (SPGD)

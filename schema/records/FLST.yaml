@@ -1,0 +1,6 @@
+# Seeded from the typed path (FlstRec, include/ESPER/Records*.h) in migration step 2.
+record: FLST
+name: FormList
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: LNAM, name: items, type: formid, repeat: true }   # LNAM (repeated)

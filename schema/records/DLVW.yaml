@@ -1,0 +1,8 @@
+# Seeded from the typed path (DlvwRec, include/ESPER/Records*.h) in migration step 2.
+record: DLVW
+name: DialogView
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: QNAM, name: quest, type: formid }   # QNAM
+  - { sig: BNAM, name: branches, type: formid, repeat: true }   # BNAM
+  - { sig: TNAM, name: topics, type: formid, repeat: true }   # TNAM

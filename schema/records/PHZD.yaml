@@ -1,0 +1,8 @@
+# Seeded from the typed path (PlacedFxRec, include/ESPER/Records*.h) in migration step 2.
+record: PHZD
+name: PlacedHazard
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: NAME, name: base, type: formid }   # NAME
+  - { sig: XSCL, name: scale, type: f32 }   # XSCL

@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct VisualEffectData) in migration step 2.
+struct: VisualEffectData
+size: 12
+fields:
+  - { name: effectArt, type: formid }   # ARTO FormID
+  - { name: shader, type: formid }   # EFSH FormID
+  - { name: flags, type: u32 }

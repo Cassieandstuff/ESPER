@@ -1,0 +1,6 @@
+# Seeded from the typed path (GmstRec, include/ESPER/Records*.h) in migration step 2.
+record: GMST
+name: GameSetting
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DATA, name: data, type: bytes }   # DATA (typed by EDID prefix)

@@ -1,0 +1,17 @@
+# Seeded from the typed path (AmmoRec, include/ESPER/Records*.h) in migration step 2.
+record: AMMO
+name: Ammunition
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: ICON, name: icon, type: zstring }   # ICON
+  - { sig: MICO, name: msgIcon, type: zstring }   # MICO
+  - { sig: YNAM, name: pickupSound, type: formid }   # YNAM
+  - { sig: ZNAM, name: dropSound, type: formid }   # ZNAM
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: DATA, name: data, type: AmmoData }   # DATA
+  - { sig: ONAM, name: shortName, type: zstring }   # ONAM

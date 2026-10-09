@@ -1,0 +1,13 @@
+# Seeded from the typed path (WatrRec, include/ESPER/Records*.h) in migration step 2.
+record: WATR
+name: Water
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: NNAM, name: noiseTextures, type: zstring, repeat: true }   # NNAM
+  - { sig: ANAM, name: opacity, type: u8 }   # ANAM
+  - { sig: FNAM, name: flags, type: u8 }   # FNAM
+  - { sig: SNAM, name: openSound, type: formid }   # SNAM
+  - { sig: XNAM, name: spell, type: formid }   # XNAM
+  - { sig: INAM, name: imageSpace, type: formid }   # INAM
+  - { sig: DNAM, name: data, type: bytes }   # DNAM (param block)

@@ -1,0 +1,8 @@
+# Seeded from the typed path (GrasRec, include/ESPER/Records*.h) in migration step 2.
+record: GRAS
+name: Grass
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { use: Model, name: model }
+  - { sig: DATA, name: data, type: GrassData }   # DATA

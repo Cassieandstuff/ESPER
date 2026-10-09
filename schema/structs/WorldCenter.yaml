@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct WorldCenter) in migration step 2.
+struct: WorldCenter
+size: 4
+fields:
+  - { name: x, type: i16 }
+  - { name: y, type: i16 }

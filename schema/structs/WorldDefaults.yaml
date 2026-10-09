@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct WorldDefaults) in migration step 2.
+struct: WorldDefaults
+size: 8
+fields:
+  - { name: landHeight, type: f32 }
+  - { name: waterHeight, type: f32 }

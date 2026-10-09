@@ -1,0 +1,11 @@
+# Seeded from the typed path (CobjRec, include/ESPER/Records*.h) in migration step 2.
+record: COBJ
+name: ConstructibleObject
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: COCT, name: itemCount, type: u32 }   # COCT
+  - { sig: CNTO, name: components, type: ContainerEntry, repeat: true }   # CNTO
+  - { sig: CNAM, name: createdObject, type: formid }   # CNAM
+  - { sig: BNAM, name: workbench, type: formid }   # BNAM (keyword)
+  - { sig: NAM1, name: outputCount, type: u16 }   # NAM1
+  - { use: Condition, name: conditions, repeat: true }

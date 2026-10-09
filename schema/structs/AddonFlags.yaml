@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct AddonFlags) in migration step 2.
+struct: AddonFlags
+size: 4
+fields:
+  - { name: masterParticleCap, type: u16 }
+  - { name: flags, type: u16 }

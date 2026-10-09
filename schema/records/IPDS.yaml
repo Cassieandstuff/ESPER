@@ -1,0 +1,6 @@
+# Seeded from the typed path (IpdsRec, include/ESPER/Records*.h) in migration step 2.
+record: IPDS
+name: ImpactDataSet
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: PNAM, name: mappings, type: ImpactMapping, repeat: true }   # PNAM

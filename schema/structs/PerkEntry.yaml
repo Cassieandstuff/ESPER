@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct PerkEntry) in migration step 2.
+struct: PerkEntry
+size: 8
+fields:
+  - { name: perk, type: formid }   # FormID
+  - { name: rank, type: u8 }
+  - { name: pad, type: "u8[3]" }

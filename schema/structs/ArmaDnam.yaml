@@ -1,0 +1,12 @@
+# Seeded from the typed path (struct ArmaDnam) in migration step 2.
+struct: ArmaDnam
+size: 12
+fields:
+  - { name: malePriority, type: u8 }
+  - { name: femalePriority, type: u8 }
+  - { name: weightSliderMale, type: u8 }   # bit1 = enabled
+  - { name: weightSliderFemale, type: u8 }
+  - { name: unknown, type: u16 }
+  - { name: detectionSound, type: u8 }
+  - { name: pad, type: u8 }
+  - { name: weaponAdjust, type: f32 }

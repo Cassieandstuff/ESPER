@@ -1,0 +1,5 @@
+# Seeded from the typed path (NaviRec, include/ESPER/Records*.h) in migration step 2.
+record: NAVI
+name: NavigationMeshInfoMap
+members:
+  - { sig: NVER, name: version, type: u32 }   # NVER

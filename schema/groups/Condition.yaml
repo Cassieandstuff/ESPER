@@ -1,0 +1,8 @@
+# A condition: CTDA plus its optional CIS1/CIS2 string parameters (Conditions.h).
+# CTDA stays opaque until lookup unions land: whether its params are FormIDs depends
+# on the function, so typing them as plain integers would hide FormIDs from remap.
+group: Condition
+members:
+  - { sig: CTDA, name: data,         type: bytes, size: 32 }
+  - { sig: CIS1, name: stringParam1, type: zstring }
+  - { sig: CIS2, name: stringParam2, type: zstring }

@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct EnableParent) in migration step 2.
+struct: EnableParent
+size: 8
+fields:
+  - { name: reference, type: formid }   # FormID
+  - { name: flags, type: u32 }

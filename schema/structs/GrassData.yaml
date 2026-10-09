@@ -1,0 +1,17 @@
+# Seeded from the typed path (struct GrassData) in migration step 2.
+struct: GrassData
+size: 32
+fields:
+  - { name: density, type: u8 }
+  - { name: minSlope, type: u8 }
+  - { name: maxSlope, type: u8 }
+  - { name: pad, type: u8 }
+  - { name: distanceFromWater, type: u16 }
+  - { name: pad2, type: u16 }
+  - { name: waterOp, type: u32 }
+  - { name: positionRange, type: f32 }
+  - { name: heightRange, type: f32 }
+  - { name: colorRange, type: f32 }
+  - { name: wavePeriod, type: f32 }
+  - { name: flags, type: u8 }
+  - { name: pad3, type: "u8[3]" }

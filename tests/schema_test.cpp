@@ -1,6 +1,6 @@
 // ── esper schema-engine self-test ───────────────────────────────────────────
 // Drives esper::Record through tests/schema (a test-only schema that uses every
-// language-0.1 construct) and through the real schema's records. Every case
+// language construct) and through the real schema's records. Every case
 // checks the fidelity contract: decode → encode reproduces the payload, both
 // verbatim and with every modeled subrecord forcibly re-encoded.
 
@@ -397,6 +397,30 @@ void TestXxxx() {
     CheckRoundTrip(rec, p.bytes());
 }
 
+void TestMarker() {
+    std::printf("T13 marker: presence-only, non-empty refused\n");
+    Payload p;
+    p.Z("EDID", "M").Sub("MARK", {});
+    esper::Record rec;
+    CHECK(Decode(p.bytes(), rec));
+    CHECK(rec.RawCount() == 0);
+    CheckRoundTrip(rec, p.bytes());
+    tv::TestAlpha a(rec);
+    CHECK(a.Flagged());
+    a.SetFlagged(false);
+    CHECK(!a.Flagged());
+    CHECK((SigsOf(rec.Encode()) == std::vector<uint32_t>{ Sig("EDID") }));
+    a.SetFlagged(true);
+    CHECK(rec.Encode() == p.bytes());
+
+    Payload bad;
+    bad.Sub("MARK", Bytes{ 1 });
+    esper::Record r2;
+    CHECK(Decode(bad.bytes(), r2));
+    CHECK(r2.RawCount() == 1);
+    CheckRoundTrip(r2, bad.bytes());
+}
+
 void TestRealSchema() {
     std::printf("T12 real schema: ARMO model slots, views, old-path parity\n");
     Payload p;
@@ -446,6 +470,7 @@ int main() {
     TestFormIds();
     TestPathsAndViews();
     TestXxxx();
+    TestMarker();
     TestRealSchema();
     if (g_failures == 0) {
         std::printf("RESULT: PASS\n");

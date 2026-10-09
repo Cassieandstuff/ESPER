@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct WeaponBasic) in migration step 2.
+struct: WeaponBasic
+size: 10
+fields:
+  - { name: value, type: i32 }
+  - { name: weight, type: f32 }
+  - { name: damage, type: i16 }

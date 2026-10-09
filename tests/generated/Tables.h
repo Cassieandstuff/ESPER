@@ -27,8 +27,9 @@ inline constexpr TypeDef kTypes[] = {
     { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 15: bytes
     { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr },  // 16: bytes:noids
     { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 4, 0, 0, 0, 0, nullptr },  // 17: bytes:4:noids
-    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 18: u8
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData" },  // 19: inline:TestAlpha.data
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr },  // 18: marker
+    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 19: u8
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData" },  // 20: inline:TestAlpha.data
 };
 inline constexpr FieldDef kFields[] = {
     { "flags", 2, false },
@@ -60,19 +61,20 @@ inline constexpr MemberDef kMembers[] = {
     { "blob", SigOf("BLOB"), 15, 0, false, false, -1 },
     { "hash", SigOf("HASH"), 16, 0, false, false, -1 },
     { "fixedBytes", SigOf("FXSZ"), 17, 0, false, false, -1 },
+    { "flagged", SigOf("MARK"), 18, 0, false, false, -1 },
     { "layers", 0, 0, 1, true, true, -1 },
     { "first", 0, 0, 3, true, false, -1 },
     { "second", 0, 0, 4, true, false, -1 },
-    { "data", SigOf("DATA"), 19, 0, false, false, -1 },
+    { "data", SigOf("DATA"), 20, 0, false, false, -1 },
     { "index", SigOf("LIDX"), 6, 0, false, false, -1 },
     { "texture", SigOf("LTEX"), 0, 0, false, false, -1 },
     { "presets", 0, 0, 2, true, true, -1 },
     { "color", SigOf("PCOL"), 9, 0, false, false, -1 },
     { "value", SigOf("PVAL"), 3, 0, false, false, -1 },
     { "first", SigOf("PRA1"), 0, 0, false, false, -1 },
-    { "second", SigOf("PRA2"), 18, 0, false, false, -1 },
+    { "second", SigOf("PRA2"), 19, 0, false, false, -1 },
     { "first", SigOf("PRB1"), 0, 0, false, false, -1 },
-    { "second", SigOf("PRB2"), 18, 0, false, false, -1 },
+    { "second", SigOf("PRB2"), 19, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
 };
 inline constexpr EntryDef kEntries[] = {
@@ -89,15 +91,16 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("BLOB"), 10 },
     { SigOf("HASH"), 11 },
     { SigOf("FXSZ"), 12 },
-    { SigOf("LIDX"), 13 },
-    { SigOf("LTEX"), 13 },
-    { SigOf("PCOL"), 13 },
-    { SigOf("PVAL"), 13 },
-    { SigOf("PRA1"), 14 },
-    { SigOf("PRA2"), 14 },
-    { SigOf("PRB1"), 15 },
-    { SigOf("PRB2"), 15 },
-    { SigOf("DATA"), 16 },
+    { SigOf("MARK"), 13 },
+    { SigOf("LIDX"), 14 },
+    { SigOf("LTEX"), 14 },
+    { SigOf("PCOL"), 14 },
+    { SigOf("PVAL"), 14 },
+    { SigOf("PRA1"), 15 },
+    { SigOf("PRA2"), 15 },
+    { SigOf("PRB1"), 16 },
+    { SigOf("PRB2"), 16 },
+    { SigOf("DATA"), 17 },
     { SigOf("LIDX"), 0 },
     { SigOf("LTEX"), 1 },
     { SigOf("PCOL"), 2 },
@@ -111,12 +114,12 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("EDID"), 0 },
 };
 inline constexpr GroupDef kGroups[] = {
-    { "TestAlpha", 0, 17, 0, 22, false },  // 0
-    { "TestAlphaLayers", 17, 3, 22, 4, true },  // 1
-    { "TestAlphaLayersPresets", 20, 2, 26, 2, true },  // 2
-    { "Pair", 22, 2, 28, 2, true },  // 3
-    { "Pair", 24, 2, 30, 2, true },  // 4
-    { "TestBeta", 26, 1, 32, 1, false },  // 5
+    { "TestAlpha", 0, 18, 0, 23, false },  // 0
+    { "TestAlphaLayers", 18, 3, 23, 4, true },  // 1
+    { "TestAlphaLayersPresets", 21, 2, 27, 2, true },  // 2
+    { "Pair", 23, 2, 29, 2, true },  // 3
+    { "Pair", 25, 2, 31, 2, true },  // 4
+    { "TestBeta", 27, 1, 33, 1, false },  // 5
 };
 inline constexpr RecordDef kRecords[] = {
     { SigOf("TSTA"), "TestAlpha", 0 },
@@ -128,7 +131,7 @@ inline constexpr SchemaSet kSchema{
     std::span<const FieldDef>(kFields, 11),
     std::span<const uint32_t>(kLinks, 1),
     kMembers, kEntries, kGroups, kRecords,
-    "0.0.1", "0.1",
+    "0.0.1", "0.2",
 };
 
 } // namespace esper_test::tables

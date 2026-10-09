@@ -1,0 +1,9 @@
+# Seeded from the typed path (MuscRec, include/ESPER/Records*.h) in migration step 2.
+record: MUSC
+name: MusicType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FNAM, name: flags, type: u32 }   # FNAM
+  - { sig: PNAM, name: priority, type: MusicPriority }   # PNAM
+  - { sig: WNAM, name: fade, type: f32 }   # WNAM
+  - { sig: TNAM, name: tracks, type: "formid[]" }   # TNAM (array in one sub)

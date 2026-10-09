@@ -1,0 +1,11 @@
+# Seeded from the typed path (PerkRec, include/ESPER/Records*.h) in migration step 2.
+record: PERK
+name: Perk
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: ICON, name: icon, type: zstring }   # ICON
+  - { sig: NNAM, name: nextPerk, type: formid }   # NNAM
+  - { use: Condition, name: conditions, repeat: true }

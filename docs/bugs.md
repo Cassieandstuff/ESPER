@@ -28,6 +28,14 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
     `modelSwap` rows). The schema engine treats them as opaque bytes and refuses remap on at least 149
     vanilla records that carry them. Whether they hold FormIDs is not yet verified on real data.
   - The other ~110 `Blob` rows have not been audited.
+- **Scale (2026-10-09, `roundtrip-gate --schema` over the five vanilla masters):** the typed path
+  would remap **98,384** vanilla records that the schema engine refuses, because they carry
+  opaque bytes it can't see into. These are counted by the first blocker per record. The top
+  blockers are `CTDA` (26,506), `MHDT` (24,019), `NVNM` (19,440), `TVDT` (8,595), `VMAD`
+  (4,369), and various `DATA`/`DNAM`/`ONAM` blobs. `CTDA` and `VMAD` are typed-path codecs that
+  *do* see FormIDs, so those refusals are the new engine being conservative until unions land,
+  not typed-path bugs. Every other blocker is an unchecked `Blob`, which is this bug's
+  territory.
 - **Fix direction:**
   - Short term: an opaque-blob binder whose `remapSafe` returns false whenever the field is
     present, used for every blob not known to be FormID-free.
@@ -35,6 +43,19 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
     `formIds: none` (see [schema-design.md](schema-design.md)).
 
 ## Fixed
+
+### STAT DNAM FormID offset pointed at a float — FIXED
+- **Symptom:** a FormID remap over STAT records (`EnsureMaster` renumbering) treated the
+  `maxAngle` float's bits as a FormID, which could rewrite the float. It never visited the real
+  MATO reference, which kept pointing at the old master index.
+- **Root cause:** `kStatDataIds` listed `FormIdAt(0)`. `StatData` is `{ float maxAngle; uint32_t
+  material; }`, so the FormID is at offset 4
+  ([RecordsWorld.h:115](../include/ESPER/RecordsWorld.h)).
+- **Found by:** the migration step 2 converter, which turns FormID offsets into typed `formid`
+  fields and reported that offset 0 lands on a float.
+- **Verified:** with the schema declaring `material` as `formid` `to: [MATO]`, the schema gate
+  resolves all 2,496 non-null vanilla STAT `material` values to MATO records (0 wrong).
+- **Fix:** `FormIdAt(4)`, in the step 2 change.
 
 ### EnsureMaster renumbered NULL FormIDs on masterless plugins — FIXED
 - **Symptom:** appending the FIRST master to a plugin (oldSelf index 0) rewrote every null (0)

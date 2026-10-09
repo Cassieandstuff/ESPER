@@ -1,0 +1,8 @@
+# Seeded from the typed path (ClfmRec, include/ESPER/Records*.h) in migration step 2.
+record: CLFM
+name: ColorForm
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: CNAM, name: color, type: ColorRgba }   # CNAM
+  - { sig: FNAM, name: playable, type: u32 }   # FNAM

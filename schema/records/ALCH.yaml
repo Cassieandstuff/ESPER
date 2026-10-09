@@ -1,0 +1,19 @@
+# Seeded from the typed path (AlchRec, include/ESPER/Records*.h) in migration step 2.
+record: ALCH
+name: Ingestible
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { use: Model, name: model }
+  - { sig: ICON, name: icon, type: zstring }   # ICON
+  - { sig: MICO, name: msgIcon, type: zstring }   # MICO
+  - { sig: YNAM, name: pickupSound, type: formid }   # YNAM
+  - { sig: ZNAM, name: dropSound, type: formid }   # ZNAM
+  - { sig: DATA, name: weight, type: f32 }   # DATA
+  - { sig: ENIT, name: potion, type: PotionData }   # ENIT
+  - { sig: EFID, name: effects, type: formid, repeat: true }   # EFID
+  - { sig: EFIT, name: effectItems, type: EffectItem, repeat: true }   # EFIT
+  - { use: Condition, name: conditions, repeat: true }

@@ -1,0 +1,9 @@
+# Seeded from the typed path (struct PotionData) in migration step 2.
+struct: PotionData
+size: 20
+fields:
+  - { name: value, type: i32 }
+  - { name: flags, type: u32 }
+  - { name: addiction, type: formid }   # FormID
+  - { name: addictionChance, type: u32 }
+  - { name: useSound, type: formid }   # FormID

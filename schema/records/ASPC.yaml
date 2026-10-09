@@ -1,0 +1,9 @@
+# Seeded from the typed path (AspcRec, include/ESPER/Records*.h) in migration step 2.
+record: ASPC
+name: AcousticSpace
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: SNAM, name: ambientSound, type: formid }   # SNAM
+  - { sig: RDAT, name: regionData, type: formid }   # RDAT
+  - { sig: BNAM, name: reverb, type: formid }   # BNAM

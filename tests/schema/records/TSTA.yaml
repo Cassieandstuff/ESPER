@@ -14,6 +14,7 @@ members:
   - { sig: BLOB, name: blob,         type: bytes }
   - { sig: HASH, name: hash,         type: bytes, formIds: none }
   - { sig: FXSZ, name: fixedBytes,   type: bytes, size: 4, formIds: none }
+  - { sig: MARK, name: flagged,      type: marker }
   - group: layers
     repeat: true
     members:

@@ -1,0 +1,10 @@
+# Seeded from the typed path (ExplRec, include/ESPER/Records*.h) in migration step 2.
+record: EXPL
+name: Explosion
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: EITM, name: enchantment, type: formid }   # EITM
+  - { sig: MNAM, name: imageSpaceMod, type: formid }   # MNAM

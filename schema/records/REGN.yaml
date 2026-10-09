@@ -1,0 +1,8 @@
+# Seeded from the typed path (RegnRec, include/ESPER/Records*.h) in migration step 2.
+record: REGN
+name: Region
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: RCLR, name: color, type: bytes }   # RCLR
+  - { sig: WNAM, name: worldspace, type: formid }   # WNAM
+  - { sig: RPLI, name: areaData, type: bytes }   # RPLI/RPLD via passthrough

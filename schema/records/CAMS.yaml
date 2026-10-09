@@ -1,0 +1,8 @@
+# Seeded from the typed path (CamsRec, include/ESPER/Records*.h) in migration step 2.
+record: CAMS
+name: CameraShot
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { use: Model, name: model }
+  - { sig: DATA, name: data, type: bytes }   # DATA (floats/enums)
+  - { sig: MNAM, name: imageSpaceMod, type: formid }   # MNAM

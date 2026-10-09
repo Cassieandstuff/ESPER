@@ -1,0 +1,6 @@
+# Seeded from the typed path (BptdRec, include/ESPER/Records*.h) in migration step 2.
+record: BPTD
+name: BodyPartData
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { use: Model, name: model }

@@ -41,30 +41,31 @@ namespace TSTA {
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> blob{ SigOf("TSTA"), { { 10 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> hash{ SigOf("TSTA"), { { 11 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> fixedBytes{ SigOf("TSTA"), { { 12 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> flagged{ SigOf("TSTA"), { { 13 }, 1, 1 } };
     namespace layers {
-        inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 13 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("TSTA"), { { 13, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::string> texture{ SigOf("TSTA"), { { 13, 1 }, 2, 2 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 14 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("TSTA"), { { 14, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> texture{ SigOf("TSTA"), { { 14, 1 }, 2, 2 } };
         namespace presets {
-            inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 13, 2 }, 2, 2 } };
-            inline constexpr ::esper::FieldRef<::esper::FormId> color{ SigOf("TSTA"), { { 13, 2, 0 }, 3, 3 } };
-            inline constexpr ::esper::FieldRef<float> value{ SigOf("TSTA"), { { 13, 2, 1 }, 3, 3 } };
+            inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 14, 2 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> color{ SigOf("TSTA"), { { 14, 2, 0 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<float> value{ SigOf("TSTA"), { { 14, 2, 1 }, 3, 3 } };
         }
     }
     namespace first {
-        inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 14 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<std::string> first{ SigOf("TSTA"), { { 14, 0 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<uint8_t> second{ SigOf("TSTA"), { { 14, 1 }, 2, 2 } };
-    }
-    namespace second {
         inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 15 }, 1, 1 } };
         inline constexpr ::esper::FieldRef<std::string> first{ SigOf("TSTA"), { { 15, 0 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<uint8_t> second{ SigOf("TSTA"), { { 15, 1 }, 2, 2 } };
     }
+    namespace second {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTA"), { { 16 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> first{ SigOf("TSTA"), { { 16, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> second{ SigOf("TSTA"), { { 16, 1 }, 2, 2 } };
+    }
     namespace data {
-        inline constexpr ::esper::StructRef self{ SigOf("TSTA"), { { 16 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<int32_t> value{ SigOf("TSTA"), { { 16, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<float> weight{ SigOf("TSTA"), { { 16, 1 }, 1, 2 } };
+        inline constexpr ::esper::StructRef self{ SigOf("TSTA"), { { 17 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int32_t> value{ SigOf("TSTA"), { { 17, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<float> weight{ SigOf("TSTA"), { { 17, 1 }, 1, 2 } };
     }
 }
 

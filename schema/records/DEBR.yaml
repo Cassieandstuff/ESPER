@@ -1,0 +1,5 @@
+# Seeded from the typed path (DebrRec, include/ESPER/Records*.h) in migration step 2.
+record: DEBR
+name: Debris
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID

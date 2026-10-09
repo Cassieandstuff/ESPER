@@ -1,0 +1,8 @@
+# Seeded from the typed path (ModeledRec, include/ESPER/Records*.h) in migration step 2.
+record: MSTT
+name: MoveableStatic
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }

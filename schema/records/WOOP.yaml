@@ -1,0 +1,7 @@
+# Seeded from the typed path (WoopRec, include/ESPER/Records*.h) in migration step 2.
+record: WOOP
+name: WordOfPower
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: TNAM, name: translation, type: lstring, table: strings }   # TNAM

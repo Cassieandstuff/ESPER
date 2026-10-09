@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct CellGrid) in migration step 2.
+struct: CellGrid
+size: 12
+fields:
+  - { name: x, type: i32 }
+  - { name: y, type: i32 }
+  - { name: flags, type: u32 }

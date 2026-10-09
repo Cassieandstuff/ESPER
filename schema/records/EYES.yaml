@@ -1,0 +1,8 @@
+# Seeded from the typed path (EyesRec, include/ESPER/Records*.h) in migration step 2.
+record: EYES
+name: Eyes
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: ICON, name: icon, type: zstring }   # ICON
+  - { sig: DATA, name: flags, type: u8 }   # DATA

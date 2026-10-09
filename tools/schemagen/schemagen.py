@@ -11,7 +11,7 @@ Emits, into --out:
 
 The descriptor language is specified in docs/schema-language.md. This file is
 the reference implementation of its validation rules: anything it accepts the
-engine can interpret, and anything outside language 0.1 is rejected by name.
+engine can interpret, and anything outside the current language version is rejected by name.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ try:
 except ImportError:  # pragma: no cover
     sys.exit("schemagen: PyYAML is required (pip install pyyaml)")
 
-LANGUAGE_VERSION = "0.1"
+LANGUAGE_VERSION = "0.2"
 
 SCALAR_KINDS = {
     "u8": ("U8", "uint8_t"), "u16": ("U16", "uint16_t"), "u32": ("U32", "uint32_t"),
@@ -38,12 +38,13 @@ SCALAR_KINDS = {
     "zstring": ("ZString", "std::string"), "wstring": ("WString", "std::string"),
     "lstring": ("LString", "::esper::LocalizedString"),
     "bytes": ("Bytes", "std::vector<uint8_t>"),
+    "marker": ("Bytes", "std::vector<uint8_t>"),   # zero-size, presence-only
 }
-FIXED_SIZE = {"u8": 1, "i8": 1, "u16": 2, "i16": 2, "u32": 4, "i32": 4, "f32": 4,
+FIXED_SIZE = {"marker": 0, "u8": 1, "i8": 1, "u16": 2, "i16": 2, "u32": 4, "i32": 4, "f32": 4,
               "formid": 4, "sig4": 4, "u64": 8, "i64": 8}
 STR_TABLES = {"strings": "Strings", "dlstrings": "DLStrings", "ilstrings": "ILStrings"}
 
-# Constructs specified by the design but not in language 0.1: reject by name.
+# Constructs specified by the design but not in this language version: reject by name.
 NOT_YET = {
     "union": "unions", "if": "conditional fields", "open": "group open markers",
     "end": "group end markers", "enum": "enum hints", "flags": "flag hints",
@@ -221,6 +222,12 @@ class Schema:
             node.spec = f"lstring:{table}"
         elif "table" in opts:
             fail(where, "'table' only applies to lstring")
+        if base == "marker":
+            for k in ("size", "formIds"):
+                if k in opts:
+                    fail(where, f"'{k}' doesn't apply to marker")
+            node.len, node.count, node.flags = "Fixed", 0, 1
+            return self.intern(node)
         if base == "bytes":
             size = opts.get("size")
             if size is not None:
@@ -496,8 +503,20 @@ class Schema:
                 fail("views", f"type name {n} is used by both {owners[n]} and {what}")
             owners[n] = what
 
-        for sig, name, _ in self.records:
+        for sig, name, root in self.records:
             claim(name, f"record {sig}")
+        # An accessor named like its own view class would be a constructor.
+        for g in self.groups:
+            for m in g.members:
+                if pascal(m.name) == g.name:
+                    fail("views", f"member '{m.name}' of {g.name} would generate accessor {g.name}(), "
+                                  f"which clashes with the view class; rename the member or the type")
+        for t in self.types:
+            if t.kind == "Struct":
+                for fname, _, brk in t.struct_fields:
+                    if not brk and pascal(fname) == t.name:
+                        fail("views", f"field '{fname}' of struct {t.name} would generate accessor "
+                                      f"{t.name}(), which clashes with the view class")
         for t in self.types:
             if t.kind == "Struct":
                 claim(t.name, f"struct {t.spec}")
@@ -693,6 +712,10 @@ def emit_views(schema: Schema, ns: str) -> str:
         el = schema.types[t.ref] if t.kind == "Array" else None
         elv = link_view(el) if el is not None else None
         body.append(f"    // {comment}")
+        if t.spec == "marker" and not repeat:
+            body.append(f"    bool {acc}() const {{ return {cursor}.Has({path_expr}); }}")
+            body.append(f"    void Set{acc}(bool on) const {{ if (on) {cursor}.Set<std::vector<uint8_t>>({path_expr}, {{}}); else {cursor}.Clear({path_expr}); }}")
+            return
         if t.kind == "Struct":
             body.append(f"    {q(t.name)} {acc}() const;")
             body.append(f"    bool Has{acc}() const {{ return {cursor}.Has({path_expr}); }}")
@@ -807,6 +830,8 @@ def emit_json(schema: Schema) -> str:
             return d
         base = t.spec.split(":")[0].split("->")[0]
         d = {"kind": base}
+        if base == "marker":
+            return d
         if t.kind == "LString":
             d["table"] = t.table.lower()
         if t.kind == "Bytes":

@@ -1,0 +1,10 @@
+# Seeded from the typed path (IdlmRec, include/ESPER/Records*.h) in migration step 2.
+record: IDLM
+name: IdleMarker
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: IDLF, name: flags, type: u8 }   # IDLF
+  - { sig: IDLC, name: animCount, type: u8 }   # IDLC
+  - { sig: IDLT, name: timerSetting, type: f32 }   # IDLT
+  - { sig: IDLA, name: animations, type: "formid[]" }   # IDLA (array)

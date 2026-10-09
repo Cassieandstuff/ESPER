@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct LtexHavok) in migration step 2.
+struct: LtexHavok
+size: 2
+fields:
+  - { name: friction, type: u8 }
+  - { name: restitution, type: u8 }

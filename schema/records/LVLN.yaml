@@ -1,0 +1,12 @@
+# Seeded from the typed path (LeveledRec, include/ESPER/Records*.h) in migration step 2.
+record: LVLN
+name: LeveledNpc
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: LVLD, name: chanceNone, type: u8 }   # LVLD
+  - { sig: LVLF, name: flags, type: u8 }   # LVLF
+  - { sig: LVLG, name: global, type: formid }   # LVLG (LVLI)
+  - { sig: LLCT, name: entryCount, type: u8 }   # LLCT
+  - { sig: LVLO, name: entries, type: LeveledEntry, repeat: true }   # LVLO
+  - { use: Model, name: model }

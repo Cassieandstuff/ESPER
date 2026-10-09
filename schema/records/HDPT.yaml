@@ -1,0 +1,15 @@
+# Seeded from the typed path (HdptRec, include/ESPER/Records*.h) in migration step 2.
+record: HDPT
+name: HeadPart
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: DATA, name: flags, type: u8 }   # DATA
+  - { sig: PNAM, name: type, type: u32 }   # PNAM (0=misc 1=face 2=eyes 3=hair …)
+  - { sig: HNAM, name: extraParts, type: formid, repeat: true }   # HNAM (repeated)
+  - { sig: NAM0, name: partTypes, type: u32, repeat: true }   # NAM0 (0=race morph 1=tri 2=chargen)
+  - { sig: NAM1, name: partFiles, type: zstring, repeat: true }   # NAM1
+  - { sig: TNAM, name: textureSet, type: formid }   # TNAM
+  - { sig: CNAM, name: color, type: formid }   # CNAM (CLFM)
+  - { sig: RNAM, name: validRaces, type: formid }   # RNAM (FLST)

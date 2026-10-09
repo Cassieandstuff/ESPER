@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct FactionRelation) in migration step 2.
+struct: FactionRelation
+size: 12
+fields:
+  - { name: faction, type: formid }   # FormID
+  - { name: modifier, type: i32 }
+  - { name: combatReaction, type: u32 }   # 0 neutral 1 enemy 2 ally 3 friend

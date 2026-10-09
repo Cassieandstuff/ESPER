@@ -1,0 +1,33 @@
+# Seeded from the typed path (WeapRec, include/ESPER/Records*.h) in migration step 2.
+record: WEAP
+name: Weapon
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: EITM, name: enchantment, type: formid }   # EITM
+  - { sig: EAMT, name: enchantAmount, type: u16 }   # EAMT
+  - { sig: ETYP, name: equipType, type: formid }   # ETYP
+  - { sig: BIDS, name: bashImpact, type: formid }   # BIDS
+  - { sig: BAMT, name: bashMaterial, type: formid }   # BAMT
+  - { sig: YNAM, name: pickupSound, type: formid }   # YNAM
+  - { sig: ZNAM, name: dropSound, type: formid }   # ZNAM
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: INAM, name: impactDataSet, type: formid }   # INAM
+  - { sig: WNAM, name: firstPersonModel, type: formid }   # WNAM
+  - { sig: SNAM, name: attackSound, type: formid }   # SNAM
+  - { sig: XNAM, name: attackSound2d, type: formid }   # XNAM
+  - { sig: NAM7, name: attackLoop, type: formid }   # NAM7
+  - { sig: TNAM, name: attackFail, type: formid }   # TNAM
+  - { sig: UNAM, name: idleSound, type: formid }   # UNAM
+  - { sig: NAM9, name: equipSound, type: formid }   # NAM9
+  - { sig: NAM8, name: unequipSound, type: formid }   # NAM8
+  - { sig: DATA, name: basic, type: WeaponBasic }   # DATA
+  - { sig: DNAM, name: dnam, type: bytes }   # DNAM (100B block, opaque)
+  - { sig: CRDT, name: crit, type: WeaponCrit }   # CRDT
+  - { sig: VNAM, name: detectionLevel, type: u32 }   # VNAM
+  - { sig: CNAM, name: templateWeapon, type: formid }   # CNAM

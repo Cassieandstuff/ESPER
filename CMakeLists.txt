@@ -110,7 +110,7 @@ if(ESPER_BUILD_TESTS)
     add_test(NAME esper-test COMMAND esper-test)
 
     # The schema engine, driven by a test-only schema (tests/schema) that
-    # exercises every language-0.1 construct, plus the real schema's records.
+    # exercises every language construct, plus the real schema's records.
     add_executable(esper-schema-test tests/schema_test.cpp)
     target_link_libraries(esper-schema-test PRIVATE esper::esper)
     target_include_directories(esper-schema-test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/tests")

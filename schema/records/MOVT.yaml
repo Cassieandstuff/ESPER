@@ -1,0 +1,8 @@
+# Seeded from the typed path (MovtRec, include/ESPER/Records*.h) in migration step 2.
+record: MOVT
+name: MovementType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: MNAM, name: mnam, type: zstring }   # MNAM (name)
+  - { sig: SPED, name: speeds, type: MovementSpeeds }   # SPED
+  - { sig: INAM, name: rotation, type: bytes }   # INAM

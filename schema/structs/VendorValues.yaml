@@ -1,0 +1,10 @@
+# Seeded from the typed path (struct VendorValues) in migration step 2.
+struct: VendorValues
+size: 12
+fields:
+  - { name: startHour, type: u16 }
+  - { name: endHour, type: u16 }
+  - { name: radius, type: u32 }
+  - { name: buysStolen, type: u8 }
+  - { name: notSellBuy, type: u8 }
+  - { name: unused, type: u16 }

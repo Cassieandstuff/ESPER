@@ -1,0 +1,9 @@
+# Seeded from the typed path (ShouRec, include/ESPER/Records*.h) in migration step 2.
+record: SHOU
+name: Shout
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: MDOB, name: menuDisplayObject, type: formid }   # MDOB
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: SNAM, name: words, type: ShoutWord, repeat: true }   # SNAM ×3

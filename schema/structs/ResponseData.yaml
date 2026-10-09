@@ -1,0 +1,12 @@
+# Seeded from the typed path (struct ResponseData) in migration step 2.
+struct: ResponseData
+size: 24
+fields:
+  - { name: emotionType, type: u32 }
+  - { name: emotionValue, type: i32 }
+  - { name: unknown, type: u32 }
+  - { name: responseNumber, type: u8 }
+  - { name: pad, type: "u8[3]" }
+  - { name: sound, type: formid }   # FormID
+  - { name: useEmotionAnimation, type: u8 }
+  - { name: pad2, type: "u8[3]" }

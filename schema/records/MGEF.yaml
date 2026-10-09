@@ -1,0 +1,12 @@
+# Seeded from the typed path (MgefRec, include/ESPER/Records*.h) in migration step 2.
+record: MGEF
+name: MagicEffect
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: MDOB, name: menuDisplayObject, type: formid }   # MDOB
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: DNAM, name: description, type: lstring, table: dlstrings }   # DNAM
+  - { use: Condition, name: conditions, repeat: true }

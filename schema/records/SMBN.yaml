@@ -1,0 +1,12 @@
+# Seeded from the typed path (SmNodeRec, include/ESPER/Records*.h) in migration step 2.
+record: SMBN
+name: StoryManagerBranchNode
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: PNAM, name: parent, type: formid }   # PNAM
+  - { sig: SNAM, name: child, type: formid }   # SNAM
+  - { sig: CITC, name: conditionCount, type: u32 }   # CITC
+  - { sig: DNAM, name: flags, type: u32 }   # DNAM
+  - { sig: XNAM, name: maxAcrossType, type: u32 }   # XNAM
+  - { sig: QNAM, name: quest, type: formid }   # NNAM? / QNAM (SMQN)
+  - { use: Condition, name: conditions, repeat: true }

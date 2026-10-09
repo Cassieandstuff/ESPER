@@ -1,0 +1,10 @@
+# Seeded from the typed path (HazdRec, include/ESPER/Records*.h) in migration step 2.
+record: HAZD
+name: Hazard
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: MNAM, name: imageSpaceMod, type: formid }   # MNAM
+  - { sig: DATA, name: data, type: HazardData }   # DATA

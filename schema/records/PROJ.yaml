@@ -1,0 +1,11 @@
+# Seeded from the typed path (ProjRec, include/ESPER/Records*.h) in migration step 2.
+record: PROJ
+name: Projectile
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: NAM1, name: muzzleModel, type: zstring }   # NAM1
+  - { sig: NAM2, name: muzzleData, type: bytes }   # NAM2
+  - { sig: VNAM, name: soundLevel, type: u32 }   # VNAM

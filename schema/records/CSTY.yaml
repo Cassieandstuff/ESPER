@@ -1,0 +1,10 @@
+# Seeded from the typed path (CstyRec, include/ESPER/Records*.h) in migration step 2.
+record: CSTY
+name: CombatStyle
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: CSGD, name: general, type: bytes }   # CSGD
+  - { sig: CSMD, name: melee, type: bytes }   # CSMD
+  - { sig: CSME, name: closeRange, type: bytes }   # CSME
+  - { sig: CSFL, name: flight, type: bytes }   # CSFL
+  - { sig: DATA, name: data, type: bytes }   # DATA

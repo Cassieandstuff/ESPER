@@ -1,0 +1,13 @@
+# Seeded from the typed path (struct SpellData) in migration step 2.
+struct: SpellData
+size: 36
+fields:
+  - { name: cost, type: u32 }
+  - { name: flags, type: u32 }
+  - { name: type, type: u32 }
+  - { name: chargeTime, type: f32 }
+  - { name: castType, type: u32 }
+  - { name: delivery, type: u32 }
+  - { name: castDuration, type: f32 }
+  - { name: range, type: f32 }
+  - { name: halfCostPerk, type: formid }   # FormID

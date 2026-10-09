@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct ShoutWord) in migration step 2.
+struct: ShoutWord
+size: 12
+fields:
+  - { name: word, type: formid }   # WOOP FormID
+  - { name: spell, type: formid }   # SPEL FormID
+  - { name: recoveryTime, type: f32 }

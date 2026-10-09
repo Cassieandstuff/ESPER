@@ -1,0 +1,16 @@
+# Seeded from the typed path (FlorRec, include/ESPER/Records*.h) in migration step 2.
+record: FLOR
+name: Flora
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { use: Model, name: model }
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: RNAM, name: activateText, type: lstring, table: strings }   # RNAM
+  - { sig: FNAM, name: flags, type: u16 }   # FNAM
+  - { sig: PFIG, name: ingredient, type: formid }   # PFIG
+  - { sig: SNAM, name: harvestSound, type: formid }   # SNAM
+  - { sig: PFPC, name: seasons, type: bytes }   # PFPC

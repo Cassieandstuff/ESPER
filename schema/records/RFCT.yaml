@@ -1,0 +1,6 @@
+# Seeded from the typed path (RfctRec, include/ESPER/Records*.h) in migration step 2.
+record: RFCT
+name: VisualEffect
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DATA, name: data, type: VisualEffectData }   # DATA

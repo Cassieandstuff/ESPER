@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct InfoFlags) in migration step 2.
+struct: InfoFlags
+size: 4
+fields:
+  - { name: flags, type: u16 }
+  - { name: resetHours, type: u16 }   # encoded hours ×2730

@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct LeveledEntry) in migration step 2.
+struct: LeveledEntry
+size: 12
+fields:
+  - { name: level, type: i32 }
+  - { name: reference, type: formid }   # FormID
+  - { name: count, type: i32 }

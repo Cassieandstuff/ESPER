@@ -1,0 +1,6 @@
+# Seeded from the typed path (VtypRec, include/ESPER/Records*.h) in migration step 2.
+record: VTYP
+name: VoiceType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DNAM, name: flags, type: u8 }   # DNAM

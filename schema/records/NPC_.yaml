@@ -1,0 +1,57 @@
+# Seeded from the typed path (NpcRec, include/ESPER/Records*.h) in migration step 2.
+record: NPC_
+name: Npc
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: ACBS, name: acbs, type: AcbsData }   # ACBS
+  - { sig: SNAM, name: factions, type: FactionRank, repeat: true }   # SNAM
+  - { sig: INAM, name: deathItem, type: formid }   # INAM
+  - { sig: VTCK, name: voice, type: formid }   # VTCK
+  - { sig: TPLT, name: templ, type: formid }   # TPLT
+  - { sig: RNAM, name: race, type: formid }   # RNAM
+  - { sig: SPCT, name: spellCount, type: u32 }   # SPCT
+  - { sig: SPLO, name: spells, type: formid, repeat: true }   # SPLO
+  - { sig: WNAM, name: wornArmor, type: formid }   # WNAM
+  - { sig: ANAM, name: farAwayModel, type: formid }   # ANAM
+  - { sig: ATKR, name: attackRace, type: formid }   # ATKR
+  - { sig: ATKE, name: attackEvents, type: zstring, repeat: true }   # ATKE
+  - { sig: SPOR, name: spectatorGroup, type: formid }   # SPOR
+  - { sig: OCOR, name: observeCorpse, type: formid }   # OCOR
+  - { sig: GWOR, name: guardWarn, type: formid }   # GWOR
+  - { sig: ECOR, name: combatOverride, type: formid }   # ECOR
+  - { sig: NAM5, name: nam5, type: u16 }   # NAM5
+  - { sig: NAM6, name: height, type: f32 }   # NAM6
+  - { sig: NAM7, name: weight, type: f32 }   # NAM7
+  - { sig: NAM8, name: soundLevel, type: u32 }   # NAM8
+  - { sig: CSCR, name: audioTemplate, type: formid }   # CSCR
+  - { sig: DOFT, name: defaultOutfit, type: formid }   # DOFT
+  - { sig: SOFT, name: sleepOutfit, type: formid }   # SOFT
+  - { sig: DPLT, name: defaultPackList, type: formid }   # DPLT
+  - { sig: CRIF, name: crimeFaction, type: formid }   # CRIF
+  - { sig: FTST, name: headTexture, type: formid }   # FTST
+  - { sig: PNAM, name: headParts, type: formid, repeat: true }   # PNAM
+  - { sig: HCLF, name: hairColor, type: formid }   # HCLF
+  - { sig: ZNAM, name: combatStyle, type: formid }   # ZNAM
+  - { sig: GNAM, name: giftFilter, type: formid }   # GNAM
+  - { sig: NAM9, name: faceMorphs, type: FaceMorphs }   # NAM9
+  - { sig: NAMA, name: faceParts, type: FaceParts }   # NAMA
+  - { sig: TINI, name: tintIndices, type: u16, repeat: true }   # TINI
+  - { sig: TINC, name: tintColors, type: TintColor, repeat: true }   # TINC
+  - { sig: TINV, name: tintValues, type: i32, repeat: true }   # TINV (via I32 codec below)
+  - { sig: TIAS, name: tintPresets, type: i16, repeat: true }   # TIAS
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: PRKZ, name: perkCount, type: u32 }   # PRKZ
+  - { sig: PRKR, name: perks, type: PerkEntry, repeat: true }   # PRKR
+  - { sig: COCT, name: itemCount, type: u32 }   # COCT
+  - { sig: CNTO, name: items, type: ContainerEntry, repeat: true }   # CNTO
+  - { sig: AIDT, name: aiData, type: AiData }   # AIDT
+  - { sig: PKID, name: packages, type: formid, repeat: true }   # PKID
+  - { sig: CNAM, name: npcClass, type: formid }   # CNAM
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: SHRT, name: shortName, type: lstring, table: strings }   # SHRT
+  - { sig: DATA, name: dataMarker, type: marker }   # DATA (zero-size marker)
+  - { sig: DNAM, name: skills, type: NpcSkills }   # DNAM
+  - { sig: QNAM, name: skinTone, type: SkinTone }   # QNAM

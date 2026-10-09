@@ -1,0 +1,7 @@
+# Seeded from the typed path (DualRec, include/ESPER/Records*.h) in migration step 2.
+record: DUAL
+name: DualCastData
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
+  - { sig: DATA, name: data, type: DualData }   # DATA

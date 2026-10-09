@@ -1,0 +1,53 @@
+# Seeded from the typed path (RaceRec, include/ESPER/Records*.h) in migration step 2.
+record: RACE
+name: Race
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: SPCT, name: spellCount, type: u32 }   # SPCT
+  - { sig: SPLO, name: spells, type: formid, repeat: true }   # SPLO
+  - { sig: WNAM, name: skin, type: formid }   # WNAM (skin ARMO)
+  - { sig: BOD2, name: biped, type: BipedBodyTemplate }   # BOD2
+  - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
+  - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
+  - { sig: ANAM, name: skeletonModels, type: zstring, repeat: true }   # ANAM (male, then female)
+  - { sig: MODT, name: modelData, type: bytes, formIds: none, repeat: true }   # MODT (opaque, follows each model)
+  - { sig: MTNM, name: movementNames, type: bytes, repeat: true }   # MTNM (4-char tags)
+  - { sig: VTCK, name: voices, type: "formid[]" }   # VTCK (male+female in one sub)
+  - { sig: DNAM, name: decapArmors, type: "formid[]" }   # DNAM (male+female)
+  - { sig: HCLF, name: defaultHairColors, type: "formid[]" }   # HCLF (male+female)
+  - { sig: TINL, name: tintCount, type: u16 }   # TINL
+  - { sig: TINI, name: tintLayerIndex, type: u16, repeat: true }   # TINI (one per layer)
+  - { sig: TINT, name: tintLayerTexture, type: zstring, repeat: true }   # TINT (one per layer)
+  - { sig: TINP, name: tintLayerMaskType, type: u16, repeat: true }   # TINP (optional per layer)
+  - { sig: TIND, name: tintLayerDefault, type: formid, repeat: true }   # TIND (optional per layer; CLFM)
+  - { sig: TINC, name: tintPresetColor, type: formid, repeat: true }   # TINC (CLFM, per preset)
+  - { sig: TINV, name: tintPresetValue, type: f32, repeat: true }   # TINV (per preset)
+  - { sig: TIRS, name: tintPresetId, type: u16, repeat: true }   # TIRS (per preset)
+  - { sig: PNAM, name: facegenMainClamp, type: f32 }   # PNAM
+  - { sig: UNAM, name: facegenFaceClamp, type: f32 }   # UNAM
+  - { sig: ATKR, name: attackRace, type: formid }   # ATKR
+  - { sig: ATKE, name: attackEvents, type: zstring, repeat: true }   # ATKE
+  - { sig: INDX, name: partIndices, type: u32, repeat: true }   # INDX
+  - { sig: MODL, name: modelPaths, type: zstring, repeat: true }   # MODL (egt / behavior graph)
+  - { sig: GNAM, name: bodyPartData, type: formid }   # GNAM
+  - { sig: NAM4, name: materialType, type: formid }   # NAM4
+  - { sig: NAM5, name: impactDataSet, type: formid }   # NAM5
+  - { sig: NAM7, name: decapFx, type: formid }   # NAM7
+  - { sig: ONAM, name: openLootSound, type: formid }   # ONAM
+  - { sig: LNAM, name: closeLootSound, type: formid }   # LNAM
+  - { sig: NAME, name: bipedObjectNames, type: zstring, repeat: true }   # NAME ×32
+  - { sig: MTYP, name: movementTypes, type: formid, repeat: true }   # MTYP
+  - { sig: VNAM, name: equipmentFlags, type: u32 }   # VNAM
+  - { sig: QNAM, name: equipSlots, type: formid, repeat: true }   # QNAM
+  - { sig: UNES, name: unarmedEquipSlot, type: formid }   # UNES
+  - { sig: PHTN, name: phonemeNames, type: zstring, repeat: true }   # PHTN
+  - { sig: PHWT, name: phonemeWeights, type: bytes, repeat: true }   # PHWT
+  - { sig: WKMV, name: baseMoveDefault, type: formid }   # WKMV
+  - { sig: RNMV, name: baseMoveRun, type: formid }   # RNMV
+  - { sig: SNMV, name: baseMoveSwim, type: formid }   # SNMV
+  - { sig: FLMV, name: baseMoveFly, type: formid }   # FLMV
+  - { sig: SPMV, name: baseMoveSneak, type: formid }   # SNKMV? (kept: SPMV sprint)
+  - { sig: HEAD, name: headParts, type: formid, repeat: true }   # HEAD
+  - { sig: RNAM, name: armorRace, type: formid }   # RNAM

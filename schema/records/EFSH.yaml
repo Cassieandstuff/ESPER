@@ -1,0 +1,11 @@
+# Seeded from the typed path (EfshRec, include/ESPER/Records*.h) in migration step 2.
+record: EFSH
+name: EffectShader
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: ICON, name: fillTexture, type: zstring }   # ICON
+  - { sig: ICO2, name: particleTexture, type: zstring }   # ICO2
+  - { sig: NAM7, name: holesTexture, type: zstring }   # NAM7
+  - { sig: NAM8, name: membranePalette, type: zstring }   # NAM8
+  - { sig: NAM9, name: particlePalette, type: zstring }   # NAM9
+  - { sig: DATA, name: data, type: bytes }   # DATA (param block)

@@ -1,0 +1,12 @@
+# Seeded from the typed path (MesgRec, include/ESPER/Records*.h) in migration step 2.
+record: MESG
+name: Message
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: QNAM, name: quest, type: formid }   # QNAM
+  - { sig: DNAM, name: flags, type: u32 }   # DNAM
+  - { sig: TNAM, name: displayTime, type: u32 }   # TNAM
+  - { sig: ITXT, name: buttonText, type: lstring, table: strings, repeat: true }   # ITXT
+  - { use: Condition, name: conditions, repeat: true }

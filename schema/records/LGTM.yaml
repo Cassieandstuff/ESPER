@@ -1,0 +1,7 @@
+# Seeded from the typed path (LgtmRec, include/ESPER/Records*.h) in migration step 2.
+record: LGTM
+name: LightingTemplate
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DATA, name: data, type: bytes }   # DATA
+  - { sig: DALC, name: ambient, type: bytes }   # DALC

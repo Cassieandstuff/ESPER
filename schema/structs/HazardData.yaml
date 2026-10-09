@@ -1,0 +1,14 @@
+# Seeded from the typed path (struct HazardData) in migration step 2.
+struct: HazardData
+size: 40
+fields:
+  - { name: limit, type: u32 }
+  - { name: radius, type: f32 }
+  - { name: lifetime, type: f32 }
+  - { name: imageSpaceRadius, type: f32 }
+  - { name: targetInterval, type: f32 }
+  - { name: flags, type: u32 }
+  - { name: spell, type: formid }   # FormID
+  - { name: light, type: formid }   # FormID
+  - { name: impactDataSet, type: formid }   # FormID
+  - { name: sound, type: formid }   # FormID

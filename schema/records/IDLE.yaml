@@ -1,0 +1,9 @@
+# Seeded from the typed path (IdleRec, include/ESPER/Records*.h) in migration step 2.
+record: IDLE
+name: IdleAnimation
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: ENAM, name: animEvent, type: zstring }   # ENAM
+  - { sig: ANAM, name: related, type: "formid[]" }   # ANAM (parent + previous)
+  - { sig: DATA, name: data, type: bytes }   # DATA (loop/flags)
+  - { use: Condition, name: conditions, repeat: true }

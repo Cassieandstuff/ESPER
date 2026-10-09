@@ -1,0 +1,9 @@
+# Seeded from the typed path (CpthRec, include/ESPER/Records*.h) in migration step 2.
+record: CPTH
+name: CameraPath
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: ANAM, name: relatedPaths, type: "formid[]" }   # ANAM (parent + previous)
+  - { sig: DATA, name: zoom, type: u8 }   # DATA
+  - { sig: SNAM, name: cameraShots, type: formid, repeat: true }   # SNAM
+  - { use: Condition, name: conditions, repeat: true }

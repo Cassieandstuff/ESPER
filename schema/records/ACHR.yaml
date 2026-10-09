@@ -1,0 +1,15 @@
+# Seeded from the typed path (AchrRec, include/ESPER/Records*.h) in migration step 2.
+record: ACHR
+name: PlacedNpc
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: NAME, name: base, type: formid }   # NAME (NPC_)
+  - { sig: XEZN, name: encounterZone, type: formid }   # XEZN
+  - { sig: XRGD, name: ragdollData, type: bytes }   # XRGD
+  - { sig: XRGB, name: ragdollBiped, type: bytes }   # XRGB
+  - { sig: XLCM, name: levelModifier, type: i32 }   # XLCM
+  - { sig: XOWN, name: owner, type: formid }   # XOWN
+  - { sig: XESP, name: enableParent, type: EnableParent }   # XESP
+  - { sig: XSCL, name: scale, type: f32 }   # XSCL
+  - { sig: DATA, name: placement, type: Placement }   # DATA

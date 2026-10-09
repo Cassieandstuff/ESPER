@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct LandHeights) in migration step 2.
+struct: LandHeights
+size: 1096
+fields:
+  - { name: offset, type: f32 }
+  - { name: deltas, type: "i8[1089]" }
+  - { name: pad, type: "u8[3]" }

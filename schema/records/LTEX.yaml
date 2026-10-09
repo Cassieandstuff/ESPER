@@ -1,0 +1,10 @@
+# Seeded from the typed path (LtexRec, include/ESPER/Records*.h) in migration step 2.
+record: LTEX
+name: LandscapeTexture
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: TNAM, name: textureSet, type: formid }   # TNAM (TXST)
+  - { sig: MNAM, name: material, type: formid }   # MNAM
+  - { sig: HNAM, name: havok, type: LtexHavok }   # HNAM
+  - { sig: SNAM, name: specular, type: u8 }   # SNAM
+  - { sig: GNAM, name: grasses, type: "formid[]" }   # GNAM? (repeated FormRef)

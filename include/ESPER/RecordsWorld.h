@@ -112,7 +112,7 @@ struct StatData {
     uint32_t material = 0;           // MATO FormID
 };
 static_assert(sizeof(StatData) == 8);
-inline constexpr FieldDef kStatDataIds[] = { FormIdAt(0) };
+inline constexpr FieldDef kStatDataIds[] = { FormIdAt(4) };   // `material` (was 0: the float)
 
 // LTEX HNAM — havok friction/restitution, 2 bytes.
 struct LtexHavok {

@@ -1,0 +1,6 @@
+# Seeded from the typed path (OtftRec, include/ESPER/Records*.h) in migration step 2.
+record: OTFT
+name: Outfit
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: INAM, name: items, type: "formid[]" }   # INAM (array in one sub)

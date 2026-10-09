@@ -1,0 +1,15 @@
+# Seeded from the typed path (struct AcbsData) in migration step 2.
+struct: AcbsData
+size: 24
+fields:
+  - { name: flags, type: u32 }   # bit 0 = female
+  - { name: magickaOffset, type: u16 }
+  - { name: staminaOffset, type: u16 }
+  - { name: level, type: u16 }   # or level ×1000 when PC-level-mult
+  - { name: calcMin, type: u16 }
+  - { name: calcMax, type: u16 }
+  - { name: speedMultiplier, type: u16 }
+  - { name: dispositionBase, type: u16 }
+  - { name: templateFlags, type: u16 }
+  - { name: healthOffset, type: u16 }
+  - { name: bleedoutOverride, type: u16 }

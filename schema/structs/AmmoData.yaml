@@ -1,0 +1,8 @@
+# Seeded from the typed path (struct AmmoData) in migration step 2.
+struct: AmmoData
+size: 16
+fields:
+  - { name: projectile, type: formid }   # FormID
+  - { name: flags, type: u32 }
+  - { name: damage, type: f32 }
+  - { name: value, type: u32 }

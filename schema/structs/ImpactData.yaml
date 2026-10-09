@@ -1,0 +1,12 @@
+# Seeded from the typed path (struct ImpactData) in migration step 2.
+struct: ImpactData
+size: 24
+fields:
+  - { name: effectDuration, type: f32 }
+  - { name: orientation, type: u32 }
+  - { name: angleThreshold, type: f32 }
+  - { name: placementRadius, type: f32 }
+  - { name: soundLevel, type: u32 }
+  - { name: flags, type: u8 }
+  - { name: impactResult, type: u8 }
+  - { name: pad, type: u16 }

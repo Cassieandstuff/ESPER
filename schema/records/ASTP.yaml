@@ -1,0 +1,10 @@
+# Seeded from the typed path (AstpRec, include/ESPER/Records*.h) in migration step 2.
+record: ASTP
+name: AssociationType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: MPRT, name: maleParent, type: zstring }   # MPRT
+  - { sig: FPRT, name: femaleParent, type: zstring }   # FPRT
+  - { sig: MCHT, name: maleChild, type: zstring }   # MCHT
+  - { sig: FCHT, name: femaleChild, type: zstring }   # FCHT
+  - { sig: DATA, name: flags, type: u32 }   # DATA

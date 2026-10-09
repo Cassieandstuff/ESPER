@@ -1,0 +1,13 @@
+# Seeded from the typed path (RefrRec, include/ESPER/Records*.h) in migration step 2.
+record: REFR
+name: PlacedObject
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: NAME, name: base, type: formid }   # NAME
+  - { sig: XTEL, name: teleport, type: TeleportDest }   # XTEL
+  - { sig: XESP, name: enableParent, type: EnableParent }   # XESP
+  - { sig: XOWN, name: owner, type: formid }   # XOWN
+  - { sig: XEMI, name: emittedLight, type: formid }   # XEMI
+  - { sig: XSCL, name: scale, type: f32 }   # XSCL
+  - { sig: DATA, name: placement, type: Placement }   # DATA

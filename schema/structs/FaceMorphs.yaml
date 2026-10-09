@@ -1,0 +1,5 @@
+# Seeded from the typed path (struct FaceMorphs) in migration step 2.
+struct: FaceMorphs
+size: 76
+fields:
+  - { name: values, type: "f32[19]" }

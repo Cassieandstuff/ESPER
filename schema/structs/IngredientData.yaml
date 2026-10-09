@@ -1,0 +1,6 @@
+# Seeded from the typed path (struct IngredientData) in migration step 2.
+struct: IngredientData
+size: 8
+fields:
+  - { name: value, type: i32 }
+  - { name: flags, type: u32 }

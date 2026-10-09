@@ -1,0 +1,28 @@
+# Seeded from the typed path (WrldRec, include/ESPER/Records*.h) in migration step 2.
+record: WRLD
+name: Worldspace
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: WCTR, name: center, type: WorldCenter }   # WCTR
+  - { sig: LTMP, name: interiorLighting, type: formid }   # LTMP
+  - { sig: XEZN, name: encounterZone, type: formid }   # XEZN
+  - { sig: XLCN, name: location, type: formid }   # XLCN
+  - { sig: CNAM, name: climate, type: formid }   # CNAM
+  - { sig: NAM2, name: water, type: formid }   # NAM2
+  - { sig: NAM3, name: lodWaterType, type: formid }   # NAM3
+  - { sig: NAM4, name: lodWaterHeight, type: f32 }   # NAM4
+  - { sig: DNAM, name: defaults, type: WorldDefaults }   # DNAM
+  - { sig: MNAM, name: mapData, type: bytes }   # MNAM (size variants)
+  - { sig: ONAM, name: mapOffset, type: bytes }   # ONAM
+  - { sig: NAMA, name: distantLodMult, type: f32 }   # NAMA
+  - { sig: DATA, name: flags, type: u8 }   # DATA
+  - { sig: NAM0, name: boundsMin, type: WorldCorner }   # NAM0
+  - { sig: NAM9, name: boundsMax, type: WorldCorner }   # NAM9
+  - { sig: WNAM, name: parentWorld, type: formid }   # WNAM
+  - { sig: PNAM, name: parentFlags, type: u16 }   # PNAM
+  - { sig: ZNAM, name: music, type: formid }   # ZNAM
+  - { sig: TNAM, name: hdLodDiffuse, type: zstring }   # TNAM
+  - { sig: UNAM, name: hdLodNormal, type: zstring }   # UNAM
+  - { sig: XWEM, name: waterEnvMap, type: zstring }   # XWEM
+  - { sig: OFST, name: offsetData, type: bytes }   # OFST (opaque, XXXX-framed)

@@ -1,0 +1,25 @@
+# Seeded from the typed path (CellRec, include/ESPER/Records*.h) in migration step 2.
+record: CELL
+name: Cell
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
+  - { sig: DATA, name: flags, type: u16 }   # DATA (u16 variant)
+  - { sig: XCLC, name: grid, type: CellGrid }   # XCLC (exterior only)
+  - { sig: XCLL, name: lighting, type: bytes }   # XCLL
+  - { sig: TVDT, name: occlusion, type: bytes }   # TVDT
+  - { sig: MHDT, name: maxHeight, type: bytes }   # MHDT
+  - { sig: LTMP, name: lightingTemplate, type: formid }   # LTMP
+  - { sig: XCLW, name: waterHeight, type: f32 }   # XCLW
+  - { sig: XNAM, name: waterNoise, type: zstring }   # XNAM
+  - { sig: XCLR, name: regions, type: "formid[]" }   # XCLR
+  - { sig: XLCN, name: location, type: formid }   # XLCN
+  - { sig: XCWT, name: water, type: formid }   # XCWT
+  - { sig: XOWN, name: owner, type: formid }   # XOWN
+  - { sig: XILL, name: lockList, type: formid }   # XILL
+  - { sig: XWEM, name: waterEnvMap, type: zstring }   # XWEM
+  - { sig: XCCM, name: climate, type: formid }   # XCCM
+  - { sig: XCAS, name: acousticSpace, type: formid }   # XCAS
+  - { sig: XEZN, name: encounterZone, type: formid }   # XEZN
+  - { sig: XCMO, name: music, type: formid }   # XCMO
+  - { sig: XCIM, name: imageSpace, type: formid }   # XCIM

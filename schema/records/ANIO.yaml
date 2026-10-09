@@ -1,0 +1,7 @@
+# Seeded from the typed path (AnioRec, include/ESPER/Records*.h) in migration step 2.
+record: ANIO
+name: AnimatedObject
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { use: Model, name: model }
+  - { sig: BNAM, name: unloadEvent, type: zstring }   # BNAM

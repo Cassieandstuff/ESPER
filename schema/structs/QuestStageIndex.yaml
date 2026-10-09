@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct QuestStageIndex) in migration step 2.
+struct: QuestStageIndex
+size: 4
+fields:
+  - { name: index, type: u16 }
+  - { name: flags, type: u8 }
+  - { name: unknown, type: u8 }

@@ -1,0 +1,5 @@
+# Seeded from the typed path (struct LandVertexTriples) in migration step 2.
+struct: LandVertexTriples
+size: 3267
+fields:
+  - { name: v, type: "u8[3267]" }

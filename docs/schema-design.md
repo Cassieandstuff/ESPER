@@ -1,6 +1,6 @@
 # ESPER — schema-first design
 
-Status: **step 1 implemented** (2026-10-09). See Migration plan for progress; the normative spec is
+Status: **steps 1–3 implemented** (2026-10-09). See Migration plan for progress; the normative spec is
 [schema-language.md](schema-language.md).
 
 ## What ESPER is
@@ -481,13 +481,28 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
 
    The new path refuses remap on 724 records the typed path accepted: opaque `VMAD` (language 0.2)
    and `MODS`/`MO2S`/`MO4S`, which the typed path assumed were FormID-free (see bugs.md).
-2. **Seed the descriptors.** A one-shot script converts the existing `Field<>`/`Repeated<>` rows and
-   packed structs into YAML. The rest is hand-fixed.
-3. **Parity oracle.** `roundtrip-gate --parity` runs the old and new paths over every vanilla record
-   and requires:
-   - both round-trip byte-exactly;
-   - the new path's raw subrecords are a subset of the old path's;
-   - the FormID visitation sequences are identical.
+2. **Done (2026-10-09). Seed the descriptors.** A one-shot script (not kept in the repo) converted
+   all of `Records*.h` into YAML: 880 rows into 115 records plus 56 structs, on top of the five
+   step-1 records. Along the way it:
+   - turned the hand-listed FormID offsets into typed `formid` fields;
+   - folded model slots into `use: Model`, and conditions into a reusable `Condition` group
+     (CTDA kept opaque until lookup unions; CIS1/CIS2 now bound);
+   - added `marker` (language 0.2);
+   - found the STAT `DNAM` FormID-offset bug ([bugs.md](bugs.md)).
+
+   Hand fixes: `CLFM` named `ColorForm` (its `color` member would have collided with a `Color`
+   view), and STAT `material` declared `to: [MATO]` so the gate verifies the fix.
+3. **Done (2026-10-09), as `roundtrip-gate --schema`. Parity oracle.** It runs both paths over
+   every vanilla record and requires:
+   - byte-exact decode → encode (verbatim and forced);
+   - no more raw subrecords than the typed path's unknowns (by count per record);
+   - identical FormID multisets wherever both paths can remap;
+   - verified `to:` targets.
+
+   Result: all 1,178,543 vanilla records (5.79M subrecords) pass. 81.85% of subrecords are
+   modeled, and the new path keeps 10,026 fewer raw than the typed path. There are 0 FormID
+   mismatches across 945,927 records. The new path refuses remap on 98,384 records the typed path
+   accepted, because they carry opaque bytes (quantified in bugs.md).
 4. **Groups (ordinal rule), unions, VMAD, CTDA table.** This moves the RACE, QUST, NPC_ CSDT and size-variant cases
    out of passthrough, and lets records with conditions be remapped. Each case is gated on real data.
 5. **`esper::loadorder`.** Lift `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex` under

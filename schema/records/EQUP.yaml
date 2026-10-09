@@ -1,0 +1,7 @@
+# Seeded from the typed path (EqupRec, include/ESPER/Records*.h) in migration step 2.
+record: EQUP
+name: EquipType
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: PNAM, name: slotParents, type: "formid[]" }   # PNAM (array)
+  - { sig: DATA, name: data, type: bytes }   # DATA (flags)

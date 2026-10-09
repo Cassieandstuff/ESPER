@@ -1,0 +1,15 @@
+# Seeded from the typed path (MustRec, include/ESPER/Records*.h) in migration step 2.
+record: MUST
+name: MusicTrack
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: CNAM, name: type, type: u32 }   # CNAM
+  - { sig: FLTV, name: duration, type: f32 }   # FLTV
+  - { sig: DNAM, name: fadeOut, type: f32 }   # DNAM
+  - { sig: ANAM, name: trackPath, type: zstring }   # ANAM
+  - { sig: BNAM, name: finalePath, type: zstring }   # BNAM
+  - { sig: FNAM, name: cuePoints, type: bytes }   # FNAM (f32 array)
+  - { sig: LNAM, name: loopData, type: bytes }   # LNAM
+  - { sig: CITC, name: conditionCount, type: u32 }   # CITC
+  - { sig: SNAM, name: subTracks, type: "formid[]" }   # SNAM (array in one sub)
+  - { use: Condition, name: conditions, repeat: true }

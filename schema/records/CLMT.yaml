@@ -1,0 +1,10 @@
+# Seeded from the typed path (ClmtRec, include/ESPER/Records*.h) in migration step 2.
+record: CLMT
+name: Climate
+members:
+  - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: WLST, name: weatherList, type: bytes, repeat: true }   # WLST (repeated triples)
+  - { sig: FNAM, name: sunTexture, type: zstring }   # FNAM
+  - { sig: GNAM, name: sunGlare, type: zstring }   # GNAM
+  - { use: Model, name: model }
+  - { sig: TNAM, name: timing, type: bytes }   # TNAM

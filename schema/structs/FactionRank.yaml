@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct FactionRank) in migration step 2.
+struct: FactionRank
+size: 8
+fields:
+  - { name: faction, type: formid }   # FormID
+  - { name: rank, type: u8 }
+  - { name: pad, type: "u8[3]" }

@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct SkinTone) in migration step 2.
+struct: SkinTone
+size: 12
+fields:
+  - { name: r, type: f32 }
+  - { name: g, type: f32 }
+  - { name: b, type: f32 }

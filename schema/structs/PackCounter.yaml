@@ -1,0 +1,7 @@
+# Seeded from the typed path (struct PackCounter) in migration step 2.
+struct: PackCounter
+size: 12
+fields:
+  - { name: dataInputCount, type: u32 }
+  - { name: packageTemplate, type: formid }   # FormID
+  - { name: versionCounter, type: u32 }
