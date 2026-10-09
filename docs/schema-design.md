@@ -1,6 +1,6 @@
 # ESPER — schema-first design
 
-Status: **steps 1–3 implemented, step 4 in progress** (2026-10-09). See Migration plan for progress; the normative spec is
+Status: **steps 1–3 and 5 implemented, step 4 partly done** (2026-10-09). See Migration plan for progress; the normative spec is
 [schema-language.md](schema-language.md).
 
 ## What ESPER is
@@ -526,9 +526,24 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    - the size-variant blobs: `XCLL`, WRLD `MNAM`, EXPL/PROJ `DATA`, ECZN `DATA`, FACT
      `CRVA`/`PLVD`;
    - the largest opaque blockers: `MHDT`, `NVNM`, `TVDT`.
-5. **`esper::loadorder`.** Lift `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex` under
-   `LoadOrderDocument`. Add lazy per-group FormKey → offset indexing, `Resolve` (winner/origin),
-   typed-view decode, and `OverrideInto`.
+5. **Done (2026-10-09). `esper::loadorder`.** `LoadOrderDocument` wraps
+   `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex`. It adds:
+   - `Resolve` (winner/origin) and `Follow` (FormIDs and typed links);
+   - schema decode into `esper::Record` and typed views;
+   - localized names and an EDID/FULL-only search;
+   - a lazily built `WorldIndex`;
+   - `SnapshotJson`;
+   - `OverrideInto`, which adds masters in load order, rewrites every FormID into the target's
+     space, and converts localized strings via `Record::Relocalize`. It refuses child records
+     and records that aren't remap-safe.
+
+   The "per-group FormKey → offset index" is the existing record index: `Plugin::Load` already
+   scans headers only, with payloads as views into the file buffer that are inflated on demand.
+
+   Result on the vanilla install (`loadorder-smoke`): 10 plugins load in 3.8 s. Lydia is found by
+   her localized name and her race link resolves to NordRace. 55 vanilla records override into a
+   new plugin, which saves and reloads clean; 45 are refused, all for opaque blobs. 49
+   worldspaces index in 175 ms.
 6. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
    ESPER pin is bumped.
 7. **Delete the typed world:** `Records*.h`, the `Field<>`/`MakeSchema` templates, the old

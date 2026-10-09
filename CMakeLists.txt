@@ -30,6 +30,7 @@ endif()
 
 option(ESPER_BUILD_TESTS "Build ESPER tests" ${PROJECT_IS_TOP_LEVEL})
 option(ESPER_BUILD_TOOLS "Build ESPER tools (roundtrip-gate)" OFF)
+option(ESPER_BUILD_LOADORDER "Build esper::loadorder (LoadOrderDocument)" ON)
 
 # ── Vendored miniz (zlib inflate/deflate) ─────────────────────────────────────
 # Its own target so consumers that also need zlib (zip writers, test fixtures)
@@ -45,6 +46,7 @@ endif()
 # ── esper ─────────────────────────────────────────────────────────────────────
 file(GLOB_RECURSE ESPER_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/cpp/*.cpp")
+list(FILTER ESPER_SOURCES EXCLUDE REGEX "/cpp/loadorder/")   # → esper::loadorder
 file(GLOB_RECURSE ESPER_HEADERS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 
@@ -62,6 +64,22 @@ if(MSVC)
 endif()
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ESPER_SOURCES} ${ESPER_HEADERS})
+
+# ── esper::loadorder (optional) ───────────────────────────────────────────────
+# LoadOrderDocument: resolve, load and query a whole load order. Consumers link
+# esper::loadorder and #include <ESPER/LoadOrder.h>.
+if(ESPER_BUILD_LOADORDER)
+    file(GLOB_RECURSE ESPER_LOADORDER_SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/cpp/loadorder/*.cpp")
+    add_library(esper_loadorder STATIC ${ESPER_LOADORDER_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/ESPER/LoadOrder.h")
+    add_library(esper::loadorder ALIAS esper_loadorder)
+    target_link_libraries(esper_loadorder PUBLIC esper::esper)
+    target_compile_features(esper_loadorder PUBLIC cxx_std_23)
+    if(MSVC)
+        target_compile_options(esper_loadorder PRIVATE /W4 /wd4100 /utf-8)
+    endif()
+endif()
 
 # ── Schema generator (contributors only) ──────────────────────────────────────
 # schema/ is compiled into schema.json + include/ESPER/generated/*.h by
@@ -119,6 +137,15 @@ if(ESPER_BUILD_TESTS)
     endif()
     add_test(NAME esper-schema-test COMMAND esper-schema-test)
 
+    if(ESPER_BUILD_LOADORDER)
+        add_executable(esper-loadorder-test tests/loadorder_test.cpp)
+        target_link_libraries(esper-loadorder-test PRIVATE esper::loadorder)
+        if(MSVC)
+            target_compile_options(esper-loadorder-test PRIVATE /W4 /wd4100 /utf-8)
+        endif()
+        add_test(NAME esper-loadorder-test COMMAND esper-loadorder-test)
+    endif()
+
     if(ESPER_SCHEMAGEN_AVAILABLE)
         add_test(NAME esper-schema-fresh
             COMMAND "${Python3_EXECUTABLE}" -I "${_ESPER_SCHEMAGEN}" ${_ESPER_GEN_MAIN} --check)
@@ -132,11 +159,20 @@ endif()
 # ── Tools (need game data; not ctests) ────────────────────────────────────────
 #   roundtrip-gate — the real-data round-trip gate over the vanilla masters
 #   esm-dump       — read-only research dumper (GRUP tree, records by sig/FormID)
+#   loadorder-smoke — LoadOrderDocument over a real Data folder
 if(ESPER_BUILD_TOOLS)
-    foreach(_tool IN ITEMS roundtrip-gate esm-dump)
+    set(_esper_tools roundtrip-gate esm-dump)
+    if(ESPER_BUILD_LOADORDER)
+        list(APPEND _esper_tools loadorder-smoke)
+    endif()
+    foreach(_tool IN LISTS _esper_tools)
         string(REPLACE "-" "_" _src "${_tool}")
         add_executable(${_tool} tools/${_src}.cpp)
-        target_link_libraries(${_tool} PRIVATE esper::esper)
+        if(_tool STREQUAL "loadorder-smoke")
+            target_link_libraries(${_tool} PRIVATE esper::loadorder)
+        else()
+            target_link_libraries(${_tool} PRIVATE esper::esper)
+        endif()
         if(MSVC)
             target_compile_options(${_tool} PRIVATE /utf-8)
         endif()

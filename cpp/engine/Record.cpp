@@ -328,6 +328,37 @@ void WalkFormIds(const SchemaSet& s, uint16_t typeIdx, Value& v, F&& f) {
     }
 }
 
+// Visits every LString-kind value under `v` (mutable).
+template <class F>
+void WalkLStrings(const SchemaSet& s, uint16_t typeIdx, Value& v, F&& f) {
+    const TypeDef& t = s.types[typeIdx];
+    switch (t.kind) {
+    case Kind::LString:
+        f(v, t);
+        return;
+    case Kind::Struct: {
+        uint16_t vi = 0;
+        for (uint16_t i = 0; i < t.refCount && vi < v.items.size(); ++i) {
+            const schema::FieldDef& fd = s.fields[t.ref + i];
+            if (fd.isBreak) continue;
+            WalkLStrings(s, fd.type, v.items[vi++], f);
+        }
+        return;
+    }
+    case Kind::Array:
+        for (Value& item : v.items) WalkLStrings(s, t.ref, item, f);
+        return;
+    case Kind::Union:
+        if (v.bits < t.refCount && !v.items.empty()) {
+            const schema::CaseDef& cd = s.cases[t.ref + static_cast<uint16_t>(v.bits)];
+            if (!cd.empty) WalkLStrings(s, cd.type, v.items[0], f);
+        }
+        return;
+    default:
+        return;
+    }
+}
+
 // The first opaque `bytes` value under `v` that may hide FormIDs, if any.
 bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
     const TypeDef& t = s.types[typeIdx];
@@ -968,6 +999,49 @@ bool Record::VisitFormIds(const std::function<void(uint32_t&)>& fn, std::string*
             n.dirty = true;
         }
     }
+    return true;
+}
+
+bool Record::Relocalize(
+    bool localized,
+    const std::function<std::optional<std::string>(uint32_t, schema::StrTable)>& lookup,
+    std::string* why) {
+    if (localized == ctx_.localized) return true;
+    for (const Node& n : nodes_) {
+        if (n.member < 0) {
+            if (why) *why = "raw subrecord " + SigText(n.sig) + " may hold string ids";
+            return false;
+        }
+    }
+    // Convert every node first; apply only if all of them convert.
+    std::vector<std::pair<size_t, Value>> changed;
+    for (size_t i = 0; i < nodes_.size(); ++i) {
+        const Node& n = nodes_[i];
+        Value v = NodeValue(n);
+        bool any = false, ok = true;
+        WalkLStrings(*set_, MemberOf(n.inst, static_cast<uint16_t>(n.member)).type, v,
+                     [&](Value& s, const TypeDef& t) {
+            any = true;
+            if (!ok) return;
+            if (localized) { ok = false; return; }
+            const std::optional<std::string> text = lookup(static_cast<uint32_t>(s.bits), t.table);
+            if (!text) { ok = false; return; }
+            s.str  = *text;
+            s.bits = 0;
+        });
+        if (!ok) {
+            if (why) *why = localized
+                ? "can't move inline strings in " + SigText(n.sig) + " into a localized plugin"
+                : "a string id in " + SigText(n.sig) + " isn't in the string tables";
+            return false;
+        }
+        if (any) changed.emplace_back(i, std::move(v));
+    }
+    for (auto& [i, v] : changed) {
+        nodes_[i].value = std::move(v);
+        nodes_[i].dirty = true;
+    }
+    ctx_.localized = localized;
     return true;
 }
 

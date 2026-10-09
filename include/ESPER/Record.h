@@ -198,6 +198,16 @@ public:
     // (empty span = any record type), in subrecord order.
     void ForEachFormId(const std::function<void(uint32_t id, std::span<const uint32_t> to)>& fn) const;
 
+    // ── Localization ────────────────────────────────────────────────────────
+    // Re-targets the record to a plugin whose localized flag is `localized`.
+    // Localized → inline: each lstring id is replaced by `lookup(id, table)`.
+    // Inline → localized is refused when the record holds any lstring (new
+    // string-table entries can't be minted here). Refuses, touching nothing,
+    // when a raw subrecord could hide string ids or a lookup misses.
+    bool Relocalize(bool localized,
+                    const std::function<std::optional<std::string>(uint32_t id, schema::StrTable)>& lookup,
+                    std::string* why = nullptr);
+
     // ── Cursor-level primitives (used by Cursor and the generated views) ─────
     template <class T> std::optional<T> GetAt(uint32_t inst, const RelPath& p) const;
     template <class T> std::vector<T>   GetAllAt(uint32_t inst, const RelPath& p) const;

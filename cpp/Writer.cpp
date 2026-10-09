@@ -310,6 +310,27 @@ RecordNode* CreateRecord(Plugin& p, uint32_t sig, char* err, int errLen) {
     return (it != p.index.end()) ? it->second : nullptr;
 }
 
+RecordNode* InsertRecord(Plugin& p, const RecHeader& header, std::vector<uint8_t> payload,
+                         char* err, int errLen) {
+    if (p.index.count(header.formId)) {
+        std::snprintf(err, errLen, "InsertRecord: %08X already exists in %s", header.formId,
+                      p.filename.c_str());
+        return nullptr;
+    }
+    GroupNode* group = FindOrCreateTopGroup(p, header.sig);
+    Node n;
+    n.rec.header = header;
+    group->children.push_back(std::move(n));
+    RebuildIndex(p);
+    auto it = p.index.find(header.formId);
+    if (it == p.index.end()) {
+        std::snprintf(err, errLen, "InsertRecord: %08X not indexed after insert", header.formId);
+        return nullptr;
+    }
+    if (!SetRecordPayload(p, *it->second, std::move(payload), err, errLen)) return nullptr;
+    return it->second;
+}
+
 // ── Finalize ────────────────────────────────────────────────────────────────
 
 static size_t CountGroups(const std::vector<Node>& nodes) {

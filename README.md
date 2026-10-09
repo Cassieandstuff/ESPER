@@ -50,6 +50,39 @@ tools. CMake 3.28+ and a C++23 compiler are required.
 `esper::miniz` is also exported, so a consumer that needs zlib itself can link that copy
 instead of compiling a second one.
 
+### The load order (optional)
+
+Link `esper::loadorder` and include `<ESPER/LoadOrder.h>` to work with a whole load order:
+
+```cpp
+esper::LoadOrderDocument doc;
+esper::LoadOrderOptions opt;
+opt.dataFolder = R"(C:\Steam\steamapps\common\Skyrim Special Edition\Data)";
+// opt.pluginsTxt = a mod manager profile's plugins.txt (default: %LOCALAPPDATA%)
+doc.Load(opt);
+
+for (const esper::ResolvedRecord* r : doc.Search(esper::Sig4("NPC_"), "Lydia")) {
+    auto d = doc.Decode(*r);                         // the winning override
+    esper::view::Npc npc(d->record);
+    const esper::ResolvedRecord* race = doc.Follow(*r, *npc.Race());
+    std::printf("%s is a %s\n", doc.Name(*r).c_str(), doc.Name(*race).c_str());
+}
+
+esper::Plugin mine;                                  // a plugin being authored
+esper::CreateEmptyPlugin(mine, "MyMod.esp", false);
+doc.OverrideInto(mine, key);                         // masters + FormIDs + strings handled
+```
+
+It resolves plugins.txt, Skyrim.ccc and the master hoist, and answers queries over the result:
+
+- **Records:** override winners, origins and chains; FormID and typed-link following.
+- **Text:** localized names, and EditorID/name search.
+- **Worldspaces and cells:** `WorldIndex`.
+- **Snapshot:** `SnapshotJson()` writes the resolved load order as JSON.
+
+Vanilla string tables ship inside BSAs and ESPER doesn't read archives, so pass
+`LoadOrderOptions::fetch` to resolve names from archives or from extracted files.
+
 ## Building standalone
 
 ```
@@ -61,7 +94,8 @@ ctest --test-dir build -C RelWithDebInfo
 | Option | Default | |
 |---|---|---|
 | `ESPER_BUILD_TESTS` | ON when top-level | `esper-test`, the synthetic-fixture test suite (registered with CTest) |
-| `ESPER_BUILD_TOOLS` | OFF | `roundtrip-gate` (the real-data gate) and `esm-dump` (a read-only record dumper) |
+| `ESPER_BUILD_LOADORDER` | ON | `esper::loadorder` (LoadOrderDocument) |
+| `ESPER_BUILD_TOOLS` | OFF | `roundtrip-gate` (the real-data gate), `esm-dump` (a read-only record dumper) and `loadorder-smoke` |
 
 `roundtrip-gate <Data folder>` parses the five vanilla masters and requires each to re-emit
 byte-identically; it needs a local game install, so it is not part of CTest.

@@ -12,6 +12,8 @@ namespace) with fresh history. GPL-3.0-or-later.
 - The library never sets `CMAKE_MSVC_RUNTIME_LIBRARY`; it must build under the consumer's choice
   (static-CRT SKSE plugins and dynamic-CRT desktop tools both consume it).
 - Stay a dependency-free leaf. miniz is vendored and exported as `esper::miniz`.
+- `esper::loadorder` (`<ESPER/LoadOrder.h>`, `cpp/loadorder/`) is the optional load-order layer
+  (`LoadOrderDocument`). It builds on the core and never the other way round.
 
 ## Fidelity doctrine (load-bearing)
 

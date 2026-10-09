@@ -62,6 +62,14 @@ uint32_t MakeRef(Plugin& p, const FormKey& key, char* err, int errLen);
 // this plugin (the index is rebuilt).
 RecordNode* CreateRecord(Plugin& p, uint32_t sig, char* err, int errLen);
 
+// Inserts a record with an explicit on-disk FormID (an override, or a copy)
+// into the type-0 top group for `header.sig`, with `payload` as its data
+// (compressed if `header.flags` says so). Fails if `p` already holds that
+// FormID. Only valid for record types that live in top groups — not CELL
+// children, WRLD children or INFO. Invalidates RecordNode pointers into `p`.
+RecordNode* InsertRecord(Plugin& p, const RecHeader& header, std::vector<uint8_t> payload,
+                         char* err, int errLen);
+
 // Re-derives `p.index` from the tree (after structural edits).
 void RebuildIndex(Plugin& p);
 
