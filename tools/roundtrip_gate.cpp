@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <string>
@@ -333,10 +334,28 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
                 }
             });
             if (oldSafe && newSafe) {
+                // Null (0) is never remapped; the typed path's condition visitor
+                // skips it while plain FormID rows include it, so compare non-null.
+                std::erase(oldIds, 0u);
+                std::erase(newIds, 0u);
                 ++st.idsCompared;
                 std::sort(oldIds.begin(), oldIds.end());
                 std::sort(newIds.begin(), newIds.end());
-                if (oldIds != newIds) { ++st.idsMismatch; note("FormID sets differ from the typed path"); }
+                if (oldIds != newIds) {
+                    ++st.idsMismatch;
+                    std::vector<uint32_t> onlyNew, onlyOld;
+                    std::set_difference(newIds.begin(), newIds.end(), oldIds.begin(), oldIds.end(),
+                                        std::back_inserter(onlyNew));
+                    std::set_difference(oldIds.begin(), oldIds.end(), newIds.begin(), newIds.end(),
+                                        std::back_inserter(onlyOld));
+                    char buf[160];
+                    std::snprintf(buf, sizeof(buf),
+                                  "FormID sets differ from the typed path (new-only %zu, e.g. %08X; "
+                                  "typed-only %zu, e.g. %08X)",
+                                  onlyNew.size(), onlyNew.empty() ? 0u : onlyNew[0],
+                                  onlyOld.size(), onlyOld.empty() ? 0u : onlyOld[0]);
+                    note(buf);
+                }
             } else if (oldSafe && !newSafe) {
                 ++st.newRefuses;
                 ++st.refuseWhy[newWhy];

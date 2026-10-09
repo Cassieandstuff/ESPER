@@ -3,7 +3,7 @@ record: PACK
 name: Package
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD (fragments → passthrough) — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: PKDT, name: data, type: bytes, formIds: none }   # PKDT (flags/type; no FormIDs)
   - { sig: PSDT, name: schedule, type: bytes, formIds: none }   # PSDT (no FormIDs)
   - { sig: PKCU, name: counter, type: PackCounter }   # PKCU

@@ -4,7 +4,13 @@ name: Cell
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
-  - { sig: DATA, name: flags, type: u16 }   # DATA (u16 variant)
+  - sig: DATA
+    name: flags              # u8 in older records, u16 in current ones
+    union:
+      by: size
+      cases:
+        - { when: 1, name: byte, type: u8 }
+        - { when: 2, name: word, type: u16 }
   - { sig: XCLC, name: grid, type: CellGrid }   # XCLC (exterior only)
   - { sig: XCLL, name: lighting, type: bytes }   # XCLL
   - { sig: TVDT, name: occlusion, type: bytes }   # TVDT

@@ -42,6 +42,7 @@ class ColorForm;
 class ColorRgba;
 class CombatStyle;
 class Condition;
+class ConditionData;
 class ConstructibleObject;
 class Container;
 class ContainerEntry;
@@ -129,6 +130,7 @@ class NavigationMesh;
 class NavigationMeshInfoMap;
 class Npc;
 class NpcSkills;
+class NpcTintLayers;
 class ObjectBounds;
 class ObjectEffect;
 class Outfit;
@@ -147,6 +149,8 @@ class Projectile;
 class Quest;
 class QuestStageIndex;
 class Race;
+class RaceTintLayers;
+class RaceTintLayersPresets;
 class Region;
 class Relationship;
 class ResponseData;
@@ -177,6 +181,12 @@ class Tree;
 class VendorValues;
 class VisualEffect;
 class VisualEffectData;
+class Vmad;
+class VmadBodySupportedScripts;
+class VmadObjectV1;
+class VmadObjectV2;
+class VmadProperty;
+class VmadScript;
 class VoiceType;
 class VolumetricLighting;
 class Water;
@@ -202,6 +212,111 @@ public:
     void SetB(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(2), v); }
     std::optional<uint8_t> A() const { return s_.at.Get<uint8_t>(s_.Field(3)); }
     void SetA(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(3), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadObjectV1 {
+public:
+    explicit VmadObjectV1(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<::esper::FormId> FormId() const { return s_.at.Get<::esper::FormId>(s_.Field(0)); }
+    void SetFormId(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(s_.Field(0), v); }
+    std::optional<int16_t> Alias() const { return s_.at.Get<int16_t>(s_.Field(1)); }
+    void SetAlias(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(1), v); }
+    std::optional<uint16_t> Unused() const { return s_.at.Get<uint16_t>(s_.Field(2)); }
+    void SetUnused(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadObjectV2 {
+public:
+    explicit VmadObjectV2(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint16_t> Unused() const { return s_.at.Get<uint16_t>(s_.Field(0)); }
+    void SetUnused(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(0), v); }
+    std::optional<int16_t> Alias() const { return s_.at.Get<int16_t>(s_.Field(1)); }
+    void SetAlias(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(1), v); }
+    std::optional<::esper::FormId> FormId() const { return s_.at.Get<::esper::FormId>(s_.Field(2)); }
+    void SetFormId(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadProperty {
+public:
+    explicit VmadProperty(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<std::string> Name() const { return s_.at.Get<std::string>(s_.Field(0)); }
+    void SetName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(0), v); }
+    std::optional<uint8_t> Type() const { return s_.at.Get<uint8_t>(s_.Field(1)); }
+    void SetType(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
+    std::optional<uint8_t> Status() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(2), 0)); }
+    void SetStatus(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(2), 0), v); }
+    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(3)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint16_t> ValueObjectCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(3), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    ::esper::view::VmadObjectV1 ValueObjectV1() const { return ::esper::view::VmadObjectV1(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(3), 0), 0) }); }
+    ::esper::view::VmadObjectV2 ValueObjectV2() const { return ::esper::view::VmadObjectV2(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(3), 0), 1) }); }
+    std::optional<std::string> ValueString() const { return s_.at.Get<std::string>(::esper::Extend(s_.Field(3), 1)); }
+    void SetValueString(const std::string& v) const { s_.at.Set<std::string>(::esper::Extend(s_.Field(3), 1), v); }
+    std::optional<int32_t> ValueInt() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(3), 2)); }
+    void SetValueInt(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(3), 2), v); }
+    std::optional<float> ValueFloat() const { return s_.at.Get<float>(::esper::Extend(s_.Field(3), 3)); }
+    void SetValueFloat(const float& v) const { s_.at.Set<float>(::esper::Extend(s_.Field(3), 3), v); }
+    std::optional<uint8_t> ValueBool() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(3), 4)); }
+    void SetValueBool(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(3), 4), v); }
+    std::optional<std::vector<::esper::Value>> ValueObjects() const { return s_.at.Get<std::vector<::esper::Value>>(::esper::Extend(s_.Field(3), 5)); }
+    void SetValueObjects(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(::esper::Extend(s_.Field(3), 5), v); }
+    std::optional<std::vector<std::string>> ValueStrings() const { return s_.at.Get<std::vector<std::string>>(::esper::Extend(s_.Field(3), 6)); }
+    void SetValueStrings(const std::vector<std::string>& v) const { s_.at.Set<std::vector<std::string>>(::esper::Extend(s_.Field(3), 6), v); }
+    std::optional<std::vector<int32_t>> ValueInts() const { return s_.at.Get<std::vector<int32_t>>(::esper::Extend(s_.Field(3), 7)); }
+    void SetValueInts(const std::vector<int32_t>& v) const { s_.at.Set<std::vector<int32_t>>(::esper::Extend(s_.Field(3), 7), v); }
+    std::optional<std::vector<float>> ValueFloats() const { return s_.at.Get<std::vector<float>>(::esper::Extend(s_.Field(3), 8)); }
+    void SetValueFloats(const std::vector<float>& v) const { s_.at.Set<std::vector<float>>(::esper::Extend(s_.Field(3), 8), v); }
+    std::optional<std::vector<uint8_t>> ValueBools() const { return s_.at.Get<std::vector<uint8_t>>(::esper::Extend(s_.Field(3), 9)); }
+    void SetValueBools(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(::esper::Extend(s_.Field(3), 9), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadScript {
+public:
+    explicit VmadScript(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<std::string> Name() const { return s_.at.Get<std::string>(s_.Field(0)); }
+    void SetName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(0), v); }
+    std::optional<uint8_t> Status() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(1), 0)); }
+    void SetStatus(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(1), 0), v); }
+    std::optional<std::vector<::esper::Value>> Properties() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(2)); }
+    void SetProperties(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadBodySupportedScripts {
+public:
+    explicit VmadBodySupportedScripts(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<std::vector<::esper::Value>> Scripts() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(0)); }
+    void SetScripts(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(0), v); }
+    std::optional<std::vector<uint8_t>> Fragments() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(1)); }
+    void SetFragments(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(1), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class Vmad {
+public:
+    explicit Vmad(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<int16_t> Version() const { return s_.at.Get<int16_t>(s_.Field(0)); }
+    void SetVersion(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(0), v); }
+    std::optional<int16_t> ObjFormat() const { return s_.at.Get<int16_t>(s_.Field(1)); }
+    void SetObjFormat(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(1), v); }
+    std::optional<uint16_t> BodyCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint16_t> BodySupportedCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(2), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    ::esper::view::VmadBodySupportedScripts BodySupportedScripts() const { return ::esper::view::VmadBodySupportedScripts(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(2), 0), 0) }); }
 private:
     ::esper::StructCursor s_;
 };
@@ -298,6 +413,56 @@ public:
     void SetArea(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(1), v); }
     std::optional<uint32_t> Duration() const { return s_.at.Get<uint32_t>(s_.Field(2)); }
     void SetDuration(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class ConditionData {
+public:
+    explicit ConditionData(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint8_t> Op() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
+    void SetOp(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
+    std::optional<std::vector<uint8_t>> Unknown() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(1)); }
+    void SetUnknown(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(1), v); }
+    std::optional<uint16_t> ComparisonCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<::esper::Link<::esper::view::Global>> ComparisonGlobal() const { return s_.at.Get<::esper::Link<::esper::view::Global>>(::esper::Extend(s_.Field(2), 0)); }
+    void SetComparisonGlobal(const ::esper::Link<::esper::view::Global>& v) const { s_.at.Set<::esper::Link<::esper::view::Global>>(::esper::Extend(s_.Field(2), 0), v); }
+    std::optional<float> ComparisonValue() const { return s_.at.Get<float>(::esper::Extend(s_.Field(2), 1)); }
+    void SetComparisonValue(const float& v) const { s_.at.Set<float>(::esper::Extend(s_.Field(2), 1), v); }
+    std::optional<uint16_t> FunctionIndex() const { return s_.at.Get<uint16_t>(s_.Field(3)); }
+    void SetFunctionIndex(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(3), v); }
+    std::optional<std::vector<uint8_t>> Pad() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(4)); }
+    void SetPad(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(4), v); }
+    std::optional<uint16_t> Param1Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(5)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint16_t> Param1FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(5), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<int32_t> Param1FormAlias() const { return s_.at.Get<int32_t>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 0)); }
+    void SetParam1FormAlias(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 0), v); }
+    std::optional<::esper::FormId> Param1FormRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 1)); }
+    void SetParam1FormRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 1), v); }
+    std::optional<uint32_t> Param1Value() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(5), 1)); }
+    void SetParam1Value(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(5), 1), v); }
+    std::optional<uint32_t> Param1Unclassified() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(5), 2)); }
+    void SetParam1Unclassified(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(5), 2), v); }
+    std::optional<uint16_t> Param2Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(6)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint16_t> Param2FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(6), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<int32_t> Param2FormAlias() const { return s_.at.Get<int32_t>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 0)); }
+    void SetParam2FormAlias(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 0), v); }
+    std::optional<::esper::FormId> Param2FormRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 1)); }
+    void SetParam2FormRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 1), v); }
+    std::optional<uint32_t> Param2Value() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(6), 1)); }
+    void SetParam2Value(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(6), 1), v); }
+    std::optional<uint32_t> Param2Unclassified() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(6), 2)); }
+    void SetParam2Unclassified(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(6), 2), v); }
+    std::optional<uint32_t> RunOnType() const { return s_.at.Get<uint32_t>(s_.Field(7)); }
+    void SetRunOnType(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(7), v); }
+    std::optional<uint16_t> ReferenceCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(8)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<::esper::FormId> ReferenceRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(8), 0)); }
+    void SetReferenceRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(8), 0), v); }
+    std::optional<uint32_t> ReferenceValue() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(8), 1)); }
+    void SetReferenceValue(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(8), 1), v); }
+    std::optional<int32_t> Param3() const { return s_.at.Get<int32_t>(s_.Field(9)); }
+    void SetParam3(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(9), v); }
 private:
     ::esper::StructCursor s_;
 };
@@ -984,7 +1149,7 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<::esper::FormId> Door() const { return s_.at.Get<::esper::FormId>(s_.Field(0)); }
     void SetDoor(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(s_.Field(0), v); }
-    ::esper::view::Placement Placement() const { return ::esper::view::Placement(s_.Nested(1)); }
+    ::esper::view::Placement Placement() const { return ::esper::view::Placement(::esper::StructCursor{ s_.at, s_.Field(1) }); }
     std::optional<uint32_t> Flags() const { return s_.at.Get<uint32_t>(s_.Field(2)); }
     void SetFlags(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(2), v); }
 private:
@@ -1371,8 +1536,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -1715,8 +1880,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // NAME
     std::optional<::esper::FormId> Base() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -1726,6 +1891,55 @@ public:
     std::optional<float> Scale() const { return c_.Get<float>(::esper::RelPath{ { 3 }, 1, 1 }); }
     void SetScale(const float& v) const { c_.Set<float>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
     void ClearScale() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class RaceTintLayersPresets {
+public:
+    explicit RaceTintLayersPresets(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // TINC
+    std::optional<::esper::Link<::esper::view::ColorForm>> Color() const { return c_.Get<::esper::Link<::esper::view::ColorForm>>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetColor(const ::esper::Link<::esper::view::ColorForm>& v) const { c_.Set<::esper::Link<::esper::view::ColorForm>>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearColor() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // TINV
+    std::optional<float> Value() const { return c_.Get<float>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetValue(const float& v) const { c_.Set<float>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearValue() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // TIRS
+    std::optional<uint16_t> Id() const { return c_.Get<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetId(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearId() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class RaceTintLayers {
+public:
+    explicit RaceTintLayers(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // TINI
+    std::optional<uint16_t> Index() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetIndex(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // TINT
+    std::optional<std::string> Texture() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetTexture(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearTexture() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // TINP
+    std::optional<uint16_t> MaskType() const { return c_.Get<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetMaskType(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearMaskType() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // TIND
+    std::optional<::esper::Link<::esper::view::ColorForm>> DefaultColor() const { return c_.Get<::esper::Link<::esper::view::ColorForm>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetDefaultColor(const ::esper::Link<::esper::view::ColorForm>& v) const { c_.Set<::esper::Link<::esper::view::ColorForm>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearDefaultColor() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // group presets
+    std::vector<::esper::view::RaceTintLayersPresets> Presets() const { std::vector<::esper::view::RaceTintLayersPresets> o; for (auto c : c_.Groups(::esper::RelPath{ { 4 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::RaceTintLayersPresets AddPresets() const { return ::esper::view::RaceTintLayersPresets(c_.AddGroup(::esper::RelPath{ { 4 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -1801,138 +2015,113 @@ public:
     std::optional<uint16_t> TintCount() const { return c_.Get<uint16_t>(::esper::RelPath{ { 15 }, 1, 1 }); }
     void SetTintCount(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 15 }, 1, 1 }, v); }
     void ClearTintCount() const { c_.Clear(::esper::RelPath{ { 15 }, 1, 1 }); }
-    // TINI (repeated)
-    std::vector<uint16_t> TintLayerIndex() const { return c_.GetAll<uint16_t>(::esper::RelPath{ { 16 }, 1, 1 }); }
-    void SetTintLayerIndex(const std::vector<uint16_t>& v) const { c_.SetAll<uint16_t>(::esper::RelPath{ { 16 }, 1, 1 }, v); }
-    void ClearTintLayerIndex() const { c_.Clear(::esper::RelPath{ { 16 }, 1, 1 }); }
-    // TINT (repeated)
-    std::vector<std::string> TintLayerTexture() const { return c_.GetAll<std::string>(::esper::RelPath{ { 17 }, 1, 1 }); }
-    void SetTintLayerTexture(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 17 }, 1, 1 }, v); }
-    void ClearTintLayerTexture() const { c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
-    // TINP (repeated)
-    std::vector<uint16_t> TintLayerMaskType() const { return c_.GetAll<uint16_t>(::esper::RelPath{ { 18 }, 1, 1 }); }
-    void SetTintLayerMaskType(const std::vector<uint16_t>& v) const { c_.SetAll<uint16_t>(::esper::RelPath{ { 18 }, 1, 1 }, v); }
-    void ClearTintLayerMaskType() const { c_.Clear(::esper::RelPath{ { 18 }, 1, 1 }); }
-    // TIND (repeated)
-    std::vector<::esper::FormId> TintLayerDefault() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 19 }, 1, 1 }); }
-    void SetTintLayerDefault(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 19 }, 1, 1 }, v); }
-    void ClearTintLayerDefault() const { c_.Clear(::esper::RelPath{ { 19 }, 1, 1 }); }
-    // TINC (repeated)
-    std::vector<::esper::FormId> TintPresetColor() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 20 }, 1, 1 }); }
-    void SetTintPresetColor(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 20 }, 1, 1 }, v); }
-    void ClearTintPresetColor() const { c_.Clear(::esper::RelPath{ { 20 }, 1, 1 }); }
-    // TINV (repeated)
-    std::vector<float> TintPresetValue() const { return c_.GetAll<float>(::esper::RelPath{ { 21 }, 1, 1 }); }
-    void SetTintPresetValue(const std::vector<float>& v) const { c_.SetAll<float>(::esper::RelPath{ { 21 }, 1, 1 }, v); }
-    void ClearTintPresetValue() const { c_.Clear(::esper::RelPath{ { 21 }, 1, 1 }); }
-    // TIRS (repeated)
-    std::vector<uint16_t> TintPresetId() const { return c_.GetAll<uint16_t>(::esper::RelPath{ { 22 }, 1, 1 }); }
-    void SetTintPresetId(const std::vector<uint16_t>& v) const { c_.SetAll<uint16_t>(::esper::RelPath{ { 22 }, 1, 1 }, v); }
-    void ClearTintPresetId() const { c_.Clear(::esper::RelPath{ { 22 }, 1, 1 }); }
+    // group tintLayers
+    std::vector<::esper::view::RaceTintLayers> TintLayers() const { std::vector<::esper::view::RaceTintLayers> o; for (auto c : c_.Groups(::esper::RelPath{ { 16 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::RaceTintLayers AddTintLayers() const { return ::esper::view::RaceTintLayers(c_.AddGroup(::esper::RelPath{ { 16 }, 1, 1 })); }
     // PNAM
-    std::optional<float> FacegenMainClamp() const { return c_.Get<float>(::esper::RelPath{ { 23 }, 1, 1 }); }
-    void SetFacegenMainClamp(const float& v) const { c_.Set<float>(::esper::RelPath{ { 23 }, 1, 1 }, v); }
-    void ClearFacegenMainClamp() const { c_.Clear(::esper::RelPath{ { 23 }, 1, 1 }); }
+    std::optional<float> FacegenMainClamp() const { return c_.Get<float>(::esper::RelPath{ { 17 }, 1, 1 }); }
+    void SetFacegenMainClamp(const float& v) const { c_.Set<float>(::esper::RelPath{ { 17 }, 1, 1 }, v); }
+    void ClearFacegenMainClamp() const { c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
     // UNAM
-    std::optional<float> FacegenFaceClamp() const { return c_.Get<float>(::esper::RelPath{ { 24 }, 1, 1 }); }
-    void SetFacegenFaceClamp(const float& v) const { c_.Set<float>(::esper::RelPath{ { 24 }, 1, 1 }, v); }
-    void ClearFacegenFaceClamp() const { c_.Clear(::esper::RelPath{ { 24 }, 1, 1 }); }
+    std::optional<float> FacegenFaceClamp() const { return c_.Get<float>(::esper::RelPath{ { 18 }, 1, 1 }); }
+    void SetFacegenFaceClamp(const float& v) const { c_.Set<float>(::esper::RelPath{ { 18 }, 1, 1 }, v); }
+    void ClearFacegenFaceClamp() const { c_.Clear(::esper::RelPath{ { 18 }, 1, 1 }); }
     // ATKR
-    std::optional<::esper::FormId> AttackRace() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 25 }, 1, 1 }); }
-    void SetAttackRace(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 25 }, 1, 1 }, v); }
-    void ClearAttackRace() const { c_.Clear(::esper::RelPath{ { 25 }, 1, 1 }); }
+    std::optional<::esper::FormId> AttackRace() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 19 }, 1, 1 }); }
+    void SetAttackRace(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 19 }, 1, 1 }, v); }
+    void ClearAttackRace() const { c_.Clear(::esper::RelPath{ { 19 }, 1, 1 }); }
     // ATKE (repeated)
-    std::vector<std::string> AttackEvents() const { return c_.GetAll<std::string>(::esper::RelPath{ { 26 }, 1, 1 }); }
-    void SetAttackEvents(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 26 }, 1, 1 }, v); }
-    void ClearAttackEvents() const { c_.Clear(::esper::RelPath{ { 26 }, 1, 1 }); }
+    std::vector<std::string> AttackEvents() const { return c_.GetAll<std::string>(::esper::RelPath{ { 20 }, 1, 1 }); }
+    void SetAttackEvents(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 20 }, 1, 1 }, v); }
+    void ClearAttackEvents() const { c_.Clear(::esper::RelPath{ { 20 }, 1, 1 }); }
     // INDX (repeated)
-    std::vector<uint32_t> PartIndices() const { return c_.GetAll<uint32_t>(::esper::RelPath{ { 27 }, 1, 1 }); }
-    void SetPartIndices(const std::vector<uint32_t>& v) const { c_.SetAll<uint32_t>(::esper::RelPath{ { 27 }, 1, 1 }, v); }
-    void ClearPartIndices() const { c_.Clear(::esper::RelPath{ { 27 }, 1, 1 }); }
+    std::vector<uint32_t> PartIndices() const { return c_.GetAll<uint32_t>(::esper::RelPath{ { 21 }, 1, 1 }); }
+    void SetPartIndices(const std::vector<uint32_t>& v) const { c_.SetAll<uint32_t>(::esper::RelPath{ { 21 }, 1, 1 }, v); }
+    void ClearPartIndices() const { c_.Clear(::esper::RelPath{ { 21 }, 1, 1 }); }
     // MODL (repeated)
-    std::vector<std::string> ModelPaths() const { return c_.GetAll<std::string>(::esper::RelPath{ { 28 }, 1, 1 }); }
-    void SetModelPaths(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 28 }, 1, 1 }, v); }
-    void ClearModelPaths() const { c_.Clear(::esper::RelPath{ { 28 }, 1, 1 }); }
+    std::vector<std::string> ModelPaths() const { return c_.GetAll<std::string>(::esper::RelPath{ { 22 }, 1, 1 }); }
+    void SetModelPaths(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 22 }, 1, 1 }, v); }
+    void ClearModelPaths() const { c_.Clear(::esper::RelPath{ { 22 }, 1, 1 }); }
     // GNAM
-    std::optional<::esper::FormId> BodyPartData() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 29 }, 1, 1 }); }
-    void SetBodyPartData(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 29 }, 1, 1 }, v); }
-    void ClearBodyPartData() const { c_.Clear(::esper::RelPath{ { 29 }, 1, 1 }); }
+    std::optional<::esper::FormId> BodyPartData() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 23 }, 1, 1 }); }
+    void SetBodyPartData(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 23 }, 1, 1 }, v); }
+    void ClearBodyPartData() const { c_.Clear(::esper::RelPath{ { 23 }, 1, 1 }); }
     // NAM4
-    std::optional<::esper::FormId> MaterialType() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }); }
-    void SetMaterialType(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }, v); }
-    void ClearMaterialType() const { c_.Clear(::esper::RelPath{ { 30 }, 1, 1 }); }
+    std::optional<::esper::FormId> MaterialType() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 24 }, 1, 1 }); }
+    void SetMaterialType(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 24 }, 1, 1 }, v); }
+    void ClearMaterialType() const { c_.Clear(::esper::RelPath{ { 24 }, 1, 1 }); }
     // NAM5
-    std::optional<::esper::FormId> ImpactDataSet() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 31 }, 1, 1 }); }
-    void SetImpactDataSet(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 31 }, 1, 1 }, v); }
-    void ClearImpactDataSet() const { c_.Clear(::esper::RelPath{ { 31 }, 1, 1 }); }
+    std::optional<::esper::FormId> ImpactDataSet() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 25 }, 1, 1 }); }
+    void SetImpactDataSet(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 25 }, 1, 1 }, v); }
+    void ClearImpactDataSet() const { c_.Clear(::esper::RelPath{ { 25 }, 1, 1 }); }
     // NAM7
-    std::optional<::esper::FormId> DecapFx() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 32 }, 1, 1 }); }
-    void SetDecapFx(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 32 }, 1, 1 }, v); }
-    void ClearDecapFx() const { c_.Clear(::esper::RelPath{ { 32 }, 1, 1 }); }
+    std::optional<::esper::FormId> DecapFx() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 26 }, 1, 1 }); }
+    void SetDecapFx(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 26 }, 1, 1 }, v); }
+    void ClearDecapFx() const { c_.Clear(::esper::RelPath{ { 26 }, 1, 1 }); }
     // ONAM
-    std::optional<::esper::FormId> OpenLootSound() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 33 }, 1, 1 }); }
-    void SetOpenLootSound(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 33 }, 1, 1 }, v); }
-    void ClearOpenLootSound() const { c_.Clear(::esper::RelPath{ { 33 }, 1, 1 }); }
+    std::optional<::esper::FormId> OpenLootSound() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 27 }, 1, 1 }); }
+    void SetOpenLootSound(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 27 }, 1, 1 }, v); }
+    void ClearOpenLootSound() const { c_.Clear(::esper::RelPath{ { 27 }, 1, 1 }); }
     // LNAM
-    std::optional<::esper::FormId> CloseLootSound() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 34 }, 1, 1 }); }
-    void SetCloseLootSound(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 34 }, 1, 1 }, v); }
-    void ClearCloseLootSound() const { c_.Clear(::esper::RelPath{ { 34 }, 1, 1 }); }
+    std::optional<::esper::FormId> CloseLootSound() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 28 }, 1, 1 }); }
+    void SetCloseLootSound(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 28 }, 1, 1 }, v); }
+    void ClearCloseLootSound() const { c_.Clear(::esper::RelPath{ { 28 }, 1, 1 }); }
     // NAME (repeated)
-    std::vector<std::string> BipedObjectNames() const { return c_.GetAll<std::string>(::esper::RelPath{ { 35 }, 1, 1 }); }
-    void SetBipedObjectNames(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 35 }, 1, 1 }, v); }
-    void ClearBipedObjectNames() const { c_.Clear(::esper::RelPath{ { 35 }, 1, 1 }); }
+    std::vector<std::string> BipedObjectNames() const { return c_.GetAll<std::string>(::esper::RelPath{ { 29 }, 1, 1 }); }
+    void SetBipedObjectNames(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 29 }, 1, 1 }, v); }
+    void ClearBipedObjectNames() const { c_.Clear(::esper::RelPath{ { 29 }, 1, 1 }); }
     // MTYP (repeated)
-    std::vector<::esper::FormId> MovementTypes() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 36 }, 1, 1 }); }
-    void SetMovementTypes(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 36 }, 1, 1 }, v); }
-    void ClearMovementTypes() const { c_.Clear(::esper::RelPath{ { 36 }, 1, 1 }); }
+    std::vector<::esper::FormId> MovementTypes() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }); }
+    void SetMovementTypes(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }, v); }
+    void ClearMovementTypes() const { c_.Clear(::esper::RelPath{ { 30 }, 1, 1 }); }
     // VNAM
-    std::optional<uint32_t> EquipmentFlags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 37 }, 1, 1 }); }
-    void SetEquipmentFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 37 }, 1, 1 }, v); }
-    void ClearEquipmentFlags() const { c_.Clear(::esper::RelPath{ { 37 }, 1, 1 }); }
+    std::optional<uint32_t> EquipmentFlags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 31 }, 1, 1 }); }
+    void SetEquipmentFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 31 }, 1, 1 }, v); }
+    void ClearEquipmentFlags() const { c_.Clear(::esper::RelPath{ { 31 }, 1, 1 }); }
     // QNAM (repeated)
-    std::vector<::esper::FormId> EquipSlots() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 38 }, 1, 1 }); }
-    void SetEquipSlots(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 38 }, 1, 1 }, v); }
-    void ClearEquipSlots() const { c_.Clear(::esper::RelPath{ { 38 }, 1, 1 }); }
+    std::vector<::esper::FormId> EquipSlots() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 32 }, 1, 1 }); }
+    void SetEquipSlots(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 32 }, 1, 1 }, v); }
+    void ClearEquipSlots() const { c_.Clear(::esper::RelPath{ { 32 }, 1, 1 }); }
     // UNES
-    std::optional<::esper::FormId> UnarmedEquipSlot() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 39 }, 1, 1 }); }
-    void SetUnarmedEquipSlot(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 39 }, 1, 1 }, v); }
-    void ClearUnarmedEquipSlot() const { c_.Clear(::esper::RelPath{ { 39 }, 1, 1 }); }
+    std::optional<::esper::FormId> UnarmedEquipSlot() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 33 }, 1, 1 }); }
+    void SetUnarmedEquipSlot(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 33 }, 1, 1 }, v); }
+    void ClearUnarmedEquipSlot() const { c_.Clear(::esper::RelPath{ { 33 }, 1, 1 }); }
     // PHTN (repeated)
-    std::vector<std::string> PhonemeNames() const { return c_.GetAll<std::string>(::esper::RelPath{ { 40 }, 1, 1 }); }
-    void SetPhonemeNames(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 40 }, 1, 1 }, v); }
-    void ClearPhonemeNames() const { c_.Clear(::esper::RelPath{ { 40 }, 1, 1 }); }
+    std::vector<std::string> PhonemeNames() const { return c_.GetAll<std::string>(::esper::RelPath{ { 34 }, 1, 1 }); }
+    void SetPhonemeNames(const std::vector<std::string>& v) const { c_.SetAll<std::string>(::esper::RelPath{ { 34 }, 1, 1 }, v); }
+    void ClearPhonemeNames() const { c_.Clear(::esper::RelPath{ { 34 }, 1, 1 }); }
     // PHWT (repeated)
-    std::vector<std::vector<uint8_t>> PhonemeWeights() const { return c_.GetAll<std::vector<uint8_t>>(::esper::RelPath{ { 41 }, 1, 1 }); }
-    void SetPhonemeWeights(const std::vector<std::vector<uint8_t>>& v) const { c_.SetAll<std::vector<uint8_t>>(::esper::RelPath{ { 41 }, 1, 1 }, v); }
-    void ClearPhonemeWeights() const { c_.Clear(::esper::RelPath{ { 41 }, 1, 1 }); }
+    std::vector<std::vector<uint8_t>> PhonemeWeights() const { return c_.GetAll<std::vector<uint8_t>>(::esper::RelPath{ { 35 }, 1, 1 }); }
+    void SetPhonemeWeights(const std::vector<std::vector<uint8_t>>& v) const { c_.SetAll<std::vector<uint8_t>>(::esper::RelPath{ { 35 }, 1, 1 }, v); }
+    void ClearPhonemeWeights() const { c_.Clear(::esper::RelPath{ { 35 }, 1, 1 }); }
     // WKMV
-    std::optional<::esper::FormId> BaseMoveDefault() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 42 }, 1, 1 }); }
-    void SetBaseMoveDefault(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 42 }, 1, 1 }, v); }
-    void ClearBaseMoveDefault() const { c_.Clear(::esper::RelPath{ { 42 }, 1, 1 }); }
+    std::optional<::esper::FormId> BaseMoveDefault() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 36 }, 1, 1 }); }
+    void SetBaseMoveDefault(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 36 }, 1, 1 }, v); }
+    void ClearBaseMoveDefault() const { c_.Clear(::esper::RelPath{ { 36 }, 1, 1 }); }
     // RNMV
-    std::optional<::esper::FormId> BaseMoveRun() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 43 }, 1, 1 }); }
-    void SetBaseMoveRun(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 43 }, 1, 1 }, v); }
-    void ClearBaseMoveRun() const { c_.Clear(::esper::RelPath{ { 43 }, 1, 1 }); }
+    std::optional<::esper::FormId> BaseMoveRun() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 37 }, 1, 1 }); }
+    void SetBaseMoveRun(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 37 }, 1, 1 }, v); }
+    void ClearBaseMoveRun() const { c_.Clear(::esper::RelPath{ { 37 }, 1, 1 }); }
     // SNMV
-    std::optional<::esper::FormId> BaseMoveSwim() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 44 }, 1, 1 }); }
-    void SetBaseMoveSwim(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 44 }, 1, 1 }, v); }
-    void ClearBaseMoveSwim() const { c_.Clear(::esper::RelPath{ { 44 }, 1, 1 }); }
+    std::optional<::esper::FormId> BaseMoveSwim() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 38 }, 1, 1 }); }
+    void SetBaseMoveSwim(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 38 }, 1, 1 }, v); }
+    void ClearBaseMoveSwim() const { c_.Clear(::esper::RelPath{ { 38 }, 1, 1 }); }
     // FLMV
-    std::optional<::esper::FormId> BaseMoveFly() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 45 }, 1, 1 }); }
-    void SetBaseMoveFly(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 45 }, 1, 1 }, v); }
-    void ClearBaseMoveFly() const { c_.Clear(::esper::RelPath{ { 45 }, 1, 1 }); }
+    std::optional<::esper::FormId> BaseMoveFly() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 39 }, 1, 1 }); }
+    void SetBaseMoveFly(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 39 }, 1, 1 }, v); }
+    void ClearBaseMoveFly() const { c_.Clear(::esper::RelPath{ { 39 }, 1, 1 }); }
     // SPMV
-    std::optional<::esper::FormId> BaseMoveSneak() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 46 }, 1, 1 }); }
-    void SetBaseMoveSneak(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 46 }, 1, 1 }, v); }
-    void ClearBaseMoveSneak() const { c_.Clear(::esper::RelPath{ { 46 }, 1, 1 }); }
+    std::optional<::esper::FormId> BaseMoveSneak() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 40 }, 1, 1 }); }
+    void SetBaseMoveSneak(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 40 }, 1, 1 }, v); }
+    void ClearBaseMoveSneak() const { c_.Clear(::esper::RelPath{ { 40 }, 1, 1 }); }
     // HEAD (repeated)
-    std::vector<::esper::FormId> HeadParts() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 47 }, 1, 1 }); }
-    void SetHeadParts(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 47 }, 1, 1 }, v); }
-    void ClearHeadParts() const { c_.Clear(::esper::RelPath{ { 47 }, 1, 1 }); }
+    std::vector<::esper::FormId> HeadParts() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 41 }, 1, 1 }); }
+    void SetHeadParts(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 41 }, 1, 1 }, v); }
+    void ClearHeadParts() const { c_.Clear(::esper::RelPath{ { 41 }, 1, 1 }); }
     // RNAM
-    std::optional<::esper::FormId> ArmorRace() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 48 }, 1, 1 }); }
-    void SetArmorRace(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 48 }, 1, 1 }, v); }
-    void ClearArmorRace() const { c_.Clear(::esper::RelPath{ { 48 }, 1, 1 }); }
+    std::optional<::esper::FormId> ArmorRace() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 42 }, 1, 1 }); }
+    void SetArmorRace(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 42 }, 1, 1 }, v); }
+    void ClearArmorRace() const { c_.Clear(::esper::RelPath{ { 42 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
 };
@@ -1969,8 +2158,8 @@ public:
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
     // CTDA
-    std::optional<std::vector<uint8_t>> Data() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }); }
-    void SetData(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    ::esper::view::ConditionData Data() const;
+    bool HasData() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
     void ClearData() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // CIS1
     std::optional<std::string> StringParam1() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
@@ -2026,8 +2215,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // NAME
     std::optional<::esper::FormId> Base() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -2053,8 +2242,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // FULL
     std::optional<::esper::LocalizedString> FullName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -2559,8 +2748,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // PKDT
     std::optional<std::vector<uint8_t>> Data() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -2593,8 +2782,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -2659,8 +2848,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // FULL
     std::optional<::esper::LocalizedString> FullName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -2832,8 +3021,11 @@ public:
     void SetFullName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearFullName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // DATA
-    std::optional<uint16_t> Flags() const { return c_.Get<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetFlags(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    std::optional<uint16_t> FlagsCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint8_t> FlagsByte() const { return c_.Get<uint8_t>(::esper::RelPath{ { 2, 0 }, 1, 2 }); }
+    void SetFlagsByte(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 2, 0 }, 1, 2 }, v); }
+    std::optional<uint16_t> FlagsWord() const { return c_.Get<uint16_t>(::esper::RelPath{ { 2, 1 }, 1, 2 }); }
+    void SetFlagsWord(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 2, 1 }, 1, 2 }, v); }
     void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // XCLC
     ::esper::view::CellGrid Grid() const;
@@ -3092,8 +3284,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -3266,8 +3458,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -3412,8 +3604,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // FNAM
     std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -3714,8 +3906,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // ENAM
     ::esper::view::InfoFlags Flags() const;
@@ -3880,8 +4072,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -4050,8 +4242,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -4459,8 +4651,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // NAME
     std::optional<::esper::FormId> Base() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -4506,8 +4698,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -4579,8 +4771,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // NAME
     std::optional<::esper::FormId> Base() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -4657,8 +4849,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -5128,8 +5320,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -5514,8 +5706,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // FULL
     std::optional<::esper::LocalizedString> FullName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -5839,6 +6031,31 @@ private:
     ::esper::Cursor c_;
 };
 
+class NpcTintLayers {
+public:
+    explicit NpcTintLayers(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // TINI
+    std::optional<uint16_t> Index() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetIndex(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // TINC
+    ::esper::view::TintColor Color() const;
+    bool HasColor() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void ClearColor() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // TINV
+    std::optional<int32_t> Value() const { return c_.Get<int32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetValue(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearValue() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // TIAS
+    std::optional<int16_t> Preset() const { return c_.Get<int16_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetPreset(const int16_t& v) const { c_.Set<int16_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearPreset() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class Npc {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("NPC_");
@@ -5851,8 +6068,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // VMAD
-    std::optional<std::vector<uint8_t>> Vmad() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetVmad(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    ::esper::view::Vmad Vmad() const;
+    bool HasVmad() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearVmad() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // OBND
     ::esper::view::ObjectBounds Bounds() const;
@@ -5986,78 +6203,65 @@ public:
     ::esper::view::FaceParts FaceParts() const;
     bool HasFaceParts() const { return c_.Has(::esper::RelPath{ { 34 }, 1, 1 }); }
     void ClearFaceParts() const { c_.Clear(::esper::RelPath{ { 34 }, 1, 1 }); }
-    // TINI (repeated)
-    std::vector<uint16_t> TintIndices() const { return c_.GetAll<uint16_t>(::esper::RelPath{ { 35 }, 1, 1 }); }
-    void SetTintIndices(const std::vector<uint16_t>& v) const { c_.SetAll<uint16_t>(::esper::RelPath{ { 35 }, 1, 1 }, v); }
-    void ClearTintIndices() const { c_.Clear(::esper::RelPath{ { 35 }, 1, 1 }); }
-    // TINC (repeated)
-    ::esper::view::TintColor TintColors() const;
-    bool HasTintColors() const { return c_.Has(::esper::RelPath{ { 36 }, 1, 1 }); }
-    void ClearTintColors() const { c_.Clear(::esper::RelPath{ { 36 }, 1, 1 }); }
-    // TINV (repeated)
-    std::vector<int32_t> TintValues() const { return c_.GetAll<int32_t>(::esper::RelPath{ { 37 }, 1, 1 }); }
-    void SetTintValues(const std::vector<int32_t>& v) const { c_.SetAll<int32_t>(::esper::RelPath{ { 37 }, 1, 1 }, v); }
-    void ClearTintValues() const { c_.Clear(::esper::RelPath{ { 37 }, 1, 1 }); }
-    // TIAS (repeated)
-    std::vector<int16_t> TintPresets() const { return c_.GetAll<int16_t>(::esper::RelPath{ { 38 }, 1, 1 }); }
-    void SetTintPresets(const std::vector<int16_t>& v) const { c_.SetAll<int16_t>(::esper::RelPath{ { 38 }, 1, 1 }, v); }
-    void ClearTintPresets() const { c_.Clear(::esper::RelPath{ { 38 }, 1, 1 }); }
+    // group tintLayers
+    std::vector<::esper::view::NpcTintLayers> TintLayers() const { std::vector<::esper::view::NpcTintLayers> o; for (auto c : c_.Groups(::esper::RelPath{ { 35 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::NpcTintLayers AddTintLayers() const { return ::esper::view::NpcTintLayers(c_.AddGroup(::esper::RelPath{ { 35 }, 1, 1 })); }
     // KSIZ
-    std::optional<uint32_t> KeywordCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 39 }, 1, 1 }); }
-    void SetKeywordCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 39 }, 1, 1 }, v); }
-    void ClearKeywordCount() const { c_.Clear(::esper::RelPath{ { 39 }, 1, 1 }); }
+    std::optional<uint32_t> KeywordCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 36 }, 1, 1 }); }
+    void SetKeywordCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 36 }, 1, 1 }, v); }
+    void ClearKeywordCount() const { c_.Clear(::esper::RelPath{ { 36 }, 1, 1 }); }
     // KWDA
-    std::optional<std::vector<::esper::FormId>> Keywords() const { return c_.Get<std::vector<::esper::FormId>>(::esper::RelPath{ { 40 }, 1, 1 }); }
-    void SetKeywords(const std::vector<::esper::FormId>& v) const { c_.Set<std::vector<::esper::FormId>>(::esper::RelPath{ { 40 }, 1, 1 }, v); }
-    void ClearKeywords() const { c_.Clear(::esper::RelPath{ { 40 }, 1, 1 }); }
+    std::optional<std::vector<::esper::FormId>> Keywords() const { return c_.Get<std::vector<::esper::FormId>>(::esper::RelPath{ { 37 }, 1, 1 }); }
+    void SetKeywords(const std::vector<::esper::FormId>& v) const { c_.Set<std::vector<::esper::FormId>>(::esper::RelPath{ { 37 }, 1, 1 }, v); }
+    void ClearKeywords() const { c_.Clear(::esper::RelPath{ { 37 }, 1, 1 }); }
     // PRKZ
-    std::optional<uint32_t> PerkCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 41 }, 1, 1 }); }
-    void SetPerkCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 41 }, 1, 1 }, v); }
-    void ClearPerkCount() const { c_.Clear(::esper::RelPath{ { 41 }, 1, 1 }); }
+    std::optional<uint32_t> PerkCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 38 }, 1, 1 }); }
+    void SetPerkCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 38 }, 1, 1 }, v); }
+    void ClearPerkCount() const { c_.Clear(::esper::RelPath{ { 38 }, 1, 1 }); }
     // PRKR (repeated)
     ::esper::view::PerkEntry Perks() const;
-    bool HasPerks() const { return c_.Has(::esper::RelPath{ { 42 }, 1, 1 }); }
-    void ClearPerks() const { c_.Clear(::esper::RelPath{ { 42 }, 1, 1 }); }
+    bool HasPerks() const { return c_.Has(::esper::RelPath{ { 39 }, 1, 1 }); }
+    void ClearPerks() const { c_.Clear(::esper::RelPath{ { 39 }, 1, 1 }); }
     // COCT
-    std::optional<uint32_t> ItemCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 43 }, 1, 1 }); }
-    void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 43 }, 1, 1 }, v); }
-    void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 43 }, 1, 1 }); }
+    std::optional<uint32_t> ItemCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 40 }, 1, 1 }); }
+    void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 40 }, 1, 1 }, v); }
+    void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 40 }, 1, 1 }); }
     // CNTO (repeated)
     ::esper::view::ContainerEntry Items() const;
-    bool HasItems() const { return c_.Has(::esper::RelPath{ { 44 }, 1, 1 }); }
-    void ClearItems() const { c_.Clear(::esper::RelPath{ { 44 }, 1, 1 }); }
+    bool HasItems() const { return c_.Has(::esper::RelPath{ { 41 }, 1, 1 }); }
+    void ClearItems() const { c_.Clear(::esper::RelPath{ { 41 }, 1, 1 }); }
     // AIDT
     ::esper::view::AiData AiData() const;
-    bool HasAiData() const { return c_.Has(::esper::RelPath{ { 45 }, 1, 1 }); }
-    void ClearAiData() const { c_.Clear(::esper::RelPath{ { 45 }, 1, 1 }); }
+    bool HasAiData() const { return c_.Has(::esper::RelPath{ { 42 }, 1, 1 }); }
+    void ClearAiData() const { c_.Clear(::esper::RelPath{ { 42 }, 1, 1 }); }
     // PKID (repeated)
-    std::vector<::esper::FormId> Packages() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 46 }, 1, 1 }); }
-    void SetPackages(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 46 }, 1, 1 }, v); }
-    void ClearPackages() const { c_.Clear(::esper::RelPath{ { 46 }, 1, 1 }); }
+    std::vector<::esper::FormId> Packages() const { return c_.GetAll<::esper::FormId>(::esper::RelPath{ { 43 }, 1, 1 }); }
+    void SetPackages(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 43 }, 1, 1 }, v); }
+    void ClearPackages() const { c_.Clear(::esper::RelPath{ { 43 }, 1, 1 }); }
     // CNAM
-    std::optional<::esper::FormId> NpcClass() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 47 }, 1, 1 }); }
-    void SetNpcClass(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 47 }, 1, 1 }, v); }
-    void ClearNpcClass() const { c_.Clear(::esper::RelPath{ { 47 }, 1, 1 }); }
+    std::optional<::esper::FormId> NpcClass() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 44 }, 1, 1 }); }
+    void SetNpcClass(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 44 }, 1, 1 }, v); }
+    void ClearNpcClass() const { c_.Clear(::esper::RelPath{ { 44 }, 1, 1 }); }
     // FULL
-    std::optional<::esper::LocalizedString> FullName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 48 }, 1, 1 }); }
-    void SetFullName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 48 }, 1, 1 }, v); }
-    void ClearFullName() const { c_.Clear(::esper::RelPath{ { 48 }, 1, 1 }); }
+    std::optional<::esper::LocalizedString> FullName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 45 }, 1, 1 }); }
+    void SetFullName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 45 }, 1, 1 }, v); }
+    void ClearFullName() const { c_.Clear(::esper::RelPath{ { 45 }, 1, 1 }); }
     // SHRT
-    std::optional<::esper::LocalizedString> ShortName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 49 }, 1, 1 }); }
-    void SetShortName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 49 }, 1, 1 }, v); }
-    void ClearShortName() const { c_.Clear(::esper::RelPath{ { 49 }, 1, 1 }); }
+    std::optional<::esper::LocalizedString> ShortName() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 46 }, 1, 1 }); }
+    void SetShortName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 46 }, 1, 1 }, v); }
+    void ClearShortName() const { c_.Clear(::esper::RelPath{ { 46 }, 1, 1 }); }
     // DATA
-    bool DataMarker() const { return c_.Has(::esper::RelPath{ { 50 }, 1, 1 }); }
-    void SetDataMarker(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 50 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 50 }, 1, 1 }); }
-    void ClearDataMarker() const { c_.Clear(::esper::RelPath{ { 50 }, 1, 1 }); }
+    bool DataMarker() const { return c_.Has(::esper::RelPath{ { 47 }, 1, 1 }); }
+    void SetDataMarker(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 47 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 47 }, 1, 1 }); }
+    void ClearDataMarker() const { c_.Clear(::esper::RelPath{ { 47 }, 1, 1 }); }
     // DNAM
     ::esper::view::NpcSkills Skills() const;
-    bool HasSkills() const { return c_.Has(::esper::RelPath{ { 51 }, 1, 1 }); }
-    void ClearSkills() const { c_.Clear(::esper::RelPath{ { 51 }, 1, 1 }); }
+    bool HasSkills() const { return c_.Has(::esper::RelPath{ { 48 }, 1, 1 }); }
+    void ClearSkills() const { c_.Clear(::esper::RelPath{ { 48 }, 1, 1 }); }
     // QNAM
     ::esper::view::SkinTone SkinTone() const;
-    bool HasSkinTone() const { return c_.Has(::esper::RelPath{ { 52 }, 1, 1 }); }
-    void ClearSkinTone() const { c_.Clear(::esper::RelPath{ { 52 }, 1, 1 }); }
+    bool HasSkinTone() const { return c_.Has(::esper::RelPath{ { 49 }, 1, 1 }); }
+    void ClearSkinTone() const { c_.Clear(::esper::RelPath{ { 49 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
 };
@@ -6067,6 +6271,7 @@ inline ::esper::view::ArmaDnam ArmorAddon::Data() const { return ::esper::view::
 inline ::esper::view::ObjectBounds Apparatus::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Apparatus::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 9 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds AcousticSpace::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad MiscItem::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds MiscItem::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight MiscItem::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::MusicPriority MusicType::Priority() const { return ::esper::view::MusicPriority(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
@@ -6082,8 +6287,12 @@ inline ::esper::view::LandAlphaTexture Landscape::AlphaTextures() const { return
 inline ::esper::view::ColorRgba Keyword::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Hazard::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::HazardData Hazard::Data() const { return ::esper::view::HazardData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline ::esper::view::Vmad PlacedHazard::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::BipedBodyTemplate Race::Biped() const { return ::esper::view::BipedBodyTemplate(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Tree::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::ConditionData Condition::Data() const { return ::esper::view::ConditionData(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
+inline ::esper::view::Vmad PlacedGrenade::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad MagicEffect::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ingestible::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::PotionData Ingestible::Potion() const { return ::esper::view::PotionData(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::EffectItem Ingestible::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 13 }, 1, 1 } }); }
@@ -6096,8 +6305,11 @@ inline ::esper::view::LeveledEntry LeveledItem::Entries() const { return ::esper
 inline ::esper::view::ObjectBounds Activator::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ContainerEntry ConstructibleObject::Components() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Projectile::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad Package::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::PackCounter Package::Counter() const { return ::esper::view::PackCounter(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
+inline ::esper::view::Vmad Book::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Book::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
+inline ::esper::view::Vmad Perk::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DialData DialogTopic::Data() const { return ::esper::view::DialData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds DualCastData::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DualData DualCastData::Data() const { return ::esper::view::DualData(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
@@ -6113,39 +6325,49 @@ inline ::esper::view::ItemValueWeight Scroll::ValueWeight() const { return ::esp
 inline ::esper::view::SpellData Scroll::Spit() const { return ::esper::view::SpellData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
 inline ::esper::view::EffectItem Scroll::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba ColorForm::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
+inline ::esper::view::Vmad SoulGem::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds SoulGem::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight SoulGem::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds IdleMarker::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad Key::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Key::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Key::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds AddonNode::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::AddonFlags AddonNode::Flags() const { return ::esper::view::AddonFlags(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline ::esper::view::Vmad Scene::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds LeveledNpc::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::LeveledEntry LeveledNpc::Entries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Furniture::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds SoundMarker::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad DialogResponses::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::InfoFlags DialogResponses::Flags() const { return ::esper::view::InfoFlags(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ResponseData DialogResponses::Responses() const { return ::esper::view::ResponseData(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ammunition::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::AmmoData Ammunition::Data() const { return ::esper::view::AmmoData(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
+inline ::esper::view::Vmad Armor::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Armor::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::BipedBodyTemplate Armor::Biped() const { return ::esper::view::BipedBodyTemplate(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Armor::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 24 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds ArtObject::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad Weapon::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Weapon::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::WeaponBasic Weapon::Basic() const { return ::esper::view::WeaponBasic(::esper::StructCursor{ c_, ::esper::RelPath{ { 24 }, 1, 1 } }); }
 inline ::esper::view::WeaponCrit Weapon::Crit() const { return ::esper::view::WeaponCrit(::esper::StructCursor{ c_, ::esper::RelPath{ { 26 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds LeveledSpell::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::LeveledEntry LeveledSpell::Entries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
+inline ::esper::view::Vmad PlacedObject::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::TeleportDest PlacedObject::Teleport() const { return ::esper::view::TeleportDest(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::EnableParent PlacedObject::EnableParent() const { return ::esper::view::EnableParent(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::Placement PlacedObject::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 8 }, 1, 1 } }); }
+inline ::esper::view::Vmad Ingredient::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ingredient::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Ingredient::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::IngredientData Ingredient::Data() const { return ::esper::view::IngredientData(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
 inline ::esper::view::EffectItem Ingredient::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 14 }, 1, 1 } }); }
+inline ::esper::view::Vmad PlacedNpc::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::EnableParent PlacedNpc::EnableParent() const { return ::esper::view::EnableParent(::esper::StructCursor{ c_, ::esper::RelPath{ { 8 }, 1, 1 } }); }
 inline ::esper::view::Placement PlacedNpc::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
+inline ::esper::view::Vmad Flora::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Flora::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Door::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Grass::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
@@ -6157,12 +6379,14 @@ inline ::esper::view::ObjectBounds PlaceableWater::Bounds() const { return ::esp
 inline ::esper::view::ColorRgba Action::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::FactionRelation Faction::Relations() const { return ::esper::view::FactionRelation(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::VendorValues Faction::VendorValues() const { return ::esper::view::VendorValues(::esper::StructCursor{ c_, ::esper::RelPath{ { 15 }, 1, 1 } }); }
+inline ::esper::view::Vmad TalkingActivator::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds TalkingActivator::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::VisualEffectData VisualEffect::Data() const { return ::esper::view::VisualEffectData(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ImpactData Impact::Data() const { return ::esper::view::ImpactData(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::DecalData Impact::Decal() const { return ::esper::view::DecalData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Container::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba LocationReferenceType::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad Quest::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::QuestStageIndex Quest::StageIndices() const { return ::esper::view::QuestStageIndex(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds TextureSet::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DecalData TextureSet::Decal() const { return ::esper::view::DecalData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
@@ -6170,16 +6394,17 @@ inline ::esper::view::ObjectBounds MoveableStatic::Bounds() const { return ::esp
 inline ::esper::view::MovementSpeeds MovementType::Speeds() const { return ::esper::view::MovementSpeeds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ShoutWord Shout::Words() const { return ::esper::view::ShoutWord(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::LtexHavok LandscapeTexture::Havok() const { return ::esper::view::LtexHavok(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
+inline ::esper::view::TintColor NpcTintLayers::Color() const { return ::esper::view::TintColor(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::Vmad Npc::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Npc::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::AcbsData Npc::Acbs() const { return ::esper::view::AcbsData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::FactionRank Npc::Factions() const { return ::esper::view::FactionRank(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::FaceMorphs Npc::FaceMorphs() const { return ::esper::view::FaceMorphs(::esper::StructCursor{ c_, ::esper::RelPath{ { 33 }, 1, 1 } }); }
 inline ::esper::view::FaceParts Npc::FaceParts() const { return ::esper::view::FaceParts(::esper::StructCursor{ c_, ::esper::RelPath{ { 34 }, 1, 1 } }); }
-inline ::esper::view::TintColor Npc::TintColors() const { return ::esper::view::TintColor(::esper::StructCursor{ c_, ::esper::RelPath{ { 36 }, 1, 1 } }); }
-inline ::esper::view::PerkEntry Npc::Perks() const { return ::esper::view::PerkEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 42 }, 1, 1 } }); }
-inline ::esper::view::ContainerEntry Npc::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 44 }, 1, 1 } }); }
-inline ::esper::view::AiData Npc::AiData() const { return ::esper::view::AiData(::esper::StructCursor{ c_, ::esper::RelPath{ { 45 }, 1, 1 } }); }
-inline ::esper::view::NpcSkills Npc::Skills() const { return ::esper::view::NpcSkills(::esper::StructCursor{ c_, ::esper::RelPath{ { 51 }, 1, 1 } }); }
-inline ::esper::view::SkinTone Npc::SkinTone() const { return ::esper::view::SkinTone(::esper::StructCursor{ c_, ::esper::RelPath{ { 52 }, 1, 1 } }); }
+inline ::esper::view::PerkEntry Npc::Perks() const { return ::esper::view::PerkEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 39 }, 1, 1 } }); }
+inline ::esper::view::ContainerEntry Npc::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 41 }, 1, 1 } }); }
+inline ::esper::view::AiData Npc::AiData() const { return ::esper::view::AiData(::esper::StructCursor{ c_, ::esper::RelPath{ { 42 }, 1, 1 } }); }
+inline ::esper::view::NpcSkills Npc::Skills() const { return ::esper::view::NpcSkills(::esper::StructCursor{ c_, ::esper::RelPath{ { 48 }, 1, 1 } }); }
+inline ::esper::view::SkinTone Npc::SkinTone() const { return ::esper::view::SkinTone(::esper::StructCursor{ c_, ::esper::RelPath{ { 49 }, 1, 1 } }); }
 
 } // namespace esper::view

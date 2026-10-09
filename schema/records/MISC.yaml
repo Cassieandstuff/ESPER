@@ -2,7 +2,7 @@ record: MISC
 name: MiscItem
 members:
   - { sig: EDID, name: editorId,     type: zstring }
-  - { sig: VMAD, name: vmad,         type: bytes }          # modeled in language 0.2 (unions)
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: OBND, name: bounds,       type: ObjectBounds }
   - { sig: FULL, name: fullName,     type: lstring, table: strings }
   - { use: Model, name: model }

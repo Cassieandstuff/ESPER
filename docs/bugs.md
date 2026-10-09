@@ -36,6 +36,10 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
   *do* see FormIDs, so those refusals are the new engine being conservative until unions land,
   not typed-path bugs. Every other blocker is an unchecked `Blob`, which is this bug's
   territory.
+- **Update (2026-10-09, step 4):** CTDA and VMAD are now typed in the schema, with FormID parity
+  against the typed path. The engine's remap refusals fell to **68,299**, and every remaining
+  blocker is an unchecked `Blob`: `MHDT` 24,019, `NVNM` 19,440, `TVDT` 8,595, then
+  `DATA`/`DNAM`/`ONAM`/`MODS`/`MNAM`.
 - **Fix direction:**
   - Short term: an opaque-blob binder whose `remapSafe` returns false whenever the field is
     present, used for every blob not known to be FormID-free.

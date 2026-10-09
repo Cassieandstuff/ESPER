@@ -1,6 +1,6 @@
 # ESPER — schema-first design
 
-Status: **steps 1–3 implemented** (2026-10-09). See Migration plan for progress; the normative spec is
+Status: **steps 1–3 implemented, step 4 in progress** (2026-10-09). See Migration plan for progress; the normative spec is
 [schema-language.md](schema-language.md).
 
 ## What ESPER is
@@ -505,6 +505,27 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    accepted, because they carry opaque bytes (quantified in bugs.md).
 4. **Groups (ordinal rule), unions, VMAD, CTDA table.** This moves the RACE, QUST, NPC_ CSDT and size-variant cases
    out of passthrough, and lets records with conditions be remapped. Each case is gated on real data.
+
+   **Done (2026-10-09): everything the typed path already knew.**
+   - Language 0.3: unions with all six selectors, `if:`, `remapUnsafe`, `table` descriptors.
+   - CTDA typed via `tables/ctdaFunctions` (401 functions converted from `CtdaFunctions.cpp`).
+   - VMAD modeled in full except the per-record fragment trailers.
+   - CELL `DATA` u8/u16 variants.
+   - RACE and NPC_ tint layers as nested groups. Structure checked on `Skyrim.esm`: 1,445 RACE
+     layers for 1,445 `TINI`, and 33,050 complete NPC_ layers.
+
+   Gate result:
+   - remap refusals fell from 98,384 to 68,299;
+   - FormID parity holds on 976,012 records (0 mismatches);
+   - 87,563 typed links are verified, including GLOB comparison values and CLFM tint colors.
+
+   **Remaining, which needs new format research** because the typed path never modeled it:
+   - QUST alias, stage and objective sections (needs `open:`/`end:` markers);
+   - NPC_ `CSDT`, PERK sections, PACK data trees, IMAD keyframes;
+   - VMAD fragment trailers;
+   - the size-variant blobs: `XCLL`, WRLD `MNAM`, EXPL/PROJ `DATA`, ECZN `DATA`, FACT
+     `CRVA`/`PLVD`;
+   - the largest opaque blockers: `MHDT`, `NVNM`, `TVDT`.
 5. **`esper::loadorder`.** Lift `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex` under
    `LoadOrderDocument`. Add lazy per-group FormKey → offset indexing, `Resolve` (winner/origin),
    typed-view decode, and `OverrideInto`.

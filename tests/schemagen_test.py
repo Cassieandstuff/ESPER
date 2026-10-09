@@ -61,12 +61,69 @@ class Rejects(unittest.TestCase):
     def test_unknown_type(self):
         self.rejects("unknown type", "- { sig: DATA, name: d, type: Nope }")
 
-    def test_union_not_in_language_01(self):
+    def test_group_markers_not_yet(self):
         self.rejects("not supported in language", """
+            - group: g
+              open: NAM0
+              members:
+                - { sig: NAM1, name: a, type: u8 }
+        """)
+
+    def test_union_needs_a_case(self):
+        self.rejects("at least one case", """
             - sig: DATA
               name: d
               union: { by: size, cases: [] }
         """)
+
+    def test_union_bad_selector(self):
+        self.rejects("union 'by' must be", """
+            - sig: DATA
+              name: d
+              union: { by: banana, cases: [ { when: 1, type: u8 } ] }
+        """)
+
+    def test_lookup_unknown_table(self):
+        self.rejects("unknown table", """
+            - sig: DATA
+              name: d
+              fields:
+                - { name: k, type: u16 }
+                - name: v
+                  union: { by: { lookup: { table: nope, key: k, column: c } }, cases: [ { when: x, type: u8 } ] }
+        """)
+
+    def test_lookup_value_must_exist(self):
+        self.rejects("is not a value of", """
+            - sig: DATA
+              name: d
+              fields:
+                - { name: k, type: u16 }
+                - name: v
+                  union: { by: { lookup: { table: t, key: k, column: c } }, cases: [ { when: zzz, type: u8 } ] }
+        """, {"tables/t.yaml": "table: t\nkey: k\ncolumns: [k, c]\nrows:\n  - [1, form]\n"})
+
+    def test_selector_field_must_exist(self):
+        self.rejects("isn't a field anywhere", """
+            - sig: DATA
+              name: d
+              fields:
+                - { name: a, type: u8 }
+                - { name: b, type: u8, if: { field: nope, min: 1 } }
+        """)
+
+    def test_if_needs_a_condition(self):
+        self.rejects("min/max, equals or in", """
+            - sig: DATA
+              name: d
+              fields:
+                - { name: a, type: u8 }
+                - { name: b, type: u8, if: { field: a } }
+        """)
+
+    def test_remap_unsafe_only_on_leaf_types(self):
+        self.rejects("remapUnsafe applies to", "- { sig: DATA, name: d, type: S, remapUnsafe: true }",
+                     {"structs/S.yaml": "struct: S\nfields:\n  - { name: a, type: u8 }\n"})
 
     def test_bad_signature(self):
         self.rejects("4-character", "- { sig: TOOLONG, name: a, type: u8 }")

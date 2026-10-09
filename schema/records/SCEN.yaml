@@ -3,7 +3,7 @@ record: SCEN
 name: Scene
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD (fragments → passthrough) — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: FNAM, name: flags, type: u32 }   # FNAM
   - { sig: PNAM, name: quest, type: formid }   # PNAM
   - { sig: INAM, name: lastActionIndex, type: u32 }   # INAM

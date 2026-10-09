@@ -74,4 +74,61 @@ namespace TSTB {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("TSTB"), { { 0 }, 1, 1 } };
 }
 
+// TSTU — TestUnions
+namespace TSTU {
+    namespace sized {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 0 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> small{ SigOf("TSTU"), { { 0, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> wide{ SigOf("TSTU"), { { 0, 1 }, 1, 2 } };
+    }
+    namespace cond {
+        inline constexpr ::esper::StructRef self{ SigOf("TSTU"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("TSTU"), { { 1, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> fn{ SigOf("TSTU"), { { 1, 1 }, 1, 2 } };
+        namespace param {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 1, 2 }, 1, 2 } };
+            namespace form {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 1, 2, 0 }, 1, 3 } };
+                inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("TSTU"), { { 1, 2, 0, 0 }, 1, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("TSTU"), { { 1, 2, 0, 1 }, 1, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<uint32_t> plain{ SigOf("TSTU"), { { 1, 2, 1 }, 1, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> unknown{ SigOf("TSTU"), { { 1, 2, 2 }, 1, 3 } };
+        }
+    }
+    namespace versioned {
+        inline constexpr ::esper::StructRef self{ SigOf("TSTU"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int16_t> version{ SigOf("TSTU"), { { 2, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> status{ SigOf("TSTU"), { { 2, 1, 0 }, 1, 3 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::Value>> items{ SigOf("TSTU"), { { 2, 2 }, 1, 2 } };
+    }
+    namespace perRecord {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 3 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> mine{ SigOf("TSTU"), { { 3, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> other{ SigOf("TSTU"), { { 3, 1 }, 1, 2 } };
+    }
+    namespace byFormVersion {
+        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> modern{ SigOf("TSTU"), { { 4, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint16_t> legacy{ SigOf("TSTU"), { { 4, 1 }, 1, 2 } };
+    }
+    namespace obj {
+        inline constexpr ::esper::StructRef self{ SigOf("TSTU"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> objFmt{ SigOf("TSTU"), { { 5, 0 }, 1, 2 } };
+        namespace target {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTU"), { { 5, 1 }, 1, 2 } };
+            namespace v1 {
+                inline constexpr ::esper::StructRef self{ SigOf("TSTU"), { { 5, 1, 0 }, 1, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> id{ SigOf("TSTU"), { { 5, 1, 0, 0 }, 1, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> pad{ SigOf("TSTU"), { { 5, 1, 0, 1 }, 1, 4 } };
+            }
+            namespace v2 {
+                inline constexpr ::esper::StructRef self{ SigOf("TSTU"), { { 5, 1, 1 }, 1, 3 } };
+                inline constexpr ::esper::FieldRef<uint32_t> pad{ SigOf("TSTU"), { { 5, 1, 1, 0 }, 1, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> id{ SigOf("TSTU"), { { 5, 1, 1, 1 }, 1, 4 } };
+            }
+        }
+    }
+}
+
 } // namespace esper_test::fields

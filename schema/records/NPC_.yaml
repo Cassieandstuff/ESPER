@@ -3,7 +3,7 @@ record: NPC_
 name: Npc
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { sig: ACBS, name: acbs, type: AcbsData }   # ACBS
   - { sig: SNAM, name: factions, type: FactionRank, repeat: true }   # SNAM
@@ -37,10 +37,14 @@ members:
   - { sig: GNAM, name: giftFilter, type: formid }   # GNAM
   - { sig: NAM9, name: faceMorphs, type: FaceMorphs }   # NAM9
   - { sig: NAMA, name: faceParts, type: FaceParts }   # NAMA
-  - { sig: TINI, name: tintIndices, type: u16, repeat: true }   # TINI
-  - { sig: TINC, name: tintColors, type: TintColor, repeat: true }   # TINC
-  - { sig: TINV, name: tintValues, type: i32, repeat: true }   # TINV (via I32 codec below)
-  - { sig: TIAS, name: tintPresets, type: i16, repeat: true }   # TIAS
+  # Tint layers (modeled as a group in step 4; the typed path kept parallel vectors).
+  - group: tintLayers
+    repeat: true
+    members:
+      - { sig: TINI, name: index,  type: u16 }
+      - { sig: TINC, name: color,  type: TintColor }
+      - { sig: TINV, name: value,  type: i32 }
+      - { sig: TIAS, name: preset, type: i16 }
   - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
   - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
   - { sig: PRKZ, name: perkCount, type: u32 }   # PRKZ

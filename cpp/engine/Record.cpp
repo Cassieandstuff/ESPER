@@ -49,61 +49,136 @@ bool ReadZ(const uint8_t*& p, const uint8_t* end, Value* out) {
     return true;
 }
 
-// Parses one value of `typeIdx` from [p, end). `out` may be null (validation
-// only). On success `p` is advanced past exactly the bytes the layout owns.
-bool Parse(const SchemaSet& s, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end,
-           const DecodeCtx& ctx, Value* out) {
-    const TypeDef& t = s.types[typeIdx];
-    if (const size_t w = ScalarWidth(t.kind)) {
-        uint64_t bits = 0;
-        if (!ReadLE(p, end, w, bits)) return false;
-        if (out) out->bits = bits;
+// Parse context: the decode context, the record's sig, and the stack of
+// structs being parsed (so a union can select on an earlier field's value).
+struct Frame {
+    const TypeDef* type;
+    const Value*   value;
+};
+struct ParseCtx {
+    const SchemaSet&   s;
+    const DecodeCtx&   ctx;
+    uint32_t           recordSig;
+    std::vector<Frame> frames;
+};
+
+// The nearest earlier field named `name` in the enclosing structs.
+const Value* FieldByName(const ParseCtx& pc, const char* name) {
+    for (size_t f = pc.frames.size(); f-- > 0;) {
+        const TypeDef& t = *pc.frames[f].type;
+        const Value&   v = *pc.frames[f].value;
+        const Value*   hit = nullptr;
+        uint16_t vi = 0;
+        for (uint16_t i = 0; i < t.refCount && vi < v.items.size(); ++i) {
+            const schema::FieldDef& fd = pc.s.fields[t.ref + i];
+            if (fd.isBreak) continue;
+            if (std::strcmp(fd.name, name) == 0) hit = &v.items[vi];
+            ++vi;
+        }
+        if (hit) return hit;
+    }
+    return nullptr;
+}
+
+// The scalar a union's selector reads at this position.
+bool SelectorValue(const ParseCtx& pc, const TypeDef& u, const uint8_t* p, const uint8_t* end,
+                   uint64_t& out) {
+    switch (u.selector) {
+    case schema::Selector::Size:
+        out = static_cast<uint64_t>(end - p);
+        return true;
+    case schema::Selector::FormVersion:
+        out = pc.ctx.formVersion;
+        return true;
+    case schema::Selector::Record:
+        out = pc.recordSig;
+        return true;
+    case schema::Selector::Field:
+    case schema::Selector::Lookup: {
+        const Value* v = FieldByName(pc, u.selField);
+        if (!v) return false;
+        if (u.selector == schema::Selector::Field) {
+            out = u.selMask ? (v->bits & u.selMask) : v->bits;
+            return true;
+        }
+        const schema::LookupDef& L = pc.s.lookups[u.lookup];
+        const auto rows = pc.s.lookupRows.subspan(L.firstRow, L.rowCount);
+        const uint32_t key = static_cast<uint32_t>(v->bits);
+        const auto it = std::lower_bound(rows.begin(), rows.end(), key,
+            [](const schema::LookupRow& r, uint32_t k) { return r.key < k; });
+        if (it == rows.end() || it->key != key) return false;   // unknown key → default
+        out = it->value;
         return true;
     }
+    default:
+        return false;
+    }
+}
+
+// The case a union takes at this position, or -1 (refuse).
+int ChooseCase(const ParseCtx& pc, const TypeDef& u, const uint8_t* p, const uint8_t* end) {
+    uint64_t v = 0;
+    const bool have = SelectorValue(pc, u, p, end, v);
+    int dflt = -1;
+    for (uint16_t i = 0; i < u.refCount; ++i) {
+        const schema::CaseDef& c = pc.s.cases[u.ref + i];
+        if (c.isDefault) { dflt = i; continue; }
+        if (!have) continue;
+        if (c.isRange) {
+            const int64_t sv = static_cast<int64_t>(v);
+            if (sv >= c.min && sv <= c.max) return i;
+            continue;
+        }
+        for (uint16_t k = 0; k < c.valueCount; ++k)
+            if (pc.s.caseValues[c.firstValue + k] == v) return i;
+    }
+    return dflt;
+}
+
+// Parses one value of `typeIdx` from [p, end) into `out`. On success `p` is
+// advanced past exactly the bytes the layout owns.
+bool Parse(ParseCtx& pc, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end, Value& out) {
+    const SchemaSet& s = pc.s;
+    const TypeDef& t = s.types[typeIdx];
+    if (const size_t w = ScalarWidth(t.kind)) return ReadLE(p, end, w, out.bits);
     switch (t.kind) {
     case Kind::ZString:
-        return ReadZ(p, end, out);
+        return ReadZ(p, end, &out);
     case Kind::WString: {
         uint64_t len = 0;
         if (!ReadLE(p, end, 2, len)) return false;
         if (static_cast<uint64_t>(end - p) < len) return false;
-        if (out) out->str.assign(reinterpret_cast<const char*>(p), static_cast<size_t>(len));
+        out.str.assign(reinterpret_cast<const char*>(p), static_cast<size_t>(len));
         p += len;
         return true;
     }
     case Kind::LString:
-        if (ctx.localized) {
-            uint64_t id = 0;
-            if (!ReadLE(p, end, 4, id)) return false;
-            if (out) out->bits = id;
-            return true;
-        }
-        return ReadZ(p, end, out);
+        if (pc.ctx.localized) return ReadLE(p, end, 4, out.bits);
+        return ReadZ(p, end, &out);
     case Kind::Bytes: {
         const size_t n = t.len == LenKind::Fixed ? t.count : static_cast<size_t>(end - p);
         if (static_cast<size_t>(end - p) < n) return false;
-        if (out) out->bytes.assign(p, p + n);
+        out.bytes.assign(p, p + n);
         p += n;
         return true;
     }
     case Kind::Struct: {
+        pc.frames.push_back(Frame{ &t, &out });
         uint16_t present = 0;
+        bool ok = true, truncated = false;
         for (uint16_t i = 0; i < t.refCount; ++i) {
             const schema::FieldDef& f = s.fields[t.ref + i];
             if (f.isBreak) {
-                if (p == end) {                    // a legitimate shorter form
-                    if (out) out->present = present;
-                    return true;
-                }
+                if (p == end) { truncated = true; break; }   // a legitimate shorter form
                 continue;
             }
-            Value item;
-            if (!Parse(s, f.type, p, end, ctx, out ? &item : nullptr)) return false;
-            if (out) out->items.push_back(std::move(item));
+            out.items.emplace_back();
+            if (!Parse(pc, f.type, p, end, out.items.back())) { ok = false; break; }
             ++present;
         }
-        if (out) out->present = Value::kAll;
-        return true;
+        pc.frames.pop_back();
+        out.present = truncated ? present : Value::kAll;
+        return ok;
     }
     case Kind::Array: {
         uint64_t count = 0;
@@ -115,20 +190,30 @@ bool Parse(const SchemaSet& s, uint16_t typeIdx, const uint8_t*& p, const uint8_
         case LenKind::Rest:
             while (p < end) {
                 const uint8_t* before = p;
-                Value item;
-                if (!Parse(s, t.ref, p, end, ctx, out ? &item : nullptr)) return false;
+                out.items.emplace_back();
+                if (!Parse(pc, t.ref, p, end, out.items.back())) return false;
                 if (p == before) return false;     // zero-width element: no progress
-                if (out) out->items.push_back(std::move(item));
             }
             return true;
         default: return false;
         }
+        // Every element occupies at least one byte, so a count larger than the
+        // bytes left is malformed: refuse it before looping.
+        if (count > static_cast<uint64_t>(end - p)) return false;
         for (uint64_t i = 0; i < count; ++i) {
-            Value item;
-            if (!Parse(s, t.ref, p, end, ctx, out ? &item : nullptr)) return false;
-            if (out) out->items.push_back(std::move(item));
+            out.items.emplace_back();
+            if (!Parse(pc, t.ref, p, end, out.items.back())) return false;
         }
         return true;
+    }
+    case Kind::Union: {
+        const int c = ChooseCase(pc, t, p, end);
+        if (c < 0) return false;                   // no case: refuse
+        out.bits = static_cast<uint64_t>(c);
+        const schema::CaseDef& cd = s.cases[t.ref + c];
+        if (cd.empty) return true;
+        out.items.emplace_back();
+        return Parse(pc, cd.type, p, end, out.items.back());
     }
     default:
         return false;
@@ -186,6 +271,12 @@ void Write(const SchemaSet& s, uint16_t typeIdx, const Value& v, const DecodeCtx
         }
         for (const Value& item : v.items) Write(s, t.ref, item, ctx, w);
         return;
+    case Kind::Union: {
+        if (v.bits >= t.refCount) return;
+        const schema::CaseDef& cd = s.cases[t.ref + static_cast<uint16_t>(v.bits)];
+        if (!cd.empty && !v.items.empty()) Write(s, cd.type, v.items[0], ctx, w);
+        return;
+    }
     default:
         return;
     }
@@ -226,6 +317,12 @@ void WalkFormIds(const SchemaSet& s, uint16_t typeIdx, Value& v, F&& f) {
     case Kind::Array:
         for (Value& item : v.items) WalkFormIds(s, t.ref, item, f);
         return;
+    case Kind::Union:
+        if (v.bits < t.refCount && !v.items.empty()) {
+            const schema::CaseDef& cd = s.cases[t.ref + static_cast<uint16_t>(v.bits)];
+            if (!cd.empty) WalkFormIds(s, cd.type, v.items[0], f);
+        }
+        return;
     default:
         return;
     }
@@ -234,6 +331,7 @@ void WalkFormIds(const SchemaSet& s, uint16_t typeIdx, Value& v, F&& f) {
 // The first opaque `bytes` value under `v` that may hide FormIDs, if any.
 bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
     const TypeDef& t = s.types[typeIdx];
+    if (t.flags & schema::kRemapUnsafe) return true;
     switch (t.kind) {
     case Kind::Bytes:
         return !v.bytes.empty() && !(t.flags & schema::kFormIdsNone);
@@ -249,6 +347,12 @@ bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
     case Kind::Array:
         for (const Value& item : v.items)
             if (HasUnsafeBytes(s, t.ref, item)) return true;
+        return false;
+    case Kind::Union:
+        if (v.bits < t.refCount && !v.items.empty()) {
+            const schema::CaseDef& cd = s.cases[t.ref + static_cast<uint16_t>(v.bits)];
+            if (!cd.empty) return HasUnsafeBytes(s, cd.type, v.items[0]);
+        }
         return false;
     default:
         return false;
@@ -320,8 +424,12 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
             }
             const uint8_t* p   = sub.data;
             const uint8_t* end = sub.data + sub.size;
-            if (Parse(set, md.type, p, end, ctx, nullptr) && p == end) {
-                n.member = static_cast<int16_t>(m);
+            ParseCtx pc{ set, ctx, sig, {} };
+            Value v;
+            if (Parse(pc, md.type, p, end, v) && p == end) {
+                n.value   = std::move(v);
+                n.decoded = true;
+                n.member  = static_cast<int16_t>(m);
                 ++counts[key(scopeInst, m)];
                 stack.back().lastPos = m;
                 placed = true;
@@ -411,10 +519,11 @@ const schema::MemberDef& Record::MemberOf(uint32_t inst, uint16_t m) const {
 }
 
 const Value& Record::NodeValue(const Node& n) const {
-    if (!n.decoded) {
+    if (!n.decoded) {                 // decode parses eagerly; kept for safety
         const uint8_t* p = bytes_.data() + n.off;
-        Parse(*set_, MemberOf(n.inst, static_cast<uint16_t>(n.member)).type, p,
-              bytes_.data() + n.off + n.size, ctx_, &n.value);
+        ParseCtx pc{ *set_, ctx_, def_->sig, {} };
+        Parse(pc, MemberOf(n.inst, static_cast<uint16_t>(n.member)).type, p,
+              bytes_.data() + n.off + n.size, n.value);
         n.decoded = true;
     }
     return n.value;
@@ -524,10 +633,38 @@ const TypeDef* Record::TypeAt(uint32_t inst, const RelPath& p) const {
         }
     }
     for (uint8_t d = p.memberDepth; d < p.depth && t; ++d) {
-        if (t->kind != Kind::Struct) return nullptr;
-        t = &FieldType(*t, p.idx[d]);
+        if (t->kind == Kind::Struct) {
+            t = &FieldType(*t, p.idx[d]);
+        } else if (t->kind == Kind::Union) {
+            if (p.idx[d] >= t->refCount) return nullptr;
+            const schema::CaseDef& cd = set_->cases[t->ref + p.idx[d]];
+            if (cd.empty) return nullptr;
+            t = &set_->types[cd.type];
+        } else {
+            return nullptr;
+        }
     }
     return t;
+}
+
+const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p) const {
+    const Value* v = &root;
+    const TypeDef* t = &set_->types[type];
+    for (uint8_t d = p.memberDepth; d < p.depth; ++d) {
+        const uint16_t i = p.idx[d];
+        if (t->kind == Kind::Union) {
+            if (v->bits != i || v->items.empty()) return nullptr;     // other case taken
+            t = &set_->types[set_->cases[t->ref + i].type];
+            v = &v->items[0];
+            continue;
+        }
+        if (t->kind != Kind::Struct) return nullptr;
+        if (v->present != Value::kAll && i >= v->present) return nullptr;
+        if (i >= v->items.size()) return nullptr;
+        t = &FieldType(*t, i);
+        v = &v->items[i];
+    }
+    return v;
 }
 
 const Value* Record::FindValue(uint32_t inst, const RelPath& p) const {
@@ -535,14 +672,8 @@ const Value* Record::FindValue(uint32_t inst, const RelPath& p) const {
     if (scope < 0) return nullptr;
     const int32_t ni = FirstNode(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]);
     if (ni < 0) return nullptr;
-    const Value* v = &NodeValue(nodes_[static_cast<size_t>(ni)]);
-    for (uint8_t d = p.memberDepth; d < p.depth; ++d) {
-        const uint16_t i = p.idx[d];
-        if (v->present != Value::kAll && i >= v->present) return nullptr;
-        if (i >= v->items.size()) return nullptr;
-        v = &v->items[i];
-    }
-    return v;
+    return Descend(NodeValue(nodes_[static_cast<size_t>(ni)]),
+                   MemberOf(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]).type, p);
 }
 
 std::vector<const Value*> Record::FindAllValues(uint32_t inst, const RelPath& p) const {
@@ -552,13 +683,7 @@ std::vector<const Value*> Record::FindAllValues(uint32_t inst, const RelPath& p)
     const uint16_t m = p.idx[p.memberDepth - 1];
     for (const Node& n : nodes_) {
         if (n.inst != static_cast<uint32_t>(scope) || n.member != static_cast<int16_t>(m)) continue;
-        const Value* v = &NodeValue(n);
-        for (uint8_t d = p.memberDepth; d < p.depth && v; ++d) {
-            const uint16_t i = p.idx[d];
-            v = (v->present != Value::kAll && i >= v->present) || i >= v->items.size()
-                    ? nullptr : &v->items[i];
-        }
-        if (v) out.push_back(v);
+        if (const Value* v = Descend(NodeValue(n), MemberOf(n.inst, m).type, p)) out.push_back(v);
     }
     return out;
 }
@@ -580,6 +705,16 @@ Value Record::DefaultValue(uint16_t typeIdx) const {
         if (t.len == LenKind::Fixed)
             for (uint32_t i = 0; i < t.count; ++i) v.items.push_back(DefaultValue(t.ref));
         break;
+    case Kind::Union: {
+        // The default case if there is one, otherwise the first.
+        uint16_t pick = 0;
+        for (uint16_t i = 0; i < t.refCount; ++i)
+            if (set_->cases[t.ref + i].isDefault) pick = i;
+        v.bits = pick;
+        const schema::CaseDef& cd = set_->cases[t.ref + pick];
+        if (!cd.empty) v.items.push_back(DefaultValue(cd.type));
+        break;
+    }
     default:
         break;
     }
@@ -603,6 +738,18 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
         const TypeDef* t = &set_->types[md.type];
         for (uint8_t d = p.memberDepth; d < p.depth; ++d) {
             const uint16_t i = p.idx[d];
+            if (t->kind == Kind::Union) {
+                if (i >= t->refCount) return;
+                const schema::CaseDef& cd = set_->cases[t->ref + i];
+                if (cd.empty) return;
+                if (cur->bits != i || cur->items.empty()) {   // switch to this case
+                    cur->bits = i;
+                    cur->items.assign(1, DefaultValue(cd.type));
+                }
+                cur = &cur->items[0];
+                t = &set_->types[cd.type];
+                continue;
+            }
             if (cur->present != Value::kAll && i >= cur->present) {
                 // Setting a field past a break extends the struct to its full form.
                 const Value full = DefaultValue(static_cast<uint16_t>(t - set_->types.data()));

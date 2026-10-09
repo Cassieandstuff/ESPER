@@ -1,0 +1,7 @@
+table: testFuncs
+key: index
+columns: [index, name, p1]
+rows:
+  - [1, Alpha, form]
+  - [2, Beta,  int]
+  - [5, Gamma, none]

@@ -1,0 +1,53 @@
+record: TSTU
+name: TestUnions
+members:
+  - sig: SIZE
+    name: sized
+    union:
+      by: size
+      cases:
+        - { when: 1, name: small, type: u8 }
+        - { when: 2, name: wide,  type: u16 }
+  - sig: COND
+    name: cond
+    fields:
+      - { name: op, type: u8 }
+      - { name: fn, type: u16 }
+      - name: param
+        union:
+          by: { lookup: { table: testFuncs, key: fn, column: p1 } }
+          cases:
+            - when: form
+              name: form
+              union:
+                by: { field: op, mask: 0x02 }
+                cases:
+                  - { when: 0x02, name: alias, type: i32 }
+                default: { name: ref, type: formid }
+            - { when: [int, none], name: plain, type: u32 }
+          default: { name: unknown, type: u32, remapUnsafe: true }
+  - sig: VER2
+    name: versioned
+    fields:
+      - { name: version, type: i16 }
+      - { name: status,  type: u8, if: { field: version, min: 4 } }
+      - { name: items,   type: "TestItem[count: u16]" }
+  - sig: RECS
+    name: perRecord
+    union:
+      by: record
+      cases:
+        - { when: TSTU, name: mine, type: u32 }
+      default: { name: other, type: bytes }
+  - sig: FVER
+    name: byFormVersion
+    union:
+      by: formVersion
+      cases:
+        - { when: { min: 44 }, name: modern, type: u32 }
+      default: { name: legacy, type: u16 }
+  - sig: OBJS
+    name: obj
+    fields:
+      - { name: objFmt, type: u16 }
+      - { name: target, type: TestObj }

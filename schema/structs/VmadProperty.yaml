@@ -1,0 +1,19 @@
+struct: VmadProperty
+fields:
+  - { name: name,   type: wstring }
+  - { name: type,   type: u8 }                      # 1 object 2 string 3 int 4 float 5 bool; 11-15 arrays
+  - { name: status, type: u8, if: { field: version, min: 4 } }
+  - name: value
+    union:
+      by: { field: type }
+      cases:
+        - { when: 1,  name: object,  type: VmadObject }
+        - { when: 2,  name: string,  type: wstring }
+        - { when: 3,  name: int,     type: i32 }
+        - { when: 4,  name: float,   type: f32 }
+        - { when: 5,  name: bool,    type: u8 }
+        - { when: 11, name: objects, type: "VmadObject[count: u32]" }
+        - { when: 12, name: strings, type: "wstring[count: u32]" }
+        - { when: 13, name: ints,    type: "i32[count: u32]" }
+        - { when: 14, name: floats,  type: "f32[count: u32]" }
+        - { when: 15, name: bools,   type: "u8[count: u32]" }

@@ -1,6 +1,6 @@
 # ESPER schema language — specification
 
-**Language version 0.2.** This document is normative. It defines what a descriptor in `schema/`
+**Language version 0.3.** This document is normative. It defines what a descriptor in `schema/`
 means, so that any implementation can decode and encode Skyrim SE/AE plugin records exactly as
 ESPER's engine does. When this document and the code disagree, that is a bug in one of them.
 `tools/schemagen` is the reference validator, and `esper::Record` is the reference engine. The
@@ -18,8 +18,9 @@ these keys it has (exactly one):
 | `record` | a record type (§5) |
 | `struct` | a named, reusable byte layout (§4) |
 | `group` | a named, reusable subrecord group (§6.3) |
+| `table` | a lookup table that unions select on (§4.4) |
 
-`enum` and `table` are reserved for a later version (§10).
+`enum` is reserved for a later version (§10).
 
 Unknown keys are errors. A key that is reserved for a later version is rejected by name.
 
@@ -29,6 +30,7 @@ Unknown keys are errors. A key that is reserved for a later version is rejected 
   signature YAML would read as a number or boolean.
 - **Member and field names** are camelCase: `[a-z][A-Za-z0-9]*`. `self`, `record` and `cursor`
   are reserved.
+- **Table names** are camelCase.
 - **Record, struct and reusable-group names** are PascalCase: `[A-Z][A-Za-z0-9]*`. They name the
   generated view types, so they must be unique across the schema. Inline groups and inline
   structs are named by concatenating their owner's name with the PascalCased member name, for
@@ -36,7 +38,13 @@ Unknown keys are errors. A key that is reserved for a later version is rejected 
 
 ## 3. Types
 
-A `type` is a base type, optionally followed by an array suffix.
+A value (a member, a struct field, or a union case) is described by exactly one of:
+
+- **`type:`** a base type, optionally followed by an array suffix (below);
+- **`fields:`** an inline struct (§4);
+- **`union:`** a layout chosen by data (§4.2).
+
+`if:` (§4.3) and `remapUnsafe: true` (§8) can be added to any of them.
 
 ### 3.1 Base types
 
@@ -83,7 +91,8 @@ fields:
   (strings, arrays without a fixed length, breaks) can't declare a size.
 - Only the **last** field may consume "the rest of the subrecord" (`T[]`, `bytes` without `size`).
   A struct can't contain itself.
-- A member may also define an inline struct with `fields:` instead of `type:`.
+- A member or field may define an inline struct with `fields:` instead of `type:`.
+- A named struct may be a union instead: `struct: Name` with `union:` in place of `fields:`.
 
 ### 4.1 Breaks
 
@@ -98,6 +107,72 @@ the same struct.
 - **Encoding:** a value with fewer fields present is written up to its break, which reproduces
   the short form. Setting a field past the break extends the value to the full form, and the
   fields in between that have no value take their zero value.
+
+### 4.2 Unions
+
+A union picks one of several layouts at decode time.
+
+```yaml
+  - name: value
+    union:
+      by: { field: type }            # the selector
+      cases:
+        - { when: 1, name: object, type: VmadObject }
+        - { when: [3, 4], name: num, type: i32 }
+        - { when: { min: 11, max: 15 }, name: array, type: "u8[count: u32]" }
+      default: { name: other, type: bytes }   # optional
+```
+
+**Selectors** (`by:`):
+
+| Selector | Chooses the case by |
+|---|---|
+| `size` | the number of bytes left in the subrecord at the union's position |
+| `formVersion` | the record header's form version |
+| `record` | the enclosing record's signature; cases are written as signatures |
+| `{ field: name }` | the value of an earlier field |
+| `{ field: name, mask: N }` | that value ANDed with `N` |
+| `{ lookup: { table, key, column } }` | the `column` value of the `table` row whose key equals the earlier field `key`; cases are written as column values |
+
+- **Field references** resolve to the **nearest earlier field** with that name in the enclosing
+  structs, searching outward. A union can therefore select on a field of a struct that contains
+  it, such as VMAD's `objFormat`. Fields are looked up within the same subrecord only. A name that
+  isn't a field anywhere in the schema is rejected.
+- **Cases** match `when:` a value, a list of values, or `{ min, max }` (inclusive; either bound
+  may be omitted). Cases are tried in order, then `default`.
+  - A case without a payload (no `type`/`fields`/`union`) matches and consumes nothing.
+  - A lookup key missing from the table matches no case and falls to `default`.
+- **Refusal:** if no case matches and there is no `default`, the subrecord is refused (§7.1).
+- **`name`** on a case is optional and names its generated accessor.
+- **Value model:** a union's value records which case was taken. Its payload is that case's
+  value. Paths (handles) step through a union by **case index**.
+
+### 4.3 Conditional fields
+
+`if:` makes a value present only when an earlier field satisfies a condition:
+
+```yaml
+  - { name: status, type: u8, if: { field: version, min: 4 } }
+```
+
+The condition is `{ field, [mask], min/max | equals | in: [..] }`. It is shorthand for a union
+selecting on that field: one case with the value, and an empty default. Handles and views
+address the value directly.
+
+### 4.4 Tables
+
+```yaml
+table: ctdaFunctions
+key: index
+columns: [index, name, param1, param2]
+rows:
+  - [0, GetWantBlocking, none, none]
+  - [1, GetDistance, form, none]
+```
+
+- The `key` column holds unique integers.
+- Other columns hold values that `lookup` unions match by their written form.
+- Tables appear in `schema.json`.
 
 ## 5. Records and members
 
@@ -229,6 +304,10 @@ reproduce the original bytes. It is ESPER's real-data gate.
   rewritten. It is set to the number of occurrences for a repeated member, the element count for
   an array, or the byte count for `bytes`. When the counted member becomes absent, the count
   subrecord is removed.
+- **Unions:** setting a value inside a union case switches the union to that case, with zeros
+  for any other fields of the case. Changing the field a selector reads does **not** re-choose
+  cases in values that were already decoded. Keeping a value consistent with its selectors is
+  the editor's job.
 - **Ambiguous data:** the format itself can be ambiguous. For example, two instances of a
   repeating group with no member in common read back as one instance. Encoding writes what it
   is given; it doesn't disambiguate.
@@ -243,7 +322,9 @@ reproduce the original bytes. It is ESPER's real-data gate.
 - **Remap safety.** A record is **remap-safe** only when every FormID it could contain is
   visible to the schema. A record is not remap-safe if it has any of these:
   - a raw subrecord;
-  - a non-empty `bytes` value whose type doesn't declare `formIds: none`.
+  - a non-empty `bytes` value whose type doesn't declare `formIds: none`;
+  - a value whose type is marked **`remapUnsafe: true`**. This is for words that might be FormIDs
+    but can't be classified, such as a condition parameter whose function isn't in the table.
 
   An implementation must refuse to renumber FormIDs in a record that isn't remap-safe, and must
   leave it untouched. `formIds: none` is a claim about the data, verified on real records; it is
@@ -256,7 +337,7 @@ consumers never run the generator.
 
 | Output | Content |
 |---|---|
-| `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. Reusable groups and named structs appear expanded at each use. |
+| `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. A union type is `{ kind: union, by, cases: [{ when \| default, name?, type? }] }`. `remapUnsafe` appears where set. `tables` holds every table. Reusable groups and named structs appear expanded at each use. |
 | `include/ESPER/generated/Tables.h` | the engine's constexpr tables (`esper::schema::SchemaSet`) |
 | `include/ESPER/generated/Fields.h` | typed handles: `esper::fields::<SIG>::<member>[::<field>]`; composite members expose `::self` |
 | `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`): accessors only, over the generic engine |
@@ -268,11 +349,9 @@ language version rejects them by name.
 
 | Construct | Purpose |
 |---|---|
-| `union:` with selectors `size`, `formVersion`, `record`, `field`, `field` + `mask`, `lookup` | layouts chosen by data |
-| `if:` | conditional fields (shorthand for a union with an empty case) |
 | `open:` / `end:` on groups | explicit marker-delimited instances |
 | `T[count: <field>]` | an array counted by an earlier field |
-| `enum:`, `flags:`, `unit:` and `enum`/`table` descriptors | rendering hints and lookup tables |
+| `enum:`, `flags:`, `unit:` and `enum` descriptors | rendering hints |
 
 ## 11. Versioning
 
@@ -286,3 +365,4 @@ language version rejects them by name.
 |---|---|
 | 0.1 | Initial: scalars, strings, bytes, structs with breaks, arrays, groups (ordinal rule, reuse with remapping), `countOf`, `to:`, `formIds: none` |
 | 0.2 | adds `marker` |
+| 0.3 | adds unions (`size`, `formVersion`, `record`, `field`, `field` + `mask` and `lookup` selectors), `if:`, `remapUnsafe`, `table` descriptors, and named union structs |

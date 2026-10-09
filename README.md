@@ -100,8 +100,9 @@ esper::Record::Commit(plugin, node, rec);
 ESPER is moving from hand-written typed record structs (`Records*.h`) to the schema-driven
 engine (`esper::Record`); the plan is in [docs/schema-design.md](docs/schema-design.md). Both
 paths ship side by side until the migration completes. The schema covers all 120 record types the
-typed path does, and round-trips the entire vanilla load order byte-exactly. Next comes modeling
-what is still opaque (unions, VMAD, conditions). The public API will change while that lands.
+typed path does, and round-trips the entire vanilla load order byte-exactly. Conditions, VMAD
+script data and tint layers are fully typed. Next comes modeling the sections that are still
+opaque. The public API will change while that lands.
 
 ## License
 

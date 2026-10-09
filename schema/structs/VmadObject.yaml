@@ -1,0 +1,11 @@
+# An object property value: the FormID's position depends on VMAD's objFormat.
+struct: VmadObject
+union:
+  by: { field: objFormat }
+  cases:
+    - when: 1
+      name: v1
+      fields: [ { name: formId, type: formid }, { name: alias, type: i16 }, { name: unused, type: u16 } ]
+    - when: 2
+      name: v2
+      fields: [ { name: unused, type: u16 }, { name: alias, type: i16 }, { name: formId, type: formid } ]

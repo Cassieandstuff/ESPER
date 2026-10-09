@@ -3,6 +3,6 @@ record: PGRE
 name: PlacedGrenade
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: NAME, name: base, type: formid }   # NAME
   - { sig: XSCL, name: scale, type: f32 }   # XSCL

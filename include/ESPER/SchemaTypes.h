@@ -18,6 +18,9 @@
 //   GroupDef   a scope: a member range + entry range. A record's root scope is
 //              unordered; nested groups follow the ordinal rule.
 //   RecordDef  a record signature → its root GroupDef.
+//   CaseDef    one case of a union: the values it matches (→ caseValues, or a
+//              min/max range) and its payload type; a union's default case is last.
+//   LookupDef  a (table, column) a union selects on: key → value rows, sorted by key.
 // ─────────────────────────────────────────────────────────────────────────────
 
 #include <cstdint>
@@ -35,6 +38,17 @@ enum class Kind : uint8_t {
     Bytes,      // opaque
     Struct,
     Array,
+    Union,      // a layout chosen by a selector (→ CaseDef range)
+};
+
+// What a union's case is chosen by.
+enum class Selector : uint8_t {
+    None,
+    Size,         // bytes remaining in the subrecord at the union's position
+    FormVersion,  // the record header's form version
+    Record,       // the enclosing record's signature
+    Field,        // an earlier field's value (optionally masked), by name
+    Lookup,       // a table column, keyed by an earlier field's value
 };
 
 enum class LenKind : uint8_t {
@@ -48,7 +62,8 @@ enum class LenKind : uint8_t {
 
 enum class StrTable : uint8_t { None, Strings, DLStrings, ILStrings };
 
-inline constexpr uint8_t kFormIdsNone = 0x01;   // Bytes: declared free of FormIDs
+inline constexpr uint8_t kFormIdsNone   = 0x01;   // Bytes: declared free of FormIDs
+inline constexpr uint8_t kRemapUnsafe   = 0x02;   // any present value blocks FormID remap
 
 struct TypeDef {
     Kind        kind      = Kind::U8;
@@ -61,6 +76,34 @@ struct TypeDef {
     uint16_t    linkFirst = 0;   // FormId: allowed target sigs (empty = any)
     uint16_t    linkCount = 0;
     const char* name      = nullptr;  // named struct type, for diagnostics
+    // Union only (ref/refCount = the CaseDef range):
+    Selector    selector  = Selector::None;
+    const char* selField  = nullptr;  // Field / Lookup: the key field's name
+    uint64_t    selMask   = 0;        // Field: AND mask (0 = none)
+    uint16_t    lookup    = 0;        // Lookup: LookupDef
+};
+
+struct CaseDef {
+    const char* name       = nullptr;  // optional; names a typed accessor
+    uint16_t    type       = 0;        // payload TypeDef (unused when empty)
+    bool        empty      = false;    // matches, but carries no bytes
+    bool        isDefault  = false;
+    bool        isRange    = false;
+    int64_t     min        = 0;        // isRange: inclusive bounds
+    int64_t     max        = 0;
+    uint16_t    firstValue = 0;        // !isRange: matched values (→ caseValues)
+    uint16_t    valueCount = 0;
+};
+
+struct LookupRow {
+    uint32_t key   = 0;
+    uint32_t value = 0;               // an interned value id, matched by cases
+};
+
+struct LookupDef {
+    const char* name     = nullptr;   // "table.column"
+    uint16_t    firstRow = 0;
+    uint16_t    rowCount = 0;
 };
 
 struct FieldDef {
@@ -107,6 +150,10 @@ struct SchemaSet {
     std::span<const EntryDef>  entries;
     std::span<const GroupDef>  groups;
     std::span<const RecordDef> records;     // sorted by sig
+    std::span<const CaseDef>   cases;
+    std::span<const uint64_t>  caseValues;
+    std::span<const LookupDef> lookups;
+    std::span<const LookupRow> lookupRows;
     const char*                schemaVersion   = nullptr;
     const char*                languageVersion = nullptr;
 

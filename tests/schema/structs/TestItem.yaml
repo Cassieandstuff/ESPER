@@ -1,0 +1,13 @@
+# An element whose payload depends on its own `kind`; `flag` depends on an
+# ancestor struct's `version` (TSTU VERS2).
+struct: TestItem
+fields:
+  - { name: kind, type: u8 }
+  - name: value
+    union:
+      by: { field: kind }
+      cases:
+        - { when: 1,      name: ref,  type: formid }
+        - { when: 2,      name: text, type: wstring }
+        - { when: [3, 4], name: num,  type: i32 }
+  - { name: flag, type: u8, if: { field: version, min: 4 } }

@@ -3,7 +3,7 @@ record: MGEF
 name: MagicEffect
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { sig: MDOB, name: menuDisplayObject, type: formid }   # MDOB
   - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ

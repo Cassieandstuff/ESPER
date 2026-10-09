@@ -1,0 +1,22 @@
+# VMAD: Papyrus script attachments (Vmad.h). Versions 2-5 and object formats 1-2
+# are modeled; anything else is refused. Bytes after the scripts (the per-record
+# fragment sections of QUST/INFO/PACK/PERK/SCEN) stay opaque for now, so a VMAD
+# that has them blocks FormID remap, as it did in the typed path.
+struct: Vmad
+fields:
+  - { name: version,   type: i16 }
+  - { name: objFormat, type: i16 }
+  - name: body
+    union:
+      by: { field: version }
+      cases:
+        - when: { min: 2, max: 5 }
+          name: supported
+          union:
+            by: { field: objFormat }
+            cases:
+              - when: [1, 2]
+                name: scripts
+                fields:
+                  - { name: scripts,   type: "VmadScript[count: u16]" }
+                  - { name: fragments, type: bytes }

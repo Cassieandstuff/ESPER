@@ -1,0 +1,11 @@
+# A named union: the FormID's position depends on the enclosing `objFmt`.
+struct: TestObj
+union:
+  by: { field: objFmt }
+  cases:
+    - when: 1
+      name: v1
+      fields: [ { name: id, type: formid }, { name: pad, type: u32 } ]
+    - when: 2
+      name: v2
+      fields: [ { name: pad, type: u32 }, { name: id, type: formid } ]

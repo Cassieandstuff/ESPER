@@ -3,7 +3,7 @@ record: INFO
 name: DialogResponses
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD (fragments → passthrough) — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: ENAM, name: flags, type: InfoFlags }   # ENAM
   - { sig: PNAM, name: previousInfo, type: formid }   # PNAM
   - { sig: CNAM, name: favorLevel, type: u8 }   # CNAM

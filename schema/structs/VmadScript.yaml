@@ -1,0 +1,5 @@
+struct: VmadScript
+fields:
+  - { name: name,       type: wstring }
+  - { name: status,     type: u8, if: { field: version, min: 4 } }
+  - { name: properties, type: "VmadProperty[count: u16]" }

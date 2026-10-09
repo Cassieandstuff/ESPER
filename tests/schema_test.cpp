@@ -421,6 +421,123 @@ void TestMarker() {
     CheckRoundTrip(r2, bad.bytes());
 }
 
+bool DecodeU(const Bytes& payload, esper::Record& rec, uint16_t formVersion = 44) {
+    esper::DecodeCtx ctx;
+    ctx.formVersion = formVersion;
+    std::string err;
+    const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTU"), payload, ctx, rec, &err);
+    if (!ok) std::printf("  decode error: %s\n", err.c_str());
+    return ok;
+}
+
+Bytes U8(uint8_t v) { return { v }; }
+
+void TestUnions() {
+    std::printf("T14 unions: every selector, if-fields, named unions, refusal\n");
+    // size
+    {
+        Payload a, b, c;
+        a.Sub("SIZE", U8(7));
+        b.Sub("SIZE", U16(0x1234));
+        c.Sub("SIZE", Bytes{ 1, 2, 3 });                       // no case for 3 bytes
+        esper::Record ra, rb, rc;
+        CHECK(DecodeU(a.bytes(), ra) && DecodeU(b.bytes(), rb) && DecodeU(c.bytes(), rc));
+        CHECK(tv::TestUnions(ra).SizedSmall() == uint8_t(7));
+        CHECK(!tv::TestUnions(ra).SizedWide().has_value());
+        CHECK(tv::TestUnions(rb).SizedWide() == uint16_t(0x1234));
+        CHECK(rc.RawCount() == 1);
+        CheckRoundTrip(ra, a.bytes());
+        CheckRoundTrip(rb, b.bytes());
+        CheckRoundTrip(rc, c.bytes());
+        // Setting the other case switches the union (and the encoded size).
+        tv::TestUnions(ra).SetSizedWide(0xBEEF);
+        Payload want;
+        want.Sub("SIZE", U16(0xBEEF));
+        CHECK(ra.Encode() == want.bytes());
+    }
+    // lookup + masked field: FormID-ness of the param comes from the table
+    {
+        auto cond = [](uint8_t op, uint16_t fn, uint32_t param) {
+            Payload p;
+            p.Sub("COND", Cat({ U8(op), U16(fn), U32(param) }));
+            return p.bytes();
+        };
+        esper::Record form, alias, plain, unknown;
+        CHECK(DecodeU(cond(0, 1, 0x01000ABC), form));
+        CHECK(DecodeU(cond(2, 1, 7), alias));
+        CHECK(DecodeU(cond(0, 2, 99), plain));
+        CHECK(DecodeU(cond(0, 9, 0x01000ABC), unknown));
+        tv::TestUnions vf(form), va(alias), vp(plain), vu(unknown);
+        CHECK(vf.Cond().ParamFormRef()->raw == 0x01000ABCu);
+        CHECK(va.Cond().ParamFormAlias() == 7);
+        CHECK(vp.Cond().ParamPlain() == 99u);
+        CHECK(vu.Cond().ParamUnknown() == 0x01000ABCu);
+        size_t ids = 0;
+        form.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+        CHECK(ids == 1);
+        ids = 0;
+        alias.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+        CHECK(ids == 0);                                         // alias index: not a FormID
+        CHECK(form.RemapSafe() && alias.RemapSafe() && plain.RemapSafe());
+        std::string why;
+        CHECK(!unknown.RemapSafe(&why));                         // unknown function: refuse
+        for (auto* r : { &form, &alias, &plain, &unknown }) CHECK(r->RawCount() == 0);
+        CheckRoundTrip(form, cond(0, 1, 0x01000ABC));
+        CheckRoundTrip(unknown, cond(0, 9, 0x01000ABC));
+    }
+    // if-fields on an ancestor, counted arrays of union-bearing elements
+    {
+        Payload v3, v4, bad;
+        v3.Sub("VER2", Cat({ U16(3), U16(2),
+                             U8(1), U32(0x01000001),
+                             U8(2), U16(2), Bytes{ 'h', 'i' } }));
+        v4.Sub("VER2", Cat({ U16(4), U8(9), U16(1),
+                             U8(3), U32(uint32_t(-5)), U8(1) }));
+        bad.Sub("VER2", Cat({ U16(3), U16(1), U8(8), U32(0) }));    // kind 8: no case
+        esper::Record r3, r4, rb;
+        CHECK(DecodeU(v3.bytes(), r3) && DecodeU(v4.bytes(), r4) && DecodeU(bad.bytes(), rb));
+        CHECK(r3.RawCount() == 0 && r4.RawCount() == 0 && rb.RawCount() == 1);
+        CheckRoundTrip(r3, v3.bytes());
+        CheckRoundTrip(r4, v4.bytes());
+        CheckRoundTrip(rb, bad.bytes());
+        CHECK(!tv::TestUnions(r3).Versioned().Status().has_value());
+        CHECK(tv::TestUnions(r4).Versioned().Status() == uint8_t(9));
+        const auto items = r3.Get(tf::TSTU::versioned::items);
+        CHECK(items && items->size() == 2);
+        size_t ids = 0;
+        r3.ForEachFormId([&](uint32_t id, std::span<const uint32_t>) { ids += id == 0x01000001u; });
+        CHECK(ids == 1);
+    }
+    // record and form-version selectors
+    {
+        Payload p;
+        p.Sub("RECS", U32(5)).Sub("FVER", U32(6));
+        esper::Record modern, legacy;
+        CHECK(DecodeU(p.bytes(), modern, 44));
+        CHECK(tv::TestUnions(modern).PerRecordMine() == 5u);
+        CHECK(tv::TestUnions(modern).ByFormVersionModern() == 6u);
+        CHECK(DecodeU(p.bytes(), legacy, 43));                 // 4 bytes but legacy wants 2
+        CHECK(legacy.RawCount() == 1);
+        CheckRoundTrip(modern, p.bytes());
+        CheckRoundTrip(legacy, p.bytes());
+    }
+    // named union selecting on an enclosing field
+    {
+        Payload a, b;
+        a.Sub("OBJS", Cat({ U16(1), U32(0x01000777), U32(0) }));
+        b.Sub("OBJS", Cat({ U16(2), U32(0), U32(0x01000777) }));
+        esper::Record ra, rb;
+        CHECK(DecodeU(a.bytes(), ra) && DecodeU(b.bytes(), rb));
+        CHECK(tv::TestUnions(ra).Obj().TargetV1().Id()->raw == 0x01000777u);
+        CHECK(tv::TestUnions(rb).Obj().TargetV2().Id()->raw == 0x01000777u);
+        CHECK(!tv::TestUnions(rb).Obj().TargetV1().Id().has_value());
+        CHECK(rb.VisitFormIds([](uint32_t& id) { id = 0x02000777; }));
+        Payload want;
+        want.Sub("OBJS", Cat({ U16(2), U32(0), U32(0x02000777) }));
+        CHECK(rb.Encode() == want.bytes());
+    }
+}
+
 void TestRealSchema() {
     std::printf("T12 real schema: ARMO model slots, views, old-path parity\n");
     Payload p;
@@ -471,6 +588,7 @@ int main() {
     TestPathsAndViews();
     TestXxxx();
     TestMarker();
+    TestUnions();
     TestRealSchema();
     if (g_failures == 0) {
         std::printf("RESULT: PASS\n");

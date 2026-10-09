@@ -3,7 +3,7 @@ record: QUST
 name: Quest
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD (fragments+aliases → passthrough) — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { sig: DNAM, name: data, type: bytes }   # DNAM (flags/priority/delay)
   - { sig: ENAM, name: eventName, type: bytes }   # ENAM (4-char story event)

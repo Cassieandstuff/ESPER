@@ -3,7 +3,7 @@ record: BOOK
 name: Book
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: OBND, name: bounds, type: ObjectBounds }   # OBND
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { use: Model, name: model }

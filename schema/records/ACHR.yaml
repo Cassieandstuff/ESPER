@@ -3,7 +3,7 @@ record: ACHR
 name: PlacedNpc
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: bytes }   # VMAD — VMAD: modeled once unions land
+  - { sig: VMAD, name: vmad, type: Vmad }
   - { sig: NAME, name: base, type: formid }   # NAME (NPC_)
   - { sig: XEZN, name: encounterZone, type: formid }   # XEZN
   - { sig: XRGD, name: ragdollData, type: bytes }   # XRGD

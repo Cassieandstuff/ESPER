@@ -18,13 +18,21 @@ members:
   - { sig: DNAM, name: decapArmors, type: "formid[]" }   # DNAM (male+female)
   - { sig: HCLF, name: defaultHairColors, type: "formid[]" }   # HCLF (male+female)
   - { sig: TINL, name: tintCount, type: u16 }   # TINL
-  - { sig: TINI, name: tintLayerIndex, type: u16, repeat: true }   # TINI (one per layer)
-  - { sig: TINT, name: tintLayerTexture, type: zstring, repeat: true }   # TINT (one per layer)
-  - { sig: TINP, name: tintLayerMaskType, type: u16, repeat: true }   # TINP (optional per layer)
-  - { sig: TIND, name: tintLayerDefault, type: formid, repeat: true }   # TIND (optional per layer; CLFM)
-  - { sig: TINC, name: tintPresetColor, type: formid, repeat: true }   # TINC (CLFM, per preset)
-  - { sig: TINV, name: tintPresetValue, type: f32, repeat: true }   # TINV (per preset)
-  - { sig: TIRS, name: tintPresetId, type: u16, repeat: true }   # TIRS (per preset)
+  # Tint layers (modeled as groups in step 4; the typed path flattened them into
+  # parallel vectors and regrouped them positionally).
+  - group: tintLayers
+    repeat: true
+    members:
+      - { sig: TINI, name: index,        type: u16 }
+      - { sig: TINT, name: texture,      type: zstring }
+      - { sig: TINP, name: maskType,     type: u16, optional: true }
+      - { sig: TIND, name: defaultColor, type: formid, optional: true, to: [CLFM] }
+      - group: presets
+        repeat: true
+        members:
+          - { sig: TINC, name: color, type: formid, to: [CLFM] }
+          - { sig: TINV, name: value, type: f32 }
+          - { sig: TIRS, name: id,    type: u16 }
   - { sig: PNAM, name: facegenMainClamp, type: f32 }   # PNAM
   - { sig: UNAM, name: facegenFaceClamp, type: f32 }   # UNAM
   - { sig: ATKR, name: attackRace, type: formid }   # ATKR

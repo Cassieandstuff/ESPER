@@ -1,8 +1,60 @@
 # A condition: CTDA plus its optional CIS1/CIS2 string parameters (Conditions.h).
-# CTDA stays opaque until lookup unions land: whether its params are FormIDs depends
-# on the function, so typing them as plain integers would hide FormIDs from remap.
+#
+# Which CTDA words are FormIDs is decided by data, exactly as the typed path's
+# VisitConditionIds does:
+#   - comparison: a GLOB FormID when op bit 2 (use global) is set, else a float;
+#   - param1/param2: a FormID when the function table (tables/ctdaFunctions)
+#     classifies that slot as `form` and op bit 1 (params are alias indices) is
+#     clear; a function missing from the table makes the record refuse remap;
+#   - reference: a FormID when runOnType is 2 (reference).
 group: Condition
 members:
-  - { sig: CTDA, name: data,         type: bytes, size: 32 }
+  - sig: CTDA
+    name: data
+    fields:
+      - { name: op, type: u8 }            # bits 5-7 compare op; bit 0 OR, 1 params are aliases, 2 use global, 3 use pack data
+      - { name: unknown, type: "u8[3]" }
+      - name: comparison
+        union:
+          by: { field: op, mask: 0x04 }
+          cases:
+            - { when: 0x04, name: global, type: formid, to: [GLOB] }
+          default: { name: value, type: f32 }
+      - { name: functionIndex, type: u16 }
+      - { name: pad, type: "u8[2]" }
+      - name: param1
+        union:
+          by: { lookup: { table: ctdaFunctions, key: functionIndex, column: param1 } }
+          cases:
+            - when: form
+              name: form
+              union:
+                by: { field: op, mask: 0x02 }
+                cases:
+                  - { when: 0x02, name: alias, type: i32 }
+                default: { name: ref, type: formid }
+            - { when: [none, int], name: value, type: u32 }
+          default: { name: unclassified, type: u32, remapUnsafe: true }
+      - name: param2
+        union:
+          by: { lookup: { table: ctdaFunctions, key: functionIndex, column: param2 } }
+          cases:
+            - when: form
+              name: form
+              union:
+                by: { field: op, mask: 0x02 }
+                cases:
+                  - { when: 0x02, name: alias, type: i32 }
+                default: { name: ref, type: formid }
+            - { when: [none, int], name: value, type: u32 }
+          default: { name: unclassified, type: u32, remapUnsafe: true }
+      - { name: runOnType, type: u32 }    # 0 subject, 1 target, 2 reference, 3 combat target, ...
+      - name: reference
+        union:
+          by: { field: runOnType }
+          cases:
+            - { when: 2, name: ref, type: formid }
+          default: { name: value, type: u32 }
+      - { name: param3, type: i32 }
   - { sig: CIS1, name: stringParam1, type: zstring }
   - { sig: CIS2, name: stringParam2, type: zstring }

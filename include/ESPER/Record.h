@@ -80,6 +80,12 @@ struct RelPath {
     uint8_t depth       = 0;
 };
 
+// `p` extended by one step (a struct field index or a union case index).
+inline RelPath Extend(RelPath p, uint16_t i) {
+    p.idx[p.depth++] = i;
+    return p;
+}
+
 // Generated handles (include/ESPER/generated/Fields.h). `T` is the value type
 // the schema gives the field, so a wrong name or type fails to compile.
 template <class T>
@@ -237,6 +243,7 @@ private:
     const schema::GroupDef&  GroupOf(uint32_t inst) const;
     const schema::MemberDef& MemberOf(uint32_t inst, uint16_t m) const;
     const Value&             NodeValue(const Node& n) const;
+    const Value*             Descend(const Value& root, uint16_t type, const RelPath& p) const;
     int32_t                  ChildAtLevel(uint32_t nodeInst, uint32_t level) const;
     std::vector<uint32_t>    InstancesOf(uint32_t parent, uint16_t slot) const;
     int32_t                  FirstNode(uint32_t inst, uint16_t member) const;

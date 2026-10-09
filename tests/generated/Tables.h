@@ -4,32 +4,52 @@
 
 #include <ESPER/SchemaTypes.h>
 
+#include <cstdint>
+
 namespace esper_test::tables {
 
 using namespace ::esper::schema;
 
 inline constexpr TypeDef kTypes[] = {
-    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 0: zstring
-    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr },  // 1: lstring:strings
-    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 2: u32
-    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 3: f32
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr },  // 4: formid->TSTB
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 5, 0, 0, "Versioned" },  // 5: struct:Versioned
-    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 6: u16
-    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 7: i32
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, "Inner" },  // 8: struct:Inner
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 9: formid
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 2, 0, 0, "Outer" },  // 10: struct:Outer
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 6, 0, 0, 0, nullptr },  // 11: u16[3]
-    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 2, 0, 0, 0, nullptr },  // 12: u32[count: u16]
-    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 13: wstring
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr },  // 14: formid->TSTB[]
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 15: bytes
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr },  // 16: bytes:noids
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 4, 0, 0, 0, 0, nullptr },  // 17: bytes:4:noids
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr },  // 18: marker
-    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr },  // 19: u8
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData" },  // 20: inline:TestAlpha.data
+    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 0: zstring
+    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 1: lstring:strings
+    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 2: u32
+    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 3: f32
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 4: formid->TSTB
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 5, 0, 0, "Versioned", Selector::None, nullptr, 0ULL, 0 },  // 5: struct:Versioned
+    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 6: u16
+    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 7: i32
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, "Inner", Selector::None, nullptr, 0ULL, 0 },  // 8: struct:Inner
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 9: formid
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 2, 0, 0, "Outer", Selector::None, nullptr, 0ULL, 0 },  // 10: struct:Outer
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 6, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 11: u16[3]
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 2, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 12: u32[count: u16]
+    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 13: wstring
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 14: formid->TSTB[]
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 15: bytes
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 16: bytes:noids
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 4, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 17: bytes:4:noids
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 18: marker
+    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 19: u8
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData", Selector::None, nullptr, 0ULL, 0 },  // 20: inline:TestAlphaData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 0, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 21: union:records/TSTU.yaml member 0:TestUnionsSized
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 2, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 22: union:records/TSTU.yaml member 1 field 2 case 0:TestUnionsCondParamForm
+    { Kind::U32, LenKind::None, StrTable::None, 2, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 23: u32
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 4, 3, 0, 0, nullptr, Selector::Lookup, "fn", 0ULL, 0 },  // 24: union:records/TSTU.yaml member 1 field 2:TestUnionsCondParam
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 11, 3, 0, 0, "TestUnionsCond", Selector::None, nullptr, 0ULL, 0 },  // 25: inline:TestUnionsCond
+    { Kind::I16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 26: i16
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 7, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 27: if:records/TSTU.yaml member 2 field 1:TestUnionsVersionedStatus
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 9, 3, 0, 0, nullptr, Selector::Field, "kind", 0ULL, 0 },  // 28: union:structs/TestItem.yaml field 1:TestItemValue
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 12, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 29: if:structs/TestItem.yaml field 2:TestItemFlag
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 14, 3, 0, 0, "TestItem", Selector::None, nullptr, 0ULL, 0 },  // 30: struct:TestItem
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 30, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 31: struct:TestItem[count: u16]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 17, 3, 0, 0, "TestUnionsVersioned", Selector::None, nullptr, 0ULL, 0 },  // 32: inline:TestUnionsVersioned
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 14, 2, 0, 0, nullptr, Selector::Record, nullptr, 0ULL, 0 },  // 33: union:records/TSTU.yaml member 3:TestUnionsPerRecord
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 16, 2, 0, 0, nullptr, Selector::FormVersion, nullptr, 0ULL, 0 },  // 34: union:records/TSTU.yaml member 4:TestUnionsByFormVersion
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 20, 2, 0, 0, "TestObjV1", Selector::None, nullptr, 0ULL, 0 },  // 35: inline:TestObjV1
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, "TestObjV2", Selector::None, nullptr, 0ULL, 0 },  // 36: inline:TestObjV2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 18, 2, 0, 0, "TestObj", Selector::Field, "objFmt", 0ULL, 0 },  // 37: union:structs/TestObj.yaml:TestObj
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, "TestUnionsObj", Selector::None, nullptr, 0ULL, 0 },  // 38: inline:TestUnionsObj
 };
 inline constexpr FieldDef kFields[] = {
     { "flags", 2, false },
@@ -43,6 +63,21 @@ inline constexpr FieldDef kFields[] = {
     { "ref", 9, false },
     { "value", 7, false },
     { "weight", 3, false },
+    { "op", 19, false },
+    { "fn", 6, false },
+    { "param", 24, false },
+    { "kind", 19, false },
+    { "value", 28, false },
+    { "flag", 29, false },
+    { "version", 26, false },
+    { "status", 27, false },
+    { "items", 31, false },
+    { "id", 9, false },
+    { "pad", 2, false },
+    { "pad", 2, false },
+    { "id", 9, false },
+    { "objFmt", 6, false },
+    { "target", 37, false },
 };
 inline constexpr uint32_t kLinks[] = {
     SigOf("TSTB"),
@@ -76,6 +111,12 @@ inline constexpr MemberDef kMembers[] = {
     { "first", SigOf("PRB1"), 0, 0, false, false, -1 },
     { "second", SigOf("PRB2"), 19, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
+    { "sized", SigOf("SIZE"), 21, 0, false, false, -1 },
+    { "cond", SigOf("COND"), 25, 0, false, false, -1 },
+    { "versioned", SigOf("VER2"), 32, 0, false, false, -1 },
+    { "perRecord", SigOf("RECS"), 33, 0, false, false, -1 },
+    { "byFormVersion", SigOf("FVER"), 34, 0, false, false, -1 },
+    { "obj", SigOf("OBJS"), 38, 0, false, false, -1 },
 };
 inline constexpr EntryDef kEntries[] = {
     { SigOf("EDID"), 0 },
@@ -112,6 +153,12 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("PRB1"), 0 },
     { SigOf("PRB2"), 1 },
     { SigOf("EDID"), 0 },
+    { SigOf("SIZE"), 0 },
+    { SigOf("COND"), 1 },
+    { SigOf("VER2"), 2 },
+    { SigOf("RECS"), 3 },
+    { SigOf("FVER"), 4 },
+    { SigOf("OBJS"), 5 },
 };
 inline constexpr GroupDef kGroups[] = {
     { "TestAlpha", 0, 18, 0, 23, false },  // 0
@@ -120,18 +167,55 @@ inline constexpr GroupDef kGroups[] = {
     { "Pair", 23, 2, 29, 2, true },  // 3
     { "Pair", 25, 2, 31, 2, true },  // 4
     { "TestBeta", 27, 1, 33, 1, false },  // 5
+    { "TestUnions", 28, 6, 34, 6, false },  // 6
 };
 inline constexpr RecordDef kRecords[] = {
     { SigOf("TSTA"), "TestAlpha", 0 },
     { SigOf("TSTB"), "TestBeta", 5 },
+    { SigOf("TSTU"), "TestUnions", 6 },
+};
+inline constexpr CaseDef kCases[] = {
+    { "small", 19, false, false, false, 0LL, 0LL, 0, 1 },
+    { "wide", 6, false, false, false, 0LL, 0LL, 1, 1 },
+    { "alias", 7, false, false, false, 0LL, 0LL, 2, 1 },
+    { "ref", 9, false, true, false, 0LL, 0LL, 3, 0 },
+    { "form", 22, false, false, false, 0LL, 0LL, 3, 1 },
+    { "plain", 2, false, false, false, 0LL, 0LL, 4, 2 },
+    { "unknown", 23, false, true, false, 0LL, 0LL, 6, 0 },
+    { nullptr, 19, false, false, true, 4LL, INT64_MAX, 6, 0 },
+    { nullptr, 0, true, true, false, 0LL, 0LL, 6, 0 },
+    { "ref", 9, false, false, false, 0LL, 0LL, 6, 1 },
+    { "text", 13, false, false, false, 0LL, 0LL, 7, 1 },
+    { "num", 7, false, false, false, 0LL, 0LL, 8, 2 },
+    { nullptr, 19, false, false, true, 4LL, INT64_MAX, 10, 0 },
+    { nullptr, 0, true, true, false, 0LL, 0LL, 10, 0 },
+    { "mine", 2, false, false, false, 0LL, 0LL, 10, 1 },
+    { "other", 15, false, true, false, 0LL, 0LL, 11, 0 },
+    { "modern", 2, false, false, true, 44LL, INT64_MAX, 11, 0 },
+    { "legacy", 6, false, true, false, 0LL, 0LL, 11, 0 },
+    { "v1", 35, false, false, false, 0LL, 0LL, 11, 1 },
+    { "v2", 36, false, false, false, 0LL, 0LL, 12, 1 },
+};
+inline constexpr uint64_t kCaseValues[] = {
+    1ULL, 2ULL, 2ULL, 1ULL, 2ULL, 3ULL, 1ULL, 2ULL, 3ULL, 4ULL, 1431589716ULL, 1ULL, 2ULL,
+};
+inline constexpr LookupDef kLookups[] = {
+    { "testFuncs.p1", 0, 3 },
+};
+inline constexpr LookupRow kLookupRows[] = {
+    { 1, 1 }, { 2, 2 }, { 5, 3 },
 };
 
 inline constexpr SchemaSet kSchema{
     kTypes,
-    std::span<const FieldDef>(kFields, 11),
+    std::span<const FieldDef>(kFields, 26),
     std::span<const uint32_t>(kLinks, 1),
     kMembers, kEntries, kGroups, kRecords,
-    "0.0.1", "0.2",
+    std::span<const CaseDef>(kCases, 20),
+    std::span<const uint64_t>(kCaseValues, 13),
+    std::span<const LookupDef>(kLookups, 1),
+    std::span<const LookupRow>(kLookupRows, 3),
+    "0.0.1", "0.3",
 };
 
 } // namespace esper_test::tables
