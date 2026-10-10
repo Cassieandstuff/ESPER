@@ -147,7 +147,16 @@ static bool WriteBytes(const fs::path& path, const std::vector<uint8_t>& bytes) 
                 static_cast<std::streamsize>(bytes.size()));
     return static_cast<bool>(f);
 }
-static std::vector<uint8_t> ZlibDeflate(const std::vector<uint8_t>& src) {
+static bool SerializeTo(const Plugin& p, std::vector<uint8_t>& out) {
+    auto r = SerializePlugin(p);
+    if (!r) {
+        std::printf("  serialize: %s\n", r.error().message.c_str());
+        return false;
+    }
+    out = std::move(*r);
+    return true;
+}
+static std::vector<uint8_t> FixtureDeflate(const std::vector<uint8_t>& src) {
     mz_ulong bound = mz_compressBound(static_cast<mz_ulong>(src.size()));
     std::vector<uint8_t> dst(bound);
     mz_ulong dstLen = bound;
@@ -162,7 +171,7 @@ static std::vector<uint8_t> ZlibDeflate(const std::vector<uint8_t>& src) {
 static std::vector<uint8_t> RecCompressed(uint32_t sig, uint32_t flags,
                                           uint32_t formId,
                                           const std::vector<uint8_t>& recData) {
-    std::vector<uint8_t> z = ZlibDeflate(recData);
+    std::vector<uint8_t> z = FixtureDeflate(recData);
     std::vector<uint8_t> block;
     PutU32(block, static_cast<uint32_t>(recData.size()));
     PutBytes(block, z);
@@ -260,7 +269,7 @@ int main() {
         Plugin p;
         p.filename = "Tree.esm";
         char err[256] = {0};
-        CHECK(p.Load((tmp / "Tree.esm").string(), err, sizeof(err)), "Load Tree.esm");
+        CHECK(p.Load((tmp / "Tree.esm").string()).has_value(), "Load Tree.esm");
         if (g_failures) std::printf("  err='%s'\n", err);
 
         // T1: TES4 fields.
@@ -379,13 +388,12 @@ int main() {
         Plugin p;
         p.filename = "Pay.esm";
         char err[256] = {0};
-        CHECK(p.Load((tmp / "Pay.esm").string(), err, sizeof(err)), "Load Pay.esm");
+        CHECK(p.Load((tmp / "Pay.esm").string()).has_value(), "Load Pay.esm");
 
         auto payloadOf = [&](uint32_t id) -> std::span<const uint8_t> {
             auto it = p.index.find(id);
             if (it == p.index.end()) return {};
-            char perr[256] = {0};
-            return it->second->Payload(perr, sizeof(perr));
+            return it->second->Payload().value_or(std::span<const uint8_t>{});
         };
 
         auto plain = payloadOf(0x000A00u);
@@ -401,8 +409,8 @@ int main() {
         CHECK(z2.data() == z.data(), "T4 second Payload() reuses the inflate cache");
 
         auto empty = payloadOf(0x000A02u);
-        CHECK(empty.data() != nullptr && empty.size() == 0,
-              "T4 empty record: non-null pointer, zero size (not an error)");
+        CHECK(p.index.count(0x000A02u) && p.index[0x000A02u]->Payload().has_value() && empty.size() == 0,
+              "T4 empty record: an empty payload, not an error");
 
         // A corrupt compressed record: kCompressed flag but 2-byte payload.
         if (auto it = p.index.find(0x000A01u); it != p.index.end()) {
@@ -412,10 +420,9 @@ int main() {
             static const uint8_t junk[2] = { 0x78, 0x9C };
             broken.raw     = junk;
             broken.rawSize = 2;
-            char perr[256] = {0};
-            auto bad = broken.Payload(perr, sizeof(perr));
-            CHECK(bad.data() == nullptr && perr[0] != 0,
-                  "T4 corrupt compressed record → null data + error text");
+            auto bad = broken.Payload();
+            CHECK(!bad && !bad.error().message.empty(),
+                  "T4 corrupt compressed record → an error with text");
         }
 
         fs::remove_all(tmp, ec);
@@ -451,7 +458,7 @@ int main() {
         Plugin p;
         p.filename = "Diag.esm";
         char err[256] = {0};
-        CHECK(p.Load((tmp / "Diag.esm").string(), err, sizeof(err)),
+        CHECK(p.Load((tmp / "Diag.esm").string()).has_value(),
               "T5 Load succeeds despite malformed record");
         CHECK(!p.diagnostics.empty(), "T5 malformed record produced a diagnostic");
         CHECK(p.index.count(0x000B01u) == 1,
@@ -519,7 +526,7 @@ int main() {
         for (const char* name : { "Master.esm", "Light.esl", "Override.esp" }) {
             auto p = std::make_unique<Plugin>();
             p->filename = name;
-            CHECK(p->Load((tmp / name).string(), err, sizeof(err)), "T7 load plugin");
+            CHECK(p->Load((tmp / name).string()).has_value(), "T7 load plugin");
             plugins.push_back(std::move(p));
         }
         const Plugin* espPtr = plugins[2].get();
@@ -599,11 +606,9 @@ int main() {
             cf << "ccNew.esl\nccOff.esl\n";
         }
 
-        std::vector<PluginListing> order;
-        char err[256] = {0};
-        CHECK(LoadOrderReader::ResolveOrder(tmp.string(), (tmp / "plugins.txt").string(),
-                                            order, err, sizeof(err)),
-              "T8 ResolveOrder ok");
+        auto resolved = LoadOrderReader::ResolveOrder(tmp.string(), (tmp / "plugins.txt").string());
+        CHECK(resolved.has_value(), "T8 ResolveOrder ok");
+        const std::vector<PluginListing> order = resolved.value_or(std::vector<PluginListing>{});
 
         auto find = [&](const char* name) -> const PluginListing* {
             for (const auto& l : order)
@@ -665,10 +670,10 @@ int main() {
         Plugin p;
         p.filename = "Rt.esm";
         char err[256] = {0};
-        CHECK(p.Load((tmp / "Rt.esm").string(), err, sizeof(err)), "T9 Load Rt.esm");
+        CHECK(p.Load((tmp / "Rt.esm").string()).has_value(), "T9 Load Rt.esm");
 
         std::vector<uint8_t> emitted;
-        CHECK(SerializePlugin(p, emitted, err, sizeof(err)), "T9 SerializePlugin ok");
+        CHECK(SerializeTo(p, emitted), "T9 SerializePlugin ok");
         CHECK(emitted.size() == esm.size() &&
               std::memcmp(emitted.data(), esm.data(), esm.size()) == 0,
               "T9 unmodified plugin re-emits byte-identically");
@@ -676,11 +681,10 @@ int main() {
         // Reading a compressed record's Payload (populating the inflate cache)
         // must NOT change what gets emitted — raw bytes still carry through.
         if (auto it = p.index.find(0x000E03u); it != p.index.end()) {
-            char perr[256] = {0};
-            (void)it->second->Payload(perr, sizeof(perr));
+            (void)it->second->Payload();
         }
         std::vector<uint8_t> emitted2;
-        CHECK(SerializePlugin(p, emitted2, err, sizeof(err)), "T9 second serialize ok");
+        CHECK(SerializeTo(p, emitted2), "T9 second serialize ok");
         CHECK(emitted2 == emitted, "T9 inflate cache does not perturb emission");
 
         // A modified payload replaces the record's bytes and resizes its group.
@@ -690,18 +694,18 @@ int main() {
             it->second->dirty    = true;
         }
         std::vector<uint8_t> emitted3;
-        CHECK(SerializePlugin(p, emitted3, err, sizeof(err)), "T9 modified serialize ok");
+        CHECK(SerializeTo(p, emitted3), "T9 modified serialize ok");
         CHECK(emitted3.size() > emitted.size(), "T9 modified emission grew");
 
         // The modified plugin must itself reload cleanly and round-trip.
         CHECK(WriteBytes(tmp / "Rt2.esm", emitted3), "T9 write modified plugin");
         Plugin p2;
         p2.filename = "Rt2.esm";
-        CHECK(p2.Load((tmp / "Rt2.esm").string(), err, sizeof(err)), "T9 reload modified");
+        CHECK(p2.Load((tmp / "Rt2.esm").string()).has_value(), "T9 reload modified");
         CHECK(p2.diagnostics.empty(), "T9 modified plugin has clean structure");
         CHECK(p2.index.size() == p.index.size(), "T9 modified plugin keeps all records");
         std::vector<uint8_t> emitted4;
-        CHECK(SerializePlugin(p2, emitted4, err, sizeof(err)) && emitted4 == emitted3,
+        CHECK(SerializeTo(p2, emitted4) && emitted4 == emitted3,
               "T9 modified plugin round-trips byte-identically");
 
         fs::remove_all(tmp, ec);
@@ -730,12 +734,12 @@ int main() {
         char err[256] = {0};
 
         const uint32_t raceRef =
-            MakeRef(np, FormKey{ "AuthorMaster.esm", kRaceId }, err, sizeof(err));
+            MakeRef(np, FormKey{ "AuthorMaster.esm", kRaceId }).value_or(0u);
         CHECK(raceRef == kRaceId, "T10 MakeRef → master index 0 ref");
         CHECK(np.masters.size() == 1 && np.masters[0] == "AuthorMaster.esm",
               "T10 MakeRef auto-added the master");
 
-        RecordNode* node = CreateRecord(np, Sig4("NPC_"), err, sizeof(err));
+        RecordNode* node = CreateRecord(np, Sig4("NPC_")).value_or(nullptr);
         CHECK(node != nullptr, "T10 CreateRecord NPC_");
         CHECK(node && (node->header.formId >> 24) == 1u &&
               (node->header.formId & 0xFFFFFFu) == 0x800u,
@@ -743,7 +747,7 @@ int main() {
 
         if (node) {
             NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, np, *node, npc, err, sizeof(err)),
+            CHECK(DecodeNode(kNpcSchema, np, *node, npc).has_value(),
                   "T10 DecodeNode on empty new record");
             npc.editorId = "MadeNord";
             npc.fullName = Lstring{};
@@ -752,13 +756,13 @@ int main() {
             AcbsData acbs{};
             acbs.flags = 0x1u;   // female
             npc.acbs   = acbs;
-            CHECK(CommitNode(kNpcSchema, np, *node, npc, err, sizeof(err)),
+            CHECK(CommitNode(kNpcSchema, np, *node, npc).has_value(),
                   "T10 CommitNode");
         }
 
         // Adding ANOTHER master after the record exists must renumber the
         // record's self index (1 → 2) and any self refs in its payload.
-        const int m2 = EnsureMaster(np, "Second.esm", err, sizeof(err));
+        const int m2 = EnsureMaster(np, "Second.esm").value_or(-1);
         CHECK(m2 == 1, "T10 EnsureMaster('Second.esm') at index 1");
         if (m2 < 0) std::printf("  err='%s'\n", err);
         RecordNode* renumbered = nullptr;
@@ -769,20 +773,20 @@ int main() {
         // The race ref (master index 0) must be untouched.
         if (renumbered) {
             NpcRec check;
-            CHECK(DecodeNode(kNpcSchema, np, *renumbered, check, err, sizeof(err)) &&
+            CHECK(DecodeNode(kNpcSchema, np, *renumbered, check).has_value() &&
                   check.race && check.race->id == kRaceId,
                   "T10 master-index ref survived the renumber");
         }
 
-        CHECK(FinalizePlugin(np, err, sizeof(err)), "T10 FinalizePlugin");
+        CHECK(FinalizePlugin(np).has_value(), "T10 FinalizePlugin");
         CHECK(np.hedrNumRecords == 2, "T10 HEDR.numRecords == records(1)+groups(1)");
         const fs::path outPath = tmp / "Made_SCT.esp";
-        CHECK(SavePlugin(np, outPath.string(), err, sizeof(err)), "T10 SavePlugin");
+        CHECK(SavePlugin(np, outPath.string()).has_value(), "T10 SavePlugin");
 
         // Reload from disk and verify everything round-tripped.
         Plugin re;
         re.filename = "Made_SCT.esp";
-        CHECK(re.Load(outPath.string(), err, sizeof(err)), "T10 reload saved plugin");
+        CHECK(re.Load(outPath.string()).has_value(), "T10 reload saved plugin");
         CHECK(re.diagnostics.empty(), "T10 saved plugin has clean structure");
         CHECK(re.masters.size() == 2 && re.masters[0] == "AuthorMaster.esm" &&
               re.masters[1] == "Second.esm", "T10 MAST list round-tripped");
@@ -792,7 +796,7 @@ int main() {
         if (!re.index.empty()) {
             RecordNode* rn = re.index.begin()->second;
             NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, re, *rn, npc, err, sizeof(err)),
+            CHECK(DecodeNode(kNpcSchema, re, *rn, npc).has_value(),
                   "T10 decode reloaded NPC");
             CHECK(npc.editorId && *npc.editorId == "MadeNord", "T10 EDID round-tripped");
             CHECK(npc.fullName && npc.fullName->text &&
@@ -811,11 +815,9 @@ int main() {
         Plugin esl;
         CreateEmptyPlugin(esl, "Tiny.esl", /*light=*/true);
         esl.hedrNextObjectId = 0xFFFu;
-        char e1[256] = {0};
-        CHECK(AllocateFormId(esl, e1, sizeof(e1)) != 0, "T10 ESL id 0xFFF allocates");
-        char e2[256] = {0};
-        CHECK(AllocateFormId(esl, e2, sizeof(e2)) == 0 && e2[0] != 0,
-              "T10 ESL id past 0xFFF errors cleanly");
+        CHECK(AllocateFormId(esl).has_value(), "T10 ESL id 0xFFF allocates");
+        const auto past = AllocateFormId(esl);
+        CHECK(!past && !past.error().message.empty(), "T10 ESL id past 0xFFF errors cleanly");
 
         fs::remove_all(tmp, ec);
     }
@@ -909,7 +911,7 @@ int main() {
         for (const char* name : { "WBase.esm", "WOver.esp" }) {
             auto p = std::make_unique<Plugin>();
             p->filename = name;
-            CHECK(p->Load((tmp / name).string(), err, sizeof(err)), "T11 load plugin");
+            CHECK(p->Load((tmp / name).string()).has_value(), "T11 load plugin");
             plugins.push_back(std::move(p));
         }
         LoadOrderIndex idx;
@@ -963,25 +965,25 @@ int main() {
         {
             Plugin p;
             CreateEmptyPlugin(p, "UnkCond.esp", /*light=*/false);
-            RecordNode* sn = CreateRecord(p, Sig4("SPEL"), err, sizeof(err));
+            RecordNode* sn = CreateRecord(p, Sig4("SPEL")).value_or(nullptr);
             CHECK(sn != nullptr, "T12 create SPEL (unknown fn)");
             if (sn) {
                 SpellRec spell;
-                DecodeNode(kSpelSchema, p, *sn, spell, err, sizeof(err));
+                (void)DecodeNode(kSpelSchema, p, *sn, spell);
                 spell.editorId = "UnkCond";
                 CondData c{};
                 c.functionIndex = 60000;         // not in the table → unknown
                 c.param1        = 0x00000800u;   // maybe a form — but we don't know
                 spell.conds.conditions.push_back(c);
-                CHECK(CommitNode(kSpelSchema, p, *sn, spell, err, sizeof(err)),
+                CHECK(CommitNode(kSpelSchema, p, *sn, spell).has_value(),
                       "T12 commit unknown-fn SPEL");
             }
-            char rerr[512] = {0};
-            const int idx = EnsureMaster(p, "Skyrim.esm", rerr, sizeof(rerr));
-            CHECK(idx < 0, "T12 EnsureMaster refuses over an UNKNOWN condition function");
-            CHECK(std::strstr(rerr, "CTDA") != nullptr, "T12 refusal message names CTDA");
+            const auto idx = EnsureMaster(p, "Skyrim.esm");
+            const std::string rerr = idx ? std::string() : idx.error().message;
+            CHECK(!idx, "T12 EnsureMaster refuses over an UNKNOWN condition function");
+            CHECK(rerr.find("CTDA") != std::string::npos, "T12 refusal message names CTDA");
             CHECK(p.masters.empty(), "T12 refused EnsureMaster is atomic");
-            if (idx >= 0 || !std::strstr(rerr, "CTDA")) std::printf("  err='%s'\n", rerr);
+            if (idx || rerr.find("CTDA") == std::string::npos) std::printf("  err='%s'\n", rerr.c_str());
         }
 
         // (b) KNOWN condition functions remap correctly: GetInFaction's Form
@@ -990,11 +992,11 @@ int main() {
         {
             Plugin p;
             CreateEmptyPlugin(p, "KnownCond.esp", /*light=*/false);
-            RecordNode* sn = CreateRecord(p, Sig4("SPEL"), err, sizeof(err));
+            RecordNode* sn = CreateRecord(p, Sig4("SPEL")).value_or(nullptr);
             CHECK(sn != nullptr, "T12 create SPEL (known fn)");
             if (sn) {
                 SpellRec spell;
-                DecodeNode(kSpelSchema, p, *sn, spell, err, sizeof(err));
+                (void)DecodeNode(kSpelSchema, p, *sn, spell);
                 spell.editorId = "KnownCond";
                 CondData formCond{};
                 formCond.functionIndex = 71;          // GetInFaction — p1 = Form
@@ -1004,10 +1006,10 @@ int main() {
                 intCond.functionIndex = 70;           // GetIsSex — p1 = Int
                 intCond.param1        = 0x00000123u;  // int that resembles a self-ref
                 spell.conds.conditions.push_back(intCond);
-                CHECK(CommitNode(kSpelSchema, p, *sn, spell, err, sizeof(err)),
+                CHECK(CommitNode(kSpelSchema, p, *sn, spell).has_value(),
                       "T12 commit known-fn SPEL");
             }
-            const int idx = EnsureMaster(p, "Skyrim.esm", err, sizeof(err));
+            const int idx = EnsureMaster(p, "Skyrim.esm").value_or(-1);
             CHECK(idx == 0, "T12 EnsureMaster succeeds over KNOWN condition functions");
             if (idx < 0) std::printf("  err='%s'\n", err);
 
@@ -1015,7 +1017,7 @@ int main() {
             for (auto& [fid, n] : p.index) if (n->header.sig == Sig4("SPEL")) rn = n;
             if (rn) {
                 SpellRec spell;
-                CHECK(DecodeNode(kSpelSchema, p, *rn, spell, err, sizeof(err)) &&
+                CHECK(DecodeNode(kSpelSchema, p, *rn, spell).has_value() &&
                       spell.conds.conditions.size() == 2, "T12 re-decode known-fn SPEL");
                 if (spell.conds.conditions.size() == 2) {
                     CHECK((spell.conds.conditions[0].param1 >> 24) == 1u &&
@@ -1031,18 +1033,18 @@ int main() {
         // null reference must stay null (the oldSelf==0 capture bug).
         Plugin p2;
         CreateEmptyPlugin(p2, "Safety2.esp", /*light=*/false);
-        RecordNode* n2 = CreateRecord(p2, Sig4("NPC_"), err, sizeof(err));
+        RecordNode* n2 = CreateRecord(p2, Sig4("NPC_")).value_or(nullptr);
         CHECK(n2 != nullptr, "T12 create NPC in second plugin");
         if (n2) {
             NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, p2, *n2, npc, err, sizeof(err)),
+            CHECK(DecodeNode(kNpcSchema, p2, *n2, npc).has_value(),
                   "T12 decode");
             npc.editorId  = "NullRefNord";
             npc.deathItem = FormRef{ 0 };
-            CHECK(CommitNode(kNpcSchema, p2, *n2, npc, err, sizeof(err)),
+            CHECK(CommitNode(kNpcSchema, p2, *n2, npc).has_value(),
                   "T12 commit");
         }
-        const int m = EnsureMaster(p2, "Skyrim.esm", err, sizeof(err));
+        const int m = EnsureMaster(p2, "Skyrim.esm").value_or(-1);
         CHECK(m == 0, "T12 EnsureMaster succeeds without conditions");
         if (m < 0) std::printf("  err='%s'\n", err);
         RecordNode* after = nullptr;
@@ -1052,7 +1054,7 @@ int main() {
               "T12 record header renumbered 0 → 1");
         if (after) {
             NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, p2, *after, npc, err, sizeof(err)) &&
+            CHECK(DecodeNode(kNpcSchema, p2, *after, npc).has_value() &&
                   npc.deathItem && npc.deathItem->id == 0u,
                   "T12 null FormID stayed null through the renumber");
         }

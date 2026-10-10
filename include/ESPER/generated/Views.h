@@ -301,26 +301,40 @@ public:
     void SetType(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
     std::optional<uint8_t> Status() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(2), 0)); }
     void SetStatus(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(2), 0), v); }
-    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(3)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
-    std::optional<uint16_t> ValueObjectCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(3), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Object = 0, String = 1, Int = 2, Float = 3, Bool = 4, Objects = 5, Strings = 6, Ints = 7, Floats = 8, Bools = 9 };
+    std::optional<ValueKind> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(3)); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsObject() const { return ValueCase() == ValueKind::Object; }
+    enum class ValueObjectKind : uint16_t { V1 = 0, V2 = 1 };
+    std::optional<ValueObjectKind> ValueObjectCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(3), 0)); if (!v) return std::nullopt; return static_cast<ValueObjectKind>(v->bits); }
+    bool ValueObjectIsV1() const { return ValueObjectCase() == ValueObjectKind::V1; }
     ::esper::view::VmadObjectV1 ValueObjectV1() const { return ::esper::view::VmadObjectV1(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(3), 0), 0) }); }
+    bool ValueObjectIsV2() const { return ValueObjectCase() == ValueObjectKind::V2; }
     ::esper::view::VmadObjectV2 ValueObjectV2() const { return ::esper::view::VmadObjectV2(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(3), 0), 1) }); }
+    bool ValueIsString() const { return ValueCase() == ValueKind::String; }
     std::optional<std::string> ValueString() const { return s_.at.Get<std::string>(::esper::Extend(s_.Field(3), 1)); }
     void SetValueString(const std::string& v) const { s_.at.Set<std::string>(::esper::Extend(s_.Field(3), 1), v); }
+    bool ValueIsInt() const { return ValueCase() == ValueKind::Int; }
     std::optional<int32_t> ValueInt() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(3), 2)); }
     void SetValueInt(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(3), 2), v); }
+    bool ValueIsFloat() const { return ValueCase() == ValueKind::Float; }
     std::optional<float> ValueFloat() const { return s_.at.Get<float>(::esper::Extend(s_.Field(3), 3)); }
     void SetValueFloat(const float& v) const { s_.at.Set<float>(::esper::Extend(s_.Field(3), 3), v); }
+    bool ValueIsBool() const { return ValueCase() == ValueKind::Bool; }
     std::optional<uint8_t> ValueBool() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(3), 4)); }
     void SetValueBool(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(3), 4), v); }
+    bool ValueIsObjects() const { return ValueCase() == ValueKind::Objects; }
     std::optional<std::vector<::esper::Value>> ValueObjects() const { return s_.at.Get<std::vector<::esper::Value>>(::esper::Extend(s_.Field(3), 5)); }
     void SetValueObjects(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(::esper::Extend(s_.Field(3), 5), v); }
+    bool ValueIsStrings() const { return ValueCase() == ValueKind::Strings; }
     std::optional<std::vector<std::string>> ValueStrings() const { return s_.at.Get<std::vector<std::string>>(::esper::Extend(s_.Field(3), 6)); }
     void SetValueStrings(const std::vector<std::string>& v) const { s_.at.Set<std::vector<std::string>>(::esper::Extend(s_.Field(3), 6), v); }
+    bool ValueIsInts() const { return ValueCase() == ValueKind::Ints; }
     std::optional<std::vector<int32_t>> ValueInts() const { return s_.at.Get<std::vector<int32_t>>(::esper::Extend(s_.Field(3), 7)); }
     void SetValueInts(const std::vector<int32_t>& v) const { s_.at.Set<std::vector<int32_t>>(::esper::Extend(s_.Field(3), 7), v); }
+    bool ValueIsFloats() const { return ValueCase() == ValueKind::Floats; }
     std::optional<std::vector<float>> ValueFloats() const { return s_.at.Get<std::vector<float>>(::esper::Extend(s_.Field(3), 8)); }
     void SetValueFloats(const std::vector<float>& v) const { s_.at.Set<std::vector<float>>(::esper::Extend(s_.Field(3), 8), v); }
+    bool ValueIsBools() const { return ValueCase() == ValueKind::Bools; }
     std::optional<std::vector<uint8_t>> ValueBools() const { return s_.at.Get<std::vector<uint8_t>>(::esper::Extend(s_.Field(3), 9)); }
     void SetValueBools(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(::esper::Extend(s_.Field(3), 9), v); }
 private:
@@ -361,8 +375,12 @@ public:
     void SetVersion(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(0), v); }
     std::optional<int16_t> ObjFormat() const { return s_.at.Get<int16_t>(s_.Field(1)); }
     void SetObjFormat(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(1), v); }
-    std::optional<uint16_t> BodyCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
-    std::optional<uint16_t> BodySupportedCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(2), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class BodyKind : uint16_t { Supported = 0 };
+    std::optional<BodyKind> BodyCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<BodyKind>(v->bits); }
+    bool BodyIsSupported() const { return BodyCase() == BodyKind::Supported; }
+    enum class BodySupportedKind : uint16_t { Scripts = 0 };
+    std::optional<BodySupportedKind> BodySupportedCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(2), 0)); if (!v) return std::nullopt; return static_cast<BodySupportedKind>(v->bits); }
+    bool BodySupportedIsScripts() const { return BodySupportedCase() == BodySupportedKind::Scripts; }
     ::esper::view::VmadBodySupportedScripts BodySupportedScripts() const { return ::esper::view::VmadBodySupportedScripts(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(2), 0), 0) }); }
 private:
     ::esper::StructCursor s_;
@@ -412,9 +430,12 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<uint32_t> Type() const { return s_.at.Get<uint32_t>(s_.Field(0)); }
     void SetType(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(0), v); }
-    std::optional<uint16_t> TopicCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class TopicKind : uint16_t { Ref = 0, Subtype = 1 };
+    std::optional<TopicKind> TopicCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<TopicKind>(v->bits); }
+    bool TopicIsRef() const { return TopicCase() == TopicKind::Ref; }
     std::optional<::esper::Link<::esper::view::DialogTopic>> TopicRef() const { return s_.at.Get<::esper::Link<::esper::view::DialogTopic>>(::esper::Extend(s_.Field(1), 0)); }
     void SetTopicRef(const ::esper::Link<::esper::view::DialogTopic>& v) const { s_.at.Set<::esper::Link<::esper::view::DialogTopic>>(::esper::Extend(s_.Field(1), 0), v); }
+    bool TopicIsSubtype() const { return TopicCase() == TopicKind::Subtype; }
     std::optional<uint32_t> TopicSubtype() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(1), 1)); }
     void SetTopicSubtype(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(1), 1), v); }
 private:
@@ -577,40 +598,60 @@ public:
     void SetOp(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
     std::optional<std::vector<uint8_t>> Unknown() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(1)); }
     void SetUnknown(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(1), v); }
-    std::optional<uint16_t> ComparisonCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ComparisonKind : uint16_t { Global = 0, Value = 1 };
+    std::optional<ComparisonKind> ComparisonCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<ComparisonKind>(v->bits); }
+    bool ComparisonIsGlobal() const { return ComparisonCase() == ComparisonKind::Global; }
     std::optional<::esper::Link<::esper::view::Global>> ComparisonGlobal() const { return s_.at.Get<::esper::Link<::esper::view::Global>>(::esper::Extend(s_.Field(2), 0)); }
     void SetComparisonGlobal(const ::esper::Link<::esper::view::Global>& v) const { s_.at.Set<::esper::Link<::esper::view::Global>>(::esper::Extend(s_.Field(2), 0), v); }
+    bool ComparisonIsValue() const { return ComparisonCase() == ComparisonKind::Value; }
     std::optional<float> ComparisonValue() const { return s_.at.Get<float>(::esper::Extend(s_.Field(2), 1)); }
     void SetComparisonValue(const float& v) const { s_.at.Set<float>(::esper::Extend(s_.Field(2), 1), v); }
     std::optional<uint16_t> FunctionIndex() const { return s_.at.Get<uint16_t>(s_.Field(3)); }
     void SetFunctionIndex(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(3), v); }
     std::optional<std::vector<uint8_t>> Pad() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(4)); }
     void SetPad(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(4), v); }
-    std::optional<uint16_t> Param1Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(5)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
-    std::optional<uint16_t> Param1FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(5), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class Param1Kind : uint16_t { Form = 0, Value = 1, Unclassified = 2 };
+    std::optional<Param1Kind> Param1Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(5)); if (!v) return std::nullopt; return static_cast<Param1Kind>(v->bits); }
+    bool Param1IsForm() const { return Param1Case() == Param1Kind::Form; }
+    enum class Param1FormKind : uint16_t { Alias = 0, Ref = 1 };
+    std::optional<Param1FormKind> Param1FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(5), 0)); if (!v) return std::nullopt; return static_cast<Param1FormKind>(v->bits); }
+    bool Param1FormIsAlias() const { return Param1FormCase() == Param1FormKind::Alias; }
     std::optional<int32_t> Param1FormAlias() const { return s_.at.Get<int32_t>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 0)); }
     void SetParam1FormAlias(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 0), v); }
+    bool Param1FormIsRef() const { return Param1FormCase() == Param1FormKind::Ref; }
     std::optional<::esper::FormId> Param1FormRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 1)); }
     void SetParam1FormRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(5), 0), 1), v); }
+    bool Param1IsValue() const { return Param1Case() == Param1Kind::Value; }
     std::optional<uint32_t> Param1Value() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(5), 1)); }
     void SetParam1Value(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(5), 1), v); }
+    bool Param1IsUnclassified() const { return Param1Case() == Param1Kind::Unclassified; }
     std::optional<uint32_t> Param1Unclassified() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(5), 2)); }
     void SetParam1Unclassified(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(5), 2), v); }
-    std::optional<uint16_t> Param2Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(6)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
-    std::optional<uint16_t> Param2FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(6), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class Param2Kind : uint16_t { Form = 0, Value = 1, Unclassified = 2 };
+    std::optional<Param2Kind> Param2Case() const { auto v = s_.at.Get<::esper::Value>(s_.Field(6)); if (!v) return std::nullopt; return static_cast<Param2Kind>(v->bits); }
+    bool Param2IsForm() const { return Param2Case() == Param2Kind::Form; }
+    enum class Param2FormKind : uint16_t { Alias = 0, Ref = 1 };
+    std::optional<Param2FormKind> Param2FormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(6), 0)); if (!v) return std::nullopt; return static_cast<Param2FormKind>(v->bits); }
+    bool Param2FormIsAlias() const { return Param2FormCase() == Param2FormKind::Alias; }
     std::optional<int32_t> Param2FormAlias() const { return s_.at.Get<int32_t>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 0)); }
     void SetParam2FormAlias(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 0), v); }
+    bool Param2FormIsRef() const { return Param2FormCase() == Param2FormKind::Ref; }
     std::optional<::esper::FormId> Param2FormRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 1)); }
     void SetParam2FormRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(6), 0), 1), v); }
+    bool Param2IsValue() const { return Param2Case() == Param2Kind::Value; }
     std::optional<uint32_t> Param2Value() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(6), 1)); }
     void SetParam2Value(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(6), 1), v); }
+    bool Param2IsUnclassified() const { return Param2Case() == Param2Kind::Unclassified; }
     std::optional<uint32_t> Param2Unclassified() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(6), 2)); }
     void SetParam2Unclassified(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(6), 2), v); }
     std::optional<uint32_t> RunOnType() const { return s_.at.Get<uint32_t>(s_.Field(7)); }
     void SetRunOnType(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(7), v); }
-    std::optional<uint16_t> ReferenceCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(8)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ReferenceKind : uint16_t { Ref = 0, Value = 1 };
+    std::optional<ReferenceKind> ReferenceCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(8)); if (!v) return std::nullopt; return static_cast<ReferenceKind>(v->bits); }
+    bool ReferenceIsRef() const { return ReferenceCase() == ReferenceKind::Ref; }
     std::optional<::esper::FormId> ReferenceRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(8), 0)); }
     void SetReferenceRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(8), 0), v); }
+    bool ReferenceIsValue() const { return ReferenceCase() == ReferenceKind::Value; }
     std::optional<uint32_t> ReferenceValue() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(8), 1)); }
     void SetReferenceValue(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(8), 1), v); }
     std::optional<int32_t> Param3() const { return s_.at.Get<int32_t>(s_.Field(9)); }
@@ -709,9 +750,12 @@ public:
     void SetType(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
     std::optional<uint16_t> Unknown() const { return s_.at.Get<uint16_t>(s_.Field(2)); }
     void SetUnknown(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(2), v); }
-    std::optional<uint16_t> TeachesCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(3)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class TeachesKind : uint16_t { Spell = 0, Skill = 1 };
+    std::optional<TeachesKind> TeachesCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(3)); if (!v) return std::nullopt; return static_cast<TeachesKind>(v->bits); }
+    bool TeachesIsSpell() const { return TeachesCase() == TeachesKind::Spell; }
     std::optional<::esper::Link<::esper::view::Spell>> TeachesSpell() const { return s_.at.Get<::esper::Link<::esper::view::Spell>>(::esper::Extend(s_.Field(3), 0)); }
     void SetTeachesSpell(const ::esper::Link<::esper::view::Spell>& v) const { s_.at.Set<::esper::Link<::esper::view::Spell>>(::esper::Extend(s_.Field(3), 0), v); }
+    bool TeachesIsSkill() const { return TeachesCase() == TeachesKind::Skill; }
     std::optional<int32_t> TeachesSkill() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(3), 1)); }
     void SetTeachesSkill(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(3), 1), v); }
     std::optional<uint32_t> Value() const { return s_.at.Get<uint32_t>(s_.Field(4)); }
@@ -1650,13 +1694,18 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<int32_t> Type() const { return s_.at.Get<int32_t>(s_.Field(0)); }
     void SetType(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(0), v); }
-    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Reference = 0, Cell = 1, Keyword = 2, Number = 3 };
+    std::optional<ValueKind> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsReference() const { return ValueCase() == ValueKind::Reference; }
     std::optional<::esper::FormId> ValueReference() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 0)); }
     void SetValueReference(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 0), v); }
+    bool ValueIsCell() const { return ValueCase() == ValueKind::Cell; }
     std::optional<::esper::Link<::esper::view::Cell>> ValueCell() const { return s_.at.Get<::esper::Link<::esper::view::Cell>>(::esper::Extend(s_.Field(1), 1)); }
     void SetValueCell(const ::esper::Link<::esper::view::Cell>& v) const { s_.at.Set<::esper::Link<::esper::view::Cell>>(::esper::Extend(s_.Field(1), 1), v); }
+    bool ValueIsKeyword() const { return ValueCase() == ValueKind::Keyword; }
     std::optional<::esper::Link<::esper::view::Keyword>> ValueKeyword() const { return s_.at.Get<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2)); }
     void SetValueKeyword(const ::esper::Link<::esper::view::Keyword>& v) const { s_.at.Set<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2), v); }
+    bool ValueIsNumber() const { return ValueCase() == ValueKind::Number; }
     std::optional<int32_t> ValueNumber() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(1), 3)); }
     void SetValueNumber(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(1), 3), v); }
     std::optional<int32_t> Radius() const { return s_.at.Get<int32_t>(s_.Field(2)); }
@@ -1671,13 +1720,18 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<int32_t> Type() const { return s_.at.Get<int32_t>(s_.Field(0)); }
     void SetType(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(0), v); }
-    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Reference = 0, Object = 1, Keyword = 2, Number = 3 };
+    std::optional<ValueKind> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsReference() const { return ValueCase() == ValueKind::Reference; }
     std::optional<::esper::FormId> ValueReference() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 0)); }
     void SetValueReference(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 0), v); }
+    bool ValueIsObject() const { return ValueCase() == ValueKind::Object; }
     std::optional<::esper::FormId> ValueObject() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 1)); }
     void SetValueObject(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 1), v); }
+    bool ValueIsKeyword() const { return ValueCase() == ValueKind::Keyword; }
     std::optional<::esper::Link<::esper::view::Keyword>> ValueKeyword() const { return s_.at.Get<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2)); }
     void SetValueKeyword(const ::esper::Link<::esper::view::Keyword>& v) const { s_.at.Set<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2), v); }
+    bool ValueIsNumber() const { return ValueCase() == ValueKind::Number; }
     std::optional<int32_t> ValueNumber() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(1), 3)); }
     void SetValueNumber(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(1), 3), v); }
     std::optional<int32_t> Count() const { return s_.at.Get<int32_t>(s_.Field(2)); }
@@ -2206,7 +2260,6 @@ private:
 class Relationship {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("RELA");
-    explicit Relationship(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Relationship(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2246,7 +2299,6 @@ private:
 class ArmorAddon {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ARMA");
-    explicit ArmorAddon(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ArmorAddon(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2317,7 +2369,6 @@ private:
 class Apparatus {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("APPA");
-    explicit Apparatus(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Apparatus(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2367,7 +2418,6 @@ private:
 class Global {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("GLOB");
-    explicit Global(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Global(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2390,7 +2440,6 @@ private:
 class ReverbParameters {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("REVB");
-    explicit ReverbParameters(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ReverbParameters(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2409,7 +2458,6 @@ private:
 class AcousticSpace {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ASPC");
-    explicit AcousticSpace(::esper::Record& r) : c_{ &r, 0 } {}
     explicit AcousticSpace(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2440,7 +2488,6 @@ private:
 class MiscItem {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MISC");
-    explicit MiscItem(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MiscItem(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2498,7 +2545,6 @@ private:
 class MusicType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MUSC");
-    explicit MusicType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MusicType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2529,7 +2575,6 @@ private:
 class ImageSpaceAdapter {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IMAD");
-    explicit ImageSpaceAdapter(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ImageSpaceAdapter(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2544,7 +2589,6 @@ private:
 class ShaderParticleGeometry {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SPGD");
-    explicit ShaderParticleGeometry(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ShaderParticleGeometry(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2567,7 +2611,6 @@ private:
 class Worldspace {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("WRLD");
-    explicit Worldspace(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Worldspace(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2674,7 +2717,6 @@ private:
 class Landscape {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LAND");
-    explicit Landscape(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Landscape(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2713,7 +2755,6 @@ private:
 class BodyPartData {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("BPTD");
-    explicit BodyPartData(::esper::Record& r) : c_{ &r, 0 } {}
     explicit BodyPartData(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2731,7 +2772,6 @@ private:
 class Keyword {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("KYWD");
-    explicit Keyword(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Keyword(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2750,7 +2790,6 @@ private:
 class Hazard {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("HAZD");
-    explicit Hazard(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Hazard(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2784,7 +2823,6 @@ private:
 class PlacedHazard {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PHZD");
-    explicit PlacedHazard(::esper::Record& r) : c_{ &r, 0 } {}
     explicit PlacedHazard(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -2868,7 +2906,6 @@ private:
 class Race {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("RACE");
-    explicit Race(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Race(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3050,7 +3087,6 @@ private:
 class Tree {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TREE");
-    explicit Tree(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Tree(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3097,7 +3133,6 @@ private:
 class IdleAnimation {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IDLE");
-    explicit IdleAnimation(::esper::Record& r) : c_{ &r, 0 } {}
     explicit IdleAnimation(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3127,7 +3162,6 @@ private:
 class PlacedGrenade {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PGRE");
-    explicit PlacedGrenade(::esper::Record& r) : c_{ &r, 0 } {}
     explicit PlacedGrenade(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3162,7 +3196,6 @@ private:
 class MagicEffect {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MGEF");
-    explicit MagicEffect(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MagicEffect(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3212,7 +3245,6 @@ private:
 class ActorValueInfo {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("AVIF");
-    explicit ActorValueInfo(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ActorValueInfo(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3239,7 +3271,6 @@ private:
 class Message {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MESG");
-    explicit Message(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Message(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3285,7 +3316,6 @@ private:
 class Ingestible {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ALCH");
-    explicit Ingestible(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Ingestible(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3354,7 +3384,6 @@ private:
 class ObjectEffect {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ENCH");
-    explicit ObjectEffect(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ObjectEffect(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3392,7 +3421,6 @@ private:
 class Light {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LIGH");
-    explicit Light(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Light(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3430,7 +3458,6 @@ private:
 class EffectShader {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("EFSH");
-    explicit EffectShader(::esper::Record& r) : c_{ &r, 0 } {}
     explicit EffectShader(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3469,7 +3496,6 @@ private:
 class CameraPath {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CPTH");
-    explicit CameraPath(::esper::Record& r) : c_{ &r, 0 } {}
     explicit CameraPath(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3499,7 +3525,6 @@ private:
 class VolumetricLighting {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("VOLI");
-    explicit VolumetricLighting(::esper::Record& r) : c_{ &r, 0 } {}
     explicit VolumetricLighting(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3514,7 +3539,6 @@ private:
 class LeveledItem {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LVLI");
-    explicit LeveledItem(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LeveledItem(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3601,7 +3625,6 @@ private:
 class Activator {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ACTI");
-    explicit Activator(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Activator(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3654,7 +3677,6 @@ private:
 class NavigationMeshInfoMap {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("NAVI");
-    explicit NavigationMeshInfoMap(::esper::Record& r) : c_{ &r, 0 } {}
     explicit NavigationMeshInfoMap(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3669,7 +3691,6 @@ private:
 class ConstructibleObject {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("COBJ");
-    explicit ConstructibleObject(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ConstructibleObject(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3707,7 +3728,6 @@ private:
 class DefaultObjectManager {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DOBJ");
-    explicit DefaultObjectManager(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DefaultObjectManager(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3726,7 +3746,6 @@ private:
 class Projectile {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PROJ");
-    explicit Projectile(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Projectile(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3774,9 +3793,12 @@ public:
     void SetType(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearType() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // CNAM
-    std::optional<uint16_t> ValueCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Byte = 0, Word = 1 };
+    std::optional<ValueKind> ValueCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsByte() const { return ValueCase() == ValueKind::Byte; }
     std::optional<uint8_t> ValueByte() const { return c_.Get<uint8_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }); }
     void SetValueByte(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }, v); }
+    bool ValueIsWord() const { return ValueCase() == ValueKind::Word; }
     std::optional<uint32_t> ValueWord() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1, 1 }, 1, 2 }); }
     void SetValueWord(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1, 1 }, 1, 2 }, v); }
     void ClearValue() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
@@ -3892,7 +3914,6 @@ private:
 class Package {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PACK");
-    explicit Package(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Package(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -3969,7 +3990,6 @@ private:
 class Book {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("BOOK");
-    explicit Book(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Book(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4062,10 +4082,14 @@ public:
     bool HasHeader() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
     void ClearHeader() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // DATA
-    std::optional<uint16_t> DataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class DataKind : uint16_t { QuestStage = 0, Ability = 1, EntryPoint = 2 };
+    std::optional<DataKind> DataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<DataKind>(v->bits); }
+    bool DataIsQuestStage() const { return DataCase() == DataKind::QuestStage; }
     ::esper::view::PerkEntriesDataQuestStage DataQuestStage() const;
+    bool DataIsAbility() const { return DataCase() == DataKind::Ability; }
     std::optional<::esper::Link<::esper::view::Spell>> DataAbility() const { return c_.Get<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 1, 1 }, 1, 2 }); }
     void SetDataAbility(const ::esper::Link<::esper::view::Spell>& v) const { c_.Set<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 1, 1 }, 1, 2 }, v); }
+    bool DataIsEntryPoint() const { return DataCase() == DataKind::EntryPoint; }
     ::esper::view::PerkEntriesDataEntryPoint DataEntryPoint() const;
     void ClearData() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // group conditionTabs
@@ -4084,15 +4108,21 @@ public:
     void SetScriptFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearScriptFlags() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // EPFD
-    std::optional<uint16_t> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 6 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class FunctionDataKind : uint16_t { Value = 0, Range = 1, Spell = 2, Text = 3, Unknown7 = 4 };
+    std::optional<FunctionDataKind> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 6 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<FunctionDataKind>(v->bits); }
+    bool FunctionDataIsValue() const { return FunctionDataCase() == FunctionDataKind::Value; }
     std::optional<float> FunctionDataValue() const { return c_.Get<float>(::esper::RelPath{ { 6, 0 }, 1, 2 }); }
     void SetFunctionDataValue(const float& v) const { c_.Set<float>(::esper::RelPath{ { 6, 0 }, 1, 2 }, v); }
+    bool FunctionDataIsRange() const { return FunctionDataCase() == FunctionDataKind::Range; }
     std::optional<std::vector<float>> FunctionDataRange() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 6, 1 }, 1, 2 }); }
     void SetFunctionDataRange(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 6, 1 }, 1, 2 }, v); }
+    bool FunctionDataIsSpell() const { return FunctionDataCase() == FunctionDataKind::Spell; }
     std::optional<::esper::Link<::esper::view::Spell>> FunctionDataSpell() const { return c_.Get<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 6, 2 }, 1, 2 }); }
     void SetFunctionDataSpell(const ::esper::Link<::esper::view::Spell>& v) const { c_.Set<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 6, 2 }, 1, 2 }, v); }
+    bool FunctionDataIsText() const { return FunctionDataCase() == FunctionDataKind::Text; }
     std::optional<std::string> FunctionDataText() const { return c_.Get<std::string>(::esper::RelPath{ { 6, 3 }, 1, 2 }); }
     void SetFunctionDataText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 6, 3 }, 1, 2 }, v); }
+    bool FunctionDataIsUnknown7() const { return FunctionDataCase() == FunctionDataKind::Unknown7; }
     std::optional<uint32_t> FunctionDataUnknown7() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6, 4 }, 1, 2 }); }
     void SetFunctionDataUnknown7(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6, 4 }, 1, 2 }, v); }
     void ClearFunctionData() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
@@ -4107,7 +4137,6 @@ private:
 class Perk {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PERK");
-    explicit Perk(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Perk(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4152,7 +4181,6 @@ private:
 class DialogTopic {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DIAL");
-    explicit DialogTopic(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DialogTopic(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4195,7 +4223,6 @@ private:
 class DualCastData {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DUAL");
-    explicit DualCastData(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DualCastData(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4218,7 +4245,6 @@ private:
 class Spell {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SPEL");
-    explicit Spell(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Spell(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4283,7 +4309,6 @@ private:
 class Cell {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CELL");
-    explicit Cell(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Cell(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4296,9 +4321,12 @@ public:
     void SetFullName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearFullName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // DATA
-    std::optional<uint16_t> FlagsCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class FlagsKind : uint16_t { Byte = 0, Word = 1 };
+    std::optional<FlagsKind> FlagsCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<FlagsKind>(v->bits); }
+    bool FlagsIsByte() const { return FlagsCase() == FlagsKind::Byte; }
     std::optional<uint8_t> FlagsByte() const { return c_.Get<uint8_t>(::esper::RelPath{ { 2, 0 }, 1, 2 }); }
     void SetFlagsByte(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 2, 0 }, 1, 2 }, v); }
+    bool FlagsIsWord() const { return FlagsCase() == FlagsKind::Word; }
     std::optional<uint16_t> FlagsWord() const { return c_.Get<uint16_t>(::esper::RelPath{ { 2, 1 }, 1, 2 }); }
     void SetFlagsWord(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 2, 1 }, 1, 2 }, v); }
     void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -4331,9 +4359,12 @@ public:
     void SetWaterCurrentSize(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
     void ClearWaterCurrentSize() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
     // XWCU
-    std::optional<uint16_t> WaterVelocityCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 10 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class WaterVelocityKind : uint16_t { V48 = 0, V64 = 1 };
+    std::optional<WaterVelocityKind> WaterVelocityCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 10 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<WaterVelocityKind>(v->bits); }
+    bool WaterVelocityIsV48() const { return WaterVelocityCase() == WaterVelocityKind::V48; }
     std::optional<std::vector<float>> WaterVelocityV48() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 10, 0 }, 1, 2 }); }
     void SetWaterVelocityV48(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 10, 0 }, 1, 2 }, v); }
+    bool WaterVelocityIsV64() const { return WaterVelocityCase() == WaterVelocityKind::V64; }
     std::optional<std::vector<float>> WaterVelocityV64() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 10, 1 }, 1, 2 }); }
     void SetWaterVelocityV64(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 10, 1 }, 1, 2 }, v); }
     void ClearWaterVelocity() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
@@ -4400,7 +4431,6 @@ private:
 class CollisionLayer {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("COLL");
-    explicit CollisionLayer(::esper::Record& r) : c_{ &r, 0 } {}
     explicit CollisionLayer(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4443,7 +4473,6 @@ private:
 class Explosion {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("EXPL");
-    explicit Explosion(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Explosion(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4477,7 +4506,6 @@ private:
 class Scroll {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SCRL");
-    explicit Scroll(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Scroll(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4542,7 +4570,6 @@ private:
 class ColorForm {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CLFM");
-    explicit ColorForm(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ColorForm(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4569,7 +4596,6 @@ private:
 class SoulGem {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SLGM");
-    explicit SoulGem(::esper::Record& r) : c_{ &r, 0 } {}
     explicit SoulGem(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4639,7 +4665,6 @@ private:
 class IdleMarker {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IDLM");
-    explicit IdleMarker(::esper::Record& r) : c_{ &r, 0 } {}
     explicit IdleMarker(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4674,7 +4699,6 @@ private:
 class SoundOutputModel {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SOPM");
-    explicit SoundOutputModel(::esper::Record& r) : c_{ &r, 0 } {}
     explicit SoundOutputModel(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4705,7 +4729,6 @@ private:
 class LightingTemplate {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LGTM");
-    explicit LightingTemplate(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LightingTemplate(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4728,7 +4751,6 @@ private:
 class NavigationMesh {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("NAVM");
-    explicit NavigationMesh(::esper::Record& r) : c_{ &r, 0 } {}
     explicit NavigationMesh(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4743,7 +4765,6 @@ private:
 class Key {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("KEYM");
-    explicit Key(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Key(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4813,7 +4834,6 @@ private:
 class StoryManagerBranchNode {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SMBN");
-    explicit StoryManagerBranchNode(::esper::Record& r) : c_{ &r, 0 } {}
     explicit StoryManagerBranchNode(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -4855,7 +4875,6 @@ private:
 class AddonNode {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ADDN");
-    explicit AddonNode(::esper::Record& r) : c_{ &r, 0 } {}
     explicit AddonNode(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5091,7 +5110,6 @@ private:
 class Scene {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SCEN");
-    explicit Scene(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Scene(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5153,7 +5171,6 @@ private:
 class StoryManagerEventNode {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SMEN");
-    explicit StoryManagerEventNode(::esper::Record& r) : c_{ &r, 0 } {}
     explicit StoryManagerEventNode(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5195,7 +5212,6 @@ private:
 class Region {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("REGN");
-    explicit Region(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Region(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5222,7 +5238,6 @@ private:
 class LeveledNpc {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LVLN");
-    explicit LeveledNpc(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LeveledNpc(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5264,7 +5279,6 @@ private:
 class StoryManagerQuestNode {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SMQN");
-    explicit StoryManagerQuestNode(::esper::Record& r) : c_{ &r, 0 } {}
     explicit StoryManagerQuestNode(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5306,7 +5320,6 @@ private:
 class Furniture {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FURN");
-    explicit Furniture(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Furniture(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5371,7 +5384,6 @@ private:
 class Location {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LCTN");
-    explicit Location(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Location(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5418,7 +5430,6 @@ private:
 class SoundMarker {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SOUN");
-    explicit SoundMarker(::esper::Record& r) : c_{ &r, 0 } {}
     explicit SoundMarker(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5449,7 +5460,6 @@ private:
 class EncounterZone {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ECZN");
-    explicit EncounterZone(::esper::Record& r) : c_{ &r, 0 } {}
     explicit EncounterZone(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5468,7 +5478,6 @@ private:
 class DialogResponses {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("INFO");
-    explicit DialogResponses(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DialogResponses(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5566,7 +5575,6 @@ private:
 class AnimatedObject {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ANIO");
-    explicit AnimatedObject(::esper::Record& r) : c_{ &r, 0 } {}
     explicit AnimatedObject(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5588,7 +5596,6 @@ private:
 class Ammunition {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("AMMO");
-    explicit Ammunition(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Ammunition(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5650,7 +5657,6 @@ private:
 class Armor {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ARMO");
-    explicit Armor(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Armor(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5767,7 +5773,6 @@ private:
 class MaterialObject {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MATO");
-    explicit MaterialObject(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MaterialObject(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5794,7 +5799,6 @@ private:
 class ArtObject {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ARTO");
-    explicit ArtObject(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ArtObject(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5820,7 +5824,6 @@ private:
 class Weapon {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("WEAP");
-    explicit Weapon(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Weapon(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5946,7 +5949,6 @@ private:
 class WordOfPower {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("WOOP");
-    explicit WordOfPower(::esper::Record& r) : c_{ &r, 0 } {}
     explicit WordOfPower(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -5969,7 +5971,6 @@ private:
 class LeveledSpell {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LVSP");
-    explicit LeveledSpell(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LeveledSpell(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6011,7 +6012,6 @@ private:
 class AssociationType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ASTP");
-    explicit AssociationType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit AssociationType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6046,7 +6046,6 @@ private:
 class Footstep {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FSTP");
-    explicit Footstep(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Footstep(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6069,7 +6068,6 @@ private:
 class EquipType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("EQUP");
-    explicit EquipType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit EquipType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6092,7 +6090,6 @@ private:
 class VoiceType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("VTYP");
-    explicit VoiceType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit VoiceType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6111,7 +6108,6 @@ private:
 class Debris {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DEBR");
-    explicit Debris(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Debris(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6126,7 +6122,6 @@ private:
 class DialogBranch {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DLBR");
-    explicit DialogBranch(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DialogBranch(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6157,7 +6152,6 @@ private:
 class LoadScreen {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LSCR");
-    explicit LoadScreen(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LoadScreen(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6203,7 +6197,6 @@ private:
 class SoundDescriptor {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SNDR");
-    explicit SoundDescriptor(::esper::Record& r) : c_{ &r, 0 } {}
     explicit SoundDescriptor(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6249,7 +6242,6 @@ private:
 class PlacedObject {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("REFR");
-    explicit PlacedObject(::esper::Record& r) : c_{ &r, 0 } {}
     explicit PlacedObject(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6298,9 +6290,12 @@ public:
     void SetRadius(const float& v) const { c_.Set<float>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
     void ClearRadius() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
     // XLIG
-    std::optional<uint16_t> LightCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 11 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class LightKind : uint16_t { V16 = 0, V20 = 1 };
+    std::optional<LightKind> LightCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 11 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<LightKind>(v->bits); }
+    bool LightIsV16() const { return LightCase() == LightKind::V16; }
     std::optional<std::vector<float>> LightV16() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 11, 0 }, 1, 2 }); }
     void SetLightV16(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 11, 0 }, 1, 2 }, v); }
+    bool LightIsV20() const { return LightCase() == LightKind::V20; }
     std::optional<std::vector<float>> LightV20() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 11, 1 }, 1, 2 }); }
     void SetLightV20(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 11, 1 }, 1, 2 }, v); }
     void ClearLight() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
@@ -6506,7 +6501,6 @@ private:
 class Ingredient {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("INGR");
-    explicit Ingredient(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Ingredient(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6579,7 +6573,6 @@ private:
 class PlacedNpc {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("ACHR");
-    explicit PlacedNpc(::esper::Record& r) : c_{ &r, 0 } {}
     explicit PlacedNpc(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6677,7 +6670,6 @@ private:
 class Weather {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("WTHR");
-    explicit Weather(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Weather(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6700,7 +6692,6 @@ private:
 class Flora {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FLOR");
-    explicit Flora(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Flora(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6758,7 +6749,6 @@ private:
 class Door {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DOOR");
-    explicit Door(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Door(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6792,7 +6782,6 @@ private:
 class Water {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("WATR");
-    explicit Water(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Water(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6839,7 +6828,6 @@ private:
 class Class {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CLAS");
-    explicit Class(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Class(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6870,7 +6858,6 @@ private:
 class Grass {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("GRAS");
-    explicit Grass(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Grass(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6896,7 +6883,6 @@ private:
 class ImpactDataSet {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IPDS");
-    explicit ImpactDataSet(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ImpactDataSet(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6915,7 +6901,6 @@ private:
 class Eyes {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("EYES");
-    explicit Eyes(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Eyes(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6942,7 +6927,6 @@ private:
 class ImageSpace {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IMGS");
-    explicit ImageSpace(::esper::Record& r) : c_{ &r, 0 } {}
     explicit ImageSpace(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -6977,7 +6961,6 @@ private:
 class CameraShot {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CAMS");
-    explicit CameraShot(::esper::Record& r) : c_{ &r, 0 } {}
     explicit CameraShot(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7003,7 +6986,6 @@ private:
 class FootstepSet {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FSTS");
-    explicit FootstepSet(::esper::Record& r) : c_{ &r, 0 } {}
     explicit FootstepSet(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7026,7 +7008,6 @@ private:
 class Static {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("STAT");
-    explicit Static(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Static(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7056,7 +7037,6 @@ private:
 class PlaceableWater {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PWAT");
-    explicit PlaceableWater(::esper::Record& r) : c_{ &r, 0 } {}
     explicit PlaceableWater(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7082,7 +7062,6 @@ private:
 class Action {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("AACT");
-    explicit Action(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Action(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7101,7 +7080,6 @@ private:
 class Faction {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FACT");
-    explicit Faction(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Faction(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7183,7 +7161,6 @@ private:
 class TalkingActivator {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TACT");
-    explicit TalkingActivator(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TalkingActivator(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7225,7 +7202,6 @@ private:
 class VisualEffect {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("RFCT");
-    explicit VisualEffect(::esper::Record& r) : c_{ &r, 0 } {}
     explicit VisualEffect(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7244,7 +7220,6 @@ private:
 class SoundCategory {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SNCT");
-    explicit SoundCategory(::esper::Record& r) : c_{ &r, 0 } {}
     explicit SoundCategory(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7279,7 +7254,6 @@ private:
 class Impact {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("IPCT");
-    explicit Impact(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Impact(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7325,7 +7299,6 @@ private:
 class Outfit {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("OTFT");
-    explicit Outfit(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Outfit(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7344,7 +7317,6 @@ private:
 class Climate {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CLMT");
-    explicit Climate(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Climate(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7378,7 +7350,6 @@ private:
 class Container {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CONT");
-    explicit Container(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Container(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7420,7 +7391,6 @@ private:
 class HeadPart {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("HDPT");
-    explicit HeadPart(::esper::Record& r) : c_{ &r, 0 } {}
     explicit HeadPart(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7474,7 +7444,6 @@ private:
 class LocationReferenceType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LCRT");
-    explicit LocationReferenceType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LocationReferenceType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7493,7 +7462,6 @@ private:
 class FormList {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("FLST");
-    explicit FormList(::esper::Record& r) : c_{ &r, 0 } {}
     explicit FormList(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7512,7 +7480,6 @@ private:
 class GameSetting {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("GMST");
-    explicit GameSetting(::esper::Record& r) : c_{ &r, 0 } {}
     explicit GameSetting(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7521,9 +7488,12 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // DATA
-    std::optional<uint16_t> ValueCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Word = 0, Text = 1 };
+    std::optional<ValueKind> ValueCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsWord() const { return ValueCase() == ValueKind::Word; }
     std::optional<uint32_t> ValueWord() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }); }
     void SetValueWord(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }, v); }
+    bool ValueIsText() const { return ValueCase() == ValueKind::Text; }
     std::optional<std::string> ValueText() const { return c_.Get<std::string>(::esper::RelPath{ { 1, 1 }, 1, 2 }); }
     void SetValueText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1, 1 }, 1, 2 }, v); }
     void ClearValue() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
@@ -7534,7 +7504,6 @@ private:
 class MusicTrack {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MUST");
-    explicit MusicTrack(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MusicTrack(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7816,7 +7785,6 @@ private:
 class Quest {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("QUST");
-    explicit Quest(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Quest(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7878,7 +7846,6 @@ private:
 class TextureSet {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TXST");
-    explicit TextureSet(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TextureSet(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7937,7 +7904,6 @@ private:
 class MaterialType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MATT");
-    explicit MaterialType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MaterialType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -7976,7 +7942,6 @@ private:
 class MoveableStatic {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MSTT");
-    explicit MoveableStatic(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MoveableStatic(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8009,7 +7974,6 @@ private:
 class MovementType {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("MOVT");
-    explicit MovementType(::esper::Record& r) : c_{ &r, 0 } {}
     explicit MovementType(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8036,7 +8000,6 @@ private:
 class Shout {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SHOU");
-    explicit Shout(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Shout(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8067,7 +8030,6 @@ private:
 class DialogView {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("DLVW");
-    explicit DialogView(::esper::Record& r) : c_{ &r, 0 } {}
     explicit DialogView(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8102,7 +8064,6 @@ private:
 class LandscapeTexture {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("LTEX");
-    explicit LandscapeTexture(::esper::Record& r) : c_{ &r, 0 } {}
     explicit LandscapeTexture(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8137,7 +8098,6 @@ private:
 class CombatStyle {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("CSTY");
-    explicit CombatStyle(::esper::Record& r) : c_{ &r, 0 } {}
     explicit CombatStyle(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8197,7 +8157,6 @@ private:
 class Npc {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("NPC_");
-    explicit Npc(::esper::Record& r) : c_{ &r, 0 } {}
     explicit Npc(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -8603,5 +8562,13 @@ inline ::esper::view::ContainerEntry Npc::Items() const { return ::esper::view::
 inline ::esper::view::AiData Npc::AiData() const { return ::esper::view::AiData(::esper::StructCursor{ c_, ::esper::RelPath{ { 42 }, 1, 1 } }); }
 inline ::esper::view::NpcSkills Npc::Skills() const { return ::esper::view::NpcSkills(::esper::StructCursor{ c_, ::esper::RelPath{ { 48 }, 1, 1 } }); }
 inline ::esper::view::SkinTone Npc::SkinTone() const { return ::esper::view::SkinTone(::esper::StructCursor{ c_, ::esper::RelPath{ { 49 }, 1, 1 } }); }
+
+// The typed view of a record, or nullopt when it's another record type:
+//   if (auto armor = As<Armor>(rec)) armor->SetEditorId("X");
+template <class View>
+std::optional<View> As(::esper::Record& r) {
+    if (r.Sig() != View::kSig) return std::nullopt;
+    return View(::esper::Cursor{ &r, 0 });
+}
 
 } // namespace esper::view

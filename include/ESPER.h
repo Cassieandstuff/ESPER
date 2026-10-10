@@ -23,6 +23,9 @@
 //   Localization — StringsSet (language-parameterized STRINGS/IL/DL triple).
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Errors (Result<T> = std::expected<T, Error>)
+#include <ESPER/Error.h>
+
 // Core container + identity
 #include <ESPER/FormKey.h>
 #include <ESPER/PluginFlags.h>

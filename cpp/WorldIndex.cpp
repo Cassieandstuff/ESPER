@@ -15,11 +15,10 @@ namespace {
 // Light XCLC scan: exterior grid coords without a full CELL decode.
 // Accepts the 8-byte (x,y) and 12-byte (x,y,flags) variants.
 bool ScanCellGrid(RecordNode& cell, int32_t& outX, int32_t& outY) {
-    char err[128] = {};
-    const std::span<const uint8_t> payload = cell.Payload(err, sizeof(err));
-    if (payload.data() == nullptr) return false;
+    const auto payload = cell.Payload();
+    if (!payload) return false;
 
-    SubIterator it(payload);
+    SubIterator it(*payload);
     SubView sub;
     while (it.Next(sub)) {
         if (sub.sig == Sig4("XCLC") && sub.size >= 8) {

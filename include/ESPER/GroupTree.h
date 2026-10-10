@@ -1,4 +1,5 @@
 #pragma once
+#include <ESPER/Error.h>
 #include <ESPER/PluginFlags.h>
 #include <ESPER/RecordHeader.h>
 
@@ -54,10 +55,8 @@ struct RecordNode {
     bool Compressed() const { return (header.flags & rec_flag::kCompressed) != 0; }
     bool Deleted() const    { return (header.flags & rec_flag::kDeleted)    != 0; }
 
-    // modified > inflated > raw. Returns an empty span with data()==nullptr on
-    // decompression failure (err filled); a genuinely empty record returns an
-    // empty span over a non-null pointer.
-    std::span<const uint8_t> Payload(char* err, int errLen);
+    // modified > inflated > raw. Fails when a compressed record won't inflate.
+    Result<std::span<const uint8_t>> Payload();
 };
 
 struct GroupNode;

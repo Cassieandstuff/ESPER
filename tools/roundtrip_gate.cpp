@@ -40,10 +40,8 @@ using namespace esper;
 
 static int GateOne(const fs::path& path) {
     Plugin p;
-    p.filename = path.filename().string();
-    char err[512] = {};
-    if (!p.Load(path.string(), err, sizeof(err))) {
-        std::printf("FAIL  %s: %s\n", p.filename.c_str(), err);
+    if (auto loaded = p.Load(path.string()); !loaded) {
+        std::printf("FAIL  %s: %s\n", path.filename().string().c_str(), loaded.error().message.c_str());
         return 1;
     }
 
@@ -110,11 +108,12 @@ static int GateOne(const fs::path& path) {
     }
 
     // Round-trip: re-emit and byte-compare against the original file.
-    std::vector<uint8_t> emitted;
-    if (!SerializePlugin(p, emitted, err, sizeof(err))) {
-        std::printf("    FAIL  re-emit: %s\n", err);
+    const auto emittedR = SerializePlugin(p);
+    if (!emittedR) {
+        std::printf("    FAIL  re-emit: %s\n", emittedR.error().message.c_str());
         return 1;
     }
+    const std::vector<uint8_t>& emitted = *emittedR;
     if (emitted.size() != p.buffer.size()) {
         std::printf("    FAIL  round-trip size mismatch: original %zu, emitted %zu\n",
                     p.buffer.size(), emitted.size());
@@ -146,9 +145,9 @@ static int GateOne(const fs::path& path) {
         const SchemaOps* ops = FindSchema(node->header.sig);
         if (!ops) continue;
 
-        char perr[256] = {};
-        const std::span<const uint8_t> payload = node->Payload(perr, sizeof(perr));
-        if (payload.data() == nullptr) continue;   // decompression failure counted above
+        const auto pr = node->Payload();
+        if (!pr) continue;   // decompression failure counted above
+        const std::span<const uint8_t> payload = *pr;
 
         char tag[5] = {};
         std::memcpy(tag, &node->header.sig, 4);
@@ -173,10 +172,9 @@ static int GateOne(const fs::path& path) {
         std::map<uint16_t, size_t> unknownFns;
         for (const auto& [formId, node] : p.index) {
             (void)formId;
-            char perr[256] = {};
-            const std::span<const uint8_t> payload = node->Payload(perr, sizeof(perr));
-            if (payload.data() == nullptr) continue;
-            SubIterator it(payload);
+            const auto payload = node->Payload();
+            if (!payload) continue;
+            SubIterator it(*payload);
             SubView sub;
             while (it.Next(sub)) {
                 if (sub.sig != Sig4("CTDA") || sub.size < 12) continue;
@@ -240,12 +238,10 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
     std::vector<std::unique_ptr<Plugin>> plugins;
     for (const fs::path& t : targets) {
         auto p = std::make_unique<Plugin>();
-        char err[512] = {};
-        if (!p->Load(t.string(), err, sizeof(err))) {
-            std::printf("FAIL  %s: %s\n", t.filename().string().c_str(), err);
+        if (auto loaded = p->Load(t.string()); !loaded) {
+            std::printf("FAIL  %s: %s\n", t.filename().string().c_str(), loaded.error().message.c_str());
             return 1;
         }
-        p->filename = t.filename().string();
         plugins.push_back(std::move(p));
     }
 
@@ -290,15 +286,15 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
                 }
             };
             ++st.records;
-            char err[256] = {};
-            const std::span<const uint8_t> payload = node->Payload(err, sizeof(err));
-            Record rec;
-            std::string why;
-            if (payload.data() == nullptr || !Record::Decode(*p, *node, rec, &why)) {
+            const auto pr = node->Payload();
+            auto decoded = pr ? Record::Decode(*p, *node) : Result<Record>(std::unexpected(pr.error()));
+            if (!decoded) {
                 ++st.decodeFail;
                 note("decode failed");
                 continue;
             }
+            const std::span<const uint8_t> payload = *pr;
+            Record& rec = *decoded;
             st.subs += rec.SubrecordCount();
             st.raw  += rec.RawCount();
             const std::vector<uint8_t> want(payload.begin(), payload.end());
@@ -318,10 +314,12 @@ static int SchemaGate(const std::vector<fs::path>& targets) {
             const bool oldSafe = ops && ops->remapIds(payload, oldCtx,
                 [](uint32_t& id, void* c) { static_cast<std::vector<uint32_t>*>(c)->push_back(id); },
                 &oldIds, scratch, oldWhy);
-            std::string newWhy;
-            const bool newSafe = rec.RemapSafe(&newWhy);
+            const auto safety = rec.CheckRemapSafe();
+            const bool newSafe = safety.has_value();
+            const std::string newWhy = newSafe ? std::string() : safety.error().message;
             std::vector<uint32_t> newIds;
-            rec.ForEachFormId([&](uint32_t id, std::span<const uint32_t> to) {
+            rec.ForEachFormId([&](FormId fid, std::span<const uint32_t> to) {
+                const uint32_t id = fid.raw;
                 newIds.push_back(id);
                 if (to.empty() || id == 0) return;
                 ++st.linksChecked;
@@ -453,10 +451,9 @@ int main(int argc, char** argv) {
         std::vector<std::unique_ptr<Plugin>> plugins;
         for (const fs::path& t : targets) {
             auto p = std::make_unique<Plugin>();
-            p->filename = t.filename().string();
-            char err[512] = {};
-            if (!p->Load(t.string(), err, sizeof(err))) {
-                std::printf("  FAIL reload %s: %s\n", p->filename.c_str(), err);
+            if (auto loaded = p->Load(t.string()); !loaded) {
+                std::printf("  FAIL reload %s: %s\n", t.filename().string().c_str(),
+                            loaded.error().message.c_str());
                 return 1;
             }
             plugins.push_back(std::move(p));
@@ -478,13 +475,12 @@ int main(int argc, char** argv) {
                 std::vector<const CellEntry*> cells;
                 world.EnumerateExterior(index, w->key, cells);
                 if (cells.empty()) continue;
-                char perr[256] = {};
                 WrldRec wr;
                 SchemaCtx wctx;
                 wctx.localized = w->owner->localized;
                 std::string name = w->key.ToString();
-                const auto pl = w->node->Payload(perr, sizeof(perr));
-                if (pl.data() && DecodeRecord(kWrldSchema, pl, wctx, wr) && wr.editorId)
+                const auto pl = w->node->Payload();
+                if (pl && DecodeRecord(kWrldSchema, *pl, wctx, wr) && wr.editorId)
                     name = *wr.editorId;
                 byWorld.emplace_back(cells.size(), name);
             }
@@ -511,14 +507,12 @@ int main(int argc, char** argv) {
             std::printf("  FAIL: Tamriel (4,-4) has no LAND\n");
             return 1;
         }
-        char lerr[256] = {};
         LandRec land;
         SchemaCtx lctx;
         lctx.localized = cell->childOwner && cell->childOwner->localized;
-        const auto payload = cell->land->Payload(lerr, sizeof(lerr));
-        if (payload.data() == nullptr ||
-            !DecodeRecord(kLandSchema, payload, lctx, land) || !land.heights) {
-            std::printf("  FAIL: LAND decode (%s)\n", lerr);
+        const auto payload = cell->land->Payload();
+        if (!payload || !DecodeRecord(kLandSchema, *payload, lctx, land) || !land.heights) {
+            std::printf("  FAIL: LAND decode (%s)\n", payload ? "malformed" : payload.error().message.c_str());
             return 1;
         }
         std::printf("  LAND: VHGT offset %.1f, %zu base tex, %zu alpha layer(s), "
@@ -533,10 +527,9 @@ int main(int argc, char** argv) {
             size_t named = 0;
             bool sawBreezehome = false, sawBleakFalls = false;
             for (const CellEntry* ce : interiors) {
-                char perr[256] = {};
-                const auto pl = ce->cell->Payload(perr, sizeof(perr));
-                if (!pl.data()) continue;
-                SubIterator sit(pl);
+                const auto pl = ce->cell->Payload();
+                if (!pl) continue;
+                SubIterator sit(*pl);
                 SubView sub;
                 while (sit.Next(sub)) {
                     if (sub.sig == Sig4("EDID")) {

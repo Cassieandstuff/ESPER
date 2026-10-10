@@ -402,14 +402,11 @@ bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
 
 // ── Decode / create / commit ─────────────────────────────────────────────────
 
-bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t> payload,
-                    const DecodeCtx& ctx, Record& out, std::string* err) {
+Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t> payload,
+                              const DecodeCtx& ctx) {
     const schema::RecordDef* def = set.Find(sig);
-    if (!def) {
-        if (err) *err = "no schema for record " + SigText(sig);
-        return false;
-    }
-    out = Record{};
+    if (!def) return Fail("no schema for record {}", SigText(sig));
+    Record out;
     out.set_ = &set;
     out.def_ = def;
     out.ctx_ = ctx;
@@ -495,38 +492,37 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
         if (!placed && level < 0) n.inst = stack.back().inst;     // unknown here: raw
         out.nodes_.push_back(n);
     }
-    if (!it.ok()) {
-        if (err) *err = "truncated/malformed subrecord stream in " + SigText(sig);
-        return false;
-    }
-    return true;
+    if (!it.ok()) return Fail("truncated/malformed subrecord stream in {}", SigText(sig));
+    return out;
 }
 
-bool Record::Decode(const Plugin& plugin, RecordNode& node, Record& out, std::string* err) {
-    char buf[256] = {};
-    const std::span<const uint8_t> payload = node.Payload(buf, sizeof(buf));
-    if (payload.data() == nullptr) {
-        if (err) *err = buf;
-        return false;
-    }
+Result<Record> Record::Decode(const Plugin& plugin, RecordNode& node) {
+    const auto payload = node.Payload();
+    if (!payload) return std::unexpected(payload.error());
     DecodeCtx ctx;
     ctx.localized   = plugin.localized;
     ctx.formVersion = node.header.version;
-    return Decode(schema::Main(), node.header.sig, payload, ctx, out, err);
+    auto rec = Decode(schema::Main(), node.header.sig, *payload, ctx);
+    if (!rec) return Wrap(rec.error(), "record {:08X}", node.header.formId);
+    return rec;
 }
 
-bool Record::Create(const SchemaSet& set, uint32_t sig, const DecodeCtx& ctx, Record& out,
-                    std::string* err) {
-    return Decode(set, sig, {}, ctx, out, err);
+Result<Record> Record::Create(const SchemaSet& set, uint32_t sig, const DecodeCtx& ctx) {
+    return Decode(set, sig, {}, ctx);
 }
 
-bool Record::Commit(Plugin& plugin, RecordNode& node, const Record& rec, std::string* err) {
-    char buf[256] = {};
-    if (!SetRecordPayload(plugin, node, rec.Encode(), buf, sizeof(buf))) {
-        if (err) *err = buf;
-        return false;
-    }
-    return true;
+Result<Record> Record::Create(const Plugin& plugin, uint32_t sig) {
+    DecodeCtx ctx;
+    ctx.localized   = plugin.localized;
+    ctx.formVersion = 44;
+    return Create(schema::Main(), sig, ctx);
+}
+
+Result<void> Record::Commit(Plugin& plugin, RecordNode& node, const Record& rec) {
+    if (rec.Sig() != node.header.sig)
+        return Fail("Commit: a {} record can't be written to {} {:08X}", SigText(rec.Sig()),
+                    SigText(node.header.sig), node.header.formId);
+    return SetRecordPayload(plugin, node, rec.Encode());
 }
 
 // ── Encode ───────────────────────────────────────────────────────────────────
@@ -1010,49 +1006,42 @@ std::optional<RelPath> Record::Find(std::string_view path) const {
 
 // ── FormIDs ──────────────────────────────────────────────────────────────────
 
-bool Record::RemapSafe(std::string* why) const {
+Result<void> Record::CheckRemapSafe() const {
     for (const Node& n : nodes_) {
-        if (n.member < 0) {
-            if (why) *why = "raw subrecord " + SigText(n.sig) + " may hold FormIDs";
-            return false;
-        }
+        if (n.member < 0)
+            return Fail("raw subrecord {} may hold FormIDs", SigText(n.sig));
         const schema::MemberDef& md = MemberOf(n.inst, static_cast<uint16_t>(n.member));
-        if (HasUnsafeBytes(*set_, md.type, NodeValue(n))) {
-            if (why) *why = "opaque bytes in " + SigText(n.sig) + " may hold FormIDs";
-            return false;
-        }
+        if (HasUnsafeBytes(*set_, md.type, NodeValue(n)))
+            return Fail("opaque bytes in {} may hold FormIDs", SigText(n.sig));
     }
-    return true;
+    return {};
 }
 
-bool Record::VisitFormIds(const std::function<void(uint32_t&)>& fn, std::string* why) {
-    if (!RemapSafe(why)) return false;
+Result<void> Record::VisitFormIds(const std::function<void(FormId&)>& fn) {
+    if (auto safe = CheckRemapSafe(); !safe) return safe;
     for (Node& n : nodes_) {
         const uint16_t type = MemberOf(n.inst, static_cast<uint16_t>(n.member)).type;
         Value v = NodeValue(n);
         WalkFormIds(*set_, type, v, [&](Value& id, const TypeDef&) {
-            uint32_t raw = static_cast<uint32_t>(id.bits);
-            fn(raw);
-            id.bits = raw;
+            FormId f{ static_cast<uint32_t>(id.bits) };
+            fn(f);
+            id.bits = f.raw;
         });
         if (!(v == n.value)) {
             n.value = std::move(v);
             n.dirty = true;
         }
     }
-    return true;
+    return {};
 }
 
-bool Record::Relocalize(
+Result<void> Record::Relocalize(
     bool localized,
-    const std::function<std::optional<std::string>(uint32_t, schema::StrTable)>& lookup,
-    std::string* why) {
-    if (localized == ctx_.localized) return true;
+    const std::function<std::optional<std::string>(uint32_t, schema::StrTable)>& lookup) {
+    if (localized == ctx_.localized) return {};
     for (const Node& n : nodes_) {
-        if (n.member < 0) {
-            if (why) *why = "raw subrecord " + SigText(n.sig) + " may hold string ids";
-            return false;
-        }
+        if (n.member < 0)
+            return Fail("raw subrecord {} may hold string ids", SigText(n.sig));
     }
     // Convert every node first; apply only if all of them convert.
     std::vector<std::pair<size_t, Value>> changed;
@@ -1071,10 +1060,9 @@ bool Record::Relocalize(
             s.bits = 0;
         });
         if (!ok) {
-            if (why) *why = localized
-                ? "can't move inline strings in " + SigText(n.sig) + " into a localized plugin"
-                : "a string id in " + SigText(n.sig) + " isn't in the string tables";
-            return false;
+            if (localized)
+                return Fail("can't move inline strings in {} into a localized plugin", SigText(n.sig));
+            return Fail("a string id in {} isn't in the string tables", SigText(n.sig));
         }
         if (any) changed.emplace_back(i, std::move(v));
     }
@@ -1083,17 +1071,17 @@ bool Record::Relocalize(
         nodes_[i].dirty = true;
     }
     ctx_.localized = localized;
-    return true;
+    return {};
 }
 
 void Record::ForEachFormId(
-    const std::function<void(uint32_t, std::span<const uint32_t>)>& fn) const {
+    const std::function<void(FormId, std::span<const uint32_t>)>& fn) const {
     for (const Node& n : nodes_) {
         if (n.member < 0) continue;
         const uint16_t type = MemberOf(n.inst, static_cast<uint16_t>(n.member)).type;
         Value v = NodeValue(n);
         WalkFormIds(*set_, type, v, [&](Value& id, const TypeDef& t) {
-            fn(static_cast<uint32_t>(id.bits), set_->links.subspan(t.linkFirst, t.linkCount));
+            fn(FormId{ static_cast<uint32_t>(id.bits) }, set_->links.subspan(t.linkFirst, t.linkCount));
         });
     }
 }

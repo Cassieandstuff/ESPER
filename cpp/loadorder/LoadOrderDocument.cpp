@@ -58,7 +58,7 @@ std::string JsonString(std::string_view s) {
 
 // ── Loading ──────────────────────────────────────────────────────────────────
 
-bool LoadOrderDocument::Load(const LoadOrderOptions& options, std::string* err) {
+Result<void> LoadOrderDocument::Load(const LoadOrderOptions& options) {
     *this = LoadOrderDocument{};
     options_ = options;
     if (!options_.fetch) {
@@ -71,30 +71,26 @@ bool LoadOrderDocument::Load(const LoadOrderOptions& options, std::string* err) 
         };
     }
 
-    char buf[512] = {};
-    if (!LoadOrderReader::ResolveOrder(options_.dataFolder, options_.pluginsTxt, listing_, buf,
-                                       sizeof(buf))) {
-        if (err) *err = buf;
-        return false;
-    }
+    auto listing = LoadOrderReader::ResolveOrder(options_.dataFolder, options_.pluginsTxt);
+    if (!listing) return std::unexpected(listing.error());
+    listing_ = std::move(*listing);
 
     std::vector<std::unique_ptr<Plugin>> plugins;
     for (const PluginListing& l : listing_) {
         if (!l.enabled || l.missing) continue;
         auto p = std::make_unique<Plugin>();
-        char perr[512] = {};
-        if (!p->Load((fs::path(options_.dataFolder) / l.filename).string(), perr, sizeof(perr))) {
-            warnings_.push_back(l.filename + ": " + perr);
+        if (auto r = p->Load((fs::path(options_.dataFolder) / l.filename).string()); !r) {
+            warnings_.push_back(l.filename + ": " + r.error().message);
             continue;
         }
-        p->filename = l.filename;
+        p->filename = l.filename;   // the load order's spelling
         for (const Diagnostic& d : p->diagnostics)
             warnings_.push_back(l.filename + ": " + d.message);
         plugins.push_back(std::move(p));
     }
     index_.Build(std::move(plugins));
     loaded_ = true;
-    return true;
+    return {};
 }
 
 const Plugin* LoadOrderDocument::FindPlugin(std::string_view filename) const {
@@ -128,23 +124,17 @@ const ResolvedRecord* LoadOrderDocument::Follow(const ResolvedRecord& from, Form
     return Resolve(from.owner->FormIdToKey(id.raw), target);
 }
 
-std::optional<DecodedRecord> LoadOrderDocument::Decode(const ResolvedRecord& r,
-                                                       std::string* err) const {
-    DecodedRecord out;
-    out.source = &r;
-    if (!r.owner || !r.node || !Record::Decode(*r.owner, *r.node, out.record, err))
-        return std::nullopt;
-    return out;
+Result<DecodedRecord> LoadOrderDocument::Decode(const ResolvedRecord& r) const {
+    if (!r.owner || !r.node) return Fail("Decode: empty ResolvedRecord");
+    auto rec = Record::Decode(*r.owner, *r.node);
+    if (!rec) return Wrap(rec.error(), "{} in {}", r.key.ToString(), r.owner->filename);
+    return DecodedRecord{ &r, std::move(*rec) };
 }
 
-std::optional<DecodedRecord> LoadOrderDocument::Decode(const FormKey& key, ResolveTarget target,
-                                                       std::string* err) const {
+Result<DecodedRecord> LoadOrderDocument::Decode(const FormKey& key, ResolveTarget target) const {
     const ResolvedRecord* r = Resolve(key, target);
-    if (!r) {
-        if (err) *err = "no record " + key.ToString();
-        return std::nullopt;
-    }
-    return Decode(*r, err);
+    if (!r) return Fail("no record {}", key.ToString());
+    return Decode(*r);
 }
 
 // ── Names ────────────────────────────────────────────────────────────────────
@@ -159,20 +149,23 @@ StringsSet* LoadOrderDocument::StringsFor(const Plugin& owner) const {
     return it->second.get();
 }
 
-std::string LoadOrderDocument::Text(const Plugin& owner, const LocalizedString& s,
-                                    schema::StrTable table) const {
+std::string LoadOrderDocument::Text(const Plugin& owner, const LocalizedString& s) const {
     if (!owner.localized) return s.text;
     std::string out;
-    if (s.id == 0 || !StringsFor(owner)->Find(VariantOf(table), s.id, out)) return {};
+    if (s.id == 0 || !StringsFor(owner)->Find(VariantOf(s.table), s.id, out)) return {};
     return out;
+}
+
+std::string LoadOrderDocument::Text(const DecodedRecord& d, const LocalizedString& s) const {
+    if (!d.source || !d.source->owner) return s.text;
+    return Text(*d.source->owner, s);
 }
 
 bool LoadOrderDocument::HeaderStrings(const ResolvedRecord& r, std::string* edid,
                                       std::string* name) const {
-    char buf[256] = {};
-    const std::span<const uint8_t> payload = r.node->Payload(buf, sizeof(buf));
-    if (payload.data() == nullptr) return false;
-    SubIterator it(payload);
+    const auto payload = r.node->Payload();
+    if (!payload) return false;
+    SubIterator it(*payload);
     SubView s;
     bool haveEdid = !edid, haveName = !name;
     while ((!haveEdid || !haveName) && it.Next(s)) {
@@ -186,7 +179,8 @@ bool LoadOrderDocument::HeaderStrings(const ResolvedRecord& r, std::string* edid
             } else {
                 ls.text = ReadZString(s);
             }
-            *name = Text(*r.owner, ls, schema::StrTable::Strings);
+            ls.table = schema::StrTable::Strings;
+            *name = Text(*r.owner, ls);
             haveName = true;
         }
     }
@@ -231,11 +225,9 @@ const WorldIndex& LoadOrderDocument::World() const {
 
 // ── Authoring ────────────────────────────────────────────────────────────────
 
-RecordNode* LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key,
-                                            std::string* err) const {
-    auto fail = [&](const std::string& why) -> RecordNode* {
-        if (err) *err = "OverrideInto " + key.ToString() + ": " + why;
-        return nullptr;
+Result<RecordNode*> LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key) const {
+    auto fail = [&](const std::string& why) -> std::unexpected<Error> {
+        return Fail("OverrideInto {}: {}", key.ToString(), why);
     };
     const ResolvedRecord* w = Resolve(key, ResolveTarget::Winner);
     if (!w) return fail("no winning record in the load order");
@@ -243,7 +235,6 @@ RecordNode* LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key,
     if (LivesInChildren(w->Sig()))
         return fail("records in cell, worldspace or topic children can't be placed in a top group");
 
-    char buf[512] = {};
     // Already overridden in `target`? (Checked without adding a master.)
     if (EqualCI(key.plugin, target.filename)) return fail("the record is defined by the target plugin");
     for (size_t m = 0; m < target.masters.size(); ++m) {
@@ -252,11 +243,11 @@ RecordNode* LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key,
         if (auto it = target.index.find(id); it != target.index.end()) return it->second;
     }
 
-    std::string why;
-    std::optional<DecodedRecord> d = Decode(*w, &why);
-    if (!d) return fail(why);
+    auto d = Decode(*w);
+    if (!d) return fail(d.error().message);
     Record& rec = d->record;
-    if (!rec.RemapSafe(&why)) return fail("its FormIDs aren't all visible to the schema: " + why);
+    if (auto safe = rec.CheckRemapSafe(); !safe)
+        return fail("its FormIDs aren't all visible to the schema: " + safe.error().message);
     if (rec.Context().localized != target.localized) {
         const Plugin& owner = *w->owner;
         const auto lookup = [&](uint32_t id, schema::StrTable table) -> std::optional<std::string> {
@@ -264,7 +255,7 @@ RecordNode* LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key,
             if (!StringsFor(owner)->Find(VariantOf(table), id, text)) return std::nullopt;
             return text;
         };
-        if (!rec.Relocalize(target.localized, lookup, &why)) return fail(why);
+        if (auto r = rec.Relocalize(target.localized, lookup); !r) return fail(r.error().message);
     }
 
     // Every plugin a FormID points into becomes a master, in load order, before
@@ -277,29 +268,32 @@ RecordNode* LoadOrderDocument::OverrideInto(Plugin& target, const FormKey& key,
         return plugins.size();
     };
     needed.insert(loadIndexOf(key.plugin));          // the overridden record's own plugin
-    rec.ForEachFormId([&](uint32_t id, std::span<const uint32_t>) {
-        if (id != 0) needed.insert(loadIndexOf(w->owner->FormIdToKey(id).plugin));
+    rec.ForEachFormId([&](FormId id, std::span<const uint32_t>) {
+        if (id.raw != 0) needed.insert(loadIndexOf(w->owner->FormIdToKey(id.raw).plugin));
     });
     for (size_t i : needed) {
         if (i >= plugins.size()) return fail("a FormID points into a plugin outside the load order");
         if (EqualCI(plugins[i]->filename, target.filename)) continue;
-        if (EnsureMaster(target, plugins[i]->filename, buf, sizeof(buf)) < 0) return fail(buf);
+        if (auto r = EnsureMaster(target, plugins[i]->filename); !r) return fail(r.error().message);
     }
 
-    bool ok = true;
-    rec.VisitFormIds([&](uint32_t& id) {
-        if (id == 0 || !ok) return;
-        const uint32_t mapped = MakeRef(target, w->owner->FormIdToKey(id), buf, sizeof(buf));
-        if (mapped == 0) ok = false;
-        else id = mapped;
+    std::optional<Error> refError;
+    const auto visited = rec.VisitFormIds([&](FormId& id) {
+        if (id.raw == 0 || refError) return;
+        const auto mapped = MakeRef(target, w->owner->FormIdToKey(id.raw));
+        if (!mapped) refError = mapped.error();
+        else id.raw = *mapped;
     });
-    if (!ok) return fail(buf);
+    if (!visited) return fail(visited.error().message);
+    if (refError) return fail(refError->message);
 
     RecHeader header = w->node->header;
-    header.formId = MakeRef(target, key, buf, sizeof(buf));   // masters may have shifted
-    RecordNode* node = InsertRecord(target, header, rec.Encode(), buf, sizeof(buf));
-    if (!node) return fail(buf);
-    return node;
+    const auto self = MakeRef(target, key);   // masters may have shifted
+    if (!self) return fail(self.error().message);
+    header.formId = *self;
+    auto node = InsertRecord(target, header, rec.Encode());
+    if (!node) return fail(node.error().message);
+    return *node;
 }
 
 // ── Snapshot ─────────────────────────────────────────────────────────────────

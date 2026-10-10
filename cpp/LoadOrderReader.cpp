@@ -61,21 +61,16 @@ static void AppendResolved(std::vector<PluginListing>& list, const fs::path& dat
     list.push_back(std::move(l));
 }
 
-bool LoadOrderReader::ResolveOrder(const std::string& dataFolder,
-                                   const std::string& pluginsTxtOverride,
-                                   std::vector<PluginListing>& out,
-                                   char* err, int errLen) {
-    out.clear();
+Result<std::vector<PluginListing>> LoadOrderReader::ResolveOrder(
+    const std::string& dataFolder, const std::string& pluginsTxtOverride) {
+    std::vector<PluginListing> out;
     const fs::path dataDir(dataFolder);
 
     std::string pluginsTxt = pluginsTxtOverride;
     if (pluginsTxt.empty()) {
         const char* localApp = std::getenv("LOCALAPPDATA");
-        if (!localApp || !*localApp) {
-            std::snprintf(err, errLen,
-                "LOCALAPPDATA not set and no plugins.txt override provided");
-            return false;
-        }
+        if (!localApp || !*localApp)
+            return Fail("LOCALAPPDATA not set and no plugins.txt override provided");
         pluginsTxt = (fs::path(localApp) / "Skyrim Special Edition" / "plugins.txt").string();
     }
 
@@ -93,10 +88,7 @@ bool LoadOrderReader::ResolveOrder(const std::string& dataFolder,
     //    plugin wins over the ccc list (AppendResolved keeps first occurrence).
     {
         std::ifstream pf(fs::path(pluginsTxt), std::ios::binary);
-        if (!pf) {
-            std::snprintf(err, errLen, "cannot open plugins.txt: %s", pluginsTxt.c_str());
-            return false;
-        }
+        if (!pf) return Fail("cannot open plugins.txt: {}", pluginsTxt);
         std::string line;
         while (std::getline(pf, line)) {
             std::string s = Trim(line);
@@ -141,9 +133,7 @@ bool LoadOrderReader::ResolveOrder(const std::string& dataFolder,
         bool flagMaster = false, flagLight = false;
         if (!l.missing) {
             Plugin p;
-            char herr[256];
-            if (p.OpenHeader((dataDir / l.filename).string(), herr,
-                             static_cast<int>(sizeof(herr)))) {
+            if (p.OpenHeader((dataDir / l.filename).string())) {
                 flagMaster = p.isMaster;
                 flagLight  = p.isLight;
             }
@@ -161,7 +151,7 @@ bool LoadOrderReader::ResolveOrder(const std::string& dataFolder,
     for (size_t i = 0; i < out.size(); ++i)
         out[i].loadIndex = static_cast<int>(i);
 
-    return true;
+    return out;
 }
 
 } // namespace esper

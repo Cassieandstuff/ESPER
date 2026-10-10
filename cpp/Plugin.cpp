@@ -8,6 +8,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
 #include <new>
 #include <vector>
 
@@ -67,6 +68,7 @@ static void ResetPluginState(Plugin& p) {
     p.onam.clear();
     p.hasIntv = false; p.intv = 0;
     p.hasIncc = false; p.incc = 0;
+    p.edited = false;
     p.buffer.clear();
     p.tes4 = RecordNode{};
     p.tree.clear();
@@ -76,25 +78,21 @@ static void ResetPluginState(Plugin& p) {
 
 // ── OpenHeader ──────────────────────────────────────────────────────────────
 
-bool Plugin::OpenHeader(const std::string& path, char* err, int errLen) {
+Result<void> Plugin::OpenHeader(const std::string& path) {
     ResetPluginState(*this);
+    filename = std::filesystem::path(path).filename().string();
 
     FILE* f = std::fopen(path.c_str(), "rb");
-    if (!f) {
-        std::snprintf(err, errLen, "cannot open plugin: %s", path.c_str());
-        return false;
-    }
+    if (!f) return Fail("cannot open plugin: {}", path);
 
     RecHeader hdr{};
     if (std::fread(&hdr, sizeof(hdr), 1, f) != 1) {
-        std::snprintf(err, errLen, "plugin too small for TES4 header: %s", path.c_str());
         std::fclose(f);
-        return false;
+        return Fail("plugin too small for TES4 header: {}", path);
     }
     if (hdr.sig != sig::TES4) {
-        std::snprintf(err, errLen, "not a TES4 plugin (bad first signature): %s", path.c_str());
         std::fclose(f);
-        return false;
+        return Fail("not a TES4 plugin (bad first signature): {}", path);
     }
 
     isMaster  = (hdr.flags & rec_flag::kMaster)    != 0;
@@ -104,14 +102,13 @@ bool Plugin::OpenHeader(const std::string& path, char* err, int errLen) {
     std::vector<uint8_t> data(hdr.dataSize);
     if (hdr.dataSize > 0 &&
         std::fread(data.data(), 1, hdr.dataSize, f) != hdr.dataSize) {
-        std::snprintf(err, errLen, "truncated TES4 data block: %s", path.c_str());
         std::fclose(f);
-        return false;
+        return Fail("truncated TES4 data block: {}", path);
     }
     std::fclose(f);
 
     ParseTes4Subrecords(data.data(), data.size(), *this);
-    return true;
+    return {};
 }
 
 // ── FormID resolution (on-disk rule) ────────────────────────────────────────
@@ -221,40 +218,34 @@ void IndexLevel(WalkCtx& ctx, std::vector<Node>& nodes) {
 
 // ── Load ────────────────────────────────────────────────────────────────────
 
-bool Plugin::Load(const std::string& path, char* err, int errLen) {
+Result<void> Plugin::Load(const std::string& path) {
     ResetPluginState(*this);
+    filename = std::filesystem::path(path).filename().string();
 
     FILE* f = std::fopen(path.c_str(), "rb");
-    if (!f) {
-        std::snprintf(err, errLen, "cannot open plugin: %s", path.c_str());
-        return false;
-    }
+    if (!f) return Fail("cannot open plugin: {}", path);
     if (std::fseek(f, 0, SEEK_END) != 0) {
-        std::snprintf(err, errLen, "cannot seek plugin: %s", path.c_str());
         std::fclose(f);
-        return false;
+        return Fail("cannot seek plugin: {}", path);
     }
     const long sz = std::ftell(f);
     if (sz < static_cast<long>(sizeof(RecHeader))) {
-        std::snprintf(err, errLen, "plugin too small for TES4 header: %s", path.c_str());
         std::fclose(f);
-        return false;
+        return Fail("plugin too small for TES4 header: {}", path);
     }
     std::rewind(f);
 
     try {
         buffer.resize(static_cast<size_t>(sz));
     } catch (const std::bad_alloc&) {
-        std::snprintf(err, errLen, "out of memory loading plugin (%ld bytes): %s", sz, path.c_str());
         std::fclose(f);
         buffer.clear();
-        return false;
+        return Fail("out of memory loading plugin ({} bytes): {}", sz, path);
     }
     if (std::fread(buffer.data(), 1, buffer.size(), f) != buffer.size()) {
-        std::snprintf(err, errLen, "short read on plugin: %s", path.c_str());
         std::fclose(f);
         buffer.clear();
-        return false;
+        return Fail("short read on plugin: {}", path);
     }
     std::fclose(f);
 
@@ -264,15 +255,13 @@ bool Plugin::Load(const std::string& path, char* err, int errLen) {
     RecHeader hdr{};
     std::memcpy(&hdr, base, sizeof(hdr));
     if (hdr.sig != sig::TES4) {
-        std::snprintf(err, errLen, "not a TES4 plugin (bad first signature): %s", path.c_str());
         buffer.clear();
-        return false;
+        return Fail("not a TES4 plugin (bad first signature): {}", path);
     }
     const uint8_t* tes4Data = base + sizeof(RecHeader);
     if (hdr.dataSize > static_cast<uint32_t>(end - tes4Data)) {
-        std::snprintf(err, errLen, "truncated TES4 data block: %s", path.c_str());
         buffer.clear();
-        return false;
+        return Fail("truncated TES4 data block: {}", path);
     }
 
     isMaster  = (hdr.flags & rec_flag::kMaster)    != 0;
@@ -287,7 +276,39 @@ bool Plugin::Load(const std::string& path, char* err, int errLen) {
     WalkCtx ctx{ *this, base };
     WalkLevel(ctx, tes4Data + hdr.dataSize, end, tree, 0);
     IndexLevel(ctx, tree);
-    return true;
+    return {};
+}
+
+// ── Lookup ──────────────────────────────────────────────────────────────────
+
+RecordNode* Plugin::Find(uint32_t formId) const {
+    const auto it = index.find(formId);
+    return it == index.end() ? nullptr : it->second;
+}
+
+namespace {
+void CollectRecords(const std::vector<Node>& nodes, uint32_t sig, std::vector<RecordNode*>& out) {
+    for (const Node& n : nodes) {
+        if (n.IsGroup()) {
+            CollectRecords(n.group->children, sig, out);
+        } else if (sig == 0 || n.rec.header.sig == sig) {
+            out.push_back(const_cast<RecordNode*>(&n.rec));
+        }
+    }
+}
+} // namespace
+
+std::vector<RecordNode*> Plugin::Records() const {
+    std::vector<RecordNode*> out;
+    out.reserve(index.size());
+    CollectRecords(tree, 0, out);
+    return out;
+}
+
+std::vector<RecordNode*> Plugin::Records(uint32_t sig) const {
+    std::vector<RecordNode*> out;
+    CollectRecords(tree, sig, out);
+    return out;
 }
 
 } // namespace esper

@@ -1,4 +1,5 @@
 #pragma once
+#include <ESPER/Error.h>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -26,11 +27,9 @@ public:
     // .esm → master, .esl → master+light), and master-flagged entries are
     // hoisted above non-masters (stable within each class) — the engine's
     // load rule, which the override chains depend on.
-    // Returns false only on hard failures (e.g. plugins.txt missing).
-    static bool ResolveOrder(const std::string& dataFolder,
-                             const std::string& pluginsTxtOverride,
-                             std::vector<PluginListing>& out,
-                             char* err, int errLen);
+    // Fails only on hard failures (e.g. plugins.txt missing).
+    static Result<std::vector<PluginListing>> ResolveOrder(const std::string& dataFolder,
+                                                           const std::string& pluginsTxtOverride);
 };
 
 } // namespace esper

@@ -56,9 +56,8 @@ int main(int argc, char** argv) {
 
     const auto t0 = std::chrono::steady_clock::now();
     LoadOrderDocument doc;
-    std::string err;
-    if (!doc.Load(opt, &err)) {
-        std::printf("FAIL  load: %s\n", err.c_str());
+    if (auto ok = doc.Load(opt); !ok) {
+        std::printf("FAIL  load: %s\n", ok.error().message.c_str());
         return 1;
     }
     const double loadMs = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
@@ -75,10 +74,18 @@ int main(int argc, char** argv) {
     for (const ResolvedRecord* r : hits) {
         std::printf("  %s  %s  \"%s\"\n", r->key.ToString().c_str(), doc.EditorId(*r).c_str(),
                     doc.Name(*r).c_str());
-        auto d = doc.Decode(*r, &err);
-        if (!d) { std::printf("  FAIL decode: %s\n", err.c_str()); ++failures; continue; }
-        view::Npc npc(d->record);
-        if (auto race = npc.Race()) {
+        auto d = doc.Decode(*r);
+        if (!d) { std::printf("  FAIL decode: %s\n", d.error().message.c_str()); ++failures; continue; }
+        auto npc = view::As<view::Npc>(d->record);
+        if (!npc) { std::printf("  FAIL: not an NPC_\n"); ++failures; continue; }
+        if (auto full = npc->FullName()) {
+            const std::string viaView = doc.Text(*d, *full);
+            if (viaView != doc.Name(*r)) {
+                std::printf("  FAIL: view name \"%s\" != header name\n", viaView.c_str());
+                ++failures;
+            }
+        }
+        if (auto race = npc->Race()) {
             const ResolvedRecord* rr = doc.Follow(*r, *race);
             std::printf("    race -> %s \"%s\"\n", rr ? doc.EditorId(*rr).c_str() : "(unresolved)",
                         rr ? doc.Name(*rr).c_str() : "");
@@ -95,26 +102,23 @@ int main(int argc, char** argv) {
         size_t n = 0;
         for (const ResolvedRecord* r : doc.Enumerate(Sig4(sig))) {
             if (n++ >= 25) break;
-            if (doc.OverrideInto(author, r->key, &err)) ++copied;
-            else { ++refused; if (firstRefusal.empty()) firstRefusal = err; }
+            if (auto node = doc.OverrideInto(author, r->key)) ++copied;
+            else { ++refused; if (firstRefusal.empty()) firstRefusal = node.error().message; }
         }
     }
-    char perr[512] = {};
     const fs::path out = tmp / "EsperSmoke.esp";
-    if (!FinalizePlugin(author, perr, sizeof(perr)) || !SavePlugin(author, out.string(), perr, sizeof(perr))) {
-        std::printf("FAIL  save: %s\n", perr);
+    if (auto saved = SavePlugin(author, out.string()); !saved) {
+        std::printf("FAIL  save: %s\n", saved.error().message.c_str());
         ++failures;
     }
     Plugin back;
     size_t reDecoded = 0, rawAfter = 0;
-    if (back.Load(out.string(), perr, sizeof(perr))) {
-        back.filename = "EsperSmoke.esp";
-        for (auto& [id, node] : back.index) {
-            Record rec;
-            if (Record::Decode(back, *node, rec)) { ++reDecoded; rawAfter += rec.RawCount(); }
+    if (auto loaded = back.Load(out.string())) {
+        for (RecordNode* node : back.Records()) {
+            if (auto rec = Record::Decode(back, *node)) { ++reDecoded; rawAfter += rec->RawCount(); }
         }
     } else {
-        std::printf("FAIL  reload: %s\n", perr);
+        std::printf("FAIL  reload: %s\n", loaded.error().message.c_str());
         ++failures;
     }
     std::printf("OverrideInto: %zu copied, %zu refused; saved + reloaded %zu record(s), %zu raw; masters:",

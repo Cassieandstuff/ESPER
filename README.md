@@ -38,10 +38,20 @@ Then include the one header — typically from your precompiled header, next to
 #include <ESPER.h>
 
 esper::Plugin plugin;
-// ...
+if (auto ok = plugin.Load(path); !ok) return fail(ok.error().message);
+
+for (esper::RecordNode* node : plugin.Records(esper::Sig4("ARMO"))) {
+    auto rec = esper::Record::Decode(plugin, *node);           // esper::Result<Record>
+    if (!rec) continue;
+    auto armor = esper::view::As<esper::view::Armor>(*rec);    // typed, checked view
+    if (armor->ArmorRating().value_or(0) < 1000) armor->SetArmorRating(1000);
+    esper::Record::Commit(plugin, *node, *rec);                // only the changed subrecord re-encodes
+}
+esper::SavePlugin(plugin, outPath);
 ```
 
-Everything lives in `namespace esper`.
+Everything lives in `namespace esper`. Every call that can fail returns `esper::Result<T>`
+(`std::expected<T, esper::Error>`).
 
 ESPER does not set the MSVC runtime library; it inherits `CMAKE_MSVC_RUNTIME_LIBRARY` from
 your project, so it links cleanly into both static-CRT SKSE plugins and dynamic-CRT desktop
@@ -59,18 +69,22 @@ esper::LoadOrderDocument doc;
 esper::LoadOrderOptions opt;
 opt.dataFolder = R"(C:\Steam\steamapps\common\Skyrim Special Edition\Data)";
 // opt.pluginsTxt = a mod manager profile's plugins.txt (default: %LOCALAPPDATA%)
-doc.Load(opt);
+if (auto ok = doc.Load(opt); !ok) return fail(ok.error().message);
 
 for (const esper::ResolvedRecord* r : doc.Search(esper::Sig4("NPC_"), "Lydia")) {
     auto d = doc.Decode(*r);                         // the winning override
-    esper::view::Npc npc(d->record);
-    const esper::ResolvedRecord* race = doc.Follow(*r, *npc.Race());
-    std::printf("%s is a %s\n", doc.Name(*r).c_str(), doc.Name(*race).c_str());
+    if (!d) continue;
+    auto npc = esper::view::As<esper::view::Npc>(d->record);
+    std::string name = doc.Text(*d, *npc->FullName());   // localized or inline
+    const esper::ResolvedRecord* race = doc.Follow(*r, *npc->Race());
+    std::printf("%s is a %s\n", name.c_str(), doc.Name(*race).c_str());
 }
 
 esper::Plugin mine;                                  // a plugin being authored
 esper::CreateEmptyPlugin(mine, "MyMod.esp", false);
-doc.OverrideInto(mine, key);                         // masters + FormIDs + strings handled
+auto key = esper::FormKey::Parse("0A2C8E:Skyrim.esm");
+doc.OverrideInto(mine, *key);                        // masters + FormIDs + strings handled
+esper::SavePlugin(mine, outPath);
 ```
 
 It resolves plugins.txt, Skyrim.ccc and the master hoist, and answers queries over the result:

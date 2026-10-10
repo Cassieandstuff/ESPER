@@ -61,24 +61,18 @@ void WriteFile(const fs::path& p, const std::vector<uint8_t>& bytes) {
 // A new record of `sig` in `p`, filled by `fill` through the schema engine.
 template <class Fill>
 uint32_t AddRecord(esper::Plugin& p, uint32_t sig, Fill&& fill) {
-    char err[256] = {};
-    esper::RecordNode* node = esper::CreateRecord(p, sig, err, sizeof(err));
-    if (!node) { std::printf("  CreateRecord: %s\n", err); return 0; }
-    const uint32_t id = node->header.formId;
-    esper::Record rec;
-    esper::DecodeCtx ctx;
-    ctx.localized = p.localized;
-    esper::Record::Create(esper::schema::Main(), sig, ctx, rec);
-    fill(rec);
-    std::string why;
-    if (!esper::Record::Commit(p, *p.index.at(id), rec, &why)) std::printf("  Commit: %s\n", why.c_str());
-    return id;
+    auto node = esper::CreateRecord(p, sig);
+    if (!node) { std::printf("  CreateRecord: %s\n", node.error().message.c_str()); return 0; }
+    auto rec = esper::Record::Create(p, sig);
+    if (!rec) { std::printf("  Create: %s\n", rec.error().message.c_str()); return 0; }
+    fill(*rec);
+    if (auto ok = esper::Record::Commit(p, **node, *rec); !ok) std::printf("  Commit: %s\n", ok.error().message.c_str());
+    return (*node)->header.formId;
 }
 
 void Save(esper::Plugin& p, const fs::path& path) {
-    char err[256] = {};
-    if (!esper::FinalizePlugin(p, err, sizeof(err)) || !esper::SavePlugin(p, path.string(), err, sizeof(err)))
-        std::printf("  save %s: %s\n", path.string().c_str(), err);
+    if (auto ok = esper::SavePlugin(p, path.string()); !ok)    // finalizes the edited plugin
+        std::printf("  save %s: %s\n", path.string().c_str(), ok.error().message.c_str());
 }
 
 struct Fixture {
@@ -117,8 +111,7 @@ Fixture Build() {
         esper::EmitSubrecord(w, esper::Sig4("EDID"), edid, sizeof(edid));
         const uint8_t junk[4] = { 1, 2, 3, 4 };
         esper::EmitSubrecord(w, esper::Sig4("ZZZZ"), junk, 4);
-        char err[128] = {};
-        esper::SetRecordPayload(master, *master.index.at(fx.armorRaw), std::move(w.buf), err, sizeof(err));
+        CHECK(esper::SetRecordPayload(master, *master.Find(fx.armorRaw), std::move(w.buf)));
     }
     Save(master, fx.dir / "Data" / "Master.esm");
     WriteFile(fx.dir / "Data" / "Strings" / "Master_English.STRINGS",
@@ -127,13 +120,11 @@ Fixture Build() {
     // Mod.esp — overrides ArmorA (new inline name, an extra keyword) and adds KwB.
     esper::Plugin mod;
     esper::CreateEmptyPlugin(mod, "Mod.esp", false);
-    char err[256] = {};
-    const uint32_t kwAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.kwA & 0xFFFFFF }, err, sizeof(err));
-    const uint32_t armorAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.armorA & 0xFFFFFF }, err, sizeof(err));
+    const uint32_t kwAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.kwA & 0xFFFFFF }).value_or(0);
+    const uint32_t armorAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.armorA & 0xFFFFFF }).value_or(0);
     fx.kwB = AddRecord(mod, kKywd, [](esper::Record& r) { r.Set(f::KYWD::editorId, std::string("KwB")); });
     {
-        esper::Record rec;
-        esper::Record::Create(esper::schema::Main(), kArmo, {}, rec);
+        esper::Record rec = esper::Record::Create(mod, kArmo).value();
         rec.Set(f::ARMO::editorId, std::string("ArmorA"));
         rec.Set(f::ARMO::fullName, esper::LocalizedString{ 0, "Armor A (modded)" });
         rec.Set(f::ARMO::keywords, std::vector<esper::FormId>{ { kwAInMod }, { fx.kwB } });
@@ -141,7 +132,7 @@ Fixture Build() {
         h.sig = kArmo;
         h.formId = armorAInMod;
         h.version = 44;
-        esper::InsertRecord(mod, h, rec.Encode(), err, sizeof(err));
+        CHECK(esper::InsertRecord(mod, h, rec.Encode()));
     }
     Save(mod, fx.dir / "Data" / "Mod.esp");
 
@@ -159,10 +150,8 @@ int main() {
     esper::LoadOrderOptions opt;
     opt.dataFolder = (fx.dir / "Data").string();
     opt.pluginsTxt = (fx.dir / "plugins.txt").string();
-    std::string err;
-    CHECK(doc.Load(opt, &err));
-    if (!doc.IsLoaded()) {
-        std::printf("load failed: %s\n", err.c_str());
+    if (auto loaded = doc.Load(opt); !loaded) {
+        std::printf("load failed: %s\n", loaded.error().message.c_str());
         return 1;
     }
 
@@ -191,7 +180,9 @@ int main() {
         auto d = doc.Decode(*winner);
         CHECK(d.has_value());
         if (d) {
-            esper::view::Armor armor(d->record);
+            CHECK(!esper::view::As<esper::view::Keyword>(d->record));   // wrong type: no view
+            auto armor = *esper::view::As<esper::view::Armor>(d->record);
+            CHECK(doc.Text(*d, *armor.FullName()) == "Armor A (modded)");
             const auto kws = armor.Keywords();
             CHECK(kws && kws->size() == 2);
             if (kws && kws->size() == 2) {
@@ -202,6 +193,12 @@ int main() {
                 CHECK(doc.Follow(*winner, esper::Link<esper::view::Armor>{ (*kws)[0].id }) == nullptr);
             }
         }
+    }
+
+    // A localized FULL resolves through the table the schema gives the field.
+    if (origin) {
+        auto d = doc.Decode(*origin);
+        CHECK(d && doc.Text(*d, *esper::view::As<esper::view::Armor>(d->record)->FullName()) == "Armor A (localized)");
     }
 
     std::printf("L4 snapshot + world index\n");
@@ -216,41 +213,39 @@ int main() {
     esper::CreateEmptyPlugin(author, "Author.esp", false);
     // An unrelated first master shifts every master index, so FormIDs that
     // weren't rewritten into Author.esp's space would point at the wrong plugin.
-    char perrBuf[256] = {};
-    CHECK(esper::EnsureMaster(author, "Other.esm", perrBuf, sizeof(perrBuf)) == 0);
+    CHECK(esper::EnsureMaster(author, "Other.esm") == 0);
     // The winner's keywords point into Master.esm and Mod.esp: both become masters, in load order.
-    esper::RecordNode* n1 = doc.OverrideInto(author, armorA, &err);
-    CHECK(n1 != nullptr);
-    if (!n1) std::printf("  %s\n", err.c_str());
+    const auto r1 = doc.OverrideInto(author, armorA);
+    CHECK(r1.has_value());
+    if (!r1) std::printf("  %s\n", r1.error().message.c_str());
+    esper::RecordNode* n1 = r1.value_or(nullptr);
     CHECK((author.masters == std::vector<std::string>{ "Other.esm", "Master.esm", "Mod.esp" }));
     // A localized winner into a non-localized plugin: the name becomes inline text.
-    esper::RecordNode* n2 = doc.OverrideInto(author, Key("Master.esm", fx.armorLoc), &err);
-    CHECK(n2 != nullptr);
+    CHECK(doc.OverrideInto(author, Key("Master.esm", fx.armorLoc)).has_value());
     // Asking again returns the existing override.
-    CHECK(doc.OverrideInto(author, armorA, &err) == author.index.at(n1 ? n1->header.formId : 0));
+    CHECK(doc.OverrideInto(author, armorA).value_or(nullptr) == author.Find(n1 ? n1->header.formId : 0));
     // FormIDs the schema can't see: refused, and nothing is added.
     const size_t before = author.index.size();
-    CHECK(doc.OverrideInto(author, Key("Master.esm", fx.armorRaw), &err) == nullptr);
-    CHECK(err.find("aren't all visible") != std::string::npos);
+    const auto refused = doc.OverrideInto(author, Key("Master.esm", fx.armorRaw));
+    CHECK(!refused && refused.error().message.find("aren't all visible") != std::string::npos);
     CHECK(author.index.size() == before);
     // Child records are refused up front.
-    CHECK(doc.OverrideInto(author, Key("Master.esm", 0x123), &err) == nullptr);
+    CHECK(!doc.OverrideInto(author, Key("Master.esm", 0x123)));
 
     Save(author, fx.dir / "Data" / "Author.esp");
     esper::Plugin back;
-    char perr[256] = {};
-    CHECK(back.Load((fx.dir / "Data" / "Author.esp").string(), perr, sizeof(perr)));
-    back.filename = "Author.esp";
+    CHECK(back.Load((fx.dir / "Data" / "Author.esp").string()));
+    CHECK(back.filename == "Author.esp");                      // Load names the plugin
     CHECK((back.masters == std::vector<std::string>{ "Other.esm", "Master.esm", "Mod.esp" }));
     size_t armors = 0;
-    for (auto& [id, node] : back.index) {
-        if (node->header.sig != kArmo) continue;
+    for (esper::RecordNode* node : back.Records(kArmo)) {
         ++armors;
-        esper::Record rec;
-        CHECK(esper::Record::Decode(back, *node, rec));
-        CHECK(rec.RawCount() == 0);
-        esper::view::Armor armor(rec);
-        const esper::FormKey self = back.FormIdToKey(id);
+        auto rec = esper::Record::Decode(back, *node);
+        CHECK(rec.has_value());
+        if (!rec) continue;
+        CHECK(rec->RawCount() == 0);
+        auto armor = *esper::view::As<esper::view::Armor>(*rec);
+        const esper::FormKey self = back.FormIdToKey(node->header.formId);
         CHECK(self.plugin == "Master.esm");
         if (armor.EditorId() == std::string("ArmorA")) {
             CHECK(armor.FullName()->text == "Armor A (modded)");
@@ -270,6 +265,20 @@ int main() {
         }
     }
     CHECK(armors == 2);
+    CHECK(back.Records().size() == back.index.size());
+
+    std::printf("L6 FormKey text\n");
+    {
+        const auto k = esper::FormKey::Parse("013BBA:Skyrim.esm");
+        CHECK(k && k->plugin == "Skyrim.esm" && k->localId == 0x013BBA);
+        CHECK(k && k->ToString() == "013BBA:Skyrim.esm");
+        const auto k2 = esper::FormKey::Parse("0x800:Mod.esl");
+        CHECK(k2 && k2->plugin == "Mod.esl" && k2->localId == 0x800);
+        CHECK(!esper::FormKey::Parse("Skyrim.esm"));                    // no colon
+        CHECK(!esper::FormKey::Parse("12G4:Skyrim.esm"));               // not hex
+        CHECK(!esper::FormKey::Parse("01013BBA:Skyrim.esm"));           // load-order byte
+        CHECK(!esper::FormKey::Parse("013BBA:"));                       // no plugin
+    }
 
     fs::remove_all(fx.dir);
     if (g_failures == 0) {

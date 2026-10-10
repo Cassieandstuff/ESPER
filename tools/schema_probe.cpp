@@ -86,9 +86,7 @@ int main(int argc, char** argv) {
     std::vector<std::unique_ptr<Plugin>> plugins;
     for (const char* n : { "Skyrim.esm", "Update.esm", "Dawnguard.esm", "HearthFires.esm", "Dragonborn.esm" }) {
         auto p = std::make_unique<Plugin>();
-        char err[256] = {};
-        if (!p->Load((data / n).string(), err, sizeof(err))) continue;
-        p->filename = n;
+        if (!p->Load((data / n).string())) continue;
         plugins.push_back(std::move(p));
     }
     LoadOrderIndex index;
@@ -100,8 +98,7 @@ int main(int argc, char** argv) {
     for (const auto& p : index.Plugins())
         for (const auto& [raw, node] : p->index) {
             if (node->header.sig != recSig) continue;
-            char err[64] = {};
-            SubIterator it(node->Payload(err, sizeof(err)));
+            SubIterator it(node->Payload().value_or(std::span<const uint8_t>{}));
             SubView s;
             bool any = false;
             while (it.Next(s))
@@ -127,8 +124,7 @@ int main(int argc, char** argv) {
     for (const auto& p : index.Plugins())
         for (const auto& [raw, node] : p->index) {
             if (node->header.sig != recSig) continue;
-            char err[64] = {};
-            SubIterator it(node->Payload(err, sizeof(err)));
+            SubIterator it(node->Payload().value_or(std::span<const uint8_t>{}));
             SubView s;
             while (it.Next(s)) {
                 if (s.sig != subSig || s.size != size) continue;
@@ -215,8 +211,7 @@ int main(int argc, char** argv) {
         for (const auto& p : index.Plugins())
             for (const auto& [raw, node] : p->index) {
                 if (node->header.sig != recSig) continue;
-                char err[64] = {};
-                SubIterator it(node->Payload(err, sizeof(err)));
+                SubIterator it(node->Payload().value_or(std::span<const uint8_t>{}));
                 SubView s;
                 while (it.Next(s)) {
                     if (s.sig != subSig || s.size != size) continue;

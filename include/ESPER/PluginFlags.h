@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <string>
 
 namespace esper {
 
@@ -10,6 +11,12 @@ constexpr uint32_t Sig4(const char s[5]) {
          | (static_cast<uint32_t>(static_cast<uint8_t>(s[1])) << 8)
          | (static_cast<uint32_t>(static_cast<uint8_t>(s[2])) << 16)
          | (static_cast<uint32_t>(static_cast<uint8_t>(s[3])) << 24);
+}
+
+// The inverse of Sig4: SigName(Sig4("NPC_")) == "NPC_".
+inline std::string SigName(uint32_t sig) {
+    return { static_cast<char>(sig & 0xFF), static_cast<char>((sig >> 8) & 0xFF),
+             static_cast<char>((sig >> 16) & 0xFF), static_cast<char>(sig >> 24) };
 }
 
 // Common record / group signatures. (Any signature can be formed inline with

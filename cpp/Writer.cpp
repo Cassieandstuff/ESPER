@@ -45,15 +45,10 @@ static void EmitNode(ByteWriter& w, const Node& n) {
     }
 }
 
-bool SerializePlugin(const Plugin& p, std::vector<uint8_t>& out,
-                     char* err, int errLen) {
-    if (p.tes4.raw == nullptr && !p.tes4.modified) {
-        std::snprintf(err, errLen,
-                      "SerializePlugin: plugin '%s' has no TES4 record "
-                      "(not Load()ed and not Finalize()d)",
-                      p.filename.c_str());
-        return false;
-    }
+Result<std::vector<uint8_t>> SerializePlugin(const Plugin& p) {
+    if (p.tes4.raw == nullptr && !p.tes4.modified)
+        return Fail("SerializePlugin: plugin '{}' has no TES4 record (not loaded and not finalized)",
+                    p.filename);
 
     ByteWriter w;
     w.buf.reserve(p.buffer.size() + 4096);
@@ -61,25 +56,23 @@ bool SerializePlugin(const Plugin& p, std::vector<uint8_t>& out,
     EmitRecord(w, p.tes4);
     for (const Node& n : p.tree) EmitNode(w, n);
 
-    out = std::move(w.buf);
-    return true;
+    return std::move(w.buf);
 }
 
-bool SavePlugin(const Plugin& p, const std::string& path, char* err, int errLen) {
-    std::vector<uint8_t> bytes;
-    if (!SerializePlugin(p, bytes, err, errLen)) return false;
+Result<void> SavePlugin(Plugin& p, const std::string& path) {
+    if (p.edited) {
+        if (auto r = FinalizePlugin(p); !r) return r;
+    }
+    auto bytes = SerializePlugin(p);
+    if (!bytes) return std::unexpected(bytes.error());
 
     FILE* f = std::fopen(path.c_str(), "wb");
-    if (!f) {
-        std::snprintf(err, errLen, "cannot open for write: %s", path.c_str());
-        return false;
-    }
+    if (!f) return Fail("cannot open for write: {}", path);
     const size_t written =
-        bytes.empty() ? 0 : std::fwrite(bytes.data(), 1, bytes.size(), f);
-    const bool ok = (written == bytes.size()) && (std::fclose(f) == 0);
-    if (!ok)
-        std::snprintf(err, errLen, "short write: %s", path.c_str());
-    return ok;
+        bytes->empty() ? 0 : std::fwrite(bytes->data(), 1, bytes->size(), f);
+    const bool ok = (written == bytes->size()) && (std::fclose(f) == 0);
+    if (!ok) return Fail("short write: {}", path);
+    return {};
 }
 
 // ── Mutation ────────────────────────────────────────────────────────────────
@@ -88,6 +81,7 @@ void CreateEmptyPlugin(Plugin& p, const std::string& filename, bool light) {
     p = Plugin{};
     p.filename = filename;
     p.isLight  = light;
+    p.edited   = true;
 
     p.hedrVersion      = 1.71f;
     p.hedrNumRecords   = 0;
@@ -99,26 +93,18 @@ void CreateEmptyPlugin(Plugin& p, const std::string& filename, bool light) {
     // Payload synthesized by FinalizePlugin.
 }
 
-uint32_t AllocateFormId(Plugin& p, char* err, int errLen) {
-    if (p.masters.size() > 0xFDu) {
-        std::snprintf(err, errLen, "AllocateFormId: %zu masters exceeds the format limit",
-                      p.masters.size());
-        return 0;
-    }
+Result<uint32_t> AllocateFormId(Plugin& p) {
+    if (p.masters.size() > 0xFDu)
+        return Fail("AllocateFormId: {} masters exceeds the format limit", p.masters.size());
     if (p.hedrNextObjectId < 0x800u) p.hedrNextObjectId = 0x800u;
 
     const uint32_t objectId = p.hedrNextObjectId;
-    if (p.isLight && objectId > 0xFFFu) {
-        std::snprintf(err, errLen,
-                      "AllocateFormId: ESL object-id space exhausted (next 0x%X > 0xFFF)",
-                      objectId);
-        return 0;
-    }
-    if (objectId > 0x00FFFFFFu) {
-        std::snprintf(err, errLen, "AllocateFormId: object-id space exhausted");
-        return 0;
-    }
+    if (p.isLight && objectId > 0xFFFu)
+        return Fail("AllocateFormId: ESL object-id space exhausted (next 0x{:X} > 0xFFF)", objectId);
+    if (objectId > 0x00FFFFFFu)
+        return Fail("AllocateFormId: object-id space exhausted");
     ++p.hedrNextObjectId;
+    p.edited = true;
     return (static_cast<uint32_t>(p.masters.size()) << 24) | objectId;
 }
 
@@ -134,13 +120,11 @@ void RebuildIndex(Plugin& p) {
     IndexTreeLevel(p, p.tree);
 }
 
-bool SetRecordPayload(Plugin& p, RecordNode& node,
-                      std::vector<uint8_t> payload, char* err, int errLen) {
-    (void)p;
+Result<void> SetRecordPayload(Plugin& p, RecordNode& node, std::vector<uint8_t> payload) {
     if (node.Compressed()) {
-        std::vector<uint8_t> z;
-        if (!ZlibDeflate(payload.data(), payload.size(), z, err, errLen))
-            return false;
+        auto zr = ZlibDeflate(payload);
+        if (!zr) return Wrap(zr.error(), "record {:08X}", node.header.formId);
+        const std::vector<uint8_t>& z = *zr;
         auto disk = std::make_unique<std::vector<uint8_t>>();
         disk->reserve(4 + z.size());
         const uint32_t logicalSize = static_cast<uint32_t>(payload.size());
@@ -155,7 +139,8 @@ bool SetRecordPayload(Plugin& p, RecordNode& node,
         node.inflated.reset();
     }
     node.dirty = true;
-    return true;
+    p.edited   = true;
+    return {};
 }
 
 namespace {
@@ -174,14 +159,12 @@ struct SelfIndexBump {
 };
 } // namespace
 
-int EnsureMaster(Plugin& p, const std::string& masterName, char* err, int errLen) {
+Result<int> EnsureMaster(Plugin& p, const std::string& masterName) {
     for (size_t i = 0; i < p.masters.size(); ++i)
         if (EqualCI(p.masters[i], masterName)) return static_cast<int>(i);
 
-    if (p.masters.size() >= 0xFDu) {
-        std::snprintf(err, errLen, "EnsureMaster: master limit reached");
-        return -1;
-    }
+    if (p.masters.size() >= 0xFDu)
+        return Fail("EnsureMaster: master limit reached");
 
     const uint32_t oldSelf = static_cast<uint32_t>(p.masters.size());
     const uint32_t newSelf = oldSelf + 1u;
@@ -194,32 +177,19 @@ int EnsureMaster(Plugin& p, const std::string& masterName, char* err, int errLen
     ctx.localized = p.localized;
     for (auto& [formId, node] : p.index) {
         (void)formId;
-        char perr[256] = {};
-        const std::span<const uint8_t> payload = node->Payload(perr, sizeof(perr));
-        if (payload.data() == nullptr) {
-            std::snprintf(err, errLen, "EnsureMaster: record %08X unreadable: %s",
-                          node->header.formId, perr);
-            return -1;
-        }
+        const auto pr = node->Payload();
+        if (!pr) return Wrap(pr.error(), "EnsureMaster: record {:08X} unreadable", node->header.formId);
+        const std::span<const uint8_t> payload = *pr;
         if (payload.empty()) continue;
         const SchemaOps* ops = FindSchema(node->header.sig);
-        if (!ops || !ops->remapIds) {
-            char tag[5] = {};
-            std::memcpy(tag, &node->header.sig, 4);
-            std::snprintf(err, errLen,
-                          "EnsureMaster: record %08X (%s) has no FormID-visiting "
-                          "schema; add masters before creating such records",
-                          node->header.formId, tag);
-            return -1;
-        }
+        if (!ops || !ops->remapIds)
+            return Fail("EnsureMaster: record {:08X} ({}) has no FormID-visiting schema; "
+                        "add masters before creating such records",
+                        node->header.formId, SigName(node->header.sig));
         std::vector<uint8_t> scratch;
         std::string why;
-        if (!ops->remapIds(payload, ctx, [](uint32_t&, void*) {}, nullptr,
-                           scratch, why)) {
-            std::snprintf(err, errLen, "EnsureMaster: record %08X cannot be "
-                          "renumbered: %s", node->header.formId, why.c_str());
-            return -1;
-        }
+        if (!ops->remapIds(payload, ctx, [](uint32_t&, void*) {}, nullptr, scratch, why))
+            return Fail("EnsureMaster: record {:08X} cannot be renumbered: {}", node->header.formId, why);
     }
 
     p.masters.push_back(masterName);
@@ -229,23 +199,20 @@ int EnsureMaster(Plugin& p, const std::string& masterName, char* err, int errLen
     SelfIndexBump bump{ oldSelf, newSelf };
     for (auto& [formId, node] : p.index) {
         (void)formId;
-        char perr[256] = {};
-        const std::span<const uint8_t> payload = node->Payload(perr, sizeof(perr));
-        if (payload.empty()) continue;
+        const auto pr = node->Payload();
+        if (!pr || pr->empty()) continue;
+        const std::span<const uint8_t> payload = *pr;
 
         const SchemaOps* ops = FindSchema(node->header.sig);
         std::vector<uint8_t> remapped;
         std::string why;
-        if (!ops->remapIds(payload, ctx, &SelfIndexBump::Apply, &bump,
-                           remapped, why)) {
-            std::snprintf(err, errLen, "EnsureMaster: remap of %08X failed: %s",
-                          node->header.formId, why.c_str());
-            return -1;   // masters already appended; caller should discard the plugin
-        }
+        if (!ops->remapIds(payload, ctx, &SelfIndexBump::Apply, &bump, remapped, why))
+            // masters already appended; caller should discard the plugin
+            return Fail("EnsureMaster: remap of {:08X} failed: {}", node->header.formId, why);
         if (remapped.size() != payload.size() ||
             std::memcmp(remapped.data(), payload.data(), payload.size()) != 0) {
-            if (!SetRecordPayload(p, *node, std::move(remapped), err, errLen))
-                return -1;
+            if (auto r = SetRecordPayload(p, *node, std::move(remapped)); !r)
+                return std::unexpected(r.error());
         }
     }
     for (auto& [formId, node] : p.index) {
@@ -255,22 +222,21 @@ int EnsureMaster(Plugin& p, const std::string& masterName, char* err, int errLen
         node->header.formId = id;
     }
     RebuildIndex(p);
+    p.edited = true;
     return static_cast<int>(oldSelf);
 }
 
-uint32_t MakeRef(Plugin& p, const FormKey& key, char* err, int errLen) {
-    if (!key.valid()) {
-        std::snprintf(err, errLen, "MakeRef: invalid FormKey");
-        return 0;
-    }
+Result<uint32_t> MakeRef(Plugin& p, const FormKey& key) {
+    if (!key.valid())
+        return Fail("MakeRef: invalid FormKey");
     const uint32_t localId = key.localId & 0x00FFFFFFu;
 
     if (EqualCI(key.plugin, p.filename))
         return (static_cast<uint32_t>(p.masters.size()) << 24) | localId;
 
-    const int idx = EnsureMaster(p, key.plugin, err, errLen);
-    if (idx < 0) return 0;
-    return (static_cast<uint32_t>(idx) << 24) | localId;
+    const auto idx = EnsureMaster(p, key.plugin);
+    if (!idx) return std::unexpected(idx.error());
+    return (static_cast<uint32_t>(*idx) << 24) | localId;
 }
 
 static GroupNode* FindOrCreateTopGroup(Plugin& p, uint32_t sig) {
@@ -289,9 +255,10 @@ static GroupNode* FindOrCreateTopGroup(Plugin& p, uint32_t sig) {
     return p.tree.back().group.get();
 }
 
-RecordNode* CreateRecord(Plugin& p, uint32_t sig, char* err, int errLen) {
-    const uint32_t formId = AllocateFormId(p, err, errLen);
-    if (formId == 0) return nullptr;
+Result<RecordNode*> CreateRecord(Plugin& p, uint32_t sig) {
+    const auto fid = AllocateFormId(p);
+    if (!fid) return std::unexpected(fid.error());
+    const uint32_t formId = *fid;
 
     GroupNode* group = FindOrCreateTopGroup(p, sig);
 
@@ -306,29 +273,23 @@ RecordNode* CreateRecord(Plugin& p, uint32_t sig, char* err, int errLen) {
 
     // Appending may have reallocated node storage anywhere in the tree.
     RebuildIndex(p);
-    auto it = p.index.find(formId);
-    return (it != p.index.end()) ? it->second : nullptr;
+    p.edited = true;
+    if (RecordNode* node = p.Find(formId)) return node;
+    return Fail("CreateRecord: {:08X} not indexed after insert", formId);
 }
 
-RecordNode* InsertRecord(Plugin& p, const RecHeader& header, std::vector<uint8_t> payload,
-                         char* err, int errLen) {
-    if (p.index.count(header.formId)) {
-        std::snprintf(err, errLen, "InsertRecord: %08X already exists in %s", header.formId,
-                      p.filename.c_str());
-        return nullptr;
-    }
+Result<RecordNode*> InsertRecord(Plugin& p, const RecHeader& header, std::vector<uint8_t> payload) {
+    if (p.index.count(header.formId))
+        return Fail("InsertRecord: {:08X} already exists in {}", header.formId, p.filename);
     GroupNode* group = FindOrCreateTopGroup(p, header.sig);
     Node n;
     n.rec.header = header;
     group->children.push_back(std::move(n));
     RebuildIndex(p);
-    auto it = p.index.find(header.formId);
-    if (it == p.index.end()) {
-        std::snprintf(err, errLen, "InsertRecord: %08X not indexed after insert", header.formId);
-        return nullptr;
-    }
-    if (!SetRecordPayload(p, *it->second, std::move(payload), err, errLen)) return nullptr;
-    return it->second;
+    RecordNode* node = p.Find(header.formId);
+    if (!node) return Fail("InsertRecord: {:08X} not indexed after insert", header.formId);
+    if (auto r = SetRecordPayload(p, *node, std::move(payload)); !r) return std::unexpected(r.error());
+    return node;
 }
 
 // ── Finalize ────────────────────────────────────────────────────────────────
@@ -340,19 +301,14 @@ static size_t CountGroups(const std::vector<Node>& nodes) {
     return g;
 }
 
-bool FinalizePlugin(Plugin& p, char* err, int errLen) {
+Result<void> FinalizePlugin(Plugin& p) {
     // ESL constraint: every SELF-defined record's object id must fit 12 bits.
     if (p.isLight) {
         const uint32_t selfIdx = static_cast<uint32_t>(p.masters.size());
         for (const auto& [formId, node] : p.index) {
             (void)node;
-            if ((formId >> 24) == selfIdx && (formId & 0x00FFFFFFu) > 0xFFFu) {
-                std::snprintf(err, errLen,
-                              "FinalizePlugin: ESL record %08X exceeds the 12-bit "
-                              "object-id ceiling",
-                              formId);
-                return false;
-            }
+            if ((formId >> 24) == selfIdx && (formId & 0x00FFFFFFu) > 0xFFFu)
+                return Fail("FinalizePlugin: ESL record {:08X} exceeds the 12-bit object-id ceiling", formId);
         }
     }
 
@@ -414,7 +370,8 @@ bool FinalizePlugin(Plugin& p, char* err, int errLen) {
 
     p.tes4.modified = std::make_unique<std::vector<uint8_t>>(std::move(w.buf));
     p.tes4.dirty    = true;
-    return true;
+    p.edited        = false;
+    return {};
 }
 
 } // namespace esper

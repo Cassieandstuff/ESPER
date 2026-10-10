@@ -1,99 +1,49 @@
 #include <ESPER/Zlib.h>
 
-#include <cstdarg>
-#include <cstdio>
 #include <limits>
 
 #include "miniz.h"
 
 namespace esper {
 
-static void SetErr(char* err, int errLen, const char* fmt, ...) {
-    if (!err || errLen <= 0) return;
-    va_list ap;
-    va_start(ap, fmt);
-    std::vsnprintf(err, static_cast<size_t>(errLen), fmt, ap);
-    va_end(ap);
-}
-
-bool ZlibInflate(const uint8_t* src, size_t srcLen, size_t expectedOut,
-                 std::vector<uint8_t>& out, char* err, int errLen) {
-    out.clear();
-
-    if (!src || srcLen == 0) {
-        SetErr(err, errLen, "ZlibInflate: empty/null source");
-        return false;
-    }
-
-    if (expectedOut == 0) {
-        return true;
-    }
-
-    if (expectedOut > 256u * 1024u * 1024u) {
-        SetErr(err, errLen, "ZlibInflate: decompressed size %zu exceeds cap",
-               static_cast<size_t>(expectedOut));
-        return false;
-    }
+Result<std::vector<uint8_t>> ZlibInflate(std::span<const uint8_t> src, size_t expectedOut) {
+    if (src.empty())
+        return Fail("ZlibInflate: empty source");
+    if (expectedOut == 0)
+        return std::vector<uint8_t>{};
+    if (expectedOut > 256u * 1024u * 1024u)
+        return Fail("ZlibInflate: decompressed size {} exceeds cap", expectedOut);
 
     const mz_ulong kULongMax = std::numeric_limits<mz_ulong>::max();
-    if (srcLen > static_cast<size_t>(kULongMax) ||
-        expectedOut > static_cast<size_t>(kULongMax)) {
-        SetErr(err, errLen, "ZlibInflate: size exceeds mz_ulong range");
-        return false;
-    }
+    if (src.size() > static_cast<size_t>(kULongMax) || expectedOut > static_cast<size_t>(kULongMax))
+        return Fail("ZlibInflate: size exceeds mz_ulong range");
 
-    out.resize(expectedOut);
-
+    std::vector<uint8_t> out(expectedOut);
     mz_ulong destLen = static_cast<mz_ulong>(expectedOut);
-    const int rc = mz_uncompress(out.data(), &destLen,
-                                 src, static_cast<mz_ulong>(srcLen));
-    if (rc != MZ_OK) {
-        SetErr(err, errLen, "ZlibInflate: mz_uncompress failed (%d: %s)",
-               rc, mz_error(rc) ? mz_error(rc) : "unknown");
-        out.clear();
-        return false;
-    }
-
-    if (static_cast<size_t>(destLen) != expectedOut) {
-        SetErr(err, errLen,
-               "ZlibInflate: size mismatch (got %llu, expected %llu)",
-               static_cast<unsigned long long>(destLen),
-               static_cast<unsigned long long>(expectedOut));
-        out.clear();
-        return false;
-    }
-
-    return true;
+    const int rc = mz_uncompress(out.data(), &destLen, src.data(), static_cast<mz_ulong>(src.size()));
+    if (rc != MZ_OK)
+        return Fail("ZlibInflate: mz_uncompress failed ({}: {})", rc, mz_error(rc) ? mz_error(rc) : "unknown");
+    if (static_cast<size_t>(destLen) != expectedOut)
+        return Fail("ZlibInflate: size mismatch (got {}, expected {})",
+                    static_cast<unsigned long long>(destLen), expectedOut);
+    return out;
 }
 
-bool ZlibDeflate(const uint8_t* src, size_t srcLen,
-                 std::vector<uint8_t>& out, char* err, int errLen) {
-    out.clear();
-    if (srcLen == 0) return true;
-    if (!src) {
-        SetErr(err, errLen, "ZlibDeflate: null source");
-        return false;
-    }
+Result<std::vector<uint8_t>> ZlibDeflate(std::span<const uint8_t> src) {
+    if (src.empty()) return std::vector<uint8_t>{};
 
     const mz_ulong kULongMax = std::numeric_limits<mz_ulong>::max();
-    if (srcLen > static_cast<size_t>(kULongMax)) {
-        SetErr(err, errLen, "ZlibDeflate: size exceeds mz_ulong range");
-        return false;
-    }
+    if (src.size() > static_cast<size_t>(kULongMax))
+        return Fail("ZlibDeflate: size exceeds mz_ulong range");
 
-    const mz_ulong bound = mz_compressBound(static_cast<mz_ulong>(srcLen));
-    out.resize(static_cast<size_t>(bound));
+    const mz_ulong bound = mz_compressBound(static_cast<mz_ulong>(src.size()));
+    std::vector<uint8_t> out(static_cast<size_t>(bound));
     mz_ulong destLen = bound;
-    const int rc = mz_compress(out.data(), &destLen,
-                               src, static_cast<mz_ulong>(srcLen));
-    if (rc != MZ_OK) {
-        SetErr(err, errLen, "ZlibDeflate: mz_compress failed (%d: %s)",
-               rc, mz_error(rc) ? mz_error(rc) : "unknown");
-        out.clear();
-        return false;
-    }
+    const int rc = mz_compress(out.data(), &destLen, src.data(), static_cast<mz_ulong>(src.size()));
+    if (rc != MZ_OK)
+        return Fail("ZlibDeflate: mz_compress failed ({}: {})", rc, mz_error(rc) ? mz_error(rc) : "unknown");
     out.resize(static_cast<size_t>(destLen));
-    return true;
+    return out;
 }
 
 } // namespace esper

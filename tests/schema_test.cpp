@@ -71,14 +71,21 @@ std::vector<uint32_t> SigsOf(const Bytes& payload) {
     return out;
 }
 
+// Moves a decoded record into `rec`, printing the error on failure.
+bool Into(esper::Result<esper::Record> r, esper::Record& rec) {
+    if (!r) {
+        std::printf("  decode error: %s\n", r.error().message.c_str());
+        return false;
+    }
+    rec = std::move(*r);
+    return true;
+}
+
 bool Decode(const Bytes& payload, esper::Record& rec, bool localized = false,
             uint32_t sig = Sig("TSTA"), const esper::schema::SchemaSet* set = nullptr) {
     esper::DecodeCtx ctx;
     ctx.localized = localized;
-    std::string err;
-    const bool ok = esper::Record::Decode(set ? *set : TestSchema(), sig, payload, ctx, rec, &err);
-    if (!ok) std::printf("  decode error: %s\n", err.c_str());
-    return ok;
+    return Into(esper::Record::Decode(set ? *set : TestSchema(), sig, payload, ctx), rec);
 }
 
 // The fidelity contract, both ways.
@@ -228,9 +235,8 @@ void TestRefusal() {
     CheckRoundTrip(rec, p.bytes());
     CHECK(rec.Get(tf::TSTA::fullName)->text == "ok");
     CHECK(!rec.Get(tf::TSTA::editorId).has_value());
-    std::string why;
-    CHECK(!rec.RemapSafe(&why));
-    CHECK(why.find("raw subrecord") != std::string::npos);
+    const auto safe = rec.CheckRemapSafe();
+    CHECK(!safe && safe.error().message.find("raw subrecord") != std::string::npos);
 }
 
 void TestLocalized() {
@@ -271,7 +277,7 @@ void TestVerbatimUnlessModified() {
 void TestCreateAndOrder() {
     std::printf("T7 create: new subrecords land in schema order; derived counts\n");
     esper::Record rec;
-    CHECK(esper::Record::Create(TestSchema(), Sig("TSTA"), {}, rec));
+    CHECK(Into(esper::Record::Create(TestSchema(), Sig("TSTA"), {}), rec));
     // Set in reverse schema order.
     rec.Set(tf::TSTA::data::weight, 2.0f);
     rec.Set(tf::TSTA::keywords, std::vector<esper::FormId>{ { 1 }, { 2 }, { 3 } });
@@ -317,16 +323,16 @@ void TestFormIds() {
 
     std::vector<uint32_t> seen;
     size_t toTstb = 0;
-    rec.ForEachFormId([&](uint32_t id, std::span<const uint32_t> to) {
+    rec.ForEachFormId([&](esper::FormId fid, std::span<const uint32_t> to) { const uint32_t id = fid.raw;
         seen.push_back(id);
         if (to.size() == 1 && to[0] == Sig("TSTB")) ++toTstb;
     });
     CHECK(seen.size() == 9);
     CHECK(toTstb == 3);                         // VERS.target + two KWDA entries
 
-    CHECK(rec.VisitFormIds([](uint32_t& id) { if ((id >> 24) == 1) id = (id & 0xFFFFFF) | 0x02000000; }));
+    CHECK(rec.VisitFormIds([](esper::FormId& f) { if ((f.raw >> 24) == 1) f.raw = (f.raw & 0xFFFFFF) | 0x02000000; }));
     size_t remapped = 0;
-    rec.ForEachFormId([&](uint32_t id, std::span<const uint32_t>) { remapped += (id >> 24) == 2; });
+    rec.ForEachFormId([&](esper::FormId fid, std::span<const uint32_t>) { const uint32_t id = fid.raw; remapped += (id >> 24) == 2; });
     CHECK(remapped == 9);
     esper::Record back;
     CHECK(Decode(rec.Encode(), back));
@@ -338,9 +344,8 @@ void TestFormIds() {
     p.Sub("REFS", U32(0x01000001)).Sub("BLOB", Bytes{ 1, 2, 3, 4 });
     esper::Record r2;
     CHECK(Decode(p.bytes(), r2));
-    std::string why;
-    CHECK(!r2.VisitFormIds([](uint32_t& id) { id = 0; }, &why));
-    CHECK(why.find("opaque bytes in BLOB") != std::string::npos);
+    const auto visited = r2.VisitFormIds([](esper::FormId& id) { id.raw = 0; });
+    CHECK(!visited && visited.error().message.find("opaque bytes in BLOB") != std::string::npos);
     CHECK(r2.Encode() == p.bytes());            // refused: untouched
 }
 
@@ -355,7 +360,7 @@ void TestPathsAndViews() {
     CHECK(!rec.Find("outer/nope").has_value());
     CHECK(rec.Find("layers/presets/value").has_value());
 
-    tv::TestAlpha a(rec);
+    auto a = *tv::As<tv::TestAlpha>(rec);
     CHECK(a.EditorId() == std::string("Alpha"));
     CHECK(a.Versioned().Radius() == 2.5f);
     CHECK(a.Outer().Inner().B() == -9);
@@ -381,7 +386,7 @@ void TestPathsAndViews() {
     esper::Record back;
     CHECK(Decode(rec.Encode(), back));
     CHECK(back.RawCount() == 0);
-    CHECK(tv::TestAlpha(back).Layers().size() == 3);
+    CHECK(tv::As<tv::TestAlpha>(back)->Layers().size() == 3);
 
     a.Outer().Inner().SetA(42);
     CHECK(rec.Get(tf::TSTA::outer::inner::a) == 42);
@@ -405,7 +410,7 @@ void TestMarker() {
     CHECK(Decode(p.bytes(), rec));
     CHECK(rec.RawCount() == 0);
     CheckRoundTrip(rec, p.bytes());
-    tv::TestAlpha a(rec);
+    auto a = *tv::As<tv::TestAlpha>(rec);
     CHECK(a.Flagged());
     a.SetFlagged(false);
     CHECK(!a.Flagged());
@@ -424,10 +429,7 @@ void TestMarker() {
 bool DecodeU(const Bytes& payload, esper::Record& rec, uint16_t formVersion = 44) {
     esper::DecodeCtx ctx;
     ctx.formVersion = formVersion;
-    std::string err;
-    const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTU"), payload, ctx, rec, &err);
-    if (!ok) std::printf("  decode error: %s\n", err.c_str());
-    return ok;
+    return Into(esper::Record::Decode(TestSchema(), Sig("TSTU"), payload, ctx), rec);
 }
 
 Bytes U8(uint8_t v) { return { v }; }
@@ -442,15 +444,15 @@ void TestUnions() {
         c.Sub("SIZE", Bytes{ 1, 2, 3 });                       // no case for 3 bytes
         esper::Record ra, rb, rc;
         CHECK(DecodeU(a.bytes(), ra) && DecodeU(b.bytes(), rb) && DecodeU(c.bytes(), rc));
-        CHECK(tv::TestUnions(ra).SizedSmall() == uint8_t(7));
-        CHECK(!tv::TestUnions(ra).SizedWide().has_value());
-        CHECK(tv::TestUnions(rb).SizedWide() == uint16_t(0x1234));
+        CHECK(tv::As<tv::TestUnions>(ra)->SizedSmall() == uint8_t(7));
+        CHECK(!tv::As<tv::TestUnions>(ra)->SizedWide().has_value());
+        CHECK(tv::As<tv::TestUnions>(rb)->SizedWide() == uint16_t(0x1234));
         CHECK(rc.RawCount() == 1);
         CheckRoundTrip(ra, a.bytes());
         CheckRoundTrip(rb, b.bytes());
         CheckRoundTrip(rc, c.bytes());
         // Setting the other case switches the union (and the encoded size).
-        tv::TestUnions(ra).SetSizedWide(0xBEEF);
+        tv::As<tv::TestUnions>(ra)->SetSizedWide(0xBEEF);
         Payload want;
         want.Sub("SIZE", U16(0xBEEF));
         CHECK(ra.Encode() == want.bytes());
@@ -467,20 +469,20 @@ void TestUnions() {
         CHECK(DecodeU(cond(2, 1, 7), alias));
         CHECK(DecodeU(cond(0, 2, 99), plain));
         CHECK(DecodeU(cond(0, 9, 0x01000ABC), unknown));
-        tv::TestUnions vf(form), va(alias), vp(plain), vu(unknown);
+        auto vf = *tv::As<tv::TestUnions>(form), va = *tv::As<tv::TestUnions>(alias),
+             vp = *tv::As<tv::TestUnions>(plain), vu = *tv::As<tv::TestUnions>(unknown);
         CHECK(vf.Cond().ParamFormRef()->raw == 0x01000ABCu);
         CHECK(va.Cond().ParamFormAlias() == 7);
         CHECK(vp.Cond().ParamPlain() == 99u);
         CHECK(vu.Cond().ParamUnknown() == 0x01000ABCu);
         size_t ids = 0;
-        form.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+        form.ForEachFormId([&](esper::FormId, std::span<const uint32_t>) { ++ids; });
         CHECK(ids == 1);
         ids = 0;
-        alias.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+        alias.ForEachFormId([&](esper::FormId, std::span<const uint32_t>) { ++ids; });
         CHECK(ids == 0);                                         // alias index: not a FormID
         CHECK(form.RemapSafe() && alias.RemapSafe() && plain.RemapSafe());
-        std::string why;
-        CHECK(!unknown.RemapSafe(&why));                         // unknown function: refuse
+        CHECK(!unknown.RemapSafe());                             // unknown function: refuse
         for (auto* r : { &form, &alias, &plain, &unknown }) CHECK(r->RawCount() == 0);
         CheckRoundTrip(form, cond(0, 1, 0x01000ABC));
         CheckRoundTrip(unknown, cond(0, 9, 0x01000ABC));
@@ -500,12 +502,12 @@ void TestUnions() {
         CheckRoundTrip(r3, v3.bytes());
         CheckRoundTrip(r4, v4.bytes());
         CheckRoundTrip(rb, bad.bytes());
-        CHECK(!tv::TestUnions(r3).Versioned().Status().has_value());
-        CHECK(tv::TestUnions(r4).Versioned().Status() == uint8_t(9));
+        CHECK(!tv::As<tv::TestUnions>(r3)->Versioned().Status().has_value());
+        CHECK(tv::As<tv::TestUnions>(r4)->Versioned().Status() == uint8_t(9));
         const auto items = r3.Get(tf::TSTU::versioned::items);
         CHECK(items && items->size() == 2);
         size_t ids = 0;
-        r3.ForEachFormId([&](uint32_t id, std::span<const uint32_t>) { ids += id == 0x01000001u; });
+        r3.ForEachFormId([&](esper::FormId fid, std::span<const uint32_t>) { const uint32_t id = fid.raw; ids += id == 0x01000001u; });
         CHECK(ids == 1);
     }
     // record and form-version selectors
@@ -514,8 +516,8 @@ void TestUnions() {
         p.Sub("RECS", U32(5)).Sub("FVER", U32(6));
         esper::Record modern, legacy;
         CHECK(DecodeU(p.bytes(), modern, 44));
-        CHECK(tv::TestUnions(modern).PerRecordMine() == 5u);
-        CHECK(tv::TestUnions(modern).ByFormVersionModern() == 6u);
+        CHECK(tv::As<tv::TestUnions>(modern)->PerRecordMine() == 5u);
+        CHECK(tv::As<tv::TestUnions>(modern)->ByFormVersionModern() == 6u);
         CHECK(DecodeU(p.bytes(), legacy, 43));                 // 4 bytes but legacy wants 2
         CHECK(legacy.RawCount() == 1);
         CheckRoundTrip(modern, p.bytes());
@@ -528,10 +530,10 @@ void TestUnions() {
         b.Sub("OBJS", Cat({ U16(2), U32(0), U32(0x01000777) }));
         esper::Record ra, rb;
         CHECK(DecodeU(a.bytes(), ra) && DecodeU(b.bytes(), rb));
-        CHECK(tv::TestUnions(ra).Obj().TargetV1().Id()->raw == 0x01000777u);
-        CHECK(tv::TestUnions(rb).Obj().TargetV2().Id()->raw == 0x01000777u);
-        CHECK(!tv::TestUnions(rb).Obj().TargetV1().Id().has_value());
-        CHECK(rb.VisitFormIds([](uint32_t& id) { id = 0x02000777; }));
+        CHECK(tv::As<tv::TestUnions>(ra)->Obj().TargetV1().Id()->raw == 0x01000777u);
+        CHECK(tv::As<tv::TestUnions>(rb)->Obj().TargetV2().Id()->raw == 0x01000777u);
+        CHECK(!tv::As<tv::TestUnions>(rb)->Obj().TargetV1().Id().has_value());
+        CHECK(rb.VisitFormIds([](esper::FormId& id) { id.raw = 0x02000777; }));
         Payload want;
         want.Sub("OBJS", Cat({ U16(2), U32(0), U32(0x02000777) }));
         CHECK(rb.Encode() == want.bytes());
@@ -541,10 +543,7 @@ void TestUnions() {
 void TestDelimited() {
     std::printf("T15 delimited groups: open/end markers, shared member sigs, reopening\n");
     auto decode = [](const Bytes& payload, esper::Record& rec) {
-        std::string err;
-        const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTD"), payload, {}, rec, &err);
-        if (!ok) std::printf("  decode error: %s\n", err.c_str());
-        return ok;
+        return Into(esper::Record::Decode(TestSchema(), Sig("TSTD"), payload, {}), rec);
     };
     Payload p;
     p.Z("EDID", "Q")
@@ -559,7 +558,7 @@ void TestDelimited() {
     CHECK(decode(p.bytes(), rec));
     CHECK(rec.RawCount() == 0);
     CheckRoundTrip(rec, p.bytes());
-    tv::TestDelimited d(rec);
+    auto d = *tv::As<tv::TestDelimited>(rec);
     CHECK(d.RootFlags() == 0xAAu);
     const auto refs = d.RefAliases();
     CHECK(refs.size() == 3);
@@ -582,30 +581,27 @@ void TestDelimited() {
     esper::Record r2;
     CHECK(decode(q.bytes(), r2));
     CHECK(r2.RawCount() == 1);
-    CHECK(tv::TestDelimited(r2).RootByte() == uint8_t(9));
+    CHECK(tv::As<tv::TestDelimited>(r2)->RootByte() == uint8_t(9));
     CheckRoundTrip(r2, q.bytes());
 
     // Built through the API, an instance encodes opener first and end last,
     // and reads back as one instance.
     esper::Record r3;
-    CHECK(esper::Record::Create(TestSchema(), Sig("TSTD"), {}, r3));
-    auto alias = tv::TestDelimited(r3).AddRefAliases();
+    CHECK(Into(esper::Record::Create(TestSchema(), Sig("TSTD"), {}), r3));
+    auto alias = tv::As<tv::TestDelimited>(r3)->AddRefAliases();
     alias.SetEnd(true);
     alias.SetName("n");
     alias.SetId(9);
     CHECK((SigsOf(r3.Encode()) == std::vector<uint32_t>{ Sig("ALST"), Sig("ALID"), Sig("ALED") }));
     esper::Record back;
     CHECK(decode(r3.Encode(), back));
-    CHECK(back.RawCount() == 0 && tv::TestDelimited(back).RefAliases().size() == 1);
+    CHECK(back.RawCount() == 0 && tv::As<tv::TestDelimited>(back)->RefAliases().size() == 1);
 }
 
 void TestSiblings() {
     std::printf("T16 member selectors and same-sig open/end\n");
     auto decode = [](const Bytes& payload, esper::Record& rec) {
-        std::string err;
-        const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTE"), payload, {}, rec, &err);
-        if (!ok) std::printf("  decode error: %s\n", err.c_str());
-        return ok;
+        return Into(esper::Record::Decode(TestSchema(), Sig("TSTE"), payload, {}), rec);
     };
     Payload p;
     p.Sub("PRKE", Bytes{ 0 }).Sub("EPFT", Bytes{ 1 }).Sub("EPFD", F32(1.5f)).Sub("PRKF", {})
@@ -619,7 +615,7 @@ void TestSiblings() {
     CHECK(decode(p.bytes(), rec));
     CHECK(rec.RawCount() == 2);
     CheckRoundTrip(rec, p.bytes());
-    tv::TestSiblings t(rec);
+    auto t = *tv::As<tv::TestSiblings>(rec);
     const auto entries = t.Entries();
     CHECK(entries.size() == 5);
     if (entries.size() == 5) {
@@ -627,10 +623,14 @@ void TestSiblings() {
         CHECK(entries[1].FunctionDataSpell() && entries[1].FunctionDataSpell()->id.raw == 0x01000801u);
         CHECK(entries[2].FunctionDataText() == std::string("hello"));
         CHECK(!entries[3].FunctionDataCase().has_value());
+        using Kind = tv::TestSiblingsEntries::FunctionDataKind;      // named cases
+        CHECK(entries[0].FunctionDataCase() == Kind::Value);
+        CHECK(entries[1].FunctionDataIsSpell() && !entries[1].FunctionDataIsText());
+        CHECK(entries[2].FunctionDataCase() == Kind::Text);
         for (const auto& e : entries) CHECK(e.End());
     }
     size_t ids = 0;
-    rec.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+    rec.ForEachFormId([&](esper::FormId, std::span<const uint32_t>) { ++ids; });
     CHECK(ids == 1);
     const auto phases = t.Phases();
     CHECK(phases.size() == 2);
@@ -658,7 +658,7 @@ void TestRealSchema() {
     CHECK(rec.RawCount() == 0);
     CheckRoundTrip(rec, p.bytes());
 
-    esper::view::Armor armor(rec);
+    auto armor = *esper::view::As<esper::view::Armor>(rec);
     CHECK(armor.EditorId() == std::string("ArmorX"));
     CHECK(armor.MaleModel() && armor.MaleModel()->Path() == std::string("male.nif"));
     CHECK(armor.FemaleModel() && armor.FemaleModel()->Path() == std::string("female.nif"));

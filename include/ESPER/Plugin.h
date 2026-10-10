@@ -1,4 +1,5 @@
 #pragma once
+#include <ESPER/Error.h>
 #include <ESPER/FormKey.h>
 #include <ESPER/GroupTree.h>
 
@@ -37,6 +38,10 @@ struct Plugin {
     bool hasIntv = false; uint32_t intv = 0;
     bool hasIncc = false; uint32_t incc = 0;
 
+    // Set by the mutation API (Writer.h); SavePlugin finalizes an edited
+    // plugin's TES4 before writing.
+    bool edited = false;
+
     // Whole file, kept for zero-copy payloads and verbatim re-emission.
     std::vector<uint8_t> buffer;
 
@@ -60,8 +65,16 @@ struct Plugin {
     Plugin(Plugin&&)                 = default;
     Plugin& operator=(Plugin&&)      = default;
 
-    bool OpenHeader(const std::string& path, char* err, int errLen);
-    bool Load(const std::string& path, char* err, int errLen);
+    // Both set `filename` to the path's file name; set it again afterwards to
+    // load a file under a different name.
+    Result<void> OpenHeader(const std::string& path);
+    Result<void> Load(const std::string& path);
+
+    // The record with on-disk FormID `formId`, or nullptr.
+    RecordNode* Find(uint32_t formId) const;
+    // Every record, or every record of `sig`, in file order (groups flattened).
+    std::vector<RecordNode*> Records() const;
+    std::vector<RecordNode*> Records(uint32_t sig) const;
 
     // Resolves a 32-bit FormID found INSIDE this plugin to a FormKey, per the
     // ON-DISK rule: the top byte indexes [masters..., self] (any index at or

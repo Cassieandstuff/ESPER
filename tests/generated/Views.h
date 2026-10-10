@@ -90,14 +90,21 @@ public:
     void SetOp(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
     std::optional<uint16_t> Fn() const { return s_.at.Get<uint16_t>(s_.Field(1)); }
     void SetFn(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(1), v); }
-    std::optional<uint16_t> ParamCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
-    std::optional<uint16_t> ParamFormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(2), 0)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ParamKind : uint16_t { Form = 0, Plain = 1, Unknown = 2 };
+    std::optional<ParamKind> ParamCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(2)); if (!v) return std::nullopt; return static_cast<ParamKind>(v->bits); }
+    bool ParamIsForm() const { return ParamCase() == ParamKind::Form; }
+    enum class ParamFormKind : uint16_t { Alias = 0, Ref = 1 };
+    std::optional<ParamFormKind> ParamFormCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(2), 0)); if (!v) return std::nullopt; return static_cast<ParamFormKind>(v->bits); }
+    bool ParamFormIsAlias() const { return ParamFormCase() == ParamFormKind::Alias; }
     std::optional<int32_t> ParamFormAlias() const { return s_.at.Get<int32_t>(::esper::Extend(::esper::Extend(s_.Field(2), 0), 0)); }
     void SetParamFormAlias(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(::esper::Extend(s_.Field(2), 0), 0), v); }
+    bool ParamFormIsRef() const { return ParamFormCase() == ParamFormKind::Ref; }
     std::optional<::esper::FormId> ParamFormRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(2), 0), 1)); }
     void SetParamFormRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(::esper::Extend(s_.Field(2), 0), 1), v); }
+    bool ParamIsPlain() const { return ParamCase() == ParamKind::Plain; }
     std::optional<uint32_t> ParamPlain() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(2), 1)); }
     void SetParamPlain(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(2), 1), v); }
+    bool ParamIsUnknown() const { return ParamCase() == ParamKind::Unknown; }
     std::optional<uint32_t> ParamUnknown() const { return s_.at.Get<uint32_t>(::esper::Extend(s_.Field(2), 2)); }
     void SetParamUnknown(const uint32_t& v) const { s_.at.Set<uint32_t>(::esper::Extend(s_.Field(2), 2), v); }
 private:
@@ -110,11 +117,15 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<uint8_t> Kind() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
     void SetKind(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
-    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ValueKind : uint16_t { Ref = 0, Text = 1, Num = 2 };
+    std::optional<ValueKind> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<ValueKind>(v->bits); }
+    bool ValueIsRef() const { return ValueCase() == ValueKind::Ref; }
     std::optional<::esper::FormId> ValueRef() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 0)); }
     void SetValueRef(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 0), v); }
+    bool ValueIsText() const { return ValueCase() == ValueKind::Text; }
     std::optional<std::string> ValueText() const { return s_.at.Get<std::string>(::esper::Extend(s_.Field(1), 1)); }
     void SetValueText(const std::string& v) const { s_.at.Set<std::string>(::esper::Extend(s_.Field(1), 1), v); }
+    bool ValueIsNum() const { return ValueCase() == ValueKind::Num; }
     std::optional<int32_t> ValueNum() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(1), 2)); }
     void SetValueNum(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(1), 2), v); }
     std::optional<uint8_t> Flag() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(2), 0)); }
@@ -167,8 +178,11 @@ public:
     bool IsPresent() const { return s_.Has(); }
     std::optional<uint16_t> ObjFmt() const { return s_.at.Get<uint16_t>(s_.Field(0)); }
     void SetObjFmt(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(0), v); }
-    std::optional<uint16_t> TargetCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class TargetKind : uint16_t { V1 = 0, V2 = 1 };
+    std::optional<TargetKind> TargetCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<TargetKind>(v->bits); }
+    bool TargetIsV1() const { return TargetCase() == TargetKind::V1; }
     ::esper_test::view::TestObjV1 TargetV1() const { return ::esper_test::view::TestObjV1(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(1), 0) }); }
+    bool TargetIsV2() const { return TargetCase() == TargetKind::V2; }
     ::esper_test::view::TestObjV2 TargetV2() const { return ::esper_test::view::TestObjV2(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(1), 1) }); }
 private:
     ::esper::StructCursor s_;
@@ -231,7 +245,6 @@ private:
 class TestAlpha {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTA");
-    explicit TestAlpha(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TestAlpha(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -311,7 +324,6 @@ private:
 class TestBeta {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTB");
-    explicit TestBeta(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TestBeta(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -413,7 +425,6 @@ private:
 class TestDelimited {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTD");
-    explicit TestDelimited(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TestDelimited(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -456,11 +467,15 @@ public:
     void SetFunctionType(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearFunctionType() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // EPFD
-    std::optional<uint16_t> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class FunctionDataKind : uint16_t { Value = 0, Spell = 1, Text = 2 };
+    std::optional<FunctionDataKind> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<FunctionDataKind>(v->bits); }
+    bool FunctionDataIsValue() const { return FunctionDataCase() == FunctionDataKind::Value; }
     std::optional<float> FunctionDataValue() const { return c_.Get<float>(::esper::RelPath{ { 2, 0 }, 1, 2 }); }
     void SetFunctionDataValue(const float& v) const { c_.Set<float>(::esper::RelPath{ { 2, 0 }, 1, 2 }, v); }
+    bool FunctionDataIsSpell() const { return FunctionDataCase() == FunctionDataKind::Spell; }
     std::optional<::esper::Link<::esper_test::view::TestBeta>> FunctionDataSpell() const { return c_.Get<::esper::Link<::esper_test::view::TestBeta>>(::esper::RelPath{ { 2, 1 }, 1, 2 }); }
     void SetFunctionDataSpell(const ::esper::Link<::esper_test::view::TestBeta>& v) const { c_.Set<::esper::Link<::esper_test::view::TestBeta>>(::esper::RelPath{ { 2, 1 }, 1, 2 }, v); }
+    bool FunctionDataIsText() const { return FunctionDataCase() == FunctionDataKind::Text; }
     std::optional<std::string> FunctionDataText() const { return c_.Get<std::string>(::esper::RelPath{ { 2, 2 }, 1, 2 }); }
     void SetFunctionDataText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 2, 2 }, 1, 2 }, v); }
     void ClearFunctionData() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
@@ -496,7 +511,6 @@ private:
 class TestSiblings {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTE");
-    explicit TestSiblings(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TestSiblings(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
@@ -517,14 +531,16 @@ private:
 class TestUnions {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTU");
-    explicit TestUnions(::esper::Record& r) : c_{ &r, 0 } {}
     explicit TestUnions(::esper::Cursor c) : c_(c) {}
     ::esper::Record& record() const { return *c_.rec; }
     ::esper::Cursor cursor() const { return c_; }
     // SIZE
-    std::optional<uint16_t> SizedCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 0 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class SizedKind : uint16_t { Small = 0, Wide = 1 };
+    std::optional<SizedKind> SizedCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 0 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<SizedKind>(v->bits); }
+    bool SizedIsSmall() const { return SizedCase() == SizedKind::Small; }
     std::optional<uint8_t> SizedSmall() const { return c_.Get<uint8_t>(::esper::RelPath{ { 0, 0 }, 1, 2 }); }
     void SetSizedSmall(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 0, 0 }, 1, 2 }, v); }
+    bool SizedIsWide() const { return SizedCase() == SizedKind::Wide; }
     std::optional<uint16_t> SizedWide() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0, 1 }, 1, 2 }); }
     void SetSizedWide(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0, 1 }, 1, 2 }, v); }
     void ClearSized() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
@@ -537,16 +553,22 @@ public:
     bool HasVersioned() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
     void ClearVersioned() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // RECS
-    std::optional<uint16_t> PerRecordCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 3 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class PerRecordKind : uint16_t { Mine = 0, Other = 1 };
+    std::optional<PerRecordKind> PerRecordCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 3 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<PerRecordKind>(v->bits); }
+    bool PerRecordIsMine() const { return PerRecordCase() == PerRecordKind::Mine; }
     std::optional<uint32_t> PerRecordMine() const { return c_.Get<uint32_t>(::esper::RelPath{ { 3, 0 }, 1, 2 }); }
     void SetPerRecordMine(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 3, 0 }, 1, 2 }, v); }
+    bool PerRecordIsOther() const { return PerRecordCase() == PerRecordKind::Other; }
     std::optional<std::vector<uint8_t>> PerRecordOther() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 3, 1 }, 1, 2 }); }
     void SetPerRecordOther(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3, 1 }, 1, 2 }, v); }
     void ClearPerRecord() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // FVER
-    std::optional<uint16_t> ByFormVersionCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 4 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    enum class ByFormVersionKind : uint16_t { Modern = 0, Legacy = 1 };
+    std::optional<ByFormVersionKind> ByFormVersionCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 4 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<ByFormVersionKind>(v->bits); }
+    bool ByFormVersionIsModern() const { return ByFormVersionCase() == ByFormVersionKind::Modern; }
     std::optional<uint32_t> ByFormVersionModern() const { return c_.Get<uint32_t>(::esper::RelPath{ { 4, 0 }, 1, 2 }); }
     void SetByFormVersionModern(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 4, 0 }, 1, 2 }, v); }
+    bool ByFormVersionIsLegacy() const { return ByFormVersionCase() == ByFormVersionKind::Legacy; }
     std::optional<uint16_t> ByFormVersionLegacy() const { return c_.Get<uint16_t>(::esper::RelPath{ { 4, 1 }, 1, 2 }); }
     void SetByFormVersionLegacy(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 4, 1 }, 1, 2 }, v); }
     void ClearByFormVersion() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
@@ -564,5 +586,13 @@ inline ::esper_test::view::TestAlphaData TestAlpha::Data() const { return ::espe
 inline ::esper_test::view::TestUnionsCond TestUnions::Cond() const { return ::esper_test::view::TestUnionsCond(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper_test::view::TestUnionsVersioned TestUnions::Versioned() const { return ::esper_test::view::TestUnionsVersioned(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper_test::view::TestUnionsObj TestUnions::Obj() const { return ::esper_test::view::TestUnionsObj(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+
+// The typed view of a record, or nullopt when it's another record type:
+//   if (auto armor = As<Armor>(rec)) armor->SetEditorId("X");
+template <class View>
+std::optional<View> As(::esper::Record& r) {
+    if (r.Sig() != View::kSig) return std::nullopt;
+    return View(::esper::Cursor{ &r, 0 });
+}
 
 } // namespace esper_test::view

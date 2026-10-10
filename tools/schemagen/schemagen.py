@@ -1068,15 +1068,16 @@ def emit_views(schema: Schema, ns: str) -> str:
             accessors(body, cls, acc, t.cases[0].type, kind, base, cursor, None, False, extra + [0])
             return
         if t.kind == "Union" and not repeat:
-            body.append(f"    std::optional<uint16_t> {acc}Case() const {{ auto v = {cursor}.Get<::esper::Value>({pe}); "
-                        f"if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }}")
+            # Which case was decoded: a named enum (switch) plus Is<Case>() (if).
+            labels = [pascal(case_label(c, i)) for i, c in enumerate(t.cases)]
+            body.append(f"    enum class {acc}Kind : uint16_t {{ " +
+                        ", ".join(f"{lab} = {i}" for i, lab in enumerate(labels)) + " };")
+            body.append(f"    std::optional<{acc}Kind> {acc}Case() const {{ auto v = {cursor}.Get<::esper::Value>({pe}); "
+                        f"if (!v) return std::nullopt; return static_cast<{acc}Kind>(v->bits); }}")
             for i, c in enumerate(t.cases):
-                if not c.name:
-                    continue
-                if c.type is None:
-                    body.append(f"    bool {acc}Is{pascal(c.name)}() const {{ return {acc}Case() == uint16_t({i}); }}")
-                    continue
-                accessors(body, cls, acc + pascal(c.name), c.type, kind, base, cursor, None, False, extra + [i])
+                body.append(f"    bool {acc}Is{labels[i]}() const {{ return {acc}Case() == {acc}Kind::{labels[i]}; }}")
+                if c.name and c.type is not None:
+                    accessors(body, cls, acc + pascal(c.name), c.type, kind, base, cursor, None, False, extra + [i])
             return
         if t.spec == "marker" and not repeat:
             body.append(f"    bool {acc}() const {{ return {cursor}.Has({pe}); }}")
@@ -1140,7 +1141,8 @@ def emit_views(schema: Schema, ns: str) -> str:
         body = [f"class {cls} {{", "public:"]
         if is_record:
             body.append(f"    static constexpr uint32_t kSig = ::esper::schema::SigOf(\"{sig}\");")
-            body.append(f"    explicit {cls}(::esper::Record& r) : c_{{ &r, 0 }} {{}}")
+        # Record views are made with As<View>(record), which checks the type;
+        # a Cursor is already a position in a record of the right type.
         body.append(f"    explicit {cls}(::esper::Cursor c) : c_(c) {{}}")
         body.append("    ::esper::Record& record() const { return *c_.rec; }")
         body.append("    ::esper::Cursor cursor() const { return c_; }")
@@ -1166,6 +1168,14 @@ def emit_views(schema: Schema, ns: str) -> str:
     for sig, name, root in schema.records:
         emit_scope_view(root, name, True, sig)
     out.extend(deferred)
+    out += ["",
+            "// The typed view of a record, or nullopt when it's another record type:",
+            "//   if (auto armor = As<Armor>(rec)) armor->SetEditorId(\"X\");",
+            "template <class View>",
+            "std::optional<View> As(::esper::Record& r) {",
+            "    if (r.Sig() != View::kSig) return std::nullopt;",
+            "    return View(::esper::Cursor{ &r, 0 });",
+            "}"]
     out.append("")
     out.append(f"}} // namespace {ns}")
     return "\n".join(out) + "\n"

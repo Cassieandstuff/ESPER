@@ -9,6 +9,9 @@ namespace) with fresh history. GPL-3.0-or-later.
 - Consumers link `esper::esper` and `#include <ESPER.h>` — nothing else. Component headers under
   `include/ESPER/` exist to organize the umbrella, not as separate entry points.
 - Everything is in `namespace esper`.
+- Fallible calls return `esper::Result<T>` (`std::expected<T, esper::Error>`, `Error.h`): no
+  `char*` error buffers, no bool + out-parameter pairs. Typed views are made with
+  `view::As<View>(record)`, which checks the record type.
 - The library never sets `CMAKE_MSVC_RUNTIME_LIBRARY`; it must build under the consumer's choice
   (static-CRT SKSE plugins and dynamic-CRT desktop tools both consume it).
 - Stay a dependency-free leaf. miniz is vendored and exported as `esper::miniz`.

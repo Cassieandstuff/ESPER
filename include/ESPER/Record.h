@@ -4,12 +4,13 @@
 // interprets a SchemaSet (SchemaTypes.h) for every record type; nothing here
 // is per-record code. See docs/schema-language.md for the semantics.
 //
-//   esper::Record rec;
-//   esper::Record::Decode(plugin, node, rec);                 // schema::Main()
-//   auto name = rec.Get(esper::fields::ARMO::editorId);       // std::optional<std::string>
-//   rec.Set(esper::fields::ARMO::editorId, std::string("X")); // marks that subrecord dirty
-//   esper::view::Armor armor(rec);                            // generated typed view
-//   esper::Record::Commit(plugin, node, rec);
+//   for (esper::RecordNode* node : plugin.Records(esper::Sig4("ARMO"))) {
+//       auto rec = esper::Record::Decode(plugin, *node);      // Result<Record>
+//       if (!rec) { log(rec.error().message); continue; }
+//       auto armor = esper::view::As<esper::view::Armor>(*rec); // nullopt if not ARMO
+//       armor->SetEditorId("X");                              // marks that subrecord dirty
+//       esper::Record::Commit(plugin, *node, *rec);
+//   }
 //
 // Fidelity: every subrecord keeps its original bytes. Encode emits them
 // verbatim unless the subrecord was modified (or `forceReencode`, which the
@@ -18,6 +19,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 #include <ESPER/ByteWriter.h>
+#include <ESPER/Error.h>
 #include <ESPER/SchemaTypes.h>
 
 #include <array>
@@ -51,9 +53,12 @@ struct Link {
 };
 
 // An lstring: `id` is meaningful when the plugin is localized, `text` otherwise.
+// `table` is the string table the schema assigns the field (FULL: strings,
+// DESC: dlstrings, ...), so resolving it needs only the owning plugin.
 struct LocalizedString {
-    uint32_t    id = 0;
-    std::string text;
+    uint32_t          id = 0;
+    std::string       text;
+    schema::StrTable  table = schema::StrTable::Strings;
     friend bool operator==(const LocalizedString&, const LocalizedString&) = default;
 };
 
@@ -142,20 +147,20 @@ struct StructCursor {
 
 class Record {
 public:
-    // Decodes `payload` as record `sig` under `set`. Returns false when the
-    // set has no schema for `sig` or the subrecord stream is malformed.
-    static bool Decode(const schema::SchemaSet& set, uint32_t sig,
-                       std::span<const uint8_t> payload, const DecodeCtx& ctx,
-                       Record& out, std::string* err = nullptr);
-    // Convenience over a parsed plugin's record node, using schema::Main().
-    static bool Decode(const Plugin& plugin, RecordNode& node, Record& out,
-                       std::string* err = nullptr);
-    // A new, empty record of `sig`.
-    static bool Create(const schema::SchemaSet& set, uint32_t sig, const DecodeCtx& ctx,
-                       Record& out, std::string* err = nullptr);
-    // Writes the encoded payload back into `node` (SetRecordPayload).
-    static bool Commit(Plugin& plugin, RecordNode& node, const Record& rec,
-                       std::string* err = nullptr);
+    // A parsed plugin's record, decoded with schema::Main(). Fails when the
+    // payload won't inflate, there's no schema for its type, or the
+    // subrecord stream is malformed.
+    static Result<Record> Decode(const Plugin& plugin, RecordNode& node);
+    // A new, empty record of `sig` for `plugin`.
+    static Result<Record> Create(const Plugin& plugin, uint32_t sig);
+    // Writes the encoded record back into `node`, which must be the same
+    // record type (SetRecordPayload).
+    static Result<void> Commit(Plugin& plugin, RecordNode& node, const Record& rec);
+
+    // The same against an explicit schema set and context (tests, tools).
+    static Result<Record> Decode(const schema::SchemaSet& set, uint32_t sig,
+                                 std::span<const uint8_t> payload, const DecodeCtx& ctx);
+    static Result<Record> Create(const schema::SchemaSet& set, uint32_t sig, const DecodeCtx& ctx);
 
     // Encodes the payload. Unmodified subrecords are emitted verbatim unless
     // `forceReencode`, which re-encodes every modeled subrecord from its value.
@@ -187,16 +192,17 @@ public:
     const Value*           GetValue(const RelPath& p) const { return FindValue(0, p); }
 
     // ── FormIDs ─────────────────────────────────────────────────────────────
-    // True when every FormID the record holds is visible to the schema: no raw
+    // Every FormID the record holds is visible to the schema: no raw
     // subrecords, and no non-empty `bytes` value that isn't declared free of
-    // FormIDs. `why` names the first blocker.
-    bool RemapSafe(std::string* why = nullptr) const;
+    // FormIDs. The error names the first blocker.
+    Result<void> CheckRemapSafe() const;
+    bool         RemapSafe() const { return CheckRemapSafe().has_value(); }
     // Applies `fn` to every FormID (marking changed subrecords dirty). Refuses,
-    // touching nothing, when !RemapSafe().
-    bool VisitFormIds(const std::function<void(uint32_t& id)>& fn, std::string* why = nullptr);
+    // touching nothing, when the record isn't remap-safe.
+    Result<void> VisitFormIds(const std::function<void(FormId& id)>& fn);
     // Read-only enumeration of every visible FormID with its declared targets
     // (empty span = any record type), in subrecord order.
-    void ForEachFormId(const std::function<void(uint32_t id, std::span<const uint32_t> to)>& fn) const;
+    void ForEachFormId(const std::function<void(FormId id, std::span<const uint32_t> to)>& fn) const;
 
     // ── Localization ────────────────────────────────────────────────────────
     // Re-targets the record to a plugin whose localized flag is `localized`.
@@ -204,9 +210,8 @@ public:
     // Inline → localized is refused when the record holds any lstring (new
     // string-table entries can't be minted here). Refuses, touching nothing,
     // when a raw subrecord could hide string ids or a lookup misses.
-    bool Relocalize(bool localized,
-                    const std::function<std::optional<std::string>(uint32_t id, schema::StrTable)>& lookup,
-                    std::string* why = nullptr);
+    Result<void> Relocalize(bool localized,
+                            const std::function<std::optional<std::string>(uint32_t id, schema::StrTable)>& lookup);
 
     // ── Cursor-level primitives (used by Cursor and the generated views) ─────
     template <class T> std::optional<T> GetAt(uint32_t inst, const RelPath& p) const;
@@ -312,7 +317,7 @@ T Record::FromValue(const Value& v, const schema::TypeDef& t, const schema::Sche
     } else if constexpr (std::is_same_v<T, std::string>) {
         return v.str;
     } else if constexpr (std::is_same_v<T, LocalizedString>) {
-        return LocalizedString{ static_cast<uint32_t>(v.bits), v.str };
+        return LocalizedString{ static_cast<uint32_t>(v.bits), v.str, t.table };
     } else if constexpr (record_detail::IsVector<T>::value) {
         using E = typename record_detail::IsVector<T>::Elem;
         T out;

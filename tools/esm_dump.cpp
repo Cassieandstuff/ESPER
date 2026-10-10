@@ -107,16 +107,15 @@ static void DumpCtda(const uint8_t* d, uint32_t n, const Plugin& p) {
 }
 
 static void DumpRecord(const Plugin& p, const RecordNode* node) {
-    char err[256] = {};
-    const std::span<const uint8_t> payload =
-        const_cast<RecordNode*>(node)->Payload(err, sizeof(err));
+    const auto pr = const_cast<RecordNode*>(node)->Payload();
     const FormKey key = p.FormIdToKey(node->header.formId);
     std::printf("== %s  %s  raw=0x%08X  flags=0x%08X%s%s  dataSize=%u\n",
                 TagOf(node->header.sig).c_str(), key.ToString().c_str(),
                 node->header.formId, node->header.flags,
                 node->Compressed() ? " [zip]" : "",
                 node->Deleted() ? " [del]" : "", node->header.dataSize);
-    if (!payload.data()) { std::printf("   (payload unavailable: %s)\n", err); return; }
+    if (!pr) { std::printf("   (payload unavailable: %s)\n", pr.error().message.c_str()); return; }
+    const std::span<const uint8_t> payload = *pr;
 
     SubIterator it(payload);
     SubView sub;
@@ -161,10 +160,9 @@ static void DumpRecord(const Plugin& p, const RecordNode* node) {
 }
 
 static std::string EdidOf(const Plugin& p, const RecordNode* node) {
-    char err[256] = {};
-    const auto payload = const_cast<RecordNode*>(node)->Payload(err, sizeof(err));
-    if (!payload.data()) return {};
-    SubIterator it(payload);
+    const auto payload = const_cast<RecordNode*>(node)->Payload();
+    if (!payload) return {};
+    SubIterator it(*payload);
     SubView sub;
     while (it.Next(sub))
         if (sub.sig == Sig4("EDID")) return ReadZString(sub);
@@ -202,10 +200,8 @@ int main(int argc, char** argv) {
     const std::string cmd  = argv[2];
 
     Plugin p;
-    p.filename = path.substr(path.find_last_of("/\\") + 1);
-    char err[512] = {};
-    if (!p.Load(path, err, sizeof(err))) {
-        std::printf("FAIL load %s: %s\n", path.c_str(), err);
+    if (auto loaded = p.Load(path); !loaded) {
+        std::printf("FAIL load %s: %s\n", path.c_str(), loaded.error().message.c_str());
         return 1;
     }
     std::printf("# %s  %zu records  %zu masters%s\n\n", p.filename.c_str(),

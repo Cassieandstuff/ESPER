@@ -13,11 +13,12 @@
 //   esper::LoadOrderDocument doc;
 //   esper::LoadOrderOptions opt;
 //   opt.dataFolder = R"(C:\Steam\steamapps\common\Skyrim Special Edition\Data)";
-//   doc.Load(opt);                                   // plugins.txt from %LOCALAPPDATA%
+//   if (auto ok = doc.Load(opt); !ok) return ok.error();   // plugins.txt from %LOCALAPPDATA%
 //   for (auto* r : doc.Search(esper::Sig4("NPC_"), "Lydia")) {
-//       auto d = doc.Decode(*r);
-//       esper::view::Npc npc(d->record);
-//       ...
+//       auto d = doc.Decode(*r);                          // Result<DecodedRecord>
+//       if (!d) continue;
+//       auto npc = esper::view::As<esper::view::Npc>(d->record);
+//       std::string name = doc.Text(*d, *npc->FullName());
 //   }
 //
 // Loading costs a header scan per plugin: record payloads are views into the
@@ -69,7 +70,7 @@ public:
     // Resolves and loads the load order. A plugin that fails to load is
     // skipped and reported in Warnings(); a load order that can't be resolved
     // at all (no plugins.txt, no Data folder) fails.
-    bool Load(const LoadOrderOptions& options, std::string* err = nullptr);
+    Result<void> Load(const LoadOrderOptions& options);
     bool IsLoaded() const { return loaded_; }
 
     const LoadOrderOptions&                     Options() const { return options_; }
@@ -101,15 +102,16 @@ public:
     }
 
     // Decodes with the schema engine (schema::Main()).
-    std::optional<DecodedRecord> Decode(const ResolvedRecord& r, std::string* err = nullptr) const;
-    std::optional<DecodedRecord> Decode(const FormKey& key,
-                                        ResolveTarget target = ResolveTarget::Winner,
-                                        std::string* err = nullptr) const;
+    Result<DecodedRecord> Decode(const ResolvedRecord& r) const;
+    Result<DecodedRecord> Decode(const FormKey& key,
+                                 ResolveTarget target = ResolveTarget::Winner) const;
 
     // ── Names ────────────────────────────────────────────────────────────────
     // The text of an lstring value from a record of `owner` (its inline text,
-    // or a string-table lookup when `owner` is localized). "" when missing.
-    std::string Text(const Plugin& owner, const LocalizedString& s, schema::StrTable table) const;
+    // or a lookup in the string table the schema gives the field when `owner`
+    // is localized). "" when missing.
+    std::string Text(const Plugin& owner, const LocalizedString& s) const;
+    std::string Text(const DecodedRecord& from, const LocalizedString& s) const;
     std::string EditorId(const ResolvedRecord& r) const;
     std::string Name(const ResolvedRecord& r) const;     // FULL, resolved; "" if none
     // Winning records of `sig` whose EditorID or name contains `text`
@@ -131,7 +133,7 @@ public:
     // Refuses records that live in cell, worldspace or topic children
     // (REFR/ACHR/LAND/NAVM/..., CELL, INFO), and records whose FormIDs or
     // strings aren't all visible to the schema (Record::RemapSafe).
-    RecordNode* OverrideInto(Plugin& target, const FormKey& key, std::string* err = nullptr) const;
+    Result<RecordNode*> OverrideInto(Plugin& target, const FormKey& key) const;
 
     // ── Snapshot ─────────────────────────────────────────────────────────────
     // The resolved load order as JSON (folders, language, and each plugin's

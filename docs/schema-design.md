@@ -346,39 +346,56 @@ These go in the spec, because anyone else's engine has to behave the same way:
   A group instance is a range of nodes. Encode order is node order. A decoded value is cached on its
   node, so repeated access doesn't re-decode. (Mutagen's overlays re-decode on every access.)
 - **Value kinds:** `int`, `uint`, `float`, `string`, `formid`, `lstring`, `bytes`, `struct`, `array`.
-- **API sketch:**
+- **API conventions** (from the API pass, 2026-10-10):
+  - **Errors:** every fallible call returns `esper::Result<T>`, which is
+    `std::expected<T, esper::Error>`. There are no `char*` error buffers and no bool plus
+    out-parameter pairs.
+  - **Records come back by value:** `Record::Decode(plugin, node)` → `Result<Record>`, and
+    `Record::Create(plugin, sig)` makes a new, empty record. `Record::Commit` refuses a record of
+    another type.
+  - **Typed views are checked:** `view::As<View>(rec)` → `std::optional<View>`, `nullopt` for
+    another record type. There's no public `View(Record&)` constructor.
+  - **Plugins:** `Load(path)` names the plugin from the path. `Records(sig)` lists records in file
+    order, and `Find(formId)` looks one up. `SavePlugin` finalizes a plugin edited through the
+    mutation API.
+  - **FormIDs** in callbacks are `FormId`. `FormKey::Parse` is the inverse of `ToString`.
 
   ```cpp
   #include <ESPER.h>
-  namespace f = esper::fields;
 
-  esper::Record npc = esper::Decode(node, ctx);
-  esper::FormId race = npc.Get(f::NPC_::race);          // typed by the handle
-  npc.Set(f::NPC_::race, newRace);                      // marks the subrecord dirty
-  for (esper::GroupView layer : raceRec.Groups(f::RACE::tintLayers))
-      use(layer.Get(f::RACE::tintLayers::texture));
-  npc.Find("NPC_/race");                                // string paths for tools/UIs
-  npc.VisitFormIds([](uint32_t& id) { /* remap */ });   // refuses if unsafe
-  esper::Encode(npc, writer);
+  esper::Plugin plugin;
+  if (auto ok = plugin.Load(path); !ok) return ok.error();
+  for (esper::RecordNode* node : plugin.Records(esper::Sig4("NPC_"))) {
+      auto rec = esper::Record::Decode(plugin, *node);      // Result<Record>
+      if (!rec) continue;
+      auto npc = esper::view::As<esper::view::Npc>(*rec);   // checked
+      npc->SetEditorId("Renamed");                          // marks the subrecord dirty
+      esper::Record::Commit(plugin, *node, *rec);
+  }
+  esper::SavePlugin(plugin, outPath);                       // finalizes the edited plugin
+
+  rec->Find("maleModel/path");                              // string paths for tools/UIs
+  rec->VisitFormIds([](esper::FormId& id) { /* remap */ }); // refuses if unsafe
   ```
 
-- **Typed views (generated, `Views.h`).** One small class per record, struct and group, wrapping an
-  `esper::Record` (or a node range) without owning it. Every accessor is a one-line call through a
-  handle, so a view is ergonomics only: all serialization stays in the one interpreted engine.
+- **Typed views (generated, `Views.h`).** One small class per record, struct and group, wrapping a
+  position in an `esper::Record` without owning it. Each accessor is a one-line call into the
+  engine, so a view is ergonomics only: all serialization stays in the one interpreted engine.
 
   ```cpp
-  esper::view::Npc npc = doc.Decode<esper::view::Npc>(key);
-  esper::Link<esper::view::Race> race = npc.Race();    // = rec.Get(f::NPC_::race)
-  npc.SetRace(otherRace);                               // = rec.Set(...), marks dirty
-  for (esper::view::RaceTintLayer layer : raceView.TintLayers())
+  auto d = doc.Decode(key);                                 // Result<DecodedRecord>
+  auto npc = esper::view::As<esper::view::Npc>(d->record);
+  std::string name = doc.Text(*d, *npc->FullName());        // the field's string table
+  for (esper::view::RaceTintLayers layer : race->TintLayers())
       use(layer.Texture(), layer.Presets());
-  esper::view::Race r = doc.Resolve(race);              // typed link -> typed view
+  const esper::ResolvedRecord* target = doc.Follow(*d->source, *armor->Enchantment());  // Link<View>
   ```
 
-  - **Optional members** return `std::optional<T>`. Repeated members and groups return ranges.
-  - **Unions** return a small generated variant with `Is<Case>()` / `As<Case>()`.
-  - **`formid` with `to:`** becomes `Link<View>`, which a `LoadOrderDocument` resolves to the
-    target's view. A `formid` without `to:` stays a plain `FormId`.
+  - **Optional members** return `std::optional<T>`. Repeated members and groups return vectors.
+  - **Unions** get a generated `<Acc>Kind` enum of their cases, `<Acc>Case()` (which case was
+    decoded), `<Acc>Is<Case>()`, and an accessor per named case's payload.
+  - **`formid` with `to:`** becomes `Link<View>`, which `LoadOrderDocument::Follow` resolves and
+    checks against the target type. A `formid` without `to:` stays a plain `FormId`.
   - **Generated output** is accessors only, with no read or write code. That keeps it small,
     unlike Mutagen's ~1.4M generated lines for Skyrim.
 
@@ -596,9 +613,26 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    her localized name and her race link resolves to NordRace. 55 vanilla records override into a
    new plugin, which saves and reloads clean; 45 are refused, all for opaque blobs. 49
    worldspaces index in 175 ms.
-6. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
+6. **API pass (2026-10-10): done except handles.** A usability review of the consumer surface
+   found that SCT used none of the schema engine. It used the typed path plus hand-walked
+   subrecords, and built its own facade over ESPER's gaps. Changes:
+   - `Result<T>` errors everywhere;
+   - checked views (`view::As`);
+   - records by value;
+   - `Plugin::Load` names the plugin (a bug: bugs.md);
+   - `Plugin::Records`/`Find`;
+   - `SavePlugin` auto-finalizes;
+   - union case enums;
+   - `LocalizedString` carries its table, so `doc.Text(decoded, value)` needs nothing else;
+   - `FormKey::Parse`;
+   - `FormId` in FormID callbacks;
+   - `SigName`.
+
+   **Open:** whether field handles (`Fields.h`) stay public. Nothing outside tests uses them, and
+   they still skip the record-type check that views now have.
+7. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
    ESPER pin is bumped.
-7. **Delete the typed world:** `Records*.h`, the `Field<>`/`MakeSchema` templates, the old
+8. **Delete the typed world:** `Records*.h`, the `Field<>`/`MakeSchema` templates, the old
    `SchemaRegistry`, `CtdaFunctions.cpp` (now `tables/ctda-functions.yaml`), and the hand-written
    VMAD codec.
 
