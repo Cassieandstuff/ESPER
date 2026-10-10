@@ -7,5 +7,50 @@ members:
   - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
   - { sig: DESC, name: description, type: lstring, table: dlstrings }   # DESC
   - { sig: ICON, name: icon, type: zstring }   # ICON
-  - { sig: NNAM, name: nextPerk, type: formid }   # NNAM
+  - { sig: NNAM, name: nextPerk, type: formid, to: [PERK] }
   - { use: Condition, name: conditions, repeat: true }
+  # step 4 (language 0.5), from esm-dump + schema-probe evidence:
+  - sig: DATA
+    name: data
+    fields:
+      - { name: trait,    type: u8 }
+      - { name: level,    type: u8 }
+      - { name: numRanks, type: u8 }
+      - { name: playable, type: u8 }
+      - { name: hidden,   type: u8 }
+  - group: entries
+    repeat: true
+    open: PRKE
+    end: PRKF
+    members:
+      - { sig: PRKE, name: header, fields: [ { name: type, type: u8 }, { name: rank, type: u8 }, { name: priority, type: u8 } ] }
+      - sig: DATA
+        name: data
+        union:
+          by: size
+          cases:
+            - { when: 8, name: questStage, fields: [ { name: quest, type: formid, to: [QUST] }, { name: stage, type: u8 }, { name: unknown, type: "u8[3]" } ] }
+            - { when: 4, name: ability,    type: formid, to: [SPEL] }
+            - { when: 3, name: entryPoint, fields: [ { name: entryPoint, type: u8 }, { name: function, type: u8 }, { name: conditionTabCount, type: u8 } ] }
+      - group: conditionTabs
+        repeat: true
+        open: PRKC
+        members:
+          - { sig: PRKC, name: runOn, type: u8 }
+          - { use: Condition, name: conditions, repeat: true }
+      - { sig: EPFT, name: functionType, type: u8 }
+      - { sig: EPF2, name: buttonLabel,  type: lstring, table: strings }
+      - { sig: EPF3, name: scriptFlags,  type: u32 }
+      # By the preceding EPFT, from the vanilla distribution: 1 float, 2 two
+      # floats, 4/5 SPEL (all 196 values resolve), 6 text, 7 a non-FormID word.
+      - sig: EPFD
+        name: functionData
+        union:
+          by: { member: functionType }
+          cases:
+            - { when: 1,      name: value,    type: f32 }
+            - { when: 2,      name: range,    type: "f32[2]" }
+            - { when: [4, 5], name: spell,    type: formid, to: [SPEL] }
+            - { when: 6,      name: text,     type: zstring }
+            - { when: 7,      name: unknown7, type: u32 }
+      - { sig: PRKF, name: end, type: marker }

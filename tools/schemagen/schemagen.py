@@ -29,7 +29,7 @@ try:
 except ImportError:  # pragma: no cover
     sys.exit("schemagen: PyYAML is required (pip install pyyaml)")
 
-LANGUAGE_VERSION = "0.3"
+LANGUAGE_VERSION = "0.5"
 
 SCALAR_KINDS = {
     "u8": ("U8", "uint8_t"), "u16": ("U16", "uint16_t"), "u32": ("U32", "uint32_t"),
@@ -49,10 +49,7 @@ FLAG_FORMIDS_NONE = 0x01
 FLAG_REMAP_UNSAFE = 0x02
 
 # Constructs specified by the design but not in this language version: reject by name.
-NOT_YET = {
-    "open": "group open markers", "end": "group end markers", "enum": "enum hints",
-    "flags": "flag hints", "unit": "unit hints",
-}
+NOT_YET = {"enum": "enum hints", "flags": "flag hints", "unit": "unit hints"}
 # Options that shape a value's type (allowed wherever a value is described).
 VALUE_OPTS = {"type", "fields", "union", "if", "table", "size", "formIds", "to", "remapUnsafe"}
 
@@ -173,6 +170,8 @@ class Group:
     members: list
     ordered: bool
     entries: list = field(default_factory=list)   # (sig, member index)
+    open_sig: str | None = None                   # delimited: the opening sig (first member)
+    end_sig: str | None = None                    # delimited: the closing sig (last member)
 
 
 class Schema:
@@ -193,6 +192,8 @@ class Schema:
         self.lookups: list[tuple[str, str]] = [] # (table, column)
         self.value_ids: dict[str, int] = {}      # interned lookup values
         self.pending_field_refs: list[tuple[str, str]] = []
+        self.pending_member_refs: list[tuple[str, str]] = []
+        self.all_member_names: set[str] = set()
 
     # ── loading ──────────────────────────────────────────────────────────────
 
@@ -486,6 +487,14 @@ class Schema:
             node.sel_field = self.field_ref(where, by["field"])
             node.sel_mask = as_int(where, by.get("mask", 0))
             node.sel_json = dict(by)
+        elif isinstance(by, dict) and "member" in by:
+            check_keys(where, by, {"member"})
+            if not isinstance(by["member"], str):
+                fail(where, "a member selector names a subrecord member")
+            node.selector = "Member"
+            node.sel_field = by["member"]
+            node.sel_json = dict(by)
+            self.pending_member_refs.append((where, by["member"]))
         elif isinstance(by, dict) and "lookup" in by:
             check_keys(where, by, {"lookup"})
             lk = by["lookup"]
@@ -506,8 +515,8 @@ class Schema:
             node.lookup = self.lookups.index(pair)
             node.sel_json = {"lookup": dict(lk)}
         else:
-            fail(where, "union 'by' must be size, formVersion, record, { field[, mask] } or "
-                        "{ lookup: { table, key, column } }")
+            fail(where, "union 'by' must be size, formVersion, record, { field[, mask] }, "
+                        "{ member } or { lookup: { table, key, column } }")
 
         cases = u.get("cases")
         if not isinstance(cases, list):
@@ -614,7 +623,7 @@ class Schema:
     # ── groups ───────────────────────────────────────────────────────────────
 
     def build_group(self, where: str, members, view_name: str, ordered: bool,
-                    remap: dict[str, str]) -> int:
+                    remap: dict[str, str], open_sig=None, end_sig=None) -> int:
         if not isinstance(members, list) or not members:
             fail(where, "a scope needs a non-empty members list")
         group = Group(name=view_name, members=[], ordered=ordered)
@@ -634,7 +643,7 @@ class Schema:
                     if gname not in self.group_defs:
                         fail(mw, f"unknown reusable group {gname!r}")
                     gd = self.group_defs[gname]
-                    check_keys(gd["_where"], gd, {"group", "members", "_where"})
+                    check_keys(gd["_where"], gd, {"group", "members", "open", "end", "_where"})
                     mname = check_name(mw, m.get("name"))
                     sigs = m.get("sigs", {}) or {}
                     if not isinstance(sigs, dict):
@@ -648,12 +657,13 @@ class Schema:
                     for s0 in used:          # the use's own remap first, then any enclosing one
                         s1 = sub.get(s0, s0)
                         merged[s0] = remap.get(s1, s1)
-                    child = self.build_group(gd["_where"], gd["members"], gname, True, merged)
+                    child = self.build_group(gd["_where"], gd["members"], gname, True, merged,
+                                             gd.get("open"), gd.get("end"))
                 else:
-                    check_keys(mw, m, {"group", "members", "repeat", "optional"})
+                    check_keys(mw, m, {"group", "members", "repeat", "optional", "open", "end"})
                     mname = check_name(mw, m.get("group"))
                     child = self.build_group(mw, m.get("members"), view_name + pascal(mname),
-                                             True, remap)
+                                             True, remap, m.get("open"), m.get("end"))
                 member = Member(name=mname, is_group=True, group=child,
                                 repeat=bool(m.get("repeat", False)),
                                 optional=bool(m.get("optional", False)))
@@ -663,6 +673,7 @@ class Schema:
                 sig = remap.get(sig, sig)
                 mname = check_name(mw, m.get("name"))
                 tidx = self.value_type(mw, m, view_name + pascal(mname))
+                self.all_member_names.add(mname)
                 member = Member(name=mname, is_group=False, sig=sig, type=tidx,
                                 repeat=bool(m.get("repeat", False)),
                                 optional=bool(m.get("optional", False)),
@@ -687,9 +698,20 @@ class Schema:
                 fail(where, f"{mem.name}: countOf target must be repeated or an array")
             mem.count_of = target[0]
 
+        if open_sig is not None or end_sig is not None:  # delimited group
+            self.delimit(where, group, open_sig, end_sig, remap)
+
         seen: dict[str, int] = {}                        # entry signatures
         for i, mem in enumerate(group.members):
-            sigs = [mem.sig] if not mem.is_group else [s for s, _ in self.groups[mem.group].entries]
+            if (group.open_sig and group.open_sig == group.end_sig and i == len(group.members) - 1
+                    and not mem.is_group and mem.sig == group.end_sig):
+                continue                                 # the same sig opens and ends: resolved by position
+            if not mem.is_group:
+                sigs = [mem.sig]
+            elif self.groups[mem.group].open_sig:       # a delimited child is entered by its opener only
+                sigs = [self.groups[mem.group].open_sig]
+            else:
+                sigs = [s for s, _ in self.groups[mem.group].entries]
             for s in sigs:
                 if s in seen:
                     a, b = group.members[seen[s]].name, mem.name
@@ -697,6 +719,22 @@ class Schema:
                 seen[s] = i
                 group.entries.append((s, i))
         return gidx
+
+    def delimit(self, where: str, group: Group, open_sig, end_sig, remap: dict[str, str]):
+        if open_sig is None:
+            fail(where, "'end' needs 'open': a delimited group is entered by its opener")
+        open_sig = remap.get(check_sig(where, open_sig), open_sig)
+        first = group.members[0]
+        if first.is_group or first.sig != open_sig or first.repeat:
+            fail(where, f"open: {open_sig} must be the group's first member, singular")
+        group.open_sig = open_sig
+        group.ordered = False                       # unordered inside, like a record root
+        if end_sig is not None:
+            end_sig = remap.get(check_sig(where, end_sig), end_sig)
+            last = group.members[-1]
+            if last.is_group or last.sig != end_sig or last.repeat or len(group.members) < 2:
+                fail(where, f"end: {end_sig} must be the group's last member, singular")
+            group.end_sig = end_sig
 
     def group_sigs(self, members) -> set[str]:
         out = set()
@@ -732,6 +770,9 @@ class Schema:
         for where, fname in self.pending_field_refs:
             if fname not in self.all_field_names:
                 fail(where, f"selector field {fname!r} isn't a field anywhere in the schema")
+        for where, mname in self.pending_member_refs:
+            if mname not in self.all_member_names:
+                fail(where, f"selector member {mname!r} isn't a subrecord member anywhere in the schema")
         self.check_view_names()
 
     def check_view_names(self):
@@ -804,7 +845,7 @@ def flatten(schema: Schema):
     for g in schema.groups:
         group_rows.append(dict(name=g.name, firstMember=len(members), memberCount=len(g.members),
                                firstEntry=len(entries), entryCount=len(g.entries),
-                               ordered=g.ordered))
+                               ordered=g.ordered, open=g.open_sig, end=g.end_sig))
         members.extend(g.members)
         entries.extend(g.entries)
     lookups, lookup_rows = [], []
@@ -854,9 +895,13 @@ def emit_tables(schema: Schema, ns: str) -> str:
         f"{m.count_of if isinstance(m.count_of, int) else -1} }},"
         for m in f["members"]], "{}")
     arr("EntryDef", "kEntries", [f"    {{ SigOf(\"{s}\"), {mi} }}," for s, mi in f["entries"]], "{}")
+    def sig_or_zero(sig):
+        return f'SigOf("{sig}")' if sig else "0"
+
     arr("GroupDef", "kGroups", [
         f"    {{ {c_str(g['name'])}, {g['firstMember']}, {g['memberCount']}, {g['firstEntry']}, "
-        f"{g['entryCount']}, {'true' if g['ordered'] else 'false'} }},  // {i}"
+        f"{g['entryCount']}, {'true' if g['ordered'] else 'false'}, "
+        f"{sig_or_zero(g['open'])}, {sig_or_zero(g['end'])} }},  // {i}"
         for i, g in enumerate(f["groups"])], "{}")
     arr("RecordDef", "kRecords", [f"    {{ SigOf(\"{sig}\"), {c_str(name)}, {root} }},"
                                   for sig, name, root in schema.records], "{}")
@@ -1183,8 +1228,12 @@ def emit_json(schema: Schema) -> str:
         ms = []
         for m in g.members:
             if m.is_group:
-                d = {"name": m.name, "group": schema.groups[m.group].name,
-                     "members": scope_json(m.group)}
+                cg = schema.groups[m.group]
+                d = {"name": m.name, "group": cg.name, "members": scope_json(m.group)}
+                if cg.open_sig:
+                    d["open"] = cg.open_sig
+                if cg.end_sig:
+                    d["end"] = cg.end_sig
             else:
                 d = {"name": m.name, "sig": m.sig, "type": type_json(m.type)}
                 if isinstance(m.count_of, int):

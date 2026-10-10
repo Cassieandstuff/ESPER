@@ -547,6 +547,37 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    - CELL `TVDT` (8,595): unexplained unaligned hits, so not provably FormID-free;
    - sectioned records QUST, SCEN, PACK and PERK, which need `open:`/`end:` group markers;
    - a long tail of small subrecords.
+
+   **Sectioned records (2026-10-09).** Two language versions:
+   - **0.4:** delimited groups (`open:`/`end:`);
+   - **0.5:** the `member` selector, and `open`/`end` sharing one signature.
+
+   With them, QUST, PERK, SCEN and PACK are modeled from vanilla evidence:
+   - **QUST:** stages with nested log entries, objectives with targets, and reference and location
+     aliases;
+   - **PERK:** entries `PRKE` … `PRKF` with a `DATA` size union, condition tabs, and `EPFD` chosen
+     by the sibling `EPFT`;
+   - **SCEN:** phases `HNAM` … `HNAM` with completion blocks, actors, and actions `ANAM` … `ANAM`;
+   - **PACK:** data inputs and procedure-tree branches opened by `ANAM`, input names opened by
+     `UNAM`, and the begin/end/change event blocks.
+
+   Every section count was checked against its marker count on the masters. Examples:
+   - 7,826 QUST stages for 7,826 `INDX`;
+   - 70,452 PACK sections for 70,452 `ANAM`;
+   - every alias, PERK entry and SCEN action closed by its end marker;
+   - each PACK input type lands on its own value member: Bool → `CNAM` u8, Float/Int → `CNAM`
+     u32, Location → `PLDT`, SingleRef → `PTDA`, Topic → `PDTO`.
+
+   Raw left: QUST 0 (typed path 131,700 unknown), PERK 0 (5,804), SCEN 6 (282,636), PACK 1
+   (314,480).
+
+   Gate result:
+   - 98.32% of subrecords modeled (from 85.76%);
+   - 114,643 records remap-safe that the typed path couldn't remap (from 104,539);
+   - 252,304 typed links verified, 0 wrong;
+   - remap refusals unchanged at 29,119.
+
+   Still opaque: NAVM `NVNM`, CELL `TVDT`, INFO response data, and the long tail.
 5. **Done (2026-10-09). `esper::loadorder`.** `LoadOrderDocument` wraps
    `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex`. It adds:
    - `Resolve` (winner/origin) and `Follow` (FormIDs and typed links);

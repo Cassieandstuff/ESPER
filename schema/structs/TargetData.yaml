@@ -1,0 +1,15 @@
+# PTDA (PACK). By `type`, from the vanilla distribution: 0 REFR/ACHR, 1 any base
+# object, 3 KYWD; 2, 4, 6 are ints. Types absent from vanilla are refused.
+struct: TargetData
+size: 12
+fields:
+  - { name: type, type: i32 }
+  - name: value
+    union:
+      by: { field: type }
+      cases:
+        - { when: 0, name: reference, type: formid, to: [REFR, ACHR, PGRE, PHZD] }
+        - { when: 1, name: object,    type: formid }
+        - { when: 3, name: keyword,   type: formid, to: [KYWD] }
+        - { when: [2, 4, 6], name: number, type: i32 }
+  - { name: count, type: i32 }

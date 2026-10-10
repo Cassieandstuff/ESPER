@@ -1,0 +1,39 @@
+# A quest alias, ALST ... ALED (reference alias) or, used with sigs: { ALST: ALLS },
+# ALLS ... ALED (location alias). Members are from esm-dump + tools/schema-probe
+# evidence on the vanilla masters; every `to:` is verified by the gate.
+group: QuestAlias
+open: ALST
+end: ALED
+members:
+  - { sig: ALST, name: id,               type: u32 }
+  - { sig: ALID, name: name,             type: zstring }
+  - { sig: FNAM, name: flags,            type: u32 }
+  - { sig: ALFI, name: forcedIntoAlias,  type: i32 }
+  - { sig: ALFL, name: specificLocation, type: formid, to: [LCTN] }
+  - { sig: ALFR, name: forcedReference,  type: formid, to: [REFR, ACHR, PGRE, PHZD] }
+  - { sig: ALUA, name: uniqueActor,      type: formid, to: [NPC_] }
+  - { sig: ALFA, name: locationAlias,    type: i32 }
+  - { sig: ALRT, name: locationRefType,  type: formid, to: [LCRT] }
+  - { sig: ALEQ, name: externalQuest,    type: formid, to: [QUST] }
+  - { sig: ALEA, name: externalAlias,    type: i32 }
+  - { sig: ALCO, name: createObject,     type: formid }
+  - { sig: ALCA, name: createAtAlias,    type: i32 }
+  - { sig: ALCL, name: createLevel,      type: u32 }
+  - { sig: ALNA, name: nearAlias,        type: i32 }
+  - { sig: ALNT, name: nearType,         type: u32 }
+  - { sig: ALFE, name: fromEvent,        type: sig4 }
+  - { sig: ALFD, name: eventData,        type: sig4 }
+  - { sig: KNAM, name: keyword,          type: formid, to: [KYWD] }
+  - { use: Condition, name: conditions, repeat: true }
+  - { sig: KSIZ, name: keywordCount,     type: u32, countOf: keywords }
+  - { sig: KWDA, name: keywords,         type: "formid[]", to: [KYWD] }
+  - { sig: COCT, name: itemCount,        type: u32, countOf: items }
+  - { sig: CNTO, name: items,            type: ContainerEntry, repeat: true }
+  - { sig: SPOR, name: spectatorOverride, type: formid, to: [FLST] }
+  - { sig: ECOR, name: combatOverride,   type: formid, to: [FLST] }
+  - { sig: ALDN, name: displayName,      type: formid, to: [MESG] }
+  - { sig: ALSP, name: spells,           type: formid, repeat: true, to: [SPEL] }
+  - { sig: ALFC, name: factions,         type: formid, repeat: true, to: [FACT] }
+  - { sig: ALPC, name: packages,         type: formid, repeat: true, to: [PACK] }
+  - { sig: VTCK, name: voiceTypes,       type: formid, to: [FLST, VTYP, NPC_] }
+  - { sig: ALED, name: end,              type: marker }

@@ -1,10 +1,79 @@
-# Seeded from the typed path (ScenRec, include/ESPER/Records*.h) in migration step 2.
+# Seeded from the typed path (ScenRec) in migration step 2; phases, actors and
+# actions modeled in step 4 (language 0.5) from esm-dump + schema-probe evidence.
+# Legacy SCDA (compiled script) and SCRO stay unmodeled: too few vanilla samples
+# to type them, so records carrying them keep refusing FormID remap.
 record: SCEN
 name: Scene
 members:
-  - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: Vmad }
-  - { sig: FNAM, name: flags, type: u32 }   # FNAM
-  - { sig: PNAM, name: quest, type: formid }   # PNAM
-  - { sig: INAM, name: lastActionIndex, type: u32 }   # INAM
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: VMAD, name: vmad,     type: Vmad }
+  - { sig: FNAM, name: flags,    type: u32 }
+  - group: phases
+    repeat: true
+    open: HNAM
+    end: HNAM
+    members:
+      - { sig: HNAM, name: start, type: marker }
+      - { sig: NAM0, name: name,  type: zstring }
+      - { use: Condition, name: startConditions, repeat: true }
+      # NEXT ... NEXT: completion conditions and the (legacy) begin script.
+      - group: completion
+        open: NEXT
+        end: NEXT
+        members:
+          - { sig: NEXT, name: open, type: marker }
+          - { use: Condition, name: conditions, repeat: true }
+          - { sig: SCHR, name: beginScriptHeader, type: "u32[5]" }
+          - { sig: SCTX, name: beginScriptText,   type: bytes, formIds: none }
+          - { sig: QNAM, name: beginScriptQuests, type: formid, repeat: true, to: [QUST] }
+          - { sig: NEXT, name: close, type: marker }
+      - { sig: SCHR, name: endScriptHeader, type: "u32[5]" }
+      - { sig: SCTX, name: endScriptText,   type: bytes, formIds: none }
+      - { sig: QNAM, name: endScriptQuests, type: formid, repeat: true, to: [QUST] }
+      - { sig: WNAM, name: editorWidth, type: u32 }
+      - { sig: HNAM, name: end, type: marker }
+  - group: actors
+    repeat: true
+    open: ALID
+    members:
+      - { sig: ALID, name: aliasId,       type: i32 }
+      - { sig: LNAM, name: flags,         type: u32 }
+      - { sig: DNAM, name: behaviorFlags, type: u32 }
+  - group: actions
+    repeat: true
+    open: ANAM
+    end: ANAM
+    members:
+      - { sig: ANAM, name: type,        type: u16 }        # 0 dialogue, 1 package, 2 timer, ...
+      - { sig: NAM0, name: name,        type: zstring }
+      - { sig: ALID, name: actorId,     type: i32 }
+      - { sig: INAM, name: index,       type: u32 }
+      - { sig: FNAM, name: flags,       type: u32 }
+      - { sig: SNAM, name: startPhaseOrTimer, type: u32, repeat: true }   # a timer action adds its seconds (f32) as a second SNAM
+      - { sig: ENAM, name: endPhase,    type: u32 }
+      - { sig: PNAM, name: packages,    type: formid, repeat: true, to: [PACK] }
+      - { sig: DATA, name: topic,       type: formid, to: [DIAL] }
+      - { sig: HTID, name: headTrackActorId, type: i32, repeat: true }
+      - { sig: DMAX, name: loopingMax,  type: f32 }
+      - { sig: DMIN, name: loopingMin,  type: f32 }
+      - { sig: DEMO, name: emotionType, type: u32 }
+      - { sig: DEVA, name: emotionValue, type: u32 }
+      - { sig: SCHR, name: scriptHeader, type: "u32[5]" }              # legacy action script
+      - { sig: SCTX, name: scriptText,   type: bytes, formIds: none }
+      - { sig: QNAM, name: scriptQuests, type: formid, repeat: true, to: [QUST] }
+      - { sig: ANAM, name: end,         type: marker }
+  # Legacy scene scripts after the actions: begin script, NEXT, end script.
+  - { sig: SCHR, name: beginScriptHeader, type: "u32[5]" }
+  - { sig: SCTX, name: beginScriptText,   type: bytes, formIds: none }
+  - { sig: QNAM, name: beginScriptQuests, type: formid, repeat: true, to: [QUST] }
+  - group: endScript
+    open: NEXT
+    members:
+      - { sig: NEXT, name: separator, type: marker }
+      - { sig: SCHR, name: header,    type: "u32[5]" }
+      - { sig: SCTX, name: text,      type: bytes, formIds: none }
+      - { sig: QNAM, name: quests,    type: formid, repeat: true, to: [QUST] }
+  - { sig: PNAM, name: quest,           type: formid, to: [QUST] }
+  - { sig: INAM, name: lastActionIndex, type: u32 }
+  - { sig: VNAM, name: unknownVnam,     type: "u32[4]" }
   - { use: Condition, name: conditions, repeat: true }

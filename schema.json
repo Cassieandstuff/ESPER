@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.1.0",
-  "languageVersion": "0.3",
+  "languageVersion": "0.5",
   "game": "Skyrim Special Edition",
   "tables": {
     "ctdaFunctions": {
@@ -11725,34 +11725,6 @@
           }
         },
         {
-          "name": "counter",
-          "sig": "PKCU",
-          "type": {
-            "kind": "struct",
-            "fields": [
-              {
-                "name": "dataInputCount",
-                "type": {
-                  "kind": "u32"
-                }
-              },
-              {
-                "name": "packageTemplate",
-                "type": {
-                  "kind": "formid"
-                }
-              },
-              {
-                "name": "versionCounter",
-                "type": {
-                  "kind": "u32"
-                }
-              }
-            ],
-            "name": "PackCounter"
-          }
-        },
-        {
           "name": "conditions",
           "group": "Condition",
           "members": [
@@ -12000,6 +11972,1010 @@
             }
           ],
           "repeat": true
+        },
+        {
+          "name": "idleFlags",
+          "sig": "IDLF",
+          "type": {
+            "kind": "u8"
+          }
+        },
+        {
+          "name": "idleCount",
+          "sig": "IDLC",
+          "type": {
+            "kind": "u8"
+          }
+        },
+        {
+          "name": "idleTimer",
+          "sig": "IDLT",
+          "type": {
+            "kind": "f32"
+          }
+        },
+        {
+          "name": "idleAnimations",
+          "sig": "IDLA",
+          "type": {
+            "kind": "array",
+            "element": {
+              "kind": "formid",
+              "to": [
+                "IDLE"
+              ]
+            }
+          }
+        },
+        {
+          "name": "combatStyle",
+          "sig": "CNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "CSTY"
+            ]
+          }
+        },
+        {
+          "name": "ownerQuest",
+          "sig": "QNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "QUST"
+            ]
+          }
+        },
+        {
+          "name": "counter",
+          "sig": "PKCU",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "dataInputCount",
+                "type": {
+                  "kind": "u32"
+                }
+              },
+              {
+                "name": "packageTemplate",
+                "type": {
+                  "kind": "formid"
+                }
+              },
+              {
+                "name": "versionCounter",
+                "type": {
+                  "kind": "u32"
+                }
+              }
+            ],
+            "name": "PackCounter"
+          }
+        },
+        {
+          "name": "sections",
+          "group": "PackageSections",
+          "members": [
+            {
+              "name": "type",
+              "sig": "ANAM",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "value",
+              "sig": "CNAM",
+              "type": {
+                "kind": "union",
+                "by": "size",
+                "cases": [
+                  {
+                    "when": 1,
+                    "name": "byte",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  },
+                  {
+                    "when": 4,
+                    "name": "word",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "location",
+              "sig": "PLDT",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "reference",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "REFR",
+                              "ACHR",
+                              "PGRE",
+                              "PHZD"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "cell",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "CELL"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 6,
+                          "name": "keyword",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "KYWD"
+                            ]
+                          }
+                        },
+                        {
+                          "when": [
+                            2,
+                            3,
+                            8,
+                            9,
+                            11,
+                            12
+                          ],
+                          "name": "number",
+                          "type": {
+                            "kind": "i32"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "radius",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  }
+                ],
+                "name": "LocationData"
+              }
+            },
+            {
+              "name": "target",
+              "sig": "PTDA",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "reference",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "REFR",
+                              "ACHR",
+                              "PGRE",
+                              "PHZD"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "object",
+                          "type": {
+                            "kind": "formid"
+                          }
+                        },
+                        {
+                          "when": 3,
+                          "name": "keyword",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "KYWD"
+                            ]
+                          }
+                        },
+                        {
+                          "when": [
+                            2,
+                            4,
+                            6
+                          ],
+                          "name": "number",
+                          "type": {
+                            "kind": "i32"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "count",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  }
+                ],
+                "name": "TargetData"
+              }
+            },
+            {
+              "name": "topic",
+              "sig": "TPIC",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "DIAL"
+                ]
+              }
+            },
+            {
+              "name": "topicValue",
+              "sig": "PDTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  },
+                  {
+                    "name": "topic",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "ref",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "DIAL"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "subtype",
+                          "type": {
+                            "kind": "sig4"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "name": "TopicData"
+              }
+            },
+            {
+              "name": "conditionCount",
+              "sig": "CITC",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "conditions",
+              "group": "Condition",
+              "members": [
+                {
+                  "name": "data",
+                  "sig": "CTDA",
+                  "type": {
+                    "kind": "struct",
+                    "fields": [
+                      {
+                        "name": "op",
+                        "type": {
+                          "kind": "u8"
+                        }
+                      },
+                      {
+                        "name": "unknown",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 3
+                        }
+                      },
+                      {
+                        "name": "comparison",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "op",
+                            "mask": 4
+                          },
+                          "cases": [
+                            {
+                              "when": 4,
+                              "name": "global",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "GLOB"
+                                ]
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "f32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "functionIndex",
+                        "type": {
+                          "kind": "u16"
+                        }
+                      },
+                      {
+                        "name": "pad",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 2
+                        }
+                      },
+                      {
+                        "name": "param1",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param1"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param2",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param2"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "runOnType",
+                        "type": {
+                          "kind": "u32"
+                        }
+                      },
+                      {
+                        "name": "reference",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "runOnType"
+                          },
+                          "cases": [
+                            {
+                              "when": 2,
+                              "name": "ref",
+                              "type": {
+                                "kind": "formid"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param3",
+                        "type": {
+                          "kind": "i32"
+                        }
+                      }
+                    ],
+                    "name": "ConditionData"
+                  }
+                },
+                {
+                  "name": "stringParam1",
+                  "sig": "CIS1",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                },
+                {
+                  "name": "stringParam2",
+                  "sig": "CIS2",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                }
+              ],
+              "repeat": true
+            },
+            {
+              "name": "branch",
+              "sig": "PRCB",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "subBranchCount",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  },
+                  {
+                    "name": "flags",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  }
+                ],
+                "name": "PackageSectionsBranch"
+              }
+            },
+            {
+              "name": "procedure",
+              "sig": "PNAM",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "dataInputIndices",
+              "sig": "PKC2",
+              "type": {
+                "kind": "u8"
+              },
+              "repeat": true
+            },
+            {
+              "name": "flagOverrides",
+              "sig": "PFOR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 3
+              },
+              "repeat": true
+            },
+            {
+              "name": "flagOverrides2",
+              "sig": "PFO2",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 4
+              },
+              "repeat": true
+            }
+          ],
+          "open": "ANAM",
+          "repeat": true
+        },
+        {
+          "name": "marker",
+          "sig": "XNAM",
+          "type": {
+            "kind": "u8"
+          }
+        },
+        {
+          "name": "inputs",
+          "group": "PackageInputs",
+          "members": [
+            {
+              "name": "index",
+              "sig": "UNAM",
+              "type": {
+                "kind": "u8"
+              }
+            },
+            {
+              "name": "name",
+              "sig": "BNAM",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "PNAM",
+              "type": {
+                "kind": "u32"
+              }
+            }
+          ],
+          "open": "UNAM",
+          "repeat": true
+        },
+        {
+          "name": "onBegin",
+          "group": "PackageEvent",
+          "members": [
+            {
+              "name": "marker",
+              "sig": "POBA",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "idle",
+              "sig": "INAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "IDLE"
+                ]
+              }
+            },
+            {
+              "name": "scriptHeader",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "scriptText",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "scriptQuests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "unknownTnam",
+              "sig": "TNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "topic",
+              "sig": "PDTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  },
+                  {
+                    "name": "topic",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "ref",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "DIAL"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "subtype",
+                          "type": {
+                            "kind": "sig4"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "name": "TopicData"
+              }
+            }
+          ],
+          "open": "POBA"
+        },
+        {
+          "name": "onEnd",
+          "group": "PackageEvent",
+          "members": [
+            {
+              "name": "marker",
+              "sig": "POEA",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "idle",
+              "sig": "INAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "IDLE"
+                ]
+              }
+            },
+            {
+              "name": "scriptHeader",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "scriptText",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "scriptQuests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "unknownTnam",
+              "sig": "TNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "topic",
+              "sig": "PDTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  },
+                  {
+                    "name": "topic",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "ref",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "DIAL"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "subtype",
+                          "type": {
+                            "kind": "sig4"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "name": "TopicData"
+              }
+            }
+          ],
+          "open": "POEA"
+        },
+        {
+          "name": "onChange",
+          "group": "PackageEvent",
+          "members": [
+            {
+              "name": "marker",
+              "sig": "POCA",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "idle",
+              "sig": "INAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "IDLE"
+                ]
+              }
+            },
+            {
+              "name": "scriptHeader",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "scriptText",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "scriptQuests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "unknownTnam",
+              "sig": "TNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "topic",
+              "sig": "PDTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  },
+                  {
+                    "name": "topic",
+                    "type": {
+                      "kind": "union",
+                      "by": {
+                        "field": "type"
+                      },
+                      "cases": [
+                        {
+                          "when": 0,
+                          "name": "ref",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "DIAL"
+                            ]
+                          }
+                        },
+                        {
+                          "when": 1,
+                          "name": "subtype",
+                          "type": {
+                            "kind": "sig4"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "name": "TopicData"
+              }
+            }
+          ],
+          "open": "POCA"
         }
       ]
     },
@@ -13066,7 +14042,10 @@
           "name": "nextPerk",
           "sig": "NNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "PERK"
+            ]
           }
         },
         {
@@ -13316,6 +14295,516 @@
               }
             }
           ],
+          "repeat": true
+        },
+        {
+          "name": "data",
+          "sig": "DATA",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "trait",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "level",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "numRanks",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "playable",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "hidden",
+                "type": {
+                  "kind": "u8"
+                }
+              }
+            ],
+            "name": "PerkData"
+          }
+        },
+        {
+          "name": "entries",
+          "group": "PerkEntries",
+          "members": [
+            {
+              "name": "header",
+              "sig": "PRKE",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "type",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  },
+                  {
+                    "name": "rank",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  },
+                  {
+                    "name": "priority",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  }
+                ],
+                "name": "PerkEntriesHeader"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "DATA",
+              "type": {
+                "kind": "union",
+                "by": "size",
+                "cases": [
+                  {
+                    "when": 8,
+                    "name": "questStage",
+                    "type": {
+                      "kind": "struct",
+                      "fields": [
+                        {
+                          "name": "quest",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "QUST"
+                            ]
+                          }
+                        },
+                        {
+                          "name": "stage",
+                          "type": {
+                            "kind": "u8"
+                          }
+                        },
+                        {
+                          "name": "unknown",
+                          "type": {
+                            "kind": "array",
+                            "element": {
+                              "kind": "u8"
+                            },
+                            "count": 3
+                          }
+                        }
+                      ],
+                      "name": "PerkEntriesDataQuestStage"
+                    }
+                  },
+                  {
+                    "when": 4,
+                    "name": "ability",
+                    "type": {
+                      "kind": "formid",
+                      "to": [
+                        "SPEL"
+                      ]
+                    }
+                  },
+                  {
+                    "when": 3,
+                    "name": "entryPoint",
+                    "type": {
+                      "kind": "struct",
+                      "fields": [
+                        {
+                          "name": "entryPoint",
+                          "type": {
+                            "kind": "u8"
+                          }
+                        },
+                        {
+                          "name": "function",
+                          "type": {
+                            "kind": "u8"
+                          }
+                        },
+                        {
+                          "name": "conditionTabCount",
+                          "type": {
+                            "kind": "u8"
+                          }
+                        }
+                      ],
+                      "name": "PerkEntriesDataEntryPoint"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "conditionTabs",
+              "group": "PerkEntriesConditionTabs",
+              "members": [
+                {
+                  "name": "runOn",
+                  "sig": "PRKC",
+                  "type": {
+                    "kind": "u8"
+                  }
+                },
+                {
+                  "name": "conditions",
+                  "group": "Condition",
+                  "members": [
+                    {
+                      "name": "data",
+                      "sig": "CTDA",
+                      "type": {
+                        "kind": "struct",
+                        "fields": [
+                          {
+                            "name": "op",
+                            "type": {
+                              "kind": "u8"
+                            }
+                          },
+                          {
+                            "name": "unknown",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 3
+                            }
+                          },
+                          {
+                            "name": "comparison",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "op",
+                                "mask": 4
+                              },
+                              "cases": [
+                                {
+                                  "when": 4,
+                                  "name": "global",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "GLOB"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "f32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "functionIndex",
+                            "type": {
+                              "kind": "u16"
+                            }
+                          },
+                          {
+                            "name": "pad",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 2
+                            }
+                          },
+                          {
+                            "name": "param1",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param1"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param2",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param2"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "runOnType",
+                            "type": {
+                              "kind": "u32"
+                            }
+                          },
+                          {
+                            "name": "reference",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "runOnType"
+                              },
+                              "cases": [
+                                {
+                                  "when": 2,
+                                  "name": "ref",
+                                  "type": {
+                                    "kind": "formid"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param3",
+                            "type": {
+                              "kind": "i32"
+                            }
+                          }
+                        ],
+                        "name": "ConditionData"
+                      }
+                    },
+                    {
+                      "name": "stringParam1",
+                      "sig": "CIS1",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "stringParam2",
+                      "sig": "CIS2",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "PRKC",
+              "repeat": true
+            },
+            {
+              "name": "functionType",
+              "sig": "EPFT",
+              "type": {
+                "kind": "u8"
+              }
+            },
+            {
+              "name": "buttonLabel",
+              "sig": "EPF2",
+              "type": {
+                "kind": "lstring",
+                "table": "strings"
+              }
+            },
+            {
+              "name": "scriptFlags",
+              "sig": "EPF3",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "functionData",
+              "sig": "EPFD",
+              "type": {
+                "kind": "union",
+                "by": {
+                  "member": "functionType"
+                },
+                "cases": [
+                  {
+                    "when": 1,
+                    "name": "value",
+                    "type": {
+                      "kind": "f32"
+                    }
+                  },
+                  {
+                    "when": 2,
+                    "name": "range",
+                    "type": {
+                      "kind": "array",
+                      "element": {
+                        "kind": "f32"
+                      },
+                      "count": 2
+                    }
+                  },
+                  {
+                    "when": [
+                      4,
+                      5
+                    ],
+                    "name": "spell",
+                    "type": {
+                      "kind": "formid",
+                      "to": [
+                        "SPEL"
+                      ]
+                    }
+                  },
+                  {
+                    "when": 6,
+                    "name": "text",
+                    "type": {
+                      "kind": "zstring"
+                    }
+                  },
+                  {
+                    "when": 7,
+                    "name": "unknown7",
+                    "type": {
+                      "kind": "u32"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "end",
+              "sig": "PRKF",
+              "type": {
+                "kind": "marker"
+              }
+            }
+          ],
+          "open": "PRKE",
+          "end": "PRKF",
           "repeat": true
         }
       ]
@@ -17651,10 +19140,886 @@
           }
         },
         {
+          "name": "phases",
+          "group": "ScenePhases",
+          "members": [
+            {
+              "name": "start",
+              "sig": "HNAM",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "name",
+              "sig": "NAM0",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "startConditions",
+              "group": "Condition",
+              "members": [
+                {
+                  "name": "data",
+                  "sig": "CTDA",
+                  "type": {
+                    "kind": "struct",
+                    "fields": [
+                      {
+                        "name": "op",
+                        "type": {
+                          "kind": "u8"
+                        }
+                      },
+                      {
+                        "name": "unknown",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 3
+                        }
+                      },
+                      {
+                        "name": "comparison",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "op",
+                            "mask": 4
+                          },
+                          "cases": [
+                            {
+                              "when": 4,
+                              "name": "global",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "GLOB"
+                                ]
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "f32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "functionIndex",
+                        "type": {
+                          "kind": "u16"
+                        }
+                      },
+                      {
+                        "name": "pad",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 2
+                        }
+                      },
+                      {
+                        "name": "param1",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param1"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param2",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param2"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "runOnType",
+                        "type": {
+                          "kind": "u32"
+                        }
+                      },
+                      {
+                        "name": "reference",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "runOnType"
+                          },
+                          "cases": [
+                            {
+                              "when": 2,
+                              "name": "ref",
+                              "type": {
+                                "kind": "formid"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param3",
+                        "type": {
+                          "kind": "i32"
+                        }
+                      }
+                    ],
+                    "name": "ConditionData"
+                  }
+                },
+                {
+                  "name": "stringParam1",
+                  "sig": "CIS1",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                },
+                {
+                  "name": "stringParam2",
+                  "sig": "CIS2",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                }
+              ],
+              "repeat": true
+            },
+            {
+              "name": "completion",
+              "group": "ScenePhasesCompletion",
+              "members": [
+                {
+                  "name": "open",
+                  "sig": "NEXT",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "conditions",
+                  "group": "Condition",
+                  "members": [
+                    {
+                      "name": "data",
+                      "sig": "CTDA",
+                      "type": {
+                        "kind": "struct",
+                        "fields": [
+                          {
+                            "name": "op",
+                            "type": {
+                              "kind": "u8"
+                            }
+                          },
+                          {
+                            "name": "unknown",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 3
+                            }
+                          },
+                          {
+                            "name": "comparison",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "op",
+                                "mask": 4
+                              },
+                              "cases": [
+                                {
+                                  "when": 4,
+                                  "name": "global",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "GLOB"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "f32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "functionIndex",
+                            "type": {
+                              "kind": "u16"
+                            }
+                          },
+                          {
+                            "name": "pad",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 2
+                            }
+                          },
+                          {
+                            "name": "param1",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param1"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param2",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param2"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "runOnType",
+                            "type": {
+                              "kind": "u32"
+                            }
+                          },
+                          {
+                            "name": "reference",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "runOnType"
+                              },
+                              "cases": [
+                                {
+                                  "when": 2,
+                                  "name": "ref",
+                                  "type": {
+                                    "kind": "formid"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param3",
+                            "type": {
+                              "kind": "i32"
+                            }
+                          }
+                        ],
+                        "name": "ConditionData"
+                      }
+                    },
+                    {
+                      "name": "stringParam1",
+                      "sig": "CIS1",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "stringParam2",
+                      "sig": "CIS2",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "beginScriptHeader",
+                  "sig": "SCHR",
+                  "type": {
+                    "kind": "array",
+                    "element": {
+                      "kind": "u32"
+                    },
+                    "count": 5
+                  }
+                },
+                {
+                  "name": "beginScriptText",
+                  "sig": "SCTX",
+                  "type": {
+                    "kind": "bytes",
+                    "formIds": "none"
+                  }
+                },
+                {
+                  "name": "beginScriptQuests",
+                  "sig": "QNAM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "QUST"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "close",
+                  "sig": "NEXT",
+                  "type": {
+                    "kind": "marker"
+                  }
+                }
+              ],
+              "open": "NEXT",
+              "end": "NEXT"
+            },
+            {
+              "name": "endScriptHeader",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "endScriptText",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "endScriptQuests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "editorWidth",
+              "sig": "WNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "end",
+              "sig": "HNAM",
+              "type": {
+                "kind": "marker"
+              }
+            }
+          ],
+          "open": "HNAM",
+          "end": "HNAM",
+          "repeat": true
+        },
+        {
+          "name": "actors",
+          "group": "SceneActors",
+          "members": [
+            {
+              "name": "aliasId",
+              "sig": "ALID",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "LNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "behaviorFlags",
+              "sig": "DNAM",
+              "type": {
+                "kind": "u32"
+              }
+            }
+          ],
+          "open": "ALID",
+          "repeat": true
+        },
+        {
+          "name": "actions",
+          "group": "SceneActions",
+          "members": [
+            {
+              "name": "type",
+              "sig": "ANAM",
+              "type": {
+                "kind": "u16"
+              }
+            },
+            {
+              "name": "name",
+              "sig": "NAM0",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "actorId",
+              "sig": "ALID",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "index",
+              "sig": "INAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "startPhaseOrTimer",
+              "sig": "SNAM",
+              "type": {
+                "kind": "u32"
+              },
+              "repeat": true
+            },
+            {
+              "name": "endPhase",
+              "sig": "ENAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "packages",
+              "sig": "PNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "PACK"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "topic",
+              "sig": "DATA",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "DIAL"
+                ]
+              }
+            },
+            {
+              "name": "headTrackActorId",
+              "sig": "HTID",
+              "type": {
+                "kind": "i32"
+              },
+              "repeat": true
+            },
+            {
+              "name": "loopingMax",
+              "sig": "DMAX",
+              "type": {
+                "kind": "f32"
+              }
+            },
+            {
+              "name": "loopingMin",
+              "sig": "DMIN",
+              "type": {
+                "kind": "f32"
+              }
+            },
+            {
+              "name": "emotionType",
+              "sig": "DEMO",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "emotionValue",
+              "sig": "DEVA",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "scriptHeader",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "scriptText",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "scriptQuests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "end",
+              "sig": "ANAM",
+              "type": {
+                "kind": "marker"
+              }
+            }
+          ],
+          "open": "ANAM",
+          "end": "ANAM",
+          "repeat": true
+        },
+        {
+          "name": "beginScriptHeader",
+          "sig": "SCHR",
+          "type": {
+            "kind": "array",
+            "element": {
+              "kind": "u32"
+            },
+            "count": 5
+          }
+        },
+        {
+          "name": "beginScriptText",
+          "sig": "SCTX",
+          "type": {
+            "kind": "bytes",
+            "formIds": "none"
+          }
+        },
+        {
+          "name": "beginScriptQuests",
+          "sig": "QNAM",
+          "type": {
+            "kind": "formid",
+            "to": [
+              "QUST"
+            ]
+          },
+          "repeat": true
+        },
+        {
+          "name": "endScript",
+          "group": "SceneEndScript",
+          "members": [
+            {
+              "name": "separator",
+              "sig": "NEXT",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "header",
+              "sig": "SCHR",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "u32"
+                },
+                "count": 5
+              }
+            },
+            {
+              "name": "text",
+              "sig": "SCTX",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            },
+            {
+              "name": "quests",
+              "sig": "QNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              },
+              "repeat": true
+            }
+          ],
+          "open": "NEXT"
+        },
+        {
           "name": "quest",
           "sig": "PNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "QUST"
+            ]
           }
         },
         {
@@ -17662,6 +20027,17 @@
           "sig": "INAM",
           "type": {
             "kind": "u32"
+          }
+        },
+        {
+          "name": "unknownVnam",
+          "sig": "VNAM",
+          "type": {
+            "kind": "array",
+            "element": {
+              "kind": "u32"
+            },
+            "count": 4
           }
         },
         {
@@ -32013,8 +34389,12 @@
           "name": "displayGlobals",
           "sig": "QTGL",
           "type": {
-            "kind": "formid"
-          }
+            "kind": "formid",
+            "to": [
+              "GLOB"
+            ]
+          },
+          "repeat": true
         },
         {
           "name": "objectWindowFilter",
@@ -32022,61 +34402,6 @@
           "type": {
             "kind": "zstring"
           }
-        },
-        {
-          "name": "stageIndices",
-          "sig": "INDX",
-          "type": {
-            "kind": "struct",
-            "fields": [
-              {
-                "name": "index",
-                "type": {
-                  "kind": "u16"
-                }
-              },
-              {
-                "name": "flags",
-                "type": {
-                  "kind": "u8"
-                }
-              },
-              {
-                "name": "unknown",
-                "type": {
-                  "kind": "u8"
-                }
-              }
-            ],
-            "name": "QuestStageIndex"
-          },
-          "repeat": true
-        },
-        {
-          "name": "stageFlags",
-          "sig": "QSDT",
-          "type": {
-            "kind": "u8"
-          },
-          "repeat": true
-        },
-        {
-          "name": "logEntries",
-          "sig": "CNAM",
-          "type": {
-            "kind": "lstring",
-            "table": "dlstrings"
-          },
-          "repeat": true
-        },
-        {
-          "name": "objectiveTexts",
-          "sig": "NNAM",
-          "type": {
-            "kind": "lstring",
-            "table": "strings"
-          },
-          "repeat": true
         },
         {
           "name": "conditions",
@@ -32328,6 +34653,670 @@
           "repeat": true
         },
         {
+          "name": "next",
+          "sig": "NEXT",
+          "type": {
+            "kind": "marker"
+          }
+        },
+        {
+          "name": "stages",
+          "group": "QuestStages",
+          "members": [
+            {
+              "name": "stage",
+              "sig": "INDX",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "index",
+                    "type": {
+                      "kind": "u16"
+                    }
+                  },
+                  {
+                    "name": "flags",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  },
+                  {
+                    "name": "unknown",
+                    "type": {
+                      "kind": "u8"
+                    }
+                  }
+                ],
+                "name": "QuestStageIndex"
+              }
+            },
+            {
+              "name": "logEntries",
+              "group": "QuestStagesLogEntries",
+              "members": [
+                {
+                  "name": "flags",
+                  "sig": "QSDT",
+                  "type": {
+                    "kind": "u8"
+                  }
+                },
+                {
+                  "name": "conditions",
+                  "group": "Condition",
+                  "members": [
+                    {
+                      "name": "data",
+                      "sig": "CTDA",
+                      "type": {
+                        "kind": "struct",
+                        "fields": [
+                          {
+                            "name": "op",
+                            "type": {
+                              "kind": "u8"
+                            }
+                          },
+                          {
+                            "name": "unknown",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 3
+                            }
+                          },
+                          {
+                            "name": "comparison",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "op",
+                                "mask": 4
+                              },
+                              "cases": [
+                                {
+                                  "when": 4,
+                                  "name": "global",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "GLOB"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "f32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "functionIndex",
+                            "type": {
+                              "kind": "u16"
+                            }
+                          },
+                          {
+                            "name": "pad",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 2
+                            }
+                          },
+                          {
+                            "name": "param1",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param1"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param2",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param2"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "runOnType",
+                            "type": {
+                              "kind": "u32"
+                            }
+                          },
+                          {
+                            "name": "reference",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "runOnType"
+                              },
+                              "cases": [
+                                {
+                                  "when": 2,
+                                  "name": "ref",
+                                  "type": {
+                                    "kind": "formid"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param3",
+                            "type": {
+                              "kind": "i32"
+                            }
+                          }
+                        ],
+                        "name": "ConditionData"
+                      }
+                    },
+                    {
+                      "name": "stringParam1",
+                      "sig": "CIS1",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "stringParam2",
+                      "sig": "CIS2",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "text",
+                  "sig": "CNAM",
+                  "type": {
+                    "kind": "lstring",
+                    "table": "dlstrings"
+                  }
+                },
+                {
+                  "name": "nextQuest",
+                  "sig": "NAM0",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "QUST"
+                    ]
+                  }
+                },
+                {
+                  "name": "scriptHeader",
+                  "sig": "SCHR",
+                  "type": {
+                    "kind": "array",
+                    "element": {
+                      "kind": "u32"
+                    },
+                    "count": 5
+                  }
+                },
+                {
+                  "name": "scriptText",
+                  "sig": "SCTX",
+                  "type": {
+                    "kind": "bytes",
+                    "formIds": "none"
+                  }
+                },
+                {
+                  "name": "questTargets",
+                  "sig": "QNAM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "QUST"
+                    ]
+                  },
+                  "repeat": true
+                }
+              ],
+              "open": "QSDT",
+              "repeat": true
+            }
+          ],
+          "open": "INDX",
+          "repeat": true
+        },
+        {
+          "name": "objectives",
+          "group": "QuestObjectives",
+          "members": [
+            {
+              "name": "index",
+              "sig": "QOBJ",
+              "type": {
+                "kind": "u16"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "text",
+              "sig": "NNAM",
+              "type": {
+                "kind": "lstring",
+                "table": "strings"
+              }
+            },
+            {
+              "name": "targets",
+              "group": "QuestObjectivesTargets",
+              "members": [
+                {
+                  "name": "target",
+                  "sig": "QSTA",
+                  "type": {
+                    "kind": "struct",
+                    "fields": [
+                      {
+                        "name": "alias",
+                        "type": {
+                          "kind": "i32"
+                        }
+                      },
+                      {
+                        "name": "flags",
+                        "type": {
+                          "kind": "u32"
+                        }
+                      }
+                    ],
+                    "name": "QuestObjectivesTargetsTarget"
+                  }
+                },
+                {
+                  "name": "conditions",
+                  "group": "Condition",
+                  "members": [
+                    {
+                      "name": "data",
+                      "sig": "CTDA",
+                      "type": {
+                        "kind": "struct",
+                        "fields": [
+                          {
+                            "name": "op",
+                            "type": {
+                              "kind": "u8"
+                            }
+                          },
+                          {
+                            "name": "unknown",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 3
+                            }
+                          },
+                          {
+                            "name": "comparison",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "op",
+                                "mask": 4
+                              },
+                              "cases": [
+                                {
+                                  "when": 4,
+                                  "name": "global",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "GLOB"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "f32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "functionIndex",
+                            "type": {
+                              "kind": "u16"
+                            }
+                          },
+                          {
+                            "name": "pad",
+                            "type": {
+                              "kind": "array",
+                              "element": {
+                                "kind": "u8"
+                              },
+                              "count": 2
+                            }
+                          },
+                          {
+                            "name": "param1",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param1"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param2",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "lookup": {
+                                  "table": "ctdaFunctions",
+                                  "key": "functionIndex",
+                                  "column": "param2"
+                                }
+                              },
+                              "cases": [
+                                {
+                                  "when": "form",
+                                  "name": "form",
+                                  "type": {
+                                    "kind": "union",
+                                    "by": {
+                                      "field": "op",
+                                      "mask": 2
+                                    },
+                                    "cases": [
+                                      {
+                                        "when": 2,
+                                        "name": "alias",
+                                        "type": {
+                                          "kind": "i32"
+                                        }
+                                      },
+                                      {
+                                        "default": true,
+                                        "name": "ref",
+                                        "type": {
+                                          "kind": "formid"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "when": [
+                                    "none",
+                                    "int"
+                                  ],
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "unclassified",
+                                  "type": {
+                                    "kind": "u32",
+                                    "remapUnsafe": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "runOnType",
+                            "type": {
+                              "kind": "u32"
+                            }
+                          },
+                          {
+                            "name": "reference",
+                            "type": {
+                              "kind": "union",
+                              "by": {
+                                "field": "runOnType"
+                              },
+                              "cases": [
+                                {
+                                  "when": 2,
+                                  "name": "ref",
+                                  "type": {
+                                    "kind": "formid"
+                                  }
+                                },
+                                {
+                                  "default": true,
+                                  "name": "value",
+                                  "type": {
+                                    "kind": "u32"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "param3",
+                            "type": {
+                              "kind": "i32"
+                            }
+                          }
+                        ],
+                        "name": "ConditionData"
+                      }
+                    },
+                    {
+                      "name": "stringParam1",
+                      "sig": "CIS1",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "stringParam2",
+                      "sig": "CIS2",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "QSTA",
+              "repeat": true
+            }
+          ],
+          "open": "QOBJ",
+          "repeat": true
+        },
+        {
           "name": "nextAliasId",
           "sig": "ANAM",
           "type": {
@@ -32335,11 +35324,1096 @@
           }
         },
         {
-          "name": "next",
-          "sig": "NEXT",
-          "type": {
-            "kind": "marker"
-          }
+          "name": "referenceAliases",
+          "group": "QuestAlias",
+          "members": [
+            {
+              "name": "id",
+              "sig": "ALST",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "name",
+              "sig": "ALID",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "forcedIntoAlias",
+              "sig": "ALFI",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "specificLocation",
+              "sig": "ALFL",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "LCTN"
+                ]
+              }
+            },
+            {
+              "name": "forcedReference",
+              "sig": "ALFR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "REFR",
+                  "ACHR",
+                  "PGRE",
+                  "PHZD"
+                ]
+              }
+            },
+            {
+              "name": "uniqueActor",
+              "sig": "ALUA",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "NPC_"
+                ]
+              }
+            },
+            {
+              "name": "locationAlias",
+              "sig": "ALFA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "locationRefType",
+              "sig": "ALRT",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "LCRT"
+                ]
+              }
+            },
+            {
+              "name": "externalQuest",
+              "sig": "ALEQ",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              }
+            },
+            {
+              "name": "externalAlias",
+              "sig": "ALEA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "createObject",
+              "sig": "ALCO",
+              "type": {
+                "kind": "formid"
+              }
+            },
+            {
+              "name": "createAtAlias",
+              "sig": "ALCA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "createLevel",
+              "sig": "ALCL",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "nearAlias",
+              "sig": "ALNA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "nearType",
+              "sig": "ALNT",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "fromEvent",
+              "sig": "ALFE",
+              "type": {
+                "kind": "sig4"
+              }
+            },
+            {
+              "name": "eventData",
+              "sig": "ALFD",
+              "type": {
+                "kind": "sig4"
+              }
+            },
+            {
+              "name": "keyword",
+              "sig": "KNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "KYWD"
+                ]
+              }
+            },
+            {
+              "name": "conditions",
+              "group": "Condition",
+              "members": [
+                {
+                  "name": "data",
+                  "sig": "CTDA",
+                  "type": {
+                    "kind": "struct",
+                    "fields": [
+                      {
+                        "name": "op",
+                        "type": {
+                          "kind": "u8"
+                        }
+                      },
+                      {
+                        "name": "unknown",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 3
+                        }
+                      },
+                      {
+                        "name": "comparison",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "op",
+                            "mask": 4
+                          },
+                          "cases": [
+                            {
+                              "when": 4,
+                              "name": "global",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "GLOB"
+                                ]
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "f32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "functionIndex",
+                        "type": {
+                          "kind": "u16"
+                        }
+                      },
+                      {
+                        "name": "pad",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 2
+                        }
+                      },
+                      {
+                        "name": "param1",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param1"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param2",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param2"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "runOnType",
+                        "type": {
+                          "kind": "u32"
+                        }
+                      },
+                      {
+                        "name": "reference",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "runOnType"
+                          },
+                          "cases": [
+                            {
+                              "when": 2,
+                              "name": "ref",
+                              "type": {
+                                "kind": "formid"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param3",
+                        "type": {
+                          "kind": "i32"
+                        }
+                      }
+                    ],
+                    "name": "ConditionData"
+                  }
+                },
+                {
+                  "name": "stringParam1",
+                  "sig": "CIS1",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                },
+                {
+                  "name": "stringParam2",
+                  "sig": "CIS2",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                }
+              ],
+              "repeat": true
+            },
+            {
+              "name": "keywordCount",
+              "sig": "KSIZ",
+              "type": {
+                "kind": "u32"
+              },
+              "countOf": "keywords"
+            },
+            {
+              "name": "keywords",
+              "sig": "KWDA",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "formid",
+                  "to": [
+                    "KYWD"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "itemCount",
+              "sig": "COCT",
+              "type": {
+                "kind": "u32"
+              },
+              "countOf": "items"
+            },
+            {
+              "name": "items",
+              "sig": "CNTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "item",
+                    "type": {
+                      "kind": "formid"
+                    }
+                  },
+                  {
+                    "name": "count",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  }
+                ],
+                "name": "ContainerEntry"
+              },
+              "repeat": true
+            },
+            {
+              "name": "spectatorOverride",
+              "sig": "SPOR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST"
+                ]
+              }
+            },
+            {
+              "name": "combatOverride",
+              "sig": "ECOR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST"
+                ]
+              }
+            },
+            {
+              "name": "displayName",
+              "sig": "ALDN",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "MESG"
+                ]
+              }
+            },
+            {
+              "name": "spells",
+              "sig": "ALSP",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "SPEL"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "factions",
+              "sig": "ALFC",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FACT"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "packages",
+              "sig": "ALPC",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "PACK"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "voiceTypes",
+              "sig": "VTCK",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST",
+                  "VTYP",
+                  "NPC_"
+                ]
+              }
+            },
+            {
+              "name": "end",
+              "sig": "ALED",
+              "type": {
+                "kind": "marker"
+              }
+            }
+          ],
+          "open": "ALST",
+          "end": "ALED",
+          "repeat": true
+        },
+        {
+          "name": "locationAliases",
+          "group": "QuestAlias",
+          "members": [
+            {
+              "name": "id",
+              "sig": "ALLS",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "name",
+              "sig": "ALID",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "forcedIntoAlias",
+              "sig": "ALFI",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "specificLocation",
+              "sig": "ALFL",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "LCTN"
+                ]
+              }
+            },
+            {
+              "name": "forcedReference",
+              "sig": "ALFR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "REFR",
+                  "ACHR",
+                  "PGRE",
+                  "PHZD"
+                ]
+              }
+            },
+            {
+              "name": "uniqueActor",
+              "sig": "ALUA",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "NPC_"
+                ]
+              }
+            },
+            {
+              "name": "locationAlias",
+              "sig": "ALFA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "locationRefType",
+              "sig": "ALRT",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "LCRT"
+                ]
+              }
+            },
+            {
+              "name": "externalQuest",
+              "sig": "ALEQ",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              }
+            },
+            {
+              "name": "externalAlias",
+              "sig": "ALEA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "createObject",
+              "sig": "ALCO",
+              "type": {
+                "kind": "formid"
+              }
+            },
+            {
+              "name": "createAtAlias",
+              "sig": "ALCA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "createLevel",
+              "sig": "ALCL",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "nearAlias",
+              "sig": "ALNA",
+              "type": {
+                "kind": "i32"
+              }
+            },
+            {
+              "name": "nearType",
+              "sig": "ALNT",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "fromEvent",
+              "sig": "ALFE",
+              "type": {
+                "kind": "sig4"
+              }
+            },
+            {
+              "name": "eventData",
+              "sig": "ALFD",
+              "type": {
+                "kind": "sig4"
+              }
+            },
+            {
+              "name": "keyword",
+              "sig": "KNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "KYWD"
+                ]
+              }
+            },
+            {
+              "name": "conditions",
+              "group": "Condition",
+              "members": [
+                {
+                  "name": "data",
+                  "sig": "CTDA",
+                  "type": {
+                    "kind": "struct",
+                    "fields": [
+                      {
+                        "name": "op",
+                        "type": {
+                          "kind": "u8"
+                        }
+                      },
+                      {
+                        "name": "unknown",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 3
+                        }
+                      },
+                      {
+                        "name": "comparison",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "op",
+                            "mask": 4
+                          },
+                          "cases": [
+                            {
+                              "when": 4,
+                              "name": "global",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "GLOB"
+                                ]
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "f32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "functionIndex",
+                        "type": {
+                          "kind": "u16"
+                        }
+                      },
+                      {
+                        "name": "pad",
+                        "type": {
+                          "kind": "array",
+                          "element": {
+                            "kind": "u8"
+                          },
+                          "count": 2
+                        }
+                      },
+                      {
+                        "name": "param1",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param1"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param2",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "lookup": {
+                              "table": "ctdaFunctions",
+                              "key": "functionIndex",
+                              "column": "param2"
+                            }
+                          },
+                          "cases": [
+                            {
+                              "when": "form",
+                              "name": "form",
+                              "type": {
+                                "kind": "union",
+                                "by": {
+                                  "field": "op",
+                                  "mask": 2
+                                },
+                                "cases": [
+                                  {
+                                    "when": 2,
+                                    "name": "alias",
+                                    "type": {
+                                      "kind": "i32"
+                                    }
+                                  },
+                                  {
+                                    "default": true,
+                                    "name": "ref",
+                                    "type": {
+                                      "kind": "formid"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "when": [
+                                "none",
+                                "int"
+                              ],
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "unclassified",
+                              "type": {
+                                "kind": "u32",
+                                "remapUnsafe": true
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "runOnType",
+                        "type": {
+                          "kind": "u32"
+                        }
+                      },
+                      {
+                        "name": "reference",
+                        "type": {
+                          "kind": "union",
+                          "by": {
+                            "field": "runOnType"
+                          },
+                          "cases": [
+                            {
+                              "when": 2,
+                              "name": "ref",
+                              "type": {
+                                "kind": "formid"
+                              }
+                            },
+                            {
+                              "default": true,
+                              "name": "value",
+                              "type": {
+                                "kind": "u32"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "param3",
+                        "type": {
+                          "kind": "i32"
+                        }
+                      }
+                    ],
+                    "name": "ConditionData"
+                  }
+                },
+                {
+                  "name": "stringParam1",
+                  "sig": "CIS1",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                },
+                {
+                  "name": "stringParam2",
+                  "sig": "CIS2",
+                  "type": {
+                    "kind": "zstring"
+                  }
+                }
+              ],
+              "repeat": true
+            },
+            {
+              "name": "keywordCount",
+              "sig": "KSIZ",
+              "type": {
+                "kind": "u32"
+              },
+              "countOf": "keywords"
+            },
+            {
+              "name": "keywords",
+              "sig": "KWDA",
+              "type": {
+                "kind": "array",
+                "element": {
+                  "kind": "formid",
+                  "to": [
+                    "KYWD"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "itemCount",
+              "sig": "COCT",
+              "type": {
+                "kind": "u32"
+              },
+              "countOf": "items"
+            },
+            {
+              "name": "items",
+              "sig": "CNTO",
+              "type": {
+                "kind": "struct",
+                "fields": [
+                  {
+                    "name": "item",
+                    "type": {
+                      "kind": "formid"
+                    }
+                  },
+                  {
+                    "name": "count",
+                    "type": {
+                      "kind": "i32"
+                    }
+                  }
+                ],
+                "name": "ContainerEntry"
+              },
+              "repeat": true
+            },
+            {
+              "name": "spectatorOverride",
+              "sig": "SPOR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST"
+                ]
+              }
+            },
+            {
+              "name": "combatOverride",
+              "sig": "ECOR",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST"
+                ]
+              }
+            },
+            {
+              "name": "displayName",
+              "sig": "ALDN",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "MESG"
+                ]
+              }
+            },
+            {
+              "name": "spells",
+              "sig": "ALSP",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "SPEL"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "factions",
+              "sig": "ALFC",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FACT"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "packages",
+              "sig": "ALPC",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "PACK"
+                ]
+              },
+              "repeat": true
+            },
+            {
+              "name": "voiceTypes",
+              "sig": "VTCK",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "FLST",
+                  "VTYP",
+                  "NPC_"
+                ]
+              }
+            },
+            {
+              "name": "end",
+              "sig": "ALED",
+              "type": {
+                "kind": "marker"
+              }
+            }
+          ],
+          "open": "ALLS",
+          "end": "ALED",
+          "repeat": true
         }
       ]
     },

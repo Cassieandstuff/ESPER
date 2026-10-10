@@ -1289,55 +1289,220 @@ namespace PACK {
     }
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> data{ SigOf("PACK"), { { 2 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::vector<uint8_t>> schedule{ SigOf("PACK"), { { 3 }, 1, 1 } };
-    namespace counter {
-        inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 4 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<uint32_t> dataInputCount{ SigOf("PACK"), { { 4, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<::esper::FormId> packageTemplate{ SigOf("PACK"), { { 4, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<uint32_t> versionCounter{ SigOf("PACK"), { { 4, 2 }, 1, 2 } };
-    }
     namespace conditions {
-        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 4 }, 1, 1 } };
         namespace data {
-            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 5, 0 }, 2, 2 } };
-            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("PACK"), { { 5, 0, 0 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("PACK"), { { 5, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 4, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("PACK"), { { 4, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("PACK"), { { 4, 0, 1 }, 2, 3 } };
             namespace comparison {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 2 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("PACK"), { { 5, 0, 2, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<float> value{ SigOf("PACK"), { { 5, 0, 2, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 2 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("PACK"), { { 4, 0, 2, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<float> value{ SigOf("PACK"), { { 4, 0, 2, 1 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("PACK"), { { 5, 0, 3 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("PACK"), { { 5, 0, 4 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("PACK"), { { 4, 0, 3 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("PACK"), { { 4, 0, 4 }, 2, 3 } };
             namespace param1 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 5 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 5 }, 2, 3 } };
                 namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 5, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 5, 0, 5, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 5, 0, 5, 0, 1 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 5, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 4, 0, 5, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 4, 0, 5, 0, 1 }, 2, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 5, 0, 5, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 5, 0, 5, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 4, 0, 5, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 4, 0, 5, 2 }, 2, 4 } };
             }
             namespace param2 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 6 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 6 }, 2, 3 } };
                 namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 6, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 5, 0, 6, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 5, 0, 6, 0, 1 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 6, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 4, 0, 6, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 4, 0, 6, 0, 1 }, 2, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 5, 0, 6, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 5, 0, 6, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 4, 0, 6, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 4, 0, 6, 2 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("PACK"), { { 5, 0, 7 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("PACK"), { { 4, 0, 7 }, 2, 3 } };
             namespace reference {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 5, 0, 8 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 5, 0, 8, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 5, 0, 8, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 4, 0, 8 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 4, 0, 8, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 4, 0, 8, 1 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("PACK"), { { 5, 0, 9 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("PACK"), { { 4, 0, 9 }, 2, 3 } };
         }
-        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("PACK"), { { 5, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("PACK"), { { 5, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("PACK"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("PACK"), { { 4, 2 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint8_t> idleFlags{ SigOf("PACK"), { { 5 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint8_t> idleCount{ SigOf("PACK"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<float> idleTimer{ SigOf("PACK"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> idleAnimations{ SigOf("PACK"), { { 8 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> combatStyle{ SigOf("PACK"), { { 9 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> ownerQuest{ SigOf("PACK"), { { 10 }, 1, 1 } };
+    namespace counter {
+        inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 11 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> dataInputCount{ SigOf("PACK"), { { 11, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> packageTemplate{ SigOf("PACK"), { { 11, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> versionCounter{ SigOf("PACK"), { { 11, 2 }, 1, 2 } };
+    }
+    namespace sections {
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 12 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::string> type{ SigOf("PACK"), { { 12, 0 }, 2, 2 } };
+        namespace value {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 1 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> byte{ SigOf("PACK"), { { 12, 1, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> word{ SigOf("PACK"), { { 12, 1, 1 }, 2, 3 } };
+        }
+        namespace location {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 12, 2 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> type{ SigOf("PACK"), { { 12, 2, 0 }, 2, 3 } };
+            namespace value {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 2, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("PACK"), { { 12, 2, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> cell{ SigOf("PACK"), { { 12, 2, 1, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("PACK"), { { 12, 2, 1, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> number{ SigOf("PACK"), { { 12, 2, 1, 3 }, 2, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<int32_t> radius{ SigOf("PACK"), { { 12, 2, 2 }, 2, 3 } };
+        }
+        namespace target {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 12, 3 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<int32_t> type{ SigOf("PACK"), { { 12, 3, 0 }, 2, 3 } };
+            namespace value {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 3, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> reference{ SigOf("PACK"), { { 12, 3, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> object{ SigOf("PACK"), { { 12, 3, 1, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("PACK"), { { 12, 3, 1, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<int32_t> number{ SigOf("PACK"), { { 12, 3, 1, 3 }, 2, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<int32_t> count{ SigOf("PACK"), { { 12, 3, 2 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<::esper::FormId> topic{ SigOf("PACK"), { { 12, 4 }, 2, 2 } };
+        namespace topicValue {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 12, 5 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("PACK"), { { 12, 5, 0 }, 2, 3 } };
+            namespace topic {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 5, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 12, 5, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("PACK"), { { 12, 5, 1, 1 }, 2, 4 } };
+            }
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> conditionCount{ SigOf("PACK"), { { 12, 6 }, 2, 2 } };
+        namespace conditions {
+            inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 12, 7 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 12, 7, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("PACK"), { { 12, 7, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("PACK"), { { 12, 7, 0, 1 }, 3, 4 } };
+                namespace comparison {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 2 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("PACK"), { { 12, 7, 0, 2, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<float> value{ SigOf("PACK"), { { 12, 7, 0, 2, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("PACK"), { { 12, 7, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("PACK"), { { 12, 7, 0, 4 }, 3, 4 } };
+                namespace param1 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 5 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 5, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 12, 7, 0, 5, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 12, 7, 0, 5, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 12, 7, 0, 5, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 12, 7, 0, 5, 2 }, 3, 5 } };
+                }
+                namespace param2 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 6 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 6, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PACK"), { { 12, 7, 0, 6, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 12, 7, 0, 6, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 12, 7, 0, 6, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PACK"), { { 12, 7, 0, 6, 2 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("PACK"), { { 12, 7, 0, 7 }, 3, 4 } };
+                namespace reference {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 12, 7, 0, 8 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 12, 7, 0, 8, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PACK"), { { 12, 7, 0, 8, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("PACK"), { { 12, 7, 0, 9 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("PACK"), { { 12, 7, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("PACK"), { { 12, 7, 2 }, 3, 3 } };
+        }
+        namespace branch {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 12, 8 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> subBranchCount{ SigOf("PACK"), { { 12, 8, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("PACK"), { { 12, 8, 1 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<std::string> procedure{ SigOf("PACK"), { { 12, 9 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("PACK"), { { 12, 10 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> dataInputIndices{ SigOf("PACK"), { { 12, 11 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> flagOverrides{ SigOf("PACK"), { { 12, 12 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> flagOverrides2{ SigOf("PACK"), { { 12, 13 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<uint8_t> marker{ SigOf("PACK"), { { 13 }, 1, 1 } };
+    namespace inputs {
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 14 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> index{ SigOf("PACK"), { { 14, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("PACK"), { { 14, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("PACK"), { { 14, 2 }, 2, 2 } };
+    }
+    namespace onBegin {
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 15 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> marker{ SigOf("PACK"), { { 15, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> idle{ SigOf("PACK"), { { 15, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("PACK"), { { 15, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptText{ SigOf("PACK"), { { 15, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> scriptQuests{ SigOf("PACK"), { { 15, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknownTnam{ SigOf("PACK"), { { 15, 5 }, 2, 2 } };
+        namespace topic {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 15, 6 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("PACK"), { { 15, 6, 0 }, 2, 3 } };
+            namespace topic {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 15, 6, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 15, 6, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("PACK"), { { 15, 6, 1, 1 }, 2, 4 } };
+            }
+        }
+    }
+    namespace onEnd {
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 16 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> marker{ SigOf("PACK"), { { 16, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> idle{ SigOf("PACK"), { { 16, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("PACK"), { { 16, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptText{ SigOf("PACK"), { { 16, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> scriptQuests{ SigOf("PACK"), { { 16, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknownTnam{ SigOf("PACK"), { { 16, 5 }, 2, 2 } };
+        namespace topic {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 16, 6 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("PACK"), { { 16, 6, 0 }, 2, 3 } };
+            namespace topic {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 16, 6, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 16, 6, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("PACK"), { { 16, 6, 1, 1 }, 2, 4 } };
+            }
+        }
+    }
+    namespace onChange {
+        inline constexpr ::esper::GroupRef self{ SigOf("PACK"), { { 17 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> marker{ SigOf("PACK"), { { 17, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> idle{ SigOf("PACK"), { { 17, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("PACK"), { { 17, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptText{ SigOf("PACK"), { { 17, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> scriptQuests{ SigOf("PACK"), { { 17, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> unknownTnam{ SigOf("PACK"), { { 17, 5 }, 2, 2 } };
+        namespace topic {
+            inline constexpr ::esper::StructRef self{ SigOf("PACK"), { { 17, 6 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> type{ SigOf("PACK"), { { 17, 6, 0 }, 2, 3 } };
+            namespace topic {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PACK"), { { 17, 6, 1 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PACK"), { { 17, 6, 1, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> subtype{ SigOf("PACK"), { { 17, 6, 1, 1 }, 2, 4 } };
+            }
+        }
     }
 }
 
@@ -1466,6 +1631,99 @@ namespace PERK {
         }
         inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("PERK"), { { 6, 1 }, 2, 2 } };
         inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("PERK"), { { 6, 2 }, 2, 2 } };
+    }
+    namespace data {
+        inline constexpr ::esper::StructRef self{ SigOf("PERK"), { { 7 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> trait{ SigOf("PERK"), { { 7, 0 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> level{ SigOf("PERK"), { { 7, 1 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> numRanks{ SigOf("PERK"), { { 7, 2 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> playable{ SigOf("PERK"), { { 7, 3 }, 1, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> hidden{ SigOf("PERK"), { { 7, 4 }, 1, 2 } };
+    }
+    namespace entries {
+        inline constexpr ::esper::GroupRef self{ SigOf("PERK"), { { 8 }, 1, 1 } };
+        namespace header {
+            inline constexpr ::esper::StructRef self{ SigOf("PERK"), { { 8, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> type{ SigOf("PERK"), { { 8, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> rank{ SigOf("PERK"), { { 8, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> priority{ SigOf("PERK"), { { 8, 0, 2 }, 2, 3 } };
+        }
+        namespace data {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 1 }, 2, 2 } };
+            namespace questStage {
+                inline constexpr ::esper::StructRef self{ SigOf("PERK"), { { 8, 1, 0 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> quest{ SigOf("PERK"), { { 8, 1, 0, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> stage{ SigOf("PERK"), { { 8, 1, 0, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("PERK"), { { 8, 1, 0, 2 }, 2, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<::esper::FormId> ability{ SigOf("PERK"), { { 8, 1, 1 }, 2, 3 } };
+            namespace entryPoint {
+                inline constexpr ::esper::StructRef self{ SigOf("PERK"), { { 8, 1, 2 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<uint8_t> entryPoint{ SigOf("PERK"), { { 8, 1, 2, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> function{ SigOf("PERK"), { { 8, 1, 2, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint8_t> conditionTabCount{ SigOf("PERK"), { { 8, 1, 2, 2 }, 2, 4 } };
+            }
+        }
+        namespace conditionTabs {
+            inline constexpr ::esper::GroupRef self{ SigOf("PERK"), { { 8, 2 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> runOn{ SigOf("PERK"), { { 8, 2, 0 }, 3, 3 } };
+            namespace conditions {
+                inline constexpr ::esper::GroupRef self{ SigOf("PERK"), { { 8, 2, 1 }, 3, 3 } };
+                namespace data {
+                    inline constexpr ::esper::StructRef self{ SigOf("PERK"), { { 8, 2, 1, 0 }, 4, 4 } };
+                    inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("PERK"), { { 8, 2, 1, 0, 0 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("PERK"), { { 8, 2, 1, 0, 1 }, 4, 5 } };
+                    namespace comparison {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 2 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("PERK"), { { 8, 2, 1, 0, 2, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<float> value{ SigOf("PERK"), { { 8, 2, 1, 0, 2, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("PERK"), { { 8, 2, 1, 0, 3 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("PERK"), { { 8, 2, 1, 0, 4 }, 4, 5 } };
+                    namespace param1 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 5 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 5, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PERK"), { { 8, 2, 1, 0, 5, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PERK"), { { 8, 2, 1, 0, 5, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PERK"), { { 8, 2, 1, 0, 5, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PERK"), { { 8, 2, 1, 0, 5, 2 }, 4, 6 } };
+                    }
+                    namespace param2 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 6 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 6, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("PERK"), { { 8, 2, 1, 0, 6, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PERK"), { { 8, 2, 1, 0, 6, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PERK"), { { 8, 2, 1, 0, 6, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("PERK"), { { 8, 2, 1, 0, 6, 2 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("PERK"), { { 8, 2, 1, 0, 7 }, 4, 5 } };
+                    namespace reference {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 2, 1, 0, 8 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("PERK"), { { 8, 2, 1, 0, 8, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("PERK"), { { 8, 2, 1, 0, 8, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("PERK"), { { 8, 2, 1, 0, 9 }, 4, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("PERK"), { { 8, 2, 1, 1 }, 4, 4 } };
+                inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("PERK"), { { 8, 2, 1, 2 }, 4, 4 } };
+            }
+        }
+        inline constexpr ::esper::FieldRef<uint8_t> functionType{ SigOf("PERK"), { { 8, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::LocalizedString> buttonLabel{ SigOf("PERK"), { { 8, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> scriptFlags{ SigOf("PERK"), { { 8, 5 }, 2, 2 } };
+        namespace functionData {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("PERK"), { { 8, 6 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<float> value{ SigOf("PERK"), { { 8, 6, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<float>> range{ SigOf("PERK"), { { 8, 6, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> spell{ SigOf("PERK"), { { 8, 6, 2 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> text{ SigOf("PERK"), { { 8, 6, 3 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> unknown7{ SigOf("PERK"), { { 8, 6, 4 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("PERK"), { { 8, 7 }, 2, 2 } };
     }
 }
 
@@ -2091,51 +2349,195 @@ namespace SCEN {
         }
     }
     inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("SCEN"), { { 2 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::FormId> quest{ SigOf("SCEN"), { { 3 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<uint32_t> lastActionIndex{ SigOf("SCEN"), { { 4 }, 1, 1 } };
-    namespace conditions {
-        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 5 }, 1, 1 } };
-        namespace data {
-            inline constexpr ::esper::StructRef self{ SigOf("SCEN"), { { 5, 0 }, 2, 2 } };
-            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("SCEN"), { { 5, 0, 0 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("SCEN"), { { 5, 0, 1 }, 2, 3 } };
-            namespace comparison {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 2 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("SCEN"), { { 5, 0, 2, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<float> value{ SigOf("SCEN"), { { 5, 0, 2, 1 }, 2, 4 } };
-            }
-            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("SCEN"), { { 5, 0, 3 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("SCEN"), { { 5, 0, 4 }, 2, 3 } };
-            namespace param1 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 5 }, 2, 3 } };
-                namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 5, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 5, 0, 5, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 5, 0, 5, 0, 1 }, 2, 5 } };
+    namespace phases {
+        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 3 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> start{ SigOf("SCEN"), { { 3, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("SCEN"), { { 3, 1 }, 2, 2 } };
+        namespace startConditions {
+            inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 3, 2 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("SCEN"), { { 3, 2, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("SCEN"), { { 3, 2, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("SCEN"), { { 3, 2, 0, 1 }, 3, 4 } };
+                namespace comparison {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 2 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("SCEN"), { { 3, 2, 0, 2, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<float> value{ SigOf("SCEN"), { { 3, 2, 0, 2, 1 }, 3, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 5, 0, 5, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 5, 0, 5, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("SCEN"), { { 3, 2, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("SCEN"), { { 3, 2, 0, 4 }, 3, 4 } };
+                namespace param1 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 5 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 5, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 3, 2, 0, 5, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 2, 0, 5, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 2, 0, 5, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 3, 2, 0, 5, 2 }, 3, 5 } };
+                }
+                namespace param2 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 6 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 6, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 3, 2, 0, 6, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 2, 0, 6, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 2, 0, 6, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 3, 2, 0, 6, 2 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("SCEN"), { { 3, 2, 0, 7 }, 3, 4 } };
+                namespace reference {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 2, 0, 8 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 2, 0, 8, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 2, 0, 8, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("SCEN"), { { 3, 2, 0, 9 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("SCEN"), { { 3, 2, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("SCEN"), { { 3, 2, 2 }, 3, 3 } };
+        }
+        namespace completion {
+            inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 3, 3 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> open{ SigOf("SCEN"), { { 3, 3, 0 }, 3, 3 } };
+            namespace conditions {
+                inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 3, 3, 1 }, 3, 3 } };
+                namespace data {
+                    inline constexpr ::esper::StructRef self{ SigOf("SCEN"), { { 3, 3, 1, 0 }, 4, 4 } };
+                    inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("SCEN"), { { 3, 3, 1, 0, 0 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("SCEN"), { { 3, 3, 1, 0, 1 }, 4, 5 } };
+                    namespace comparison {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 2 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("SCEN"), { { 3, 3, 1, 0, 2, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<float> value{ SigOf("SCEN"), { { 3, 3, 1, 0, 2, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("SCEN"), { { 3, 3, 1, 0, 3 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("SCEN"), { { 3, 3, 1, 0, 4 }, 4, 5 } };
+                    namespace param1 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 5 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 5, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 3, 3, 1, 0, 5, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 3, 1, 0, 5, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 3, 1, 0, 5, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 3, 3, 1, 0, 5, 2 }, 4, 6 } };
+                    }
+                    namespace param2 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 6 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 6, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 3, 3, 1, 0, 6, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 3, 1, 0, 6, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 3, 1, 0, 6, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 3, 3, 1, 0, 6, 2 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("SCEN"), { { 3, 3, 1, 0, 7 }, 4, 5 } };
+                    namespace reference {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 3, 3, 1, 0, 8 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 3, 3, 1, 0, 8, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 3, 3, 1, 0, 8, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("SCEN"), { { 3, 3, 1, 0, 9 }, 4, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("SCEN"), { { 3, 3, 1, 1 }, 4, 4 } };
+                inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("SCEN"), { { 3, 3, 1, 2 }, 4, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::vector<uint32_t>> beginScriptHeader{ SigOf("SCEN"), { { 3, 3, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> beginScriptText{ SigOf("SCEN"), { { 3, 3, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> beginScriptQuests{ SigOf("SCEN"), { { 3, 3, 4 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> close{ SigOf("SCEN"), { { 3, 3, 5 }, 3, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> endScriptHeader{ SigOf("SCEN"), { { 3, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> endScriptText{ SigOf("SCEN"), { { 3, 5 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> endScriptQuests{ SigOf("SCEN"), { { 3, 6 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> editorWidth{ SigOf("SCEN"), { { 3, 7 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("SCEN"), { { 3, 8 }, 2, 2 } };
+    }
+    namespace actors {
+        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<int32_t> aliasId{ SigOf("SCEN"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("SCEN"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> behaviorFlags{ SigOf("SCEN"), { { 4, 2 }, 2, 2 } };
+    }
+    namespace actions {
+        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> type{ SigOf("SCEN"), { { 5, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("SCEN"), { { 5, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> actorId{ SigOf("SCEN"), { { 5, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> index{ SigOf("SCEN"), { { 5, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("SCEN"), { { 5, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> startPhaseOrTimer{ SigOf("SCEN"), { { 5, 5 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> endPhase{ SigOf("SCEN"), { { 5, 6 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> packages{ SigOf("SCEN"), { { 5, 7 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> topic{ SigOf("SCEN"), { { 5, 8 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> headTrackActorId{ SigOf("SCEN"), { { 5, 9 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<float> loopingMax{ SigOf("SCEN"), { { 5, 10 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<float> loopingMin{ SigOf("SCEN"), { { 5, 11 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> emotionType{ SigOf("SCEN"), { { 5, 12 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> emotionValue{ SigOf("SCEN"), { { 5, 13 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("SCEN"), { { 5, 14 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptText{ SigOf("SCEN"), { { 5, 15 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> scriptQuests{ SigOf("SCEN"), { { 5, 16 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("SCEN"), { { 5, 17 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<std::vector<uint32_t>> beginScriptHeader{ SigOf("SCEN"), { { 6 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> beginScriptText{ SigOf("SCEN"), { { 7 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<::esper::FormId> beginScriptQuests{ SigOf("SCEN"), { { 8 }, 1, 1 } };
+    namespace endScript {
+        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 9 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> separator{ SigOf("SCEN"), { { 9, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint32_t>> header{ SigOf("SCEN"), { { 9, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> text{ SigOf("SCEN"), { { 9, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> quests{ SigOf("SCEN"), { { 9, 3 }, 2, 2 } };
+    }
+    inline constexpr ::esper::FieldRef<::esper::FormId> quest{ SigOf("SCEN"), { { 10 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> lastActionIndex{ SigOf("SCEN"), { { 11 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint32_t>> unknownVnam{ SigOf("SCEN"), { { 12 }, 1, 1 } };
+    namespace conditions {
+        inline constexpr ::esper::GroupRef self{ SigOf("SCEN"), { { 13 }, 1, 1 } };
+        namespace data {
+            inline constexpr ::esper::StructRef self{ SigOf("SCEN"), { { 13, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("SCEN"), { { 13, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("SCEN"), { { 13, 0, 1 }, 2, 3 } };
+            namespace comparison {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 2 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("SCEN"), { { 13, 0, 2, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<float> value{ SigOf("SCEN"), { { 13, 0, 2, 1 }, 2, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("SCEN"), { { 13, 0, 3 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("SCEN"), { { 13, 0, 4 }, 2, 3 } };
+            namespace param1 {
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 5 }, 2, 3 } };
+                namespace form {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 5, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 13, 0, 5, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 13, 0, 5, 0, 1 }, 2, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 13, 0, 5, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 13, 0, 5, 2 }, 2, 4 } };
             }
             namespace param2 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 6 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 6 }, 2, 3 } };
                 namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 6, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 5, 0, 6, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 5, 0, 6, 0, 1 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 6, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("SCEN"), { { 13, 0, 6, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 13, 0, 6, 0, 1 }, 2, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 5, 0, 6, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 5, 0, 6, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 13, 0, 6, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("SCEN"), { { 13, 0, 6, 2 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("SCEN"), { { 5, 0, 7 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("SCEN"), { { 13, 0, 7 }, 2, 3 } };
             namespace reference {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 5, 0, 8 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 5, 0, 8, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 5, 0, 8, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("SCEN"), { { 13, 0, 8 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("SCEN"), { { 13, 0, 8, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("SCEN"), { { 13, 0, 8, 1 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("SCEN"), { { 5, 0, 9 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("SCEN"), { { 13, 0, 9 }, 2, 3 } };
         }
-        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("SCEN"), { { 5, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("SCEN"), { { 5, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("SCEN"), { { 13, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("SCEN"), { { 13, 2 }, 2, 2 } };
     }
 }
 
@@ -3987,61 +4389,336 @@ namespace QUST {
     inline constexpr ::esper::FieldRef<uint32_t> event{ SigOf("QUST"), { { 4 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<::esper::FormId> displayGlobals{ SigOf("QUST"), { { 5 }, 1, 1 } };
     inline constexpr ::esper::FieldRef<std::string> objectWindowFilter{ SigOf("QUST"), { { 6 }, 1, 1 } };
-    namespace stageIndices {
-        inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 7 }, 1, 1 } };
-        inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("QUST"), { { 7, 0 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("QUST"), { { 7, 1 }, 1, 2 } };
-        inline constexpr ::esper::FieldRef<uint8_t> unknown{ SigOf("QUST"), { { 7, 2 }, 1, 2 } };
-    }
-    inline constexpr ::esper::FieldRef<uint8_t> stageFlags{ SigOf("QUST"), { { 8 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> logEntries{ SigOf("QUST"), { { 9 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<::esper::LocalizedString> objectiveTexts{ SigOf("QUST"), { { 10 }, 1, 1 } };
     namespace conditions {
-        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 11 }, 1, 1 } };
+        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 7 }, 1, 1 } };
         namespace data {
-            inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 11, 0 }, 2, 2 } };
-            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 11, 0, 0 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 11, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 7, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 7, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 7, 0, 1 }, 2, 3 } };
             namespace comparison {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 2 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 11, 0, 2, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 11, 0, 2, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 2 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 7, 0, 2, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 7, 0, 2, 1 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 11, 0, 3 }, 2, 3 } };
-            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 11, 0, 4 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 7, 0, 3 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 7, 0, 4 }, 2, 3 } };
             namespace param1 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 5 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 5 }, 2, 3 } };
                 namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 5, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 11, 0, 5, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 11, 0, 5, 0, 1 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 5, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 7, 0, 5, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 7, 0, 5, 0, 1 }, 2, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 11, 0, 5, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 11, 0, 5, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 7, 0, 5, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 7, 0, 5, 2 }, 2, 4 } };
             }
             namespace param2 {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 6 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 6 }, 2, 3 } };
                 namespace form {
-                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 6, 0 }, 2, 4 } };
-                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 11, 0, 6, 0, 0 }, 2, 5 } };
-                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 11, 0, 6, 0, 1 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 6, 0 }, 2, 4 } };
+                    inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 7, 0, 6, 0, 0 }, 2, 5 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 7, 0, 6, 0, 1 }, 2, 5 } };
                 }
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 11, 0, 6, 1 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 11, 0, 6, 2 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 7, 0, 6, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 7, 0, 6, 2 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 11, 0, 7 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 7, 0, 7 }, 2, 3 } };
             namespace reference {
-                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 11, 0, 8 }, 2, 3 } };
-                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 11, 0, 8, 0 }, 2, 4 } };
-                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 11, 0, 8, 1 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 7, 0, 8 }, 2, 3 } };
+                inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 7, 0, 8, 0 }, 2, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 7, 0, 8, 1 }, 2, 4 } };
             }
-            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 11, 0, 9 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 7, 0, 9 }, 2, 3 } };
         }
-        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 11, 1 }, 2, 2 } };
-        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 11, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 7, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 7, 2 }, 2, 2 } };
     }
-    inline constexpr ::esper::FieldRef<uint32_t> nextAliasId{ SigOf("QUST"), { { 12 }, 1, 1 } };
-    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> next{ SigOf("QUST"), { { 13 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> next{ SigOf("QUST"), { { 8 }, 1, 1 } };
+    namespace stages {
+        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 9 }, 1, 1 } };
+        namespace stage {
+            inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 9, 0 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("QUST"), { { 9, 0, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("QUST"), { { 9, 0, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<uint8_t> unknown{ SigOf("QUST"), { { 9, 0, 2 }, 2, 3 } };
+        }
+        namespace logEntries {
+            inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 9, 1 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint8_t> flags{ SigOf("QUST"), { { 9, 1, 0 }, 3, 3 } };
+            namespace conditions {
+                inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 9, 1, 1 }, 3, 3 } };
+                namespace data {
+                    inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 9, 1, 1, 0 }, 4, 4 } };
+                    inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 9, 1, 1, 0, 0 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 9, 1, 1, 0, 1 }, 4, 5 } };
+                    namespace comparison {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 2 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 9, 1, 1, 0, 2, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 9, 1, 1, 0, 2, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 9, 1, 1, 0, 3 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 9, 1, 1, 0, 4 }, 4, 5 } };
+                    namespace param1 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 5 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 5, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 9, 1, 1, 0, 5, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 9, 1, 1, 0, 5, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 9, 1, 1, 0, 5, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 9, 1, 1, 0, 5, 2 }, 4, 6 } };
+                    }
+                    namespace param2 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 6 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 6, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 9, 1, 1, 0, 6, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 9, 1, 1, 0, 6, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 9, 1, 1, 0, 6, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 9, 1, 1, 0, 6, 2 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 9, 1, 1, 0, 7 }, 4, 5 } };
+                    namespace reference {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 9, 1, 1, 0, 8 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 9, 1, 1, 0, 8, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 9, 1, 1, 0, 8, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 9, 1, 1, 0, 9 }, 4, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 9, 1, 1, 1 }, 4, 4 } };
+                inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 9, 1, 1, 2 }, 4, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<::esper::LocalizedString> text{ SigOf("QUST"), { { 9, 1, 2 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> nextQuest{ SigOf("QUST"), { { 9, 1, 3 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint32_t>> scriptHeader{ SigOf("QUST"), { { 9, 1, 4 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::vector<uint8_t>> scriptText{ SigOf("QUST"), { { 9, 1, 5 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> questTargets{ SigOf("QUST"), { { 9, 1, 6 }, 3, 3 } };
+        }
+    }
+    namespace objectives {
+        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 10 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("QUST"), { { 10, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("QUST"), { { 10, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::LocalizedString> text{ SigOf("QUST"), { { 10, 2 }, 2, 2 } };
+        namespace targets {
+            inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 10, 3 }, 2, 2 } };
+            namespace target {
+                inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 10, 3, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 10, 3, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("QUST"), { { 10, 3, 0, 1 }, 3, 4 } };
+            }
+            namespace conditions {
+                inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 10, 3, 1 }, 3, 3 } };
+                namespace data {
+                    inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 10, 3, 1, 0 }, 4, 4 } };
+                    inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 10, 3, 1, 0, 0 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 10, 3, 1, 0, 1 }, 4, 5 } };
+                    namespace comparison {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 2 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 10, 3, 1, 0, 2, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 10, 3, 1, 0, 2, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 10, 3, 1, 0, 3 }, 4, 5 } };
+                    inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 10, 3, 1, 0, 4 }, 4, 5 } };
+                    namespace param1 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 5 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 5, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 10, 3, 1, 0, 5, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 10, 3, 1, 0, 5, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 10, 3, 1, 0, 5, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 10, 3, 1, 0, 5, 2 }, 4, 6 } };
+                    }
+                    namespace param2 {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 6 }, 4, 5 } };
+                        namespace form {
+                            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 6, 0 }, 4, 6 } };
+                            inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 10, 3, 1, 0, 6, 0, 0 }, 4, 7 } };
+                            inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 10, 3, 1, 0, 6, 0, 1 }, 4, 7 } };
+                        }
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 10, 3, 1, 0, 6, 1 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 10, 3, 1, 0, 6, 2 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 10, 3, 1, 0, 7 }, 4, 5 } };
+                    namespace reference {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 10, 3, 1, 0, 8 }, 4, 5 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 10, 3, 1, 0, 8, 0 }, 4, 6 } };
+                        inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 10, 3, 1, 0, 8, 1 }, 4, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 10, 3, 1, 0, 9 }, 4, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 10, 3, 1, 1 }, 4, 4 } };
+                inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 10, 3, 1, 2 }, 4, 4 } };
+            }
+        }
+    }
+    inline constexpr ::esper::FieldRef<uint32_t> nextAliasId{ SigOf("QUST"), { { 11 }, 1, 1 } };
+    namespace referenceAliases {
+        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 12 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> id{ SigOf("QUST"), { { 12, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("QUST"), { { 12, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("QUST"), { { 12, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> forcedIntoAlias{ SigOf("QUST"), { { 12, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> specificLocation{ SigOf("QUST"), { { 12, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> forcedReference{ SigOf("QUST"), { { 12, 5 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> uniqueActor{ SigOf("QUST"), { { 12, 6 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> locationAlias{ SigOf("QUST"), { { 12, 7 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> locationRefType{ SigOf("QUST"), { { 12, 8 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> externalQuest{ SigOf("QUST"), { { 12, 9 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> externalAlias{ SigOf("QUST"), { { 12, 10 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> createObject{ SigOf("QUST"), { { 12, 11 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> createAtAlias{ SigOf("QUST"), { { 12, 12 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> createLevel{ SigOf("QUST"), { { 12, 13 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> nearAlias{ SigOf("QUST"), { { 12, 14 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> nearType{ SigOf("QUST"), { { 12, 15 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> fromEvent{ SigOf("QUST"), { { 12, 16 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> eventData{ SigOf("QUST"), { { 12, 17 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("QUST"), { { 12, 18 }, 2, 2 } };
+        namespace conditions {
+            inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 12, 19 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 12, 19, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 12, 19, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 12, 19, 0, 1 }, 3, 4 } };
+                namespace comparison {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 2 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 12, 19, 0, 2, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 12, 19, 0, 2, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 12, 19, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 12, 19, 0, 4 }, 3, 4 } };
+                namespace param1 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 5 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 5, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 12, 19, 0, 5, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 12, 19, 0, 5, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 12, 19, 0, 5, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 12, 19, 0, 5, 2 }, 3, 5 } };
+                }
+                namespace param2 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 6 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 6, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 12, 19, 0, 6, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 12, 19, 0, 6, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 12, 19, 0, 6, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 12, 19, 0, 6, 2 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 12, 19, 0, 7 }, 3, 4 } };
+                namespace reference {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 12, 19, 0, 8 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 12, 19, 0, 8, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 12, 19, 0, 8, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 12, 19, 0, 9 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 12, 19, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 12, 19, 2 }, 3, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("QUST"), { { 12, 20 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("QUST"), { { 12, 21 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> itemCount{ SigOf("QUST"), { { 12, 22 }, 2, 2 } };
+        namespace items {
+            inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 12, 23 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> item{ SigOf("QUST"), { { 12, 23, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> count{ SigOf("QUST"), { { 12, 23, 1 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<::esper::FormId> spectatorOverride{ SigOf("QUST"), { { 12, 24 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> combatOverride{ SigOf("QUST"), { { 12, 25 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> displayName{ SigOf("QUST"), { { 12, 26 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> spells{ SigOf("QUST"), { { 12, 27 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> factions{ SigOf("QUST"), { { 12, 28 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> packages{ SigOf("QUST"), { { 12, 29 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> voiceTypes{ SigOf("QUST"), { { 12, 30 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("QUST"), { { 12, 31 }, 2, 2 } };
+    }
+    namespace locationAliases {
+        inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 13 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> id{ SigOf("QUST"), { { 13, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("QUST"), { { 13, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("QUST"), { { 13, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> forcedIntoAlias{ SigOf("QUST"), { { 13, 3 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> specificLocation{ SigOf("QUST"), { { 13, 4 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> forcedReference{ SigOf("QUST"), { { 13, 5 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> uniqueActor{ SigOf("QUST"), { { 13, 6 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> locationAlias{ SigOf("QUST"), { { 13, 7 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> locationRefType{ SigOf("QUST"), { { 13, 8 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> externalQuest{ SigOf("QUST"), { { 13, 9 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> externalAlias{ SigOf("QUST"), { { 13, 10 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> createObject{ SigOf("QUST"), { { 13, 11 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> createAtAlias{ SigOf("QUST"), { { 13, 12 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> createLevel{ SigOf("QUST"), { { 13, 13 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<int32_t> nearAlias{ SigOf("QUST"), { { 13, 14 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> nearType{ SigOf("QUST"), { { 13, 15 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> fromEvent{ SigOf("QUST"), { { 13, 16 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> eventData{ SigOf("QUST"), { { 13, 17 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> keyword{ SigOf("QUST"), { { 13, 18 }, 2, 2 } };
+        namespace conditions {
+            inline constexpr ::esper::GroupRef self{ SigOf("QUST"), { { 13, 19 }, 2, 2 } };
+            namespace data {
+                inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 13, 19, 0 }, 3, 3 } };
+                inline constexpr ::esper::FieldRef<uint8_t> op{ SigOf("QUST"), { { 13, 19, 0, 0 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> unknown{ SigOf("QUST"), { { 13, 19, 0, 1 }, 3, 4 } };
+                namespace comparison {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 2 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> global{ SigOf("QUST"), { { 13, 19, 0, 2, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<float> value{ SigOf("QUST"), { { 13, 19, 0, 2, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint16_t> functionIndex{ SigOf("QUST"), { { 13, 19, 0, 3 }, 3, 4 } };
+                inline constexpr ::esper::FieldRef<std::vector<uint8_t>> pad{ SigOf("QUST"), { { 13, 19, 0, 4 }, 3, 4 } };
+                namespace param1 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 5 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 5, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 13, 19, 0, 5, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 13, 19, 0, 5, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 13, 19, 0, 5, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 13, 19, 0, 5, 2 }, 3, 5 } };
+                }
+                namespace param2 {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 6 }, 3, 4 } };
+                    namespace form {
+                        inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 6, 0 }, 3, 5 } };
+                        inline constexpr ::esper::FieldRef<int32_t> alias{ SigOf("QUST"), { { 13, 19, 0, 6, 0, 0 }, 3, 6 } };
+                        inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 13, 19, 0, 6, 0, 1 }, 3, 6 } };
+                    }
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 13, 19, 0, 6, 1 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> unclassified{ SigOf("QUST"), { { 13, 19, 0, 6, 2 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<uint32_t> runOnType{ SigOf("QUST"), { { 13, 19, 0, 7 }, 3, 4 } };
+                namespace reference {
+                    inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("QUST"), { { 13, 19, 0, 8 }, 3, 4 } };
+                    inline constexpr ::esper::FieldRef<::esper::FormId> ref{ SigOf("QUST"), { { 13, 19, 0, 8, 0 }, 3, 5 } };
+                    inline constexpr ::esper::FieldRef<uint32_t> value{ SigOf("QUST"), { { 13, 19, 0, 8, 1 }, 3, 5 } };
+                }
+                inline constexpr ::esper::FieldRef<int32_t> param3{ SigOf("QUST"), { { 13, 19, 0, 9 }, 3, 4 } };
+            }
+            inline constexpr ::esper::FieldRef<std::string> stringParam1{ SigOf("QUST"), { { 13, 19, 1 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> stringParam2{ SigOf("QUST"), { { 13, 19, 2 }, 3, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<uint32_t> keywordCount{ SigOf("QUST"), { { 13, 20 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<::esper::FormId>> keywords{ SigOf("QUST"), { { 13, 21 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> itemCount{ SigOf("QUST"), { { 13, 22 }, 2, 2 } };
+        namespace items {
+            inline constexpr ::esper::StructRef self{ SigOf("QUST"), { { 13, 23 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> item{ SigOf("QUST"), { { 13, 23, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<int32_t> count{ SigOf("QUST"), { { 13, 23, 1 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<::esper::FormId> spectatorOverride{ SigOf("QUST"), { { 13, 24 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> combatOverride{ SigOf("QUST"), { { 13, 25 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> displayName{ SigOf("QUST"), { { 13, 26 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> spells{ SigOf("QUST"), { { 13, 27 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> factions{ SigOf("QUST"), { { 13, 28 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> packages{ SigOf("QUST"), { { 13, 29 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<::esper::FormId> voiceTypes{ SigOf("QUST"), { { 13, 30 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("QUST"), { { 13, 31 }, 2, 2 } };
+    }
 }
 
 // TXST — TextureSet

@@ -1,19 +1,47 @@
-# Seeded from the typed path (QustRec, include/ESPER/Records*.h) in migration step 2.
+# Seeded from the typed path (QustRec) in migration step 2; sections modeled in
+# step 4 with delimited groups (language 0.4) from esm-dump + schema-probe evidence.
 record: QUST
 name: Quest
 members:
-  - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: Vmad }
-  - { sig: FULL, name: fullName, type: lstring, table: strings }   # FULL
-  - { sig: DNAM, name: data, type: QuestData }
-  - { sig: ENAM, name: event, type: sig4 }
-  - { sig: QTGL, name: displayGlobals, type: formid }   # QTGL
-  - { sig: FLTR, name: objectWindowFilter, type: zstring }   # FLTR
-  - { sig: INDX, name: stageIndices, type: QuestStageIndex, repeat: true }   # INDX
-  - { sig: QSDT, name: stageFlags, type: u8, repeat: true }   # QSDT
-  - { sig: CNAM, name: logEntries, type: lstring, table: dlstrings, repeat: true }   # CNAM (per stage, DL)
-  - { sig: NNAM, name: objectiveTexts, type: lstring, table: strings, repeat: true }   # NNAM
+  - { sig: EDID, name: editorId,       type: zstring }
+  - { sig: VMAD, name: vmad,           type: Vmad }
+  - { sig: FULL, name: fullName,       type: lstring, table: strings }
+  - { sig: DNAM, name: data,           type: QuestData }
+  - { sig: ENAM, name: event,          type: sig4 }
+  - { sig: QTGL, name: displayGlobals, type: formid, repeat: true, to: [GLOB] }
+  - { sig: FLTR, name: objectWindowFilter, type: zstring }
+  # Dialogue conditions, then NEXT, then story-manager event conditions.
   - { use: Condition, name: conditions, repeat: true }
-  # step 4, tools/schema-probe evidence:
-  - { sig: ANAM, name: nextAliasId, type: u32 }
-  - { sig: NEXT, name: next, type: marker }
+  - { sig: NEXT, name: next,           type: marker }
+  - group: stages
+    repeat: true
+    open: INDX
+    members:
+      - { sig: INDX, name: stage, type: QuestStageIndex }
+      - group: logEntries
+        repeat: true
+        open: QSDT
+        members:
+          - { sig: QSDT, name: flags,        type: u8 }
+          - { use: Condition, name: conditions, repeat: true }
+          - { sig: CNAM, name: text,         type: lstring, table: dlstrings }
+          - { sig: NAM0, name: nextQuest,    type: formid, to: [QUST] }
+          - { sig: SCHR, name: scriptHeader, type: "u32[5]" }
+          - { sig: SCTX, name: scriptText,   type: bytes, formIds: none }   # legacy script source text
+          - { sig: QNAM, name: questTargets, type: formid, repeat: true, to: [QUST] }
+  - group: objectives
+    repeat: true
+    open: QOBJ
+    members:
+      - { sig: QOBJ, name: index, type: u16 }
+      - { sig: FNAM, name: flags, type: u32 }
+      - { sig: NNAM, name: text,  type: lstring, table: strings }
+      - group: targets
+        repeat: true
+        open: QSTA
+        members:
+          - { sig: QSTA, name: target, fields: [ { name: alias, type: i32 }, { name: flags, type: u32 } ] }
+          - { use: Condition, name: conditions, repeat: true }
+  - { sig: ANAM, name: nextAliasId,    type: u32 }
+  - { use: QuestAlias, name: referenceAliases, repeat: true }
+  - { use: QuestAlias, name: locationAliases,  repeat: true, sigs: { ALST: ALLS } }

@@ -19,9 +19,12 @@ class TestAlphaData;
 class TestAlphaLayers;
 class TestAlphaLayersPresets;
 class TestBeta;
+class TestDelimited;
+class TestDelimitedRefAliasesConditions;
 class TestItem;
 class TestObjV1;
 class TestObjV2;
+class TestSiblings;
 class TestUnions;
 class TestUnionsCond;
 class TestUnionsObj;
@@ -316,6 +319,197 @@ public:
     std::optional<std::string> EditorId() const { return c_.Get<std::string>(::esper::RelPath{ { 0 }, 1, 1 }); }
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestDelimitedRefAliasesConditions {
+public:
+    explicit TestDelimitedRefAliasesConditions(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // CTDA
+    std::optional<uint32_t> Data() const { return c_.Get<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetData(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearData() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // CIS1
+    std::optional<std::string> Param() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetParam(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearParam() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestDelimitedRefAliases {
+public:
+    explicit TestDelimitedRefAliases(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ALST
+    std::optional<uint32_t> Id() const { return c_.Get<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetId(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // ALID
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper_test::view::TestDelimitedRefAliasesConditions> Conditions() const { std::vector<::esper_test::view::TestDelimitedRefAliasesConditions> o; for (auto c : c_.Groups(::esper::RelPath{ { 3 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestDelimitedRefAliasesConditions AddConditions() const { return ::esper_test::view::TestDelimitedRefAliasesConditions(c_.AddGroup(::esper::RelPath{ { 3 }, 1, 1 })); }
+    // ALED
+    bool End() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 4 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestDelimitedLocAliases {
+public:
+    explicit TestDelimitedLocAliases(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ALLS
+    std::optional<uint32_t> Id() const { return c_.Get<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetId(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // ALID
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // ALED
+    bool End() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestDelimitedStages {
+public:
+    explicit TestDelimitedStages(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // INDX
+    std::optional<uint16_t> Index() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetIndex(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // CNAM
+    std::optional<std::string> Text() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearText() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestDelimited {
+public:
+    static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTD");
+    explicit TestDelimited(::esper::Record& r) : c_{ &r, 0 } {}
+    explicit TestDelimited(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // EDID
+    std::optional<std::string> EditorId() const { return c_.Get<std::string>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> RootFlags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetRootFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearRootFlags() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // ROOT
+    std::optional<uint8_t> RootByte() const { return c_.Get<uint8_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetRootByte(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearRootByte() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // group refAliases
+    std::vector<::esper_test::view::TestDelimitedRefAliases> RefAliases() const { std::vector<::esper_test::view::TestDelimitedRefAliases> o; for (auto c : c_.Groups(::esper::RelPath{ { 3 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestDelimitedRefAliases AddRefAliases() const { return ::esper_test::view::TestDelimitedRefAliases(c_.AddGroup(::esper::RelPath{ { 3 }, 1, 1 })); }
+    // group locAliases
+    std::vector<::esper_test::view::TestDelimitedLocAliases> LocAliases() const { std::vector<::esper_test::view::TestDelimitedLocAliases> o; for (auto c : c_.Groups(::esper::RelPath{ { 4 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestDelimitedLocAliases AddLocAliases() const { return ::esper_test::view::TestDelimitedLocAliases(c_.AddGroup(::esper::RelPath{ { 4 }, 1, 1 })); }
+    // group stages
+    std::vector<::esper_test::view::TestDelimitedStages> Stages() const { std::vector<::esper_test::view::TestDelimitedStages> o; for (auto c : c_.Groups(::esper::RelPath{ { 5 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestDelimitedStages AddStages() const { return ::esper_test::view::TestDelimitedStages(c_.AddGroup(::esper::RelPath{ { 5 }, 1, 1 })); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestSiblingsEntries {
+public:
+    explicit TestSiblingsEntries(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // PRKE
+    std::optional<uint8_t> Header() const { return c_.Get<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetHeader(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearHeader() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // EPFT
+    std::optional<uint8_t> FunctionType() const { return c_.Get<uint8_t>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetFunctionType(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearFunctionType() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // EPFD
+    std::optional<uint16_t> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 2 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<float> FunctionDataValue() const { return c_.Get<float>(::esper::RelPath{ { 2, 0 }, 1, 2 }); }
+    void SetFunctionDataValue(const float& v) const { c_.Set<float>(::esper::RelPath{ { 2, 0 }, 1, 2 }, v); }
+    std::optional<::esper::Link<::esper_test::view::TestBeta>> FunctionDataSpell() const { return c_.Get<::esper::Link<::esper_test::view::TestBeta>>(::esper::RelPath{ { 2, 1 }, 1, 2 }); }
+    void SetFunctionDataSpell(const ::esper::Link<::esper_test::view::TestBeta>& v) const { c_.Set<::esper::Link<::esper_test::view::TestBeta>>(::esper::RelPath{ { 2, 1 }, 1, 2 }, v); }
+    std::optional<std::string> FunctionDataText() const { return c_.Get<std::string>(::esper::RelPath{ { 2, 2 }, 1, 2 }); }
+    void SetFunctionDataText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 2, 2 }, 1, 2 }, v); }
+    void ClearFunctionData() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // PRKF
+    bool End() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestSiblingsPhases {
+public:
+    explicit TestSiblingsPhases(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // HNAM
+    bool Start() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetStart(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearStart() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // NAM0
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // HNAM
+    bool End() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 2 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class TestSiblings {
+public:
+    static constexpr uint32_t kSig = ::esper::schema::SigOf("TSTE");
+    explicit TestSiblings(::esper::Record& r) : c_{ &r, 0 } {}
+    explicit TestSiblings(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // EDID
+    std::optional<std::string> EditorId() const { return c_.Get<std::string>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group entries
+    std::vector<::esper_test::view::TestSiblingsEntries> Entries() const { std::vector<::esper_test::view::TestSiblingsEntries> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestSiblingsEntries AddEntries() const { return ::esper_test::view::TestSiblingsEntries(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+    // group phases
+    std::vector<::esper_test::view::TestSiblingsPhases> Phases() const { std::vector<::esper_test::view::TestSiblingsPhases> o; for (auto c : c_.Groups(::esper::RelPath{ { 2 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper_test::view::TestSiblingsPhases AddPhases() const { return ::esper_test::view::TestSiblingsPhases(c_.AddGroup(::esper::RelPath{ { 2 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };

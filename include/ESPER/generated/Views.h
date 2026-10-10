@@ -131,6 +131,7 @@ class LightingTemplate;
 class LoadScreen;
 class LoadScreenRotationLimits;
 class Location;
+class LocationData;
 class LocationReferenceType;
 class LockData;
 class LtexHavok;
@@ -158,7 +159,12 @@ class ObjectEffect;
 class Outfit;
 class PackCounter;
 class Package;
+class PackageSectionsBranch;
 class Perk;
+class PerkData;
+class PerkEntriesDataEntryPoint;
+class PerkEntriesDataQuestStage;
+class PerkEntriesHeader;
 class PerkEntry;
 class PlaceableWater;
 class PlacedGrenade;
@@ -180,6 +186,7 @@ class PotionData;
 class Projectile;
 class Quest;
 class QuestData;
+class QuestObjectivesTargetsTarget;
 class QuestStageIndex;
 class Race;
 class RaceTintLayers;
@@ -211,6 +218,7 @@ class StoryManagerBranchNode;
 class StoryManagerEventNode;
 class StoryManagerQuestNode;
 class TalkingActivator;
+class TargetData;
 class TeleportDest;
 class TextureSet;
 class TintColor;
@@ -1636,6 +1644,120 @@ private:
     ::esper::StructCursor s_;
 };
 
+class LocationData {
+public:
+    explicit LocationData(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<int32_t> Type() const { return s_.at.Get<int32_t>(s_.Field(0)); }
+    void SetType(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(0), v); }
+    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<::esper::FormId> ValueReference() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 0)); }
+    void SetValueReference(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 0), v); }
+    std::optional<::esper::Link<::esper::view::Cell>> ValueCell() const { return s_.at.Get<::esper::Link<::esper::view::Cell>>(::esper::Extend(s_.Field(1), 1)); }
+    void SetValueCell(const ::esper::Link<::esper::view::Cell>& v) const { s_.at.Set<::esper::Link<::esper::view::Cell>>(::esper::Extend(s_.Field(1), 1), v); }
+    std::optional<::esper::Link<::esper::view::Keyword>> ValueKeyword() const { return s_.at.Get<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2)); }
+    void SetValueKeyword(const ::esper::Link<::esper::view::Keyword>& v) const { s_.at.Set<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2), v); }
+    std::optional<int32_t> ValueNumber() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(1), 3)); }
+    void SetValueNumber(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(1), 3), v); }
+    std::optional<int32_t> Radius() const { return s_.at.Get<int32_t>(s_.Field(2)); }
+    void SetRadius(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class TargetData {
+public:
+    explicit TargetData(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<int32_t> Type() const { return s_.at.Get<int32_t>(s_.Field(0)); }
+    void SetType(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(0), v); }
+    std::optional<uint16_t> ValueCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<::esper::FormId> ValueReference() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 0)); }
+    void SetValueReference(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 0), v); }
+    std::optional<::esper::FormId> ValueObject() const { return s_.at.Get<::esper::FormId>(::esper::Extend(s_.Field(1), 1)); }
+    void SetValueObject(const ::esper::FormId& v) const { s_.at.Set<::esper::FormId>(::esper::Extend(s_.Field(1), 1), v); }
+    std::optional<::esper::Link<::esper::view::Keyword>> ValueKeyword() const { return s_.at.Get<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2)); }
+    void SetValueKeyword(const ::esper::Link<::esper::view::Keyword>& v) const { s_.at.Set<::esper::Link<::esper::view::Keyword>>(::esper::Extend(s_.Field(1), 2), v); }
+    std::optional<int32_t> ValueNumber() const { return s_.at.Get<int32_t>(::esper::Extend(s_.Field(1), 3)); }
+    void SetValueNumber(const int32_t& v) const { s_.at.Set<int32_t>(::esper::Extend(s_.Field(1), 3), v); }
+    std::optional<int32_t> Count() const { return s_.at.Get<int32_t>(s_.Field(2)); }
+    void SetCount(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class PackageSectionsBranch {
+public:
+    explicit PackageSectionsBranch(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint32_t> SubBranchCount() const { return s_.at.Get<uint32_t>(s_.Field(0)); }
+    void SetSubBranchCount(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(0), v); }
+    std::optional<uint32_t> Flags() const { return s_.at.Get<uint32_t>(s_.Field(1)); }
+    void SetFlags(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(1), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class PerkData {
+public:
+    explicit PerkData(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint8_t> Trait() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
+    void SetTrait(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
+    std::optional<uint8_t> Level() const { return s_.at.Get<uint8_t>(s_.Field(1)); }
+    void SetLevel(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
+    std::optional<uint8_t> NumRanks() const { return s_.at.Get<uint8_t>(s_.Field(2)); }
+    void SetNumRanks(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(2), v); }
+    std::optional<uint8_t> Playable() const { return s_.at.Get<uint8_t>(s_.Field(3)); }
+    void SetPlayable(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(3), v); }
+    std::optional<uint8_t> Hidden() const { return s_.at.Get<uint8_t>(s_.Field(4)); }
+    void SetHidden(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(4), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class PerkEntriesHeader {
+public:
+    explicit PerkEntriesHeader(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint8_t> Type() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
+    void SetType(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
+    std::optional<uint8_t> Rank() const { return s_.at.Get<uint8_t>(s_.Field(1)); }
+    void SetRank(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
+    std::optional<uint8_t> Priority() const { return s_.at.Get<uint8_t>(s_.Field(2)); }
+    void SetPriority(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class PerkEntriesDataQuestStage {
+public:
+    explicit PerkEntriesDataQuestStage(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<::esper::Link<::esper::view::Quest>> Quest() const { return s_.at.Get<::esper::Link<::esper::view::Quest>>(s_.Field(0)); }
+    void SetQuest(const ::esper::Link<::esper::view::Quest>& v) const { s_.at.Set<::esper::Link<::esper::view::Quest>>(s_.Field(0), v); }
+    std::optional<uint8_t> Stage() const { return s_.at.Get<uint8_t>(s_.Field(1)); }
+    void SetStage(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
+    std::optional<std::vector<uint8_t>> Unknown() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(2)); }
+    void SetUnknown(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class PerkEntriesDataEntryPoint {
+public:
+    explicit PerkEntriesDataEntryPoint(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint8_t> EntryPoint() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
+    void SetEntryPoint(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
+    std::optional<uint8_t> Function() const { return s_.at.Get<uint8_t>(s_.Field(1)); }
+    void SetFunction(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
+    std::optional<uint8_t> ConditionTabCount() const { return s_.at.Get<uint8_t>(s_.Field(2)); }
+    void SetConditionTabCount(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
 class QuestData {
 public:
     explicit QuestData(::esper::StructCursor s) : s_(s) {}
@@ -1664,6 +1786,18 @@ public:
     void SetFlags(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(1), v); }
     std::optional<uint8_t> Unknown() const { return s_.at.Get<uint8_t>(s_.Field(2)); }
     void SetUnknown(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(2), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class QuestObjectivesTargetsTarget {
+public:
+    explicit QuestObjectivesTargetsTarget(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<int32_t> Alias() const { return s_.at.Get<int32_t>(s_.Field(0)); }
+    void SetAlias(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(0), v); }
+    std::optional<uint32_t> Flags() const { return s_.at.Get<uint32_t>(s_.Field(1)); }
+    void SetFlags(const uint32_t& v) const { s_.at.Set<uint32_t>(s_.Field(1), v); }
 private:
     ::esper::StructCursor s_;
 };
@@ -3630,6 +3764,131 @@ private:
     ::esper::Cursor c_;
 };
 
+class PackageSections {
+public:
+    explicit PackageSections(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ANAM
+    std::optional<std::string> Type() const { return c_.Get<std::string>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetType(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearType() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // CNAM
+    std::optional<uint16_t> ValueCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<uint8_t> ValueByte() const { return c_.Get<uint8_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }); }
+    void SetValueByte(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 1, 0 }, 1, 2 }, v); }
+    std::optional<uint32_t> ValueWord() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1, 1 }, 1, 2 }); }
+    void SetValueWord(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1, 1 }, 1, 2 }, v); }
+    void ClearValue() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // PLDT
+    ::esper::view::LocationData Location() const;
+    bool HasLocation() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void ClearLocation() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // PTDA
+    ::esper::view::TargetData Target() const;
+    bool HasTarget() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void ClearTarget() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // TPIC
+    std::optional<::esper::Link<::esper::view::DialogTopic>> Topic() const { return c_.Get<::esper::Link<::esper::view::DialogTopic>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetTopic(const ::esper::Link<::esper::view::DialogTopic>& v) const { c_.Set<::esper::Link<::esper::view::DialogTopic>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearTopic() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // PDTO
+    ::esper::view::TopicData TopicValue() const;
+    bool HasTopicValue() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void ClearTopicValue() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // CITC
+    std::optional<uint32_t> ConditionCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetConditionCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearConditionCount() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 7 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 7 }, 1, 1 })); }
+    // PRCB
+    ::esper::view::PackageSectionsBranch Branch() const;
+    bool HasBranch() const { return c_.Has(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void ClearBranch() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // PNAM
+    std::optional<std::string> Procedure() const { return c_.Get<std::string>(::esper::RelPath{ { 9 }, 1, 1 }); }
+    void SetProcedure(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
+    void ClearProcedure() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 10 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
+    // PKC2 (repeated)
+    std::vector<uint8_t> DataInputIndices() const { return c_.GetAll<uint8_t>(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void SetDataInputIndices(const std::vector<uint8_t>& v) const { c_.SetAll<uint8_t>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
+    void ClearDataInputIndices() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // PFOR (repeated)
+    std::vector<std::vector<uint32_t>> FlagOverrides() const { return c_.GetAll<std::vector<uint32_t>>(::esper::RelPath{ { 12 }, 1, 1 }); }
+    void SetFlagOverrides(const std::vector<std::vector<uint32_t>>& v) const { c_.SetAll<std::vector<uint32_t>>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
+    void ClearFlagOverrides() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
+    // PFO2 (repeated)
+    std::vector<std::vector<uint32_t>> FlagOverrides2() const { return c_.GetAll<std::vector<uint32_t>>(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void SetFlagOverrides2(const std::vector<std::vector<uint32_t>>& v) const { c_.SetAll<std::vector<uint32_t>>(::esper::RelPath{ { 13 }, 1, 1 }, v); }
+    void ClearFlagOverrides2() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class PackageInputs {
+public:
+    explicit PackageInputs(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // UNAM
+    std::optional<uint8_t> Index() const { return c_.Get<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetIndex(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // BNAM
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // PNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class PackageEvent {
+public:
+    explicit PackageEvent(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // POBA
+    bool Marker() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetMarker(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearMarker() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // INAM
+    std::optional<::esper::Link<::esper::view::IdleAnimation>> Idle() const { return c_.Get<::esper::Link<::esper::view::IdleAnimation>>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetIdle(const ::esper::Link<::esper::view::IdleAnimation>& v) const { c_.Set<::esper::Link<::esper::view::IdleAnimation>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearIdle() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> ScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearScriptHeader() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> ScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearScriptText() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> ScriptQuests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetScriptQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearScriptQuests() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // TNAM
+    std::optional<uint32_t> UnknownTnam() const { return c_.Get<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetUnknownTnam(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearUnknownTnam() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // PDTO
+    ::esper::view::TopicData Topic() const;
+    bool HasTopic() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void ClearTopic() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class Package {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PACK");
@@ -3653,13 +3912,56 @@ public:
     std::optional<std::vector<uint8_t>> Schedule() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }); }
     void SetSchedule(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
     void ClearSchedule() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 4 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 4 }, 1, 1 })); }
+    // IDLF
+    std::optional<uint8_t> IdleFlags() const { return c_.Get<uint8_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetIdleFlags(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearIdleFlags() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // IDLC
+    std::optional<uint8_t> IdleCount() const { return c_.Get<uint8_t>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetIdleCount(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearIdleCount() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // IDLT
+    std::optional<float> IdleTimer() const { return c_.Get<float>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetIdleTimer(const float& v) const { c_.Set<float>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearIdleTimer() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // IDLA
+    std::optional<std::vector<::esper::Link<::esper::view::IdleAnimation>>> IdleAnimations() const { return c_.Get<std::vector<::esper::Link<::esper::view::IdleAnimation>>>(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetIdleAnimations(const std::vector<::esper::Link<::esper::view::IdleAnimation>>& v) const { c_.Set<std::vector<::esper::Link<::esper::view::IdleAnimation>>>(::esper::RelPath{ { 8 }, 1, 1 }, v); }
+    void ClearIdleAnimations() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // CNAM
+    std::optional<::esper::Link<::esper::view::CombatStyle>> CombatStyle() const { return c_.Get<::esper::Link<::esper::view::CombatStyle>>(::esper::RelPath{ { 9 }, 1, 1 }); }
+    void SetCombatStyle(const ::esper::Link<::esper::view::CombatStyle>& v) const { c_.Set<::esper::Link<::esper::view::CombatStyle>>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
+    void ClearCombatStyle() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
+    // QNAM
+    std::optional<::esper::Link<::esper::view::Quest>> OwnerQuest() const { return c_.Get<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 10 }, 1, 1 }); }
+    void SetOwnerQuest(const ::esper::Link<::esper::view::Quest>& v) const { c_.Set<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
+    void ClearOwnerQuest() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
     // PKCU
     ::esper::view::PackCounter Counter() const;
-    bool HasCounter() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
-    void ClearCounter() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
-    // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 5 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 5 }, 1, 1 })); }
+    bool HasCounter() const { return c_.Has(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void ClearCounter() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // group sections
+    std::vector<::esper::view::PackageSections> Sections() const { std::vector<::esper::view::PackageSections> o; for (auto c : c_.Groups(::esper::RelPath{ { 12 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::PackageSections AddSections() const { return ::esper::view::PackageSections(c_.AddGroup(::esper::RelPath{ { 12 }, 1, 1 })); }
+    // XNAM
+    std::optional<uint8_t> Marker() const { return c_.Get<uint8_t>(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void SetMarker(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 13 }, 1, 1 }, v); }
+    void ClearMarker() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+    // group inputs
+    std::vector<::esper::view::PackageInputs> Inputs() const { std::vector<::esper::view::PackageInputs> o; for (auto c : c_.Groups(::esper::RelPath{ { 14 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::PackageInputs AddInputs() const { return ::esper::view::PackageInputs(c_.AddGroup(::esper::RelPath{ { 14 }, 1, 1 })); }
+    // group onBegin
+    std::optional<::esper::view::PackageEvent> OnBegin() const { auto g = c_.Groups(::esper::RelPath{ { 15 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper::view::PackageEvent(g.front()); }
+    ::esper::view::PackageEvent EnsureOnBegin() const { return ::esper::view::PackageEvent(c_.EnsureGroup(::esper::RelPath{ { 15 }, 1, 1 })); }
+    // group onEnd
+    std::optional<::esper::view::PackageEvent> OnEnd() const { auto g = c_.Groups(::esper::RelPath{ { 16 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper::view::PackageEvent(g.front()); }
+    ::esper::view::PackageEvent EnsureOnEnd() const { return ::esper::view::PackageEvent(c_.EnsureGroup(::esper::RelPath{ { 16 }, 1, 1 })); }
+    // group onChange
+    std::optional<::esper::view::PackageEvent> OnChange() const { auto g = c_.Groups(::esper::RelPath{ { 17 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper::view::PackageEvent(g.front()); }
+    ::esper::view::PackageEvent EnsureOnChange() const { return ::esper::view::PackageEvent(c_.EnsureGroup(::esper::RelPath{ { 17 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -3734,6 +4036,74 @@ private:
     ::esper::Cursor c_;
 };
 
+class PerkEntriesConditionTabs {
+public:
+    explicit PerkEntriesConditionTabs(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // PRKC
+    std::optional<uint8_t> RunOn() const { return c_.Get<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetRunOn(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearRunOn() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+private:
+    ::esper::Cursor c_;
+};
+
+class PerkEntries {
+public:
+    explicit PerkEntries(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // PRKE
+    ::esper::view::PerkEntriesHeader Header() const;
+    bool HasHeader() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearHeader() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // DATA
+    std::optional<uint16_t> DataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 1 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    ::esper::view::PerkEntriesDataQuestStage DataQuestStage() const;
+    std::optional<::esper::Link<::esper::view::Spell>> DataAbility() const { return c_.Get<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 1, 1 }, 1, 2 }); }
+    void SetDataAbility(const ::esper::Link<::esper::view::Spell>& v) const { c_.Set<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 1, 1 }, 1, 2 }, v); }
+    ::esper::view::PerkEntriesDataEntryPoint DataEntryPoint() const;
+    void ClearData() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // group conditionTabs
+    std::vector<::esper::view::PerkEntriesConditionTabs> ConditionTabs() const { std::vector<::esper::view::PerkEntriesConditionTabs> o; for (auto c : c_.Groups(::esper::RelPath{ { 2 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::PerkEntriesConditionTabs AddConditionTabs() const { return ::esper::view::PerkEntriesConditionTabs(c_.AddGroup(::esper::RelPath{ { 2 }, 1, 1 })); }
+    // EPFT
+    std::optional<uint8_t> FunctionType() const { return c_.Get<uint8_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetFunctionType(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearFunctionType() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // EPF2
+    std::optional<::esper::LocalizedString> ButtonLabel() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetButtonLabel(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearButtonLabel() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // EPF3
+    std::optional<uint32_t> ScriptFlags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetScriptFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearScriptFlags() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // EPFD
+    std::optional<uint16_t> FunctionDataCase() const { auto v = c_.Get<::esper::Value>(::esper::RelPath{ { 6 }, 1, 1 }); if (!v) return std::nullopt; return static_cast<uint16_t>(v->bits); }
+    std::optional<float> FunctionDataValue() const { return c_.Get<float>(::esper::RelPath{ { 6, 0 }, 1, 2 }); }
+    void SetFunctionDataValue(const float& v) const { c_.Set<float>(::esper::RelPath{ { 6, 0 }, 1, 2 }, v); }
+    std::optional<std::vector<float>> FunctionDataRange() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 6, 1 }, 1, 2 }); }
+    void SetFunctionDataRange(const std::vector<float>& v) const { c_.Set<std::vector<float>>(::esper::RelPath{ { 6, 1 }, 1, 2 }, v); }
+    std::optional<::esper::Link<::esper::view::Spell>> FunctionDataSpell() const { return c_.Get<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 6, 2 }, 1, 2 }); }
+    void SetFunctionDataSpell(const ::esper::Link<::esper::view::Spell>& v) const { c_.Set<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 6, 2 }, 1, 2 }, v); }
+    std::optional<std::string> FunctionDataText() const { return c_.Get<std::string>(::esper::RelPath{ { 6, 3 }, 1, 2 }); }
+    void SetFunctionDataText(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 6, 3 }, 1, 2 }, v); }
+    std::optional<uint32_t> FunctionDataUnknown7() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6, 4 }, 1, 2 }); }
+    void SetFunctionDataUnknown7(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6, 4 }, 1, 2 }, v); }
+    void ClearFunctionData() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // PRKF
+    bool End() const { return c_.Has(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 7 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class Perk {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("PERK");
@@ -3762,12 +4132,19 @@ public:
     void SetIcon(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
     void ClearIcon() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // NNAM
-    std::optional<::esper::FormId> NextPerk() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }); }
-    void SetNextPerk(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    std::optional<::esper::Link<::esper::view::Perk>> NextPerk() const { return c_.Get<::esper::Link<::esper::view::Perk>>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetNextPerk(const ::esper::Link<::esper::view::Perk>& v) const { c_.Set<::esper::Link<::esper::view::Perk>>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearNextPerk() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // group conditions
     std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 6 }, 1, 1 })) o.emplace_back(c); return o; }
     ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 6 }, 1, 1 })); }
+    // DATA
+    ::esper::view::PerkData Data() const;
+    bool HasData() const { return c_.Has(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void ClearData() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // group entries
+    std::vector<::esper::view::PerkEntries> Entries() const { std::vector<::esper::view::PerkEntries> o; for (auto c : c_.Groups(::esper::RelPath{ { 8 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::PerkEntries AddEntries() const { return ::esper::view::PerkEntries(c_.AddGroup(::esper::RelPath{ { 8 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -4509,6 +4886,208 @@ private:
     ::esper::Cursor c_;
 };
 
+class ScenePhasesCompletion {
+public:
+    explicit ScenePhasesCompletion(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // NEXT
+    bool Open() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetOpen(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearOpen() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> BeginScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetBeginScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearBeginScriptHeader() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> BeginScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetBeginScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearBeginScriptText() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> BeginScriptQuests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetBeginScriptQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearBeginScriptQuests() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // NEXT
+    bool Close() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetClose(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 5 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void ClearClose() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class ScenePhases {
+public:
+    explicit ScenePhases(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // HNAM
+    bool Start() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetStart(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearStart() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // NAM0
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // group startConditions
+    std::vector<::esper::view::Condition> StartConditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 2 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddStartConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 2 }, 1, 1 })); }
+    // group completion
+    std::optional<::esper::view::ScenePhasesCompletion> Completion() const { auto g = c_.Groups(::esper::RelPath{ { 3 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper::view::ScenePhasesCompletion(g.front()); }
+    ::esper::view::ScenePhasesCompletion EnsureCompletion() const { return ::esper::view::ScenePhasesCompletion(c_.EnsureGroup(::esper::RelPath{ { 3 }, 1, 1 })); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> EndScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetEndScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearEndScriptHeader() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> EndScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetEndScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearEndScriptText() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> EndScriptQuests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetEndScriptQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearEndScriptQuests() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // WNAM
+    std::optional<uint32_t> EditorWidth() const { return c_.Get<uint32_t>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetEditorWidth(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearEditorWidth() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // HNAM
+    bool End() const { return c_.Has(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 8 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class SceneActors {
+public:
+    explicit SceneActors(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ALID
+    std::optional<int32_t> AliasId() const { return c_.Get<int32_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetAliasId(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearAliasId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // LNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // DNAM
+    std::optional<uint32_t> BehaviorFlags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetBehaviorFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearBehaviorFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class SceneActions {
+public:
+    explicit SceneActions(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ANAM
+    std::optional<uint16_t> Type() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetType(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearType() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // NAM0
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // ALID
+    std::optional<int32_t> ActorId() const { return c_.Get<int32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetActorId(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearActorId() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // INAM
+    std::optional<uint32_t> Index() const { return c_.Get<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetIndex(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // SNAM (repeated)
+    std::vector<uint32_t> StartPhaseOrTimer() const { return c_.GetAll<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetStartPhaseOrTimer(const std::vector<uint32_t>& v) const { c_.SetAll<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearStartPhaseOrTimer() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // ENAM
+    std::optional<uint32_t> EndPhase() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetEndPhase(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearEndPhase() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // PNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Package>> Packages() const { return c_.GetAll<::esper::Link<::esper::view::Package>>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetPackages(const std::vector<::esper::Link<::esper::view::Package>>& v) const { c_.SetAll<::esper::Link<::esper::view::Package>>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearPackages() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // DATA
+    std::optional<::esper::Link<::esper::view::DialogTopic>> Topic() const { return c_.Get<::esper::Link<::esper::view::DialogTopic>>(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetTopic(const ::esper::Link<::esper::view::DialogTopic>& v) const { c_.Set<::esper::Link<::esper::view::DialogTopic>>(::esper::RelPath{ { 8 }, 1, 1 }, v); }
+    void ClearTopic() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // HTID (repeated)
+    std::vector<int32_t> HeadTrackActorId() const { return c_.GetAll<int32_t>(::esper::RelPath{ { 9 }, 1, 1 }); }
+    void SetHeadTrackActorId(const std::vector<int32_t>& v) const { c_.SetAll<int32_t>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
+    void ClearHeadTrackActorId() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
+    // DMAX
+    std::optional<float> LoopingMax() const { return c_.Get<float>(::esper::RelPath{ { 10 }, 1, 1 }); }
+    void SetLoopingMax(const float& v) const { c_.Set<float>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
+    void ClearLoopingMax() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
+    // DMIN
+    std::optional<float> LoopingMin() const { return c_.Get<float>(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void SetLoopingMin(const float& v) const { c_.Set<float>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
+    void ClearLoopingMin() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // DEMO
+    std::optional<uint32_t> EmotionType() const { return c_.Get<uint32_t>(::esper::RelPath{ { 12 }, 1, 1 }); }
+    void SetEmotionType(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
+    void ClearEmotionType() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
+    // DEVA
+    std::optional<uint32_t> EmotionValue() const { return c_.Get<uint32_t>(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void SetEmotionValue(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 13 }, 1, 1 }, v); }
+    void ClearEmotionValue() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> ScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 14 }, 1, 1 }); }
+    void SetScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 14 }, 1, 1 }, v); }
+    void ClearScriptHeader() const { c_.Clear(::esper::RelPath{ { 14 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> ScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 15 }, 1, 1 }); }
+    void SetScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 15 }, 1, 1 }, v); }
+    void ClearScriptText() const { c_.Clear(::esper::RelPath{ { 15 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> ScriptQuests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 16 }, 1, 1 }); }
+    void SetScriptQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 16 }, 1, 1 }, v); }
+    void ClearScriptQuests() const { c_.Clear(::esper::RelPath{ { 16 }, 1, 1 }); }
+    // ANAM
+    bool End() const { return c_.Has(::esper::RelPath{ { 17 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 17 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class SceneEndScript {
+public:
+    explicit SceneEndScript(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // NEXT
+    bool Separator() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetSeparator(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 0 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearSeparator() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> Header() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearHeader() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> Text() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearText() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> Quests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearQuests() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class Scene {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SCEN");
@@ -4528,17 +5107,45 @@ public:
     std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
     void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
     void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // group phases
+    std::vector<::esper::view::ScenePhases> Phases() const { std::vector<::esper::view::ScenePhases> o; for (auto c : c_.Groups(::esper::RelPath{ { 3 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::ScenePhases AddPhases() const { return ::esper::view::ScenePhases(c_.AddGroup(::esper::RelPath{ { 3 }, 1, 1 })); }
+    // group actors
+    std::vector<::esper::view::SceneActors> Actors() const { std::vector<::esper::view::SceneActors> o; for (auto c : c_.Groups(::esper::RelPath{ { 4 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::SceneActors AddActors() const { return ::esper::view::SceneActors(c_.AddGroup(::esper::RelPath{ { 4 }, 1, 1 })); }
+    // group actions
+    std::vector<::esper::view::SceneActions> Actions() const { std::vector<::esper::view::SceneActions> o; for (auto c : c_.Groups(::esper::RelPath{ { 5 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::SceneActions AddActions() const { return ::esper::view::SceneActions(c_.AddGroup(::esper::RelPath{ { 5 }, 1, 1 })); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> BeginScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetBeginScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearBeginScriptHeader() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> BeginScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetBeginScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearBeginScriptText() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> BeginScriptQuests() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetBeginScriptQuests(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 8 }, 1, 1 }, v); }
+    void ClearBeginScriptQuests() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // group endScript
+    std::optional<::esper::view::SceneEndScript> EndScript() const { auto g = c_.Groups(::esper::RelPath{ { 9 }, 1, 1 }); if (g.empty()) return std::nullopt; return ::esper::view::SceneEndScript(g.front()); }
+    ::esper::view::SceneEndScript EnsureEndScript() const { return ::esper::view::SceneEndScript(c_.EnsureGroup(::esper::RelPath{ { 9 }, 1, 1 })); }
     // PNAM
-    std::optional<::esper::FormId> Quest() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 3 }, 1, 1 }); }
-    void SetQuest(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
-    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    std::optional<::esper::Link<::esper::view::Quest>> Quest() const { return c_.Get<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 10 }, 1, 1 }); }
+    void SetQuest(const ::esper::Link<::esper::view::Quest>& v) const { c_.Set<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
+    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
     // INAM
-    std::optional<uint32_t> LastActionIndex() const { return c_.Get<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }); }
-    void SetLastActionIndex(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
-    void ClearLastActionIndex() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    std::optional<uint32_t> LastActionIndex() const { return c_.Get<uint32_t>(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void SetLastActionIndex(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
+    void ClearLastActionIndex() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // VNAM
+    std::optional<std::vector<uint32_t>> UnknownVnam() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 12 }, 1, 1 }); }
+    void SetUnknownVnam(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
+    void ClearUnknownVnam() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
     // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 5 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 5 }, 1, 1 })); }
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 13 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 13 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -6978,6 +7585,234 @@ private:
     ::esper::Cursor c_;
 };
 
+class QuestStagesLogEntries {
+public:
+    explicit QuestStagesLogEntries(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // QSDT
+    std::optional<uint8_t> Flags() const { return c_.Get<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetFlags(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+    // CNAM
+    std::optional<::esper::LocalizedString> Text() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetText(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearText() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // NAM0
+    std::optional<::esper::Link<::esper::view::Quest>> NextQuest() const { return c_.Get<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetNextQuest(const ::esper::Link<::esper::view::Quest>& v) const { c_.Set<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearNextQuest() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // SCHR
+    std::optional<std::vector<uint32_t>> ScriptHeader() const { return c_.Get<std::vector<uint32_t>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetScriptHeader(const std::vector<uint32_t>& v) const { c_.Set<std::vector<uint32_t>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearScriptHeader() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // SCTX
+    std::optional<std::vector<uint8_t>> ScriptText() const { return c_.Get<std::vector<uint8_t>>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetScriptText(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearScriptText() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // QNAM (repeated)
+    std::vector<::esper::Link<::esper::view::Quest>> QuestTargets() const { return c_.GetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetQuestTargets(const std::vector<::esper::Link<::esper::view::Quest>>& v) const { c_.SetAll<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearQuestTargets() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
+class QuestStages {
+public:
+    explicit QuestStages(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // INDX
+    ::esper::view::QuestStageIndex Stage() const;
+    bool HasStage() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearStage() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group logEntries
+    std::vector<::esper::view::QuestStagesLogEntries> LogEntries() const { std::vector<::esper::view::QuestStagesLogEntries> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestStagesLogEntries AddLogEntries() const { return ::esper::view::QuestStagesLogEntries(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+private:
+    ::esper::Cursor c_;
+};
+
+class QuestObjectivesTargets {
+public:
+    explicit QuestObjectivesTargets(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // QSTA
+    ::esper::view::QuestObjectivesTargetsTarget Target() const;
+    bool HasTarget() const { return c_.Has(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void ClearTarget() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 1 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 1 }, 1, 1 })); }
+private:
+    ::esper::Cursor c_;
+};
+
+class QuestObjectives {
+public:
+    explicit QuestObjectives(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // QOBJ
+    std::optional<uint16_t> Index() const { return c_.Get<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetIndex(const uint16_t& v) const { c_.Set<uint16_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearIndex() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // NNAM
+    std::optional<::esper::LocalizedString> Text() const { return c_.Get<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetText(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearText() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // group targets
+    std::vector<::esper::view::QuestObjectivesTargets> Targets() const { std::vector<::esper::view::QuestObjectivesTargets> o; for (auto c : c_.Groups(::esper::RelPath{ { 3 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestObjectivesTargets AddTargets() const { return ::esper::view::QuestObjectivesTargets(c_.AddGroup(::esper::RelPath{ { 3 }, 1, 1 })); }
+private:
+    ::esper::Cursor c_;
+};
+
+class QuestAlias {
+public:
+    explicit QuestAlias(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // ALST
+    std::optional<uint32_t> Id() const { return c_.Get<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetId(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // ALID
+    std::optional<std::string> Name() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetName(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    // ALFI
+    std::optional<int32_t> ForcedIntoAlias() const { return c_.Get<int32_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetForcedIntoAlias(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearForcedIntoAlias() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    // ALFL
+    std::optional<::esper::Link<::esper::view::Location>> SpecificLocation() const { return c_.Get<::esper::Link<::esper::view::Location>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetSpecificLocation(const ::esper::Link<::esper::view::Location>& v) const { c_.Set<::esper::Link<::esper::view::Location>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    void ClearSpecificLocation() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
+    // ALFR
+    std::optional<::esper::FormId> ForcedReference() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetForcedReference(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    void ClearForcedReference() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // ALUA
+    std::optional<::esper::Link<::esper::view::Npc>> UniqueActor() const { return c_.Get<::esper::Link<::esper::view::Npc>>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetUniqueActor(const ::esper::Link<::esper::view::Npc>& v) const { c_.Set<::esper::Link<::esper::view::Npc>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearUniqueActor() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // ALFA
+    std::optional<int32_t> LocationAlias() const { return c_.Get<int32_t>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetLocationAlias(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearLocationAlias() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // ALRT
+    std::optional<::esper::Link<::esper::view::LocationReferenceType>> LocationRefType() const { return c_.Get<::esper::Link<::esper::view::LocationReferenceType>>(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetLocationRefType(const ::esper::Link<::esper::view::LocationReferenceType>& v) const { c_.Set<::esper::Link<::esper::view::LocationReferenceType>>(::esper::RelPath{ { 8 }, 1, 1 }, v); }
+    void ClearLocationRefType() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // ALEQ
+    std::optional<::esper::Link<::esper::view::Quest>> ExternalQuest() const { return c_.Get<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 9 }, 1, 1 }); }
+    void SetExternalQuest(const ::esper::Link<::esper::view::Quest>& v) const { c_.Set<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
+    void ClearExternalQuest() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
+    // ALEA
+    std::optional<int32_t> ExternalAlias() const { return c_.Get<int32_t>(::esper::RelPath{ { 10 }, 1, 1 }); }
+    void SetExternalAlias(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
+    void ClearExternalAlias() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
+    // ALCO
+    std::optional<::esper::FormId> CreateObject() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void SetCreateObject(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
+    void ClearCreateObject() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // ALCA
+    std::optional<int32_t> CreateAtAlias() const { return c_.Get<int32_t>(::esper::RelPath{ { 12 }, 1, 1 }); }
+    void SetCreateAtAlias(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
+    void ClearCreateAtAlias() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
+    // ALCL
+    std::optional<uint32_t> CreateLevel() const { return c_.Get<uint32_t>(::esper::RelPath{ { 13 }, 1, 1 }); }
+    void SetCreateLevel(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 13 }, 1, 1 }, v); }
+    void ClearCreateLevel() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+    // ALNA
+    std::optional<int32_t> NearAlias() const { return c_.Get<int32_t>(::esper::RelPath{ { 14 }, 1, 1 }); }
+    void SetNearAlias(const int32_t& v) const { c_.Set<int32_t>(::esper::RelPath{ { 14 }, 1, 1 }, v); }
+    void ClearNearAlias() const { c_.Clear(::esper::RelPath{ { 14 }, 1, 1 }); }
+    // ALNT
+    std::optional<uint32_t> NearType() const { return c_.Get<uint32_t>(::esper::RelPath{ { 15 }, 1, 1 }); }
+    void SetNearType(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 15 }, 1, 1 }, v); }
+    void ClearNearType() const { c_.Clear(::esper::RelPath{ { 15 }, 1, 1 }); }
+    // ALFE
+    std::optional<uint32_t> FromEvent() const { return c_.Get<uint32_t>(::esper::RelPath{ { 16 }, 1, 1 }); }
+    void SetFromEvent(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 16 }, 1, 1 }, v); }
+    void ClearFromEvent() const { c_.Clear(::esper::RelPath{ { 16 }, 1, 1 }); }
+    // ALFD
+    std::optional<uint32_t> EventData() const { return c_.Get<uint32_t>(::esper::RelPath{ { 17 }, 1, 1 }); }
+    void SetEventData(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 17 }, 1, 1 }, v); }
+    void ClearEventData() const { c_.Clear(::esper::RelPath{ { 17 }, 1, 1 }); }
+    // KNAM
+    std::optional<::esper::Link<::esper::view::Keyword>> Keyword() const { return c_.Get<::esper::Link<::esper::view::Keyword>>(::esper::RelPath{ { 18 }, 1, 1 }); }
+    void SetKeyword(const ::esper::Link<::esper::view::Keyword>& v) const { c_.Set<::esper::Link<::esper::view::Keyword>>(::esper::RelPath{ { 18 }, 1, 1 }, v); }
+    void ClearKeyword() const { c_.Clear(::esper::RelPath{ { 18 }, 1, 1 }); }
+    // group conditions
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 19 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 19 }, 1, 1 })); }
+    // KSIZ
+    std::optional<uint32_t> KeywordCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 20 }, 1, 1 }); }
+    void SetKeywordCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 20 }, 1, 1 }, v); }
+    void ClearKeywordCount() const { c_.Clear(::esper::RelPath{ { 20 }, 1, 1 }); }
+    // KWDA
+    std::optional<std::vector<::esper::Link<::esper::view::Keyword>>> Keywords() const { return c_.Get<std::vector<::esper::Link<::esper::view::Keyword>>>(::esper::RelPath{ { 21 }, 1, 1 }); }
+    void SetKeywords(const std::vector<::esper::Link<::esper::view::Keyword>>& v) const { c_.Set<std::vector<::esper::Link<::esper::view::Keyword>>>(::esper::RelPath{ { 21 }, 1, 1 }, v); }
+    void ClearKeywords() const { c_.Clear(::esper::RelPath{ { 21 }, 1, 1 }); }
+    // COCT
+    std::optional<uint32_t> ItemCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 22 }, 1, 1 }); }
+    void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 22 }, 1, 1 }, v); }
+    void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 22 }, 1, 1 }); }
+    // CNTO (repeated)
+    ::esper::view::ContainerEntry Items() const;
+    bool HasItems() const { return c_.Has(::esper::RelPath{ { 23 }, 1, 1 }); }
+    void ClearItems() const { c_.Clear(::esper::RelPath{ { 23 }, 1, 1 }); }
+    // SPOR
+    std::optional<::esper::Link<::esper::view::FormList>> SpectatorOverride() const { return c_.Get<::esper::Link<::esper::view::FormList>>(::esper::RelPath{ { 24 }, 1, 1 }); }
+    void SetSpectatorOverride(const ::esper::Link<::esper::view::FormList>& v) const { c_.Set<::esper::Link<::esper::view::FormList>>(::esper::RelPath{ { 24 }, 1, 1 }, v); }
+    void ClearSpectatorOverride() const { c_.Clear(::esper::RelPath{ { 24 }, 1, 1 }); }
+    // ECOR
+    std::optional<::esper::Link<::esper::view::FormList>> CombatOverride() const { return c_.Get<::esper::Link<::esper::view::FormList>>(::esper::RelPath{ { 25 }, 1, 1 }); }
+    void SetCombatOverride(const ::esper::Link<::esper::view::FormList>& v) const { c_.Set<::esper::Link<::esper::view::FormList>>(::esper::RelPath{ { 25 }, 1, 1 }, v); }
+    void ClearCombatOverride() const { c_.Clear(::esper::RelPath{ { 25 }, 1, 1 }); }
+    // ALDN
+    std::optional<::esper::Link<::esper::view::Message>> DisplayName() const { return c_.Get<::esper::Link<::esper::view::Message>>(::esper::RelPath{ { 26 }, 1, 1 }); }
+    void SetDisplayName(const ::esper::Link<::esper::view::Message>& v) const { c_.Set<::esper::Link<::esper::view::Message>>(::esper::RelPath{ { 26 }, 1, 1 }, v); }
+    void ClearDisplayName() const { c_.Clear(::esper::RelPath{ { 26 }, 1, 1 }); }
+    // ALSP (repeated)
+    std::vector<::esper::Link<::esper::view::Spell>> Spells() const { return c_.GetAll<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 27 }, 1, 1 }); }
+    void SetSpells(const std::vector<::esper::Link<::esper::view::Spell>>& v) const { c_.SetAll<::esper::Link<::esper::view::Spell>>(::esper::RelPath{ { 27 }, 1, 1 }, v); }
+    void ClearSpells() const { c_.Clear(::esper::RelPath{ { 27 }, 1, 1 }); }
+    // ALFC (repeated)
+    std::vector<::esper::Link<::esper::view::Faction>> Factions() const { return c_.GetAll<::esper::Link<::esper::view::Faction>>(::esper::RelPath{ { 28 }, 1, 1 }); }
+    void SetFactions(const std::vector<::esper::Link<::esper::view::Faction>>& v) const { c_.SetAll<::esper::Link<::esper::view::Faction>>(::esper::RelPath{ { 28 }, 1, 1 }, v); }
+    void ClearFactions() const { c_.Clear(::esper::RelPath{ { 28 }, 1, 1 }); }
+    // ALPC (repeated)
+    std::vector<::esper::Link<::esper::view::Package>> Packages() const { return c_.GetAll<::esper::Link<::esper::view::Package>>(::esper::RelPath{ { 29 }, 1, 1 }); }
+    void SetPackages(const std::vector<::esper::Link<::esper::view::Package>>& v) const { c_.SetAll<::esper::Link<::esper::view::Package>>(::esper::RelPath{ { 29 }, 1, 1 }, v); }
+    void ClearPackages() const { c_.Clear(::esper::RelPath{ { 29 }, 1, 1 }); }
+    // VTCK
+    std::optional<::esper::FormId> VoiceTypes() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }); }
+    void SetVoiceTypes(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 30 }, 1, 1 }, v); }
+    void ClearVoiceTypes() const { c_.Clear(::esper::RelPath{ { 30 }, 1, 1 }); }
+    // ALED
+    bool End() const { return c_.Has(::esper::RelPath{ { 31 }, 1, 1 }); }
+    void SetEnd(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 31 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 31 }, 1, 1 }); }
+    void ClearEnd() const { c_.Clear(::esper::RelPath{ { 31 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class Quest {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("QUST");
@@ -7005,41 +7840,37 @@ public:
     std::optional<uint32_t> Event() const { return c_.Get<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }); }
     void SetEvent(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
     void ClearEvent() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
-    // QTGL
-    std::optional<::esper::FormId> DisplayGlobals() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }); }
-    void SetDisplayGlobals(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
+    // QTGL (repeated)
+    std::vector<::esper::Link<::esper::view::Global>> DisplayGlobals() const { return c_.GetAll<::esper::Link<::esper::view::Global>>(::esper::RelPath{ { 5 }, 1, 1 }); }
+    void SetDisplayGlobals(const std::vector<::esper::Link<::esper::view::Global>>& v) const { c_.SetAll<::esper::Link<::esper::view::Global>>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearDisplayGlobals() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // FLTR
     std::optional<std::string> ObjectWindowFilter() const { return c_.Get<std::string>(::esper::RelPath{ { 6 }, 1, 1 }); }
     void SetObjectWindowFilter(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
     void ClearObjectWindowFilter() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
-    // INDX (repeated)
-    ::esper::view::QuestStageIndex StageIndices() const;
-    bool HasStageIndices() const { return c_.Has(::esper::RelPath{ { 7 }, 1, 1 }); }
-    void ClearStageIndices() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
-    // QSDT (repeated)
-    std::vector<uint8_t> StageFlags() const { return c_.GetAll<uint8_t>(::esper::RelPath{ { 8 }, 1, 1 }); }
-    void SetStageFlags(const std::vector<uint8_t>& v) const { c_.SetAll<uint8_t>(::esper::RelPath{ { 8 }, 1, 1 }, v); }
-    void ClearStageFlags() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
-    // CNAM (repeated)
-    std::vector<::esper::LocalizedString> LogEntries() const { return c_.GetAll<::esper::LocalizedString>(::esper::RelPath{ { 9 }, 1, 1 }); }
-    void SetLogEntries(const std::vector<::esper::LocalizedString>& v) const { c_.SetAll<::esper::LocalizedString>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
-    void ClearLogEntries() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
-    // NNAM (repeated)
-    std::vector<::esper::LocalizedString> ObjectiveTexts() const { return c_.GetAll<::esper::LocalizedString>(::esper::RelPath{ { 10 }, 1, 1 }); }
-    void SetObjectiveTexts(const std::vector<::esper::LocalizedString>& v) const { c_.SetAll<::esper::LocalizedString>(::esper::RelPath{ { 10 }, 1, 1 }, v); }
-    void ClearObjectiveTexts() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
     // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 11 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 11 }, 1, 1 })); }
-    // ANAM
-    std::optional<uint32_t> NextAliasId() const { return c_.Get<uint32_t>(::esper::RelPath{ { 12 }, 1, 1 }); }
-    void SetNextAliasId(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
-    void ClearNextAliasId() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 7 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 7 }, 1, 1 })); }
     // NEXT
-    bool Next() const { return c_.Has(::esper::RelPath{ { 13 }, 1, 1 }); }
-    void SetNext(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 13 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
-    void ClearNext() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
+    bool Next() const { return c_.Has(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void SetNext(bool on) const { if (on) c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 8 }, 1, 1 }, {}); else c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    void ClearNext() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
+    // group stages
+    std::vector<::esper::view::QuestStages> Stages() const { std::vector<::esper::view::QuestStages> o; for (auto c : c_.Groups(::esper::RelPath{ { 9 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestStages AddStages() const { return ::esper::view::QuestStages(c_.AddGroup(::esper::RelPath{ { 9 }, 1, 1 })); }
+    // group objectives
+    std::vector<::esper::view::QuestObjectives> Objectives() const { std::vector<::esper::view::QuestObjectives> o; for (auto c : c_.Groups(::esper::RelPath{ { 10 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestObjectives AddObjectives() const { return ::esper::view::QuestObjectives(c_.AddGroup(::esper::RelPath{ { 10 }, 1, 1 })); }
+    // ANAM
+    std::optional<uint32_t> NextAliasId() const { return c_.Get<uint32_t>(::esper::RelPath{ { 11 }, 1, 1 }); }
+    void SetNextAliasId(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
+    void ClearNextAliasId() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
+    // group referenceAliases
+    std::vector<::esper::view::QuestAlias> ReferenceAliases() const { std::vector<::esper::view::QuestAlias> o; for (auto c : c_.Groups(::esper::RelPath{ { 12 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestAlias AddReferenceAliases() const { return ::esper::view::QuestAlias(c_.AddGroup(::esper::RelPath{ { 12 }, 1, 1 })); }
+    // group locationAliases
+    std::vector<::esper::view::QuestAlias> LocationAliases() const { std::vector<::esper::view::QuestAlias> o; for (auto c : c_.Groups(::esper::RelPath{ { 13 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::QuestAlias AddLocationAliases() const { return ::esper::view::QuestAlias(c_.AddGroup(::esper::RelPath{ { 13 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -7629,12 +8460,21 @@ inline ::esper::view::ObjectBounds Activator::Bounds() const { return ::esper::v
 inline ::esper::view::ColorRgba Activator::MarkerColor() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::ContainerEntry ConstructibleObject::Components() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Projectile::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::LocationData PackageSections::Location() const { return ::esper::view::LocationData(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
+inline ::esper::view::TargetData PackageSections::Target() const { return ::esper::view::TargetData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
+inline ::esper::view::TopicData PackageSections::TopicValue() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline ::esper::view::PackageSectionsBranch PackageSections::Branch() const { return ::esper::view::PackageSectionsBranch(::esper::StructCursor{ c_, ::esper::RelPath{ { 8 }, 1, 1 } }); }
+inline ::esper::view::TopicData PackageEvent::Topic() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 inline ::esper::view::Vmad Package::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::PackCounter Package::Counter() const { return ::esper::view::PackCounter(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
+inline ::esper::view::PackCounter Package::Counter() const { return ::esper::view::PackCounter(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::Vmad Book::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Book::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::BookData Book::Data() const { return ::esper::view::BookData(::esper::StructCursor{ c_, ::esper::RelPath{ { 14 }, 1, 1 } }); }
+inline ::esper::view::PerkEntriesHeader PerkEntries::Header() const { return ::esper::view::PerkEntriesHeader(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
+inline ::esper::view::PerkEntriesDataQuestStage PerkEntries::DataQuestStage() const { return ::esper::view::PerkEntriesDataQuestStage(::esper::StructCursor{ c_, ::esper::RelPath{ { 1, 0 }, 1, 2 } }); }
+inline ::esper::view::PerkEntriesDataEntryPoint PerkEntries::DataEntryPoint() const { return ::esper::view::PerkEntriesDataEntryPoint(::esper::StructCursor{ c_, ::esper::RelPath{ { 1, 2 }, 1, 2 } }); }
 inline ::esper::view::Vmad Perk::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::PerkData Perk::Data() const { return ::esper::view::PerkData(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::DialData DialogTopic::Data() const { return ::esper::view::DialData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds DualCastData::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DualData DualCastData::Data() const { return ::esper::view::DualData(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
@@ -7740,9 +8580,11 @@ inline ::esper::view::ObjectBounds Container::Bounds() const { return ::esper::v
 inline ::esper::view::ContainerData Container::Data() const { return ::esper::view::ContainerData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::ContainerEntry Container::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba LocationReferenceType::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline ::esper::view::QuestStageIndex QuestStages::Stage() const { return ::esper::view::QuestStageIndex(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
+inline ::esper::view::QuestObjectivesTargetsTarget QuestObjectivesTargets::Target() const { return ::esper::view::QuestObjectivesTargetsTarget(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
+inline ::esper::view::ContainerEntry QuestAlias::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 23 }, 1, 1 } }); }
 inline ::esper::view::Vmad Quest::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::QuestData Quest::Data() const { return ::esper::view::QuestData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper::view::QuestStageIndex Quest::StageIndices() const { return ::esper::view::QuestStageIndex(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds TextureSet::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DecalData TextureSet::Decal() const { return ::esper::view::DecalData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds MoveableStatic::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }

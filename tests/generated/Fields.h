@@ -74,6 +74,60 @@ namespace TSTB {
     inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("TSTB"), { { 0 }, 1, 1 } };
 }
 
+// TSTD — TestDelimited
+namespace TSTD {
+    inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("TSTD"), { { 0 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint32_t> rootFlags{ SigOf("TSTD"), { { 1 }, 1, 1 } };
+    inline constexpr ::esper::FieldRef<uint8_t> rootByte{ SigOf("TSTD"), { { 2 }, 1, 1 } };
+    namespace refAliases {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTD"), { { 3 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> id{ SigOf("TSTD"), { { 3, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("TSTD"), { { 3, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("TSTD"), { { 3, 2 }, 2, 2 } };
+        namespace conditions {
+            inline constexpr ::esper::GroupRef self{ SigOf("TSTD"), { { 3, 3 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<uint32_t> data{ SigOf("TSTD"), { { 3, 3, 0 }, 3, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> param{ SigOf("TSTD"), { { 3, 3, 1 }, 3, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("TSTD"), { { 3, 4 }, 2, 2 } };
+    }
+    namespace locAliases {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTD"), { { 4 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint32_t> id{ SigOf("TSTD"), { { 4, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("TSTD"), { { 4, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint32_t> flags{ SigOf("TSTD"), { { 4, 2 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("TSTD"), { { 4, 3 }, 2, 2 } };
+    }
+    namespace stages {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTD"), { { 5 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint16_t> index{ SigOf("TSTD"), { { 5, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> text{ SigOf("TSTD"), { { 5, 1 }, 2, 2 } };
+    }
+}
+
+// TSTE — TestSiblings
+namespace TSTE {
+    inline constexpr ::esper::FieldRef<std::string> editorId{ SigOf("TSTE"), { { 0 }, 1, 1 } };
+    namespace entries {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTE"), { { 1 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<uint8_t> header{ SigOf("TSTE"), { { 1, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<uint8_t> functionType{ SigOf("TSTE"), { { 1, 1 }, 2, 2 } };
+        namespace functionData {
+            inline constexpr ::esper::FieldRef<::esper::Value> self{ SigOf("TSTE"), { { 1, 2 }, 2, 2 } };
+            inline constexpr ::esper::FieldRef<float> value{ SigOf("TSTE"), { { 1, 2, 0 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<::esper::FormId> spell{ SigOf("TSTE"), { { 1, 2, 1 }, 2, 3 } };
+            inline constexpr ::esper::FieldRef<std::string> text{ SigOf("TSTE"), { { 1, 2, 2 }, 2, 3 } };
+        }
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("TSTE"), { { 1, 3 }, 2, 2 } };
+    }
+    namespace phases {
+        inline constexpr ::esper::GroupRef self{ SigOf("TSTE"), { { 2 }, 1, 1 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> start{ SigOf("TSTE"), { { 2, 0 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::string> name{ SigOf("TSTE"), { { 2, 1 }, 2, 2 } };
+        inline constexpr ::esper::FieldRef<std::vector<uint8_t>> end{ SigOf("TSTE"), { { 2, 2 }, 2, 2 } };
+    }
+}
+
 // TSTU — TestUnions
 namespace TSTU {
     namespace sized {

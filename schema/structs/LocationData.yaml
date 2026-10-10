@@ -1,0 +1,16 @@
+# PLDT (PACK). The value is a FormID or an int, by `type` — from the vanilla
+# distribution: 0 REFR/ACHR (incl. the player, 0x14), 1 CELL, 6 KYWD; 2, 3, 8,
+# 9, 11, 12 are ints (zero or small). Types absent from vanilla are refused.
+struct: LocationData
+size: 12
+fields:
+  - { name: type, type: i32 }
+  - name: value
+    union:
+      by: { field: type }
+      cases:
+        - { when: 0, name: reference, type: formid, to: [REFR, ACHR, PGRE, PHZD] }
+        - { when: 1, name: cell,      type: formid, to: [CELL] }
+        - { when: 6, name: keyword,   type: formid, to: [KYWD] }
+        - { when: [2, 3, 8, 9, 11, 12], name: number, type: i32 }
+  - { name: radius, type: i32 }

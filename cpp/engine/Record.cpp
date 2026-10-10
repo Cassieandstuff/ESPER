@@ -60,6 +60,8 @@ struct ParseCtx {
     const DecodeCtx&   ctx;
     uint32_t           recordSig;
     std::vector<Frame> frames;
+    const Record*      rec  = nullptr;   // Member selectors: the record decoded so far
+    uint32_t           inst = 0;         // ... and the scope the subrecord is placed in
 };
 
 // The nearest earlier field named `name` in the enclosing structs.
@@ -93,6 +95,12 @@ bool SelectorValue(const ParseCtx& pc, const TypeDef& u, const uint8_t* p, const
     case schema::Selector::Record:
         out = pc.recordSig;
         return true;
+    case schema::Selector::Member: {
+        const Value* v = pc.rec ? pc.rec->LatestMemberValue(pc.inst, u.selField) : nullptr;
+        if (!v) return false;
+        out = v->bits;
+        return true;
+    }
     case schema::Selector::Field:
     case schema::Selector::Lookup: {
         const Value* v = FieldByName(pc, u.selField);
@@ -408,8 +416,10 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
     out.bytes_.assign(payload.begin(), payload.end());
     out.insts_.push_back(Inst{ def->root, -1, 0 });
 
-    struct Open { uint32_t inst; int32_t lastPos; };
-    std::vector<Open> stack{ { 0, -1 } };
+    // `fresh`: the instance was just opened by the subrecord being resolved, so
+    // its opener may be placed in it (a later opener starts a new instance).
+    struct Open { uint32_t inst; int32_t lastPos; bool fresh; };
+    std::vector<Open> stack{ { 0, -1, false } };
     // Occurrences per (scope instance, member): subrecord nodes or group instances.
     std::unordered_map<uint64_t, uint32_t> counts;
     auto key = [](uint32_t inst, int member) {
@@ -430,7 +440,16 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
         while (level >= 0) {
             const uint32_t scopeInst = stack[static_cast<size_t>(level)].inst;
             const schema::GroupDef& g = out.GroupOf(scopeInst);
-            const int m = EntryLookup(set, g, sub.sig);
+            int m;
+            if (g.openSig == sub.sig && !stack[static_cast<size_t>(level)].fresh) {
+                if (g.endSig != sub.sig) {
+                    --level;                                     // reopens: a new instance outward
+                    continue;
+                }
+                m = g.memberCount - 1;                           // same sig opens and ends: it ends here
+            } else {
+                m = EntryLookup(set, g, sub.sig);
+            }
             if (m < 0) { --level; continue; }                    // not this scope
             const schema::MemberDef& md = set.members[g.firstMember + m];
             const int32_t lastPos = stack[static_cast<size_t>(level)].lastPos;
@@ -449,13 +468,14 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
                                            static_cast<uint16_t>(m) });
                 ++counts[key(scopeInst, m)];
                 stack.back().lastPos = m;
-                stack.push_back(Open{ ni, -1 });
+                stack.back().fresh = false;
+                stack.push_back(Open{ ni, -1, true });
                 level = static_cast<int>(stack.size()) - 1;      // resolve inside it
                 continue;
             }
             const uint8_t* p   = sub.data;
             const uint8_t* end = sub.data + sub.size;
-            ParseCtx pc{ set, ctx, sig, {} };
+            ParseCtx pc{ set, ctx, sig, {}, &out, scopeInst };
             Value v;
             if (Parse(pc, md.type, p, end, v) && p == end) {
                 n.value   = std::move(v);
@@ -463,7 +483,11 @@ bool Record::Decode(const SchemaSet& set, uint32_t sig, std::span<const uint8_t>
                 n.member  = static_cast<int16_t>(m);
                 ++counts[key(scopeInst, m)];
                 stack.back().lastPos = m;
+                stack.back().fresh = false;
                 placed = true;
+                if (g.endSig != 0 && g.endSig == sub.sig && m == g.memberCount - 1 &&
+                    stack.size() > 1)
+                    stack.pop_back();                            // the end member closes it
             }
             // else: refused — kept raw, in place, without advancing the position
             break;
@@ -696,6 +720,23 @@ const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p)
         v = &v->items[i];
     }
     return v;
+}
+
+const Value* Record::LatestMemberValue(uint32_t inst, std::string_view name) const {
+    for (int32_t cur = static_cast<int32_t>(inst); cur >= 0;
+         cur = insts_[static_cast<size_t>(cur)].parent) {
+        const schema::GroupDef& g = GroupOf(static_cast<uint32_t>(cur));
+        int m = -1;
+        for (uint16_t i = 0; i < g.memberCount && m < 0; ++i) {
+            const schema::MemberDef& md = set_->members[g.firstMember + i];
+            if (!md.isGroup && name == md.name) m = i;
+        }
+        if (m < 0) continue;
+        for (size_t k = nodes_.size(); k-- > 0;)
+            if (nodes_[k].inst == static_cast<uint32_t>(cur) && nodes_[k].member == m)
+                return &NodeValue(nodes_[k]);
+    }
+    return nullptr;
 }
 
 const Value* Record::FindValue(uint32_t inst, const RelPath& p) const {

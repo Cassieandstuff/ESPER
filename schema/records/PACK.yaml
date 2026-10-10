@@ -1,10 +1,55 @@
-# Seeded from the typed path (PackRec, include/ESPER/Records*.h) in migration step 2.
+# Seeded from the typed path (PackRec) in migration step 2; data inputs,
+# procedure tree, input names and event blocks modeled in step 4 (language 0.5)
+# from esm-dump + schema-probe evidence.
 record: PACK
 name: Package
 members:
-  - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: VMAD, name: vmad, type: Vmad }
-  - { sig: PKDT, name: data, type: bytes, formIds: none }   # PKDT (flags/type; no FormIDs)
-  - { sig: PSDT, name: schedule, type: bytes, formIds: none }   # PSDT (no FormIDs)
-  - { sig: PKCU, name: counter, type: PackCounter }   # PKCU
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: VMAD, name: vmad,     type: Vmad }
+  - { sig: PKDT, name: data,     type: bytes, formIds: none }   # flags/type (typed path: no FormIDs)
+  - { sig: PSDT, name: schedule, type: bytes, formIds: none }
   - { use: Condition, name: conditions, repeat: true }
+  - { sig: IDLF, name: idleFlags,      type: u8 }
+  - { sig: IDLC, name: idleCount,      type: u8 }
+  - { sig: IDLT, name: idleTimer,      type: f32 }
+  - { sig: IDLA, name: idleAnimations, type: "formid[]", to: [IDLE] }
+  - { sig: CNAM, name: combatStyle,    type: formid, to: [CSTY] }
+  - { sig: QNAM, name: ownerQuest,     type: formid, to: [QUST] }
+  - { sig: PKCU, name: counter,        type: PackCounter }
+  # ANAM opens both data inputs (type name + value) and, in templates,
+  # procedure-tree branches (branch type + conditions + procedure).
+  - group: sections
+    repeat: true
+    open: ANAM
+    members:
+      - { sig: ANAM, name: type, type: zstring }
+      - sig: CNAM
+        name: value
+        union:
+          by: size
+          cases:
+            - { when: 1, name: byte, type: u8 }
+            - { when: 4, name: word, type: u32 }   # int or float; never a FormID in vanilla (probe)
+      - { sig: PLDT, name: location,       type: LocationData }
+      - { sig: PTDA, name: target,         type: TargetData }
+      - { sig: TPIC, name: topic,          type: formid, to: [DIAL] }
+      - { sig: PDTO, name: topicValue,     type: TopicData }      # "Topic" data inputs
+      - { sig: CITC, name: conditionCount, type: u32 }
+      - { use: Condition, name: conditions, repeat: true }
+      - { sig: PRCB, name: branch,         fields: [ { name: subBranchCount, type: u32 }, { name: flags, type: u32 } ] }
+      - { sig: PNAM, name: procedure,      type: zstring }
+      - { sig: FNAM, name: flags,          type: u32 }
+      - { sig: PKC2, name: dataInputIndices, type: u8, repeat: true }
+      - { sig: PFOR, name: flagOverrides,  type: "u32[3]", repeat: true }
+      - { sig: PFO2, name: flagOverrides2, type: "u32[4]", repeat: true }
+  - { sig: XNAM, name: marker, type: u8 }
+  - group: inputs
+    repeat: true
+    open: UNAM
+    members:
+      - { sig: UNAM, name: index, type: u8 }
+      - { sig: BNAM, name: name,  type: zstring }
+      - { sig: PNAM, name: flags, type: u32 }
+  - { use: PackageEvent, name: onBegin }
+  - { use: PackageEvent, name: onEnd,    sigs: { POBA: POEA } }
+  - { use: PackageEvent, name: onChange, sigs: { POBA: POCA } }

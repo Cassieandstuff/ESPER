@@ -1,0 +1,12 @@
+# A package event block: POBA (on begin), or with sigs remapped POEA (on end) /
+# POCA (on change), then its idle, legacy script and topic.
+group: PackageEvent
+open: POBA
+members:
+  - { sig: POBA, name: marker,       type: marker }
+  - { sig: INAM, name: idle,         type: formid, to: [IDLE] }
+  - { sig: SCHR, name: scriptHeader, type: "u32[5]" }
+  - { sig: SCTX, name: scriptText,   type: bytes, formIds: none }
+  - { sig: QNAM, name: scriptQuests, type: formid, repeat: true, to: [QUST] }
+  - { sig: TNAM, name: unknownTnam,  type: u32 }
+  - { sig: PDTO, name: topic,        type: TopicData }

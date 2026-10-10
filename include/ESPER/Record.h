@@ -220,6 +220,9 @@ public:
     Cursor              AddGroupAt(uint32_t inst, const RelPath& p);
 
     const Value*                     FindValue(uint32_t inst, const RelPath& p) const;
+    // The value of the latest subrecord member named `name` in instance `inst`,
+    // or else in its enclosing instances (nearest first); nullptr if none.
+    const Value*                     LatestMemberValue(uint32_t inst, std::string_view name) const;
     std::vector<const Value*>        FindAllValues(uint32_t inst, const RelPath& p) const;
     const schema::TypeDef*           TypeAt(uint32_t inst, const RelPath& p) const;
     // Replaces the value at `p` (creating groups/subrecord as needed). A no-op

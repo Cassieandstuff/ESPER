@@ -258,120 +258,199 @@ inline constexpr TypeDef kTypes[] = {
     { Kind::Array, LenKind::Fixed, StrTable::None, 0, 18, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 244: u8[18]
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 477, 9, 0, 0, "NpcSkills", Selector::None, nullptr, 0ULL, 0 },  // 245: struct:NpcSkills
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 486, 3, 0, 0, "SkinTone", Selector::None, nullptr, 0ULL, 0 },  // 246: struct:SkinTone
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 489, 3, 0, 0, "PackCounter", Selector::None, nullptr, 0ULL, 0 },  // 247: struct:PackCounter
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 198, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 248: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 200, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 249: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 202, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 250: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 205, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 251: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 207, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 252: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 210, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 253: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 492, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 254: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 212, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 255: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 214, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 256: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 216, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 257: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 219, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 258: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 221, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 259: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 224, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 260: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 502, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 261: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 512, 5, 0, 0, "QuestData", Selector::None, nullptr, 0ULL, 0 },  // 262: struct:QuestData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 517, 3, 0, 0, "QuestStageIndex", Selector::None, nullptr, 0ULL, 0 },  // 263: struct:QuestStageIndex
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 226, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 264: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 228, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 265: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 230, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 266: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 233, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 267: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 235, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 268: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 238, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 269: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 520, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 270: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 35, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 271: formid->CLFM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 530, 4, 0, 0, "PlacedObjectPrimitive", Selector::None, nullptr, 0ULL, 0 },  // 272: inline:PlacedObjectPrimitive
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 36, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 273: formid->REFR
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 534, 2, 0, 0, "PlacedObjectPortal", Selector::None, nullptr, 0ULL, 0 },  // 274: inline:PlacedObjectPortal
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 536, 2, 0, 0, "PlacedObjectRoomMarker", Selector::None, nullptr, 0ULL, 0 },  // 275: inline:PlacedObjectRoomMarker
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 276: f32[5]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 240, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 277: union:records/REFR.yaml member 11:PlacedObjectLight
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 37, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 278: formid->LGTM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 538, 3, 0, 0, "TeleportDest", Selector::None, nullptr, 0ULL, 0 },  // 279: struct:TeleportDest
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 38, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 280: formid->MESG
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 39, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 281: formid->NAVM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 541, 3, 0, 0, "PlacedObjectNavmeshDoor", Selector::None, nullptr, 0ULL, 0 },  // 282: inline:PlacedObjectNavmeshDoor
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 40, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 283: formid->KEYM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 544, 7, 0, 0, "LockData", Selector::None, nullptr, 0ULL, 0 },  // 284: struct:LockData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 551, 2, 0, 0, "PlacedObjectActivateParents", Selector::None, nullptr, 0ULL, 0 },  // 285: inline:PlacedObjectActivateParents
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 41, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 286: formid->ECZN
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 42, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 287: formid->LVLI
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 43, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 288: formid->CELL
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 553, 2, 0, 0, "PlacedObjectLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0 },  // 289: inline:PlacedObjectLinkedRefsKeyed
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 242, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 290: union:records/REFR.yaml member 41:PlacedObjectLinkedRefs
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 555, 2, 0, 0, "PlacedObjectMapMarkerType", Selector::None, nullptr, 0ULL, 0 },  // 291: inline:PlacedObjectMapMarkerType
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 557, 2, 0, 0, "PlacedObjectAlpha", Selector::None, nullptr, 0ULL, 0 },  // 292: inline:PlacedObjectAlpha
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 44, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 293: formid->NPC_
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 45, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 294: formid->ASTP
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 559, 7, 0, 0, "RelationshipData", Selector::None, nullptr, 0ULL, 0 },  // 295: struct:RelationshipData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 566, 3, 0, 0, "VisualEffectData", Selector::None, nullptr, 0ULL, 0 },  // 296: struct:VisualEffectData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 244, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 297: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 246, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 298: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 248, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 299: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 251, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 300: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 253, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 301: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 256, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 302: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 569, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 303: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 579, 9, 0, 0, "SpellData", Selector::None, nullptr, 0ULL, 0 },  // 304: struct:SpellData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 258, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 305: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 260, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 306: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 262, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 307: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 265, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 308: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 267, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 309: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 270, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 310: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 588, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 311: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 598, 3, 0, 0, "ShoutWord", Selector::None, nullptr, 0ULL, 0 },  // 312: struct:ShoutWord
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 272, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 313: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 274, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 314: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 276, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 315: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 279, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 316: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 281, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 317: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 284, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 318: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 601, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 319: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 286, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 320: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 288, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 321: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 290, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 322: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 293, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 323: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 295, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 324: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 298, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 325: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 611, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 326: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 300, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 327: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 302, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 328: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 304, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 329: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 307, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 330: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 309, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 331: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 312, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 332: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 621, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 333: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 46, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 334: formid->SOPM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 631, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0 },  // 335: inline:SoundDescriptorValues
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 314, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 336: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 316, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 337: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 318, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 338: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 339: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 323, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 340: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 326, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 341: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 636, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 342: inline:ConditionData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 343: bytes:36:noids
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 328, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 344: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 330, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 345: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 332, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 346: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 335, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 347: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 337, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 348: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 340, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 349: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 646, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 350: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 47, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 351: formid->MATO
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 656, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0 },  // 352: struct:StatData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 353: bytes:260:noids
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 660, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0 },  // 354: inline:StaticLodNames
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 664, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0 },  // 355: struct:WeaponBasic
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 667, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0 },  // 356: struct:WeaponData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 697, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0 },  // 357: struct:WeaponCrit
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 704, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0 },  // 358: struct:WorldCenter
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 706, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0 },  // 359: struct:WorldDefaults
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 708, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0 },  // 360: struct:WorldCorner
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 198, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 247: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 200, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 248: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 202, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 249: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 205, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 250: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 207, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 251: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 210, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 252: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 489, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 253: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 35, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 254: formid->IDLE
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 254, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 255: formid->IDLE[]
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 36, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 256: formid->CSTY
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 499, 3, 0, 0, "PackCounter", Selector::None, nullptr, 0ULL, 0 },  // 257: struct:PackCounter
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 212, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 258: union:records/PACK.yaml member 12 member 1:PackageSectionsValue
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 37, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 259: formid->CELL
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 214, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 260: union:structs/LocationData.yaml field 1:LocationDataValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 502, 3, 0, 0, "LocationData", Selector::None, nullptr, 0ULL, 0 },  // 261: struct:LocationData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 218, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 262: union:structs/TargetData.yaml field 1:TargetDataValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 505, 3, 0, 0, "TargetData", Selector::None, nullptr, 0ULL, 0 },  // 263: struct:TargetData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 222, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 264: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 224, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 265: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 226, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 266: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 229, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 267: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 231, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 268: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 234, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 269: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 508, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 270: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 518, 2, 0, 0, "PackageSectionsBranch", Selector::None, nullptr, 0ULL, 0 },  // 271: inline:PackageSectionsBranch
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 272: u32[3]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 273: u32[4]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 236, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 274: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 238, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 275: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 240, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 276: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 243, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 277: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 245, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 278: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 248, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 279: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 520, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 280: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 530, 5, 0, 0, "PerkData", Selector::None, nullptr, 0ULL, 0 },  // 281: inline:PerkData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 535, 3, 0, 0, "PerkEntriesHeader", Selector::None, nullptr, 0ULL, 0 },  // 282: inline:PerkEntriesHeader
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 538, 3, 0, 0, "PerkEntriesDataQuestStage", Selector::None, nullptr, 0ULL, 0 },  // 283: inline:PerkEntriesDataQuestStage
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 541, 3, 0, 0, "PerkEntriesDataEntryPoint", Selector::None, nullptr, 0ULL, 0 },  // 284: inline:PerkEntriesDataEntryPoint
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 250, 3, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 285: union:records/PERK.yaml member 8 member 1:PerkEntriesData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 253, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 286: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 255, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 287: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 257, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 288: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 260, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 289: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 262, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 290: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 265, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 291: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 544, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 292: inline:ConditionData
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 2, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 293: f32[2]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 267, 5, 0, 0, nullptr, Selector::Member, "functionType", 0ULL, 0 },  // 294: union:records/PERK.yaml member 8 member 6:PerkEntriesFunctionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 554, 5, 0, 0, "QuestData", Selector::None, nullptr, 0ULL, 0 },  // 295: struct:QuestData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 272, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 296: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 274, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 297: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 276, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 298: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 279, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 299: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 281, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 300: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 284, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 301: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 559, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 302: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 569, 3, 0, 0, "QuestStageIndex", Selector::None, nullptr, 0ULL, 0 },  // 303: struct:QuestStageIndex
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 286, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 304: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 288, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 305: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 290, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 306: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 293, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 307: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 295, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 308: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 298, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 309: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 572, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 310: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 582, 2, 0, 0, "QuestObjectivesTargetsTarget", Selector::None, nullptr, 0ULL, 0 },  // 311: inline:QuestObjectivesTargetsTarget
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 300, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 312: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 302, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 313: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 304, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 314: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 307, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 315: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 309, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 316: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 312, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 317: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 584, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 318: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 38, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 319: formid->NPC_
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 314, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 320: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 316, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 321: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 318, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 322: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 323: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 323, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 324: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 326, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 325: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 594, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 326: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 39, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 327: formid->FLST
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 40, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 328: formid->MESG
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 41, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 329: formid->FACT
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 42, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 330: formid->PACK
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 43, 3, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 331: formid->FLST,VTYP,NPC_
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 328, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 332: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 330, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 333: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 332, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 334: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 335, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 335: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 337, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 336: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 340, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 337: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 604, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 338: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 46, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 339: formid->CLFM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 614, 4, 0, 0, "PlacedObjectPrimitive", Selector::None, nullptr, 0ULL, 0 },  // 340: inline:PlacedObjectPrimitive
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 47, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 341: formid->REFR
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 618, 2, 0, 0, "PlacedObjectPortal", Selector::None, nullptr, 0ULL, 0 },  // 342: inline:PlacedObjectPortal
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 620, 2, 0, 0, "PlacedObjectRoomMarker", Selector::None, nullptr, 0ULL, 0 },  // 343: inline:PlacedObjectRoomMarker
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 344: f32[5]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 342, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 345: union:records/REFR.yaml member 11:PlacedObjectLight
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 48, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 346: formid->LGTM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 622, 3, 0, 0, "TeleportDest", Selector::None, nullptr, 0ULL, 0 },  // 347: struct:TeleportDest
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 49, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 348: formid->NAVM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 625, 3, 0, 0, "PlacedObjectNavmeshDoor", Selector::None, nullptr, 0ULL, 0 },  // 349: inline:PlacedObjectNavmeshDoor
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 50, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 350: formid->KEYM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 628, 7, 0, 0, "LockData", Selector::None, nullptr, 0ULL, 0 },  // 351: struct:LockData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 635, 2, 0, 0, "PlacedObjectActivateParents", Selector::None, nullptr, 0ULL, 0 },  // 352: inline:PlacedObjectActivateParents
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 51, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 353: formid->ECZN
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 52, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 354: formid->LVLI
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 637, 2, 0, 0, "PlacedObjectLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0 },  // 355: inline:PlacedObjectLinkedRefsKeyed
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 344, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 356: union:records/REFR.yaml member 41:PlacedObjectLinkedRefs
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 639, 2, 0, 0, "PlacedObjectMapMarkerType", Selector::None, nullptr, 0ULL, 0 },  // 357: inline:PlacedObjectMapMarkerType
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 641, 2, 0, 0, "PlacedObjectAlpha", Selector::None, nullptr, 0ULL, 0 },  // 358: inline:PlacedObjectAlpha
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 53, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 359: formid->ASTP
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 643, 7, 0, 0, "RelationshipData", Selector::None, nullptr, 0ULL, 0 },  // 360: struct:RelationshipData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 650, 3, 0, 0, "VisualEffectData", Selector::None, nullptr, 0ULL, 0 },  // 361: struct:VisualEffectData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 346, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 362: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 348, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 363: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 350, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 364: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 353, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 365: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 355, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 366: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 358, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 367: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 653, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 368: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 360, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 369: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 362, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 370: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 364, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 371: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 367, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 372: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 369, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 373: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 372, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 374: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 663, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 375: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 374, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 376: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 376, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 377: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 378, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 378: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 381, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 379: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 383, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 380: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 386, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 381: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 673, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 382: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 683, 9, 0, 0, "SpellData", Selector::None, nullptr, 0ULL, 0 },  // 383: struct:SpellData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 388, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 384: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 390, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 385: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 392, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 386: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 395, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 387: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 397, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 388: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 400, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 389: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 692, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 390: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 702, 3, 0, 0, "ShoutWord", Selector::None, nullptr, 0ULL, 0 },  // 391: struct:ShoutWord
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 402, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 392: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 404, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 393: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 406, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 394: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 409, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 395: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 411, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 396: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 414, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 397: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 705, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 398: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 416, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 399: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 418, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 400: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 420, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 401: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 423, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 402: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 425, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 403: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 428, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 404: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 715, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 405: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 430, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 406: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 432, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 407: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 434, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 408: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 437, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 409: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 439, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 410: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 442, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 411: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 725, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 412: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 54, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 413: formid->SOPM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 735, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0 },  // 414: inline:SoundDescriptorValues
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 444, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 415: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 446, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 416: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 448, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 417: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 451, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 418: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 453, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 419: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 456, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 420: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 740, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 421: inline:ConditionData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 422: bytes:36:noids
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 458, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 423: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 460, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 424: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 462, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 425: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 465, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 426: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 467, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 427: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 470, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 428: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 750, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 429: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 55, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 430: formid->MATO
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 760, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0 },  // 431: struct:StatData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 432: bytes:260:noids
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 764, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0 },  // 433: inline:StaticLodNames
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 768, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0 },  // 434: struct:WeaponBasic
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 771, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0 },  // 435: struct:WeaponData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 801, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0 },  // 436: struct:WeaponCrit
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 808, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0 },  // 437: struct:WorldCenter
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 810, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0 },  // 438: struct:WorldDefaults
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 812, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0 },  // 439: struct:WorldCorner
 };
 inline constexpr FieldDef kFields[] = {
     { "r", 1, false },
@@ -863,37 +942,25 @@ inline constexpr FieldDef kFields[] = {
     { "r", 13, false },
     { "g", 13, false },
     { "b", 13, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 247, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 249, false },
+    { "param2", 251, false },
+    { "runOnType", 43, false },
+    { "reference", 252, false },
+    { "param3", 12, false },
     { "dataInputCount", 43, false },
     { "packageTemplate", 7, false },
     { "versionCounter", 43, false },
-    { "op", 1, false },
-    { "unknown", 66, false },
-    { "comparison", 248, false },
-    { "functionIndex", 8, false },
-    { "pad", 69, false },
-    { "param1", 250, false },
-    { "param2", 252, false },
-    { "runOnType", 43, false },
-    { "reference", 253, false },
-    { "param3", 12, false },
-    { "op", 1, false },
-    { "unknown", 66, false },
-    { "comparison", 255, false },
-    { "functionIndex", 8, false },
-    { "pad", 69, false },
-    { "param1", 257, false },
-    { "param2", 259, false },
-    { "runOnType", 43, false },
-    { "reference", 260, false },
-    { "param3", 12, false },
-    { "flags", 8, false },
-    { "priority", 1, false },
-    { "unknown3", 1, false },
-    { "unknown4", 43, false },
-    { "type", 43, false },
-    { "index", 8, false },
-    { "flags", 1, false },
-    { "unknown", 1, false },
+    { "type", 12, false },
+    { "value", 260, false },
+    { "radius", 12, false },
+    { "type", 12, false },
+    { "value", 262, false },
+    { "count", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
     { "comparison", 264, false },
@@ -904,86 +971,81 @@ inline constexpr FieldDef kFields[] = {
     { "runOnType", 43, false },
     { "reference", 269, false },
     { "param3", 12, false },
-    { "bounds", 30, false },
-    { "color", 30, false },
-    { "unknown", 13, false },
-    { "type", 43, false },
-    { "origin", 273, false },
-    { "destination", 273, false },
-    { "linkedRooms", 1, false },
-    { "unknown", 66, false },
-    { "door", 7, false },
-    { "placement", 50, false },
+    { "subBranchCount", 43, false },
     { "flags", 43, false },
-    { "navmesh", 281, false },
-    { "triangle", 8, false },
-    { "unknown", 8, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 274, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 276, false },
+    { "param2", 278, false },
+    { "runOnType", 43, false },
+    { "reference", 279, false },
+    { "param3", 12, false },
+    { "trait", 1, false },
     { "level", 1, false },
-    { "pad0", 66, false },
-    { "key", 283, false },
-    { "flags", 1, false },
-    { "pad1", 66, false },
-    { "unknown0", 43, false },
-    { "unknown1", 43, false },
-    { "ref", 39, false },
-    { "delay", 13, false },
-    { "keyword", 33, false },
-    { "ref", 34, false },
+    { "numRanks", 1, false },
+    { "playable", 1, false },
+    { "hidden", 1, false },
     { "type", 1, false },
-    { "unused", 1, false },
-    { "cutoff", 1, false },
-    { "base", 1, false },
-    { "parent", 293, false },
-    { "child", 293, false },
     { "rank", 1, false },
-    { "unknown", 1, false },
-    { "flags", 1, false },
-    { "unknown2", 1, false },
-    { "associationType", 294, false },
-    { "effectArt", 7, false },
-    { "shader", 7, false },
-    { "flags", 43, false },
+    { "priority", 1, false },
+    { "quest", 169, false },
+    { "stage", 1, false },
+    { "unknown", 66, false },
+    { "entryPoint", 1, false },
+    { "function", 1, false },
+    { "conditionTabCount", 1, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 297, false },
+    { "comparison", 286, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 299, false },
-    { "param2", 301, false },
+    { "param1", 288, false },
+    { "param2", 290, false },
     { "runOnType", 43, false },
-    { "reference", 302, false },
+    { "reference", 291, false },
     { "param3", 12, false },
-    { "cost", 43, false },
-    { "flags", 43, false },
+    { "flags", 8, false },
+    { "priority", 1, false },
+    { "unknown3", 1, false },
+    { "unknown4", 43, false },
     { "type", 43, false },
-    { "chargeTime", 13, false },
-    { "castType", 43, false },
-    { "delivery", 43, false },
-    { "castDuration", 13, false },
-    { "range", 13, false },
-    { "halfCostPerk", 7, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 305, false },
+    { "comparison", 296, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 307, false },
-    { "param2", 309, false },
+    { "param1", 298, false },
+    { "param2", 300, false },
     { "runOnType", 43, false },
-    { "reference", 310, false },
+    { "reference", 301, false },
     { "param3", 12, false },
-    { "word", 7, false },
-    { "spell", 7, false },
-    { "recoveryTime", 13, false },
+    { "index", 8, false },
+    { "flags", 1, false },
+    { "unknown", 1, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 313, false },
+    { "comparison", 304, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 315, false },
-    { "param2", 317, false },
+    { "param1", 306, false },
+    { "param2", 308, false },
     { "runOnType", 43, false },
-    { "reference", 318, false },
+    { "reference", 309, false },
+    { "param3", 12, false },
+    { "alias", 12, false },
+    { "flags", 43, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 312, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 314, false },
+    { "param2", 316, false },
+    { "runOnType", 43, false },
+    { "reference", 317, false },
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
@@ -997,13 +1059,134 @@ inline constexpr FieldDef kFields[] = {
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 327, false },
+    { "comparison", 332, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 329, false },
-    { "param2", 331, false },
+    { "param1", 334, false },
+    { "param2", 336, false },
     { "runOnType", 43, false },
-    { "reference", 332, false },
+    { "reference", 337, false },
+    { "param3", 12, false },
+    { "bounds", 30, false },
+    { "color", 30, false },
+    { "unknown", 13, false },
+    { "type", 43, false },
+    { "origin", 341, false },
+    { "destination", 341, false },
+    { "linkedRooms", 1, false },
+    { "unknown", 66, false },
+    { "door", 7, false },
+    { "placement", 50, false },
+    { "flags", 43, false },
+    { "navmesh", 348, false },
+    { "triangle", 8, false },
+    { "unknown", 8, false },
+    { "level", 1, false },
+    { "pad0", 66, false },
+    { "key", 350, false },
+    { "flags", 1, false },
+    { "pad1", 66, false },
+    { "unknown0", 43, false },
+    { "unknown1", 43, false },
+    { "ref", 39, false },
+    { "delay", 13, false },
+    { "keyword", 33, false },
+    { "ref", 34, false },
+    { "type", 1, false },
+    { "unused", 1, false },
+    { "cutoff", 1, false },
+    { "base", 1, false },
+    { "parent", 319, false },
+    { "child", 319, false },
+    { "rank", 1, false },
+    { "unknown", 1, false },
+    { "flags", 1, false },
+    { "unknown2", 1, false },
+    { "associationType", 359, false },
+    { "effectArt", 7, false },
+    { "shader", 7, false },
+    { "flags", 43, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 362, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 364, false },
+    { "param2", 366, false },
+    { "runOnType", 43, false },
+    { "reference", 367, false },
+    { "param3", 12, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 369, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 371, false },
+    { "param2", 373, false },
+    { "runOnType", 43, false },
+    { "reference", 374, false },
+    { "param3", 12, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 376, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 378, false },
+    { "param2", 380, false },
+    { "runOnType", 43, false },
+    { "reference", 381, false },
+    { "param3", 12, false },
+    { "cost", 43, false },
+    { "flags", 43, false },
+    { "type", 43, false },
+    { "chargeTime", 13, false },
+    { "castType", 43, false },
+    { "delivery", 43, false },
+    { "castDuration", 13, false },
+    { "range", 13, false },
+    { "halfCostPerk", 7, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 384, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 386, false },
+    { "param2", 388, false },
+    { "runOnType", 43, false },
+    { "reference", 389, false },
+    { "param3", 12, false },
+    { "word", 7, false },
+    { "spell", 7, false },
+    { "recoveryTime", 13, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 392, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 394, false },
+    { "param2", 396, false },
+    { "runOnType", 43, false },
+    { "reference", 397, false },
+    { "param3", 12, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 399, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 401, false },
+    { "param2", 403, false },
+    { "runOnType", 43, false },
+    { "reference", 404, false },
+    { "param3", 12, false },
+    { "op", 1, false },
+    { "unknown", 66, false },
+    { "comparison", 406, false },
+    { "functionIndex", 8, false },
+    { "pad", 69, false },
+    { "param1", 408, false },
+    { "param2", 410, false },
+    { "runOnType", 43, false },
+    { "reference", 411, false },
     { "param3", 12, false },
     { "frequencyShift", 122, false },
     { "frequencyVariance", 122, false },
@@ -1012,32 +1195,32 @@ inline constexpr FieldDef kFields[] = {
     { "staticAttenuation", 8, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 336, false },
+    { "comparison", 415, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 338, false },
-    { "param2", 340, false },
+    { "param1", 417, false },
+    { "param2", 419, false },
     { "runOnType", 43, false },
-    { "reference", 341, false },
+    { "reference", 420, false },
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 344, false },
+    { "comparison", 423, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 346, false },
-    { "param2", 348, false },
+    { "param1", 425, false },
+    { "param2", 427, false },
     { "runOnType", 43, false },
-    { "reference", 349, false },
+    { "reference", 428, false },
     { "param3", 12, false },
     { "maxAngle", 13, false },
-    { "material", 351, false },
+    { "material", 430, false },
     { nullptr, 0, true },
     { "unknown", 43, false },
-    { "lod0", 353, false },
-    { "lod1", 353, false },
-    { "lod2", 353, false },
-    { "lod3", 353, false },
+    { "lod0", 432, false },
+    { "lod1", 432, false },
+    { "lod2", 432, false },
+    { "lod3", 432, false },
     { "value", 12, false },
     { "weight", 13, false },
     { "damage", 3, false },
@@ -1086,7 +1269,7 @@ inline constexpr FieldDef kFields[] = {
     { "y", 13, false },
 };
 inline constexpr uint32_t kLinks[] = {
-    SigOf("KYWD"), SigOf("REFR"), SigOf("ACHR"), SigOf("PGRE"), SigOf("PHZD"), SigOf("LCTN"), SigOf("LCRT"), SigOf("REFR"), SigOf("ACHR"), SigOf("IMGS"), SigOf("DIAL"), SigOf("ACHR"), SigOf("TXST"), SigOf("EXPL"), SigOf("DEBR"), SigOf("GLOB"), SigOf("ENCH"), SigOf("SNDR"), SigOf("EQUP"), SigOf("IPDS"), SigOf("MATT"), SigOf("RACE"), SigOf("ARMA"), SigOf("ARMO"), SigOf("SPEL"), SigOf("FACT"), SigOf("NPC_"), SigOf("QUST"), SigOf("LIGH"), SigOf("EFSH"), SigOf("PROJ"), SigOf("ARTO"), SigOf("DUAL"), SigOf("IMAD"), SigOf("PERK"), SigOf("CLFM"), SigOf("REFR"), SigOf("LGTM"), SigOf("MESG"), SigOf("NAVM"), SigOf("KEYM"), SigOf("ECZN"), SigOf("LVLI"), SigOf("CELL"), SigOf("NPC_"), SigOf("ASTP"), SigOf("SOPM"), SigOf("MATO"),
+    SigOf("KYWD"), SigOf("REFR"), SigOf("ACHR"), SigOf("PGRE"), SigOf("PHZD"), SigOf("LCTN"), SigOf("LCRT"), SigOf("REFR"), SigOf("ACHR"), SigOf("IMGS"), SigOf("DIAL"), SigOf("ACHR"), SigOf("TXST"), SigOf("EXPL"), SigOf("DEBR"), SigOf("GLOB"), SigOf("ENCH"), SigOf("SNDR"), SigOf("EQUP"), SigOf("IPDS"), SigOf("MATT"), SigOf("RACE"), SigOf("ARMA"), SigOf("ARMO"), SigOf("SPEL"), SigOf("FACT"), SigOf("NPC_"), SigOf("QUST"), SigOf("LIGH"), SigOf("EFSH"), SigOf("PROJ"), SigOf("ARTO"), SigOf("DUAL"), SigOf("IMAD"), SigOf("PERK"), SigOf("IDLE"), SigOf("CSTY"), SigOf("CELL"), SigOf("NPC_"), SigOf("FLST"), SigOf("MESG"), SigOf("FACT"), SigOf("PACK"), SigOf("FLST"), SigOf("VTYP"), SigOf("NPC_"), SigOf("CLFM"), SigOf("REFR"), SigOf("LGTM"), SigOf("NAVM"), SigOf("KEYM"), SigOf("ECZN"), SigOf("LVLI"), SigOf("ASTP"), SigOf("SOPM"), SigOf("MATO"),
 };
 inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -1914,19 +2097,87 @@ inline constexpr MemberDef kMembers[] = {
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "data", SigOf("PKDT"), 53, 0, false, false, -1 },
     { "schedule", SigOf("PSDT"), 53, 0, false, false, -1 },
-    { "counter", SigOf("PKCU"), 247, 0, false, false, -1 },
     { "conditions", 0, 0, 139, true, true, -1 },
-    { "data", SigOf("CTDA"), 254, 0, false, false, -1 },
+    { "idleFlags", SigOf("IDLF"), 1, 0, false, false, -1 },
+    { "idleCount", SigOf("IDLC"), 1, 0, false, false, -1 },
+    { "idleTimer", SigOf("IDLT"), 13, 0, false, false, -1 },
+    { "idleAnimations", SigOf("IDLA"), 255, 0, false, false, -1 },
+    { "combatStyle", SigOf("CNAM"), 256, 0, false, false, -1 },
+    { "ownerQuest", SigOf("QNAM"), 169, 0, false, false, -1 },
+    { "counter", SigOf("PKCU"), 257, 0, false, false, -1 },
+    { "sections", 0, 0, 140, true, true, -1 },
+    { "marker", SigOf("XNAM"), 1, 0, false, false, -1 },
+    { "inputs", 0, 0, 142, true, true, -1 },
+    { "onBegin", 0, 0, 143, true, false, -1 },
+    { "onEnd", 0, 0, 144, true, false, -1 },
+    { "onChange", 0, 0, 145, true, false, -1 },
+    { "data", SigOf("CTDA"), 253, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "type", SigOf("ANAM"), 0, 0, false, false, -1 },
+    { "value", SigOf("CNAM"), 258, 0, false, false, -1 },
+    { "location", SigOf("PLDT"), 261, 0, false, false, -1 },
+    { "target", SigOf("PTDA"), 263, 0, false, false, -1 },
+    { "topic", SigOf("TPIC"), 44, 0, false, false, -1 },
+    { "topicValue", SigOf("PDTO"), 47, 0, false, false, -1 },
+    { "conditionCount", SigOf("CITC"), 43, 0, false, false, -1 },
+    { "conditions", 0, 0, 141, true, true, -1 },
+    { "branch", SigOf("PRCB"), 271, 0, false, false, -1 },
+    { "procedure", SigOf("PNAM"), 0, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "dataInputIndices", SigOf("PKC2"), 1, 0, false, true, -1 },
+    { "flagOverrides", SigOf("PFOR"), 272, 0, false, true, -1 },
+    { "flagOverrides2", SigOf("PFO2"), 273, 0, false, true, -1 },
+    { "data", SigOf("CTDA"), 270, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "index", SigOf("UNAM"), 1, 0, false, false, -1 },
+    { "name", SigOf("BNAM"), 0, 0, false, false, -1 },
+    { "flags", SigOf("PNAM"), 43, 0, false, false, -1 },
+    { "marker", SigOf("POBA"), 41, 0, false, false, -1 },
+    { "idle", SigOf("INAM"), 254, 0, false, false, -1 },
+    { "scriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "scriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "scriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "unknownTnam", SigOf("TNAM"), 43, 0, false, false, -1 },
+    { "topic", SigOf("PDTO"), 47, 0, false, false, -1 },
+    { "marker", SigOf("POEA"), 41, 0, false, false, -1 },
+    { "idle", SigOf("INAM"), 254, 0, false, false, -1 },
+    { "scriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "scriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "scriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "unknownTnam", SigOf("TNAM"), 43, 0, false, false, -1 },
+    { "topic", SigOf("PDTO"), 47, 0, false, false, -1 },
+    { "marker", SigOf("POCA"), 41, 0, false, false, -1 },
+    { "idle", SigOf("INAM"), 254, 0, false, false, -1 },
+    { "scriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "scriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "scriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "unknownTnam", SigOf("TNAM"), 43, 0, false, false, -1 },
+    { "topic", SigOf("PDTO"), 47, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
     { "description", SigOf("DESC"), 77, 0, false, false, -1 },
     { "icon", SigOf("ICON"), 0, 0, false, false, -1 },
-    { "nextPerk", SigOf("NNAM"), 7, 0, false, false, -1 },
-    { "conditions", 0, 0, 141, true, true, -1 },
-    { "data", SigOf("CTDA"), 261, 0, false, false, -1 },
+    { "nextPerk", SigOf("NNAM"), 222, 0, false, false, -1 },
+    { "conditions", 0, 0, 147, true, true, -1 },
+    { "data", SigOf("DATA"), 281, 0, false, false, -1 },
+    { "entries", 0, 0, 148, true, true, -1 },
+    { "data", SigOf("CTDA"), 280, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "header", SigOf("PRKE"), 282, 0, false, false, -1 },
+    { "data", SigOf("DATA"), 285, 0, false, false, -1 },
+    { "conditionTabs", 0, 0, 149, true, true, -1 },
+    { "functionType", SigOf("EPFT"), 1, 0, false, false, -1 },
+    { "buttonLabel", SigOf("EPF2"), 52, 0, false, false, -1 },
+    { "scriptFlags", SigOf("EPF3"), 43, 0, false, false, -1 },
+    { "functionData", SigOf("EPFD"), 294, 0, false, false, -1 },
+    { "end", SigOf("PRKF"), 41, 0, false, false, -1 },
+    { "runOn", SigOf("PRKC"), 1, 0, false, false, -1 },
+    { "conditions", 0, 0, 150, true, true, -1 },
+    { "data", SigOf("CTDA"), 292, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -1944,16 +2195,16 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 145, true, false, -1 },
+    { "model", 0, 0, 154, true, false, -1 },
     { "muzzleModel", SigOf("NAM1"), 0, 0, false, false, -1 },
     { "muzzleData", SigOf("NAM2"), 24, 0, false, false, -1 },
     { "soundLevel", SigOf("VNAM"), 43, 0, false, false, -1 },
-    { "destructible", 0, 0, 146, true, false, -1 },
+    { "destructible", 0, 0, 155, true, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
     { "header", SigOf("DEST"), 58, 0, false, false, -1 },
-    { "stages", 0, 0, 147, true, true, -1 },
+    { "stages", 0, 0, 156, true, true, -1 },
     { "data", SigOf("DSTD"), 61, 0, false, false, -1 },
     { "model", SigOf("DMDL"), 0, 0, false, false, -1 },
     { "hashes", SigOf("DMDT"), 53, 0, false, false, -1 },
@@ -1961,7 +2212,7 @@ inline constexpr MemberDef kMembers[] = {
     { "end", SigOf("DSTF"), 41, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
-    { "model", 0, 0, 149, true, false, -1 },
+    { "model", 0, 0, 158, true, false, -1 },
     { "data", SigOf("DNAM"), 24, 0, false, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
@@ -1969,18 +2220,109 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "data", SigOf("DNAM"), 262, 0, false, false, -1 },
+    { "data", SigOf("DNAM"), 295, 0, false, false, -1 },
     { "event", SigOf("ENAM"), 45, 0, false, false, -1 },
-    { "displayGlobals", SigOf("QTGL"), 7, 0, false, false, -1 },
+    { "displayGlobals", SigOf("QTGL"), 67, 0, false, true, -1 },
     { "objectWindowFilter", SigOf("FLTR"), 0, 0, false, false, -1 },
-    { "stageIndices", SigOf("INDX"), 263, 0, false, true, -1 },
-    { "stageFlags", SigOf("QSDT"), 1, 0, false, true, -1 },
-    { "logEntries", SigOf("CNAM"), 77, 0, false, true, -1 },
-    { "objectiveTexts", SigOf("NNAM"), 52, 0, false, true, -1 },
-    { "conditions", 0, 0, 151, true, true, -1 },
-    { "nextAliasId", SigOf("ANAM"), 43, 0, false, false, -1 },
+    { "conditions", 0, 0, 160, true, true, -1 },
     { "next", SigOf("NEXT"), 41, 0, false, false, -1 },
-    { "data", SigOf("CTDA"), 270, 0, false, false, -1 },
+    { "stages", 0, 0, 161, true, true, -1 },
+    { "objectives", 0, 0, 164, true, true, -1 },
+    { "nextAliasId", SigOf("ANAM"), 43, 0, false, false, -1 },
+    { "referenceAliases", 0, 0, 167, true, true, -1 },
+    { "locationAliases", 0, 0, 169, true, true, -1 },
+    { "data", SigOf("CTDA"), 302, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "stage", SigOf("INDX"), 303, 0, false, false, -1 },
+    { "logEntries", 0, 0, 162, true, true, -1 },
+    { "flags", SigOf("QSDT"), 1, 0, false, false, -1 },
+    { "conditions", 0, 0, 163, true, true, -1 },
+    { "text", SigOf("CNAM"), 77, 0, false, false, -1 },
+    { "nextQuest", SigOf("NAM0"), 169, 0, false, false, -1 },
+    { "scriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "scriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "questTargets", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "data", SigOf("CTDA"), 310, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "index", SigOf("QOBJ"), 8, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "text", SigOf("NNAM"), 52, 0, false, false, -1 },
+    { "targets", 0, 0, 165, true, true, -1 },
+    { "target", SigOf("QSTA"), 311, 0, false, false, -1 },
+    { "conditions", 0, 0, 166, true, true, -1 },
+    { "data", SigOf("CTDA"), 318, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "id", SigOf("ALST"), 43, 0, false, false, -1 },
+    { "name", SigOf("ALID"), 0, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "forcedIntoAlias", SigOf("ALFI"), 12, 0, false, false, -1 },
+    { "specificLocation", SigOf("ALFL"), 37, 0, false, false, -1 },
+    { "forcedReference", SigOf("ALFR"), 34, 0, false, false, -1 },
+    { "uniqueActor", SigOf("ALUA"), 319, 0, false, false, -1 },
+    { "locationAlias", SigOf("ALFA"), 12, 0, false, false, -1 },
+    { "locationRefType", SigOf("ALRT"), 38, 0, false, false, -1 },
+    { "externalQuest", SigOf("ALEQ"), 169, 0, false, false, -1 },
+    { "externalAlias", SigOf("ALEA"), 12, 0, false, false, -1 },
+    { "createObject", SigOf("ALCO"), 7, 0, false, false, -1 },
+    { "createAtAlias", SigOf("ALCA"), 12, 0, false, false, -1 },
+    { "createLevel", SigOf("ALCL"), 43, 0, false, false, -1 },
+    { "nearAlias", SigOf("ALNA"), 12, 0, false, false, -1 },
+    { "nearType", SigOf("ALNT"), 43, 0, false, false, -1 },
+    { "fromEvent", SigOf("ALFE"), 45, 0, false, false, -1 },
+    { "eventData", SigOf("ALFD"), 45, 0, false, false, -1 },
+    { "keyword", SigOf("KNAM"), 33, 0, false, false, -1 },
+    { "conditions", 0, 0, 168, true, true, -1 },
+    { "keywordCount", SigOf("KSIZ"), 43, 0, false, false, 21 },
+    { "keywords", SigOf("KWDA"), 57, 0, false, false, -1 },
+    { "itemCount", SigOf("COCT"), 43, 0, false, false, 23 },
+    { "items", SigOf("CNTO"), 103, 0, false, true, -1 },
+    { "spectatorOverride", SigOf("SPOR"), 327, 0, false, false, -1 },
+    { "combatOverride", SigOf("ECOR"), 327, 0, false, false, -1 },
+    { "displayName", SigOf("ALDN"), 328, 0, false, false, -1 },
+    { "spells", SigOf("ALSP"), 91, 0, false, true, -1 },
+    { "factions", SigOf("ALFC"), 329, 0, false, true, -1 },
+    { "packages", SigOf("ALPC"), 330, 0, false, true, -1 },
+    { "voiceTypes", SigOf("VTCK"), 331, 0, false, false, -1 },
+    { "end", SigOf("ALED"), 41, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 326, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "id", SigOf("ALLS"), 43, 0, false, false, -1 },
+    { "name", SigOf("ALID"), 0, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "forcedIntoAlias", SigOf("ALFI"), 12, 0, false, false, -1 },
+    { "specificLocation", SigOf("ALFL"), 37, 0, false, false, -1 },
+    { "forcedReference", SigOf("ALFR"), 34, 0, false, false, -1 },
+    { "uniqueActor", SigOf("ALUA"), 319, 0, false, false, -1 },
+    { "locationAlias", SigOf("ALFA"), 12, 0, false, false, -1 },
+    { "locationRefType", SigOf("ALRT"), 38, 0, false, false, -1 },
+    { "externalQuest", SigOf("ALEQ"), 169, 0, false, false, -1 },
+    { "externalAlias", SigOf("ALEA"), 12, 0, false, false, -1 },
+    { "createObject", SigOf("ALCO"), 7, 0, false, false, -1 },
+    { "createAtAlias", SigOf("ALCA"), 12, 0, false, false, -1 },
+    { "createLevel", SigOf("ALCL"), 43, 0, false, false, -1 },
+    { "nearAlias", SigOf("ALNA"), 12, 0, false, false, -1 },
+    { "nearType", SigOf("ALNT"), 43, 0, false, false, -1 },
+    { "fromEvent", SigOf("ALFE"), 45, 0, false, false, -1 },
+    { "eventData", SigOf("ALFD"), 45, 0, false, false, -1 },
+    { "keyword", SigOf("KNAM"), 33, 0, false, false, -1 },
+    { "conditions", 0, 0, 170, true, true, -1 },
+    { "keywordCount", SigOf("KSIZ"), 43, 0, false, false, 21 },
+    { "keywords", SigOf("KWDA"), 57, 0, false, false, -1 },
+    { "itemCount", SigOf("COCT"), 43, 0, false, false, 23 },
+    { "items", SigOf("CNTO"), 103, 0, false, true, -1 },
+    { "spectatorOverride", SigOf("SPOR"), 327, 0, false, false, -1 },
+    { "combatOverride", SigOf("ECOR"), 327, 0, false, false, -1 },
+    { "displayName", SigOf("ALDN"), 328, 0, false, false, -1 },
+    { "spells", SigOf("ALSP"), 91, 0, false, true, -1 },
+    { "factions", SigOf("ALFC"), 329, 0, false, true, -1 },
+    { "packages", SigOf("ALPC"), 330, 0, false, true, -1 },
+    { "voiceTypes", SigOf("VTCK"), 331, 0, false, false, -1 },
+    { "end", SigOf("ALED"), 41, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 338, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -1999,7 +2341,7 @@ inline constexpr MemberDef kMembers[] = {
     { "decapArmors", SigOf("DNAM"), 63, 0, false, false, -1 },
     { "defaultHairColors", SigOf("HCLF"), 63, 0, false, false, -1 },
     { "tintCount", SigOf("TINL"), 8, 0, false, false, -1 },
-    { "tintLayers", 0, 0, 153, true, true, -1 },
+    { "tintLayers", 0, 0, 172, true, true, -1 },
     { "facegenMainClamp", SigOf("PNAM"), 13, 0, false, false, -1 },
     { "facegenFaceClamp", SigOf("UNAM"), 13, 0, false, false, -1 },
     { "attackRace", SigOf("ATKR"), 7, 0, false, false, -1 },
@@ -2029,53 +2371,53 @@ inline constexpr MemberDef kMembers[] = {
     { "index", SigOf("TINI"), 8, 0, false, false, -1 },
     { "texture", SigOf("TINT"), 0, 0, false, false, -1 },
     { "maskType", SigOf("TINP"), 8, 0, false, false, -1 },
-    { "defaultColor", SigOf("TIND"), 271, 0, false, false, -1 },
-    { "presets", 0, 0, 154, true, true, -1 },
-    { "color", SigOf("TINC"), 271, 0, false, false, -1 },
+    { "defaultColor", SigOf("TIND"), 339, 0, false, false, -1 },
+    { "presets", 0, 0, 173, true, true, -1 },
+    { "color", SigOf("TINC"), 339, 0, false, false, -1 },
     { "value", SigOf("TINV"), 13, 0, false, false, -1 },
     { "id", SigOf("TIRS"), 8, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "base", SigOf("NAME"), 7, 0, false, false, -1 },
     { "boundHalfExtents", SigOf("XMBO"), 30, 0, false, false, -1 },
-    { "primitive", SigOf("XPRM"), 272, 0, false, false, -1 },
+    { "primitive", SigOf("XPRM"), 340, 0, false, false, -1 },
     { "occlusionPlane", SigOf("XOCP"), 155, 0, false, false, -1 },
-    { "portal", SigOf("XPOD"), 274, 0, false, false, -1 },
-    { "roomMarker", SigOf("XRMR"), 275, 0, false, false, -1 },
-    { "linkedRooms", SigOf("XLRM"), 273, 0, false, true, -1 },
+    { "portal", SigOf("XPOD"), 342, 0, false, false, -1 },
+    { "roomMarker", SigOf("XRMR"), 343, 0, false, false, -1 },
+    { "linkedRooms", SigOf("XLRM"), 341, 0, false, true, -1 },
     { "multiBoundPrimitive", SigOf("XMBP"), 41, 0, false, false, -1 },
     { "radius", SigOf("XRDS"), 13, 0, false, false, -1 },
-    { "light", SigOf("XLIG"), 277, 0, false, false, -1 },
+    { "light", SigOf("XLIG"), 345, 0, false, false, -1 },
     { "emittedLight", SigOf("XEMI"), 7, 0, false, false, -1 },
-    { "lightingTemplate", SigOf("LNAM"), 278, 0, false, false, -1 },
+    { "lightingTemplate", SigOf("LNAM"), 346, 0, false, false, -1 },
     { "imageSpace", SigOf("INAM"), 42, 0, false, false, -1 },
-    { "waterReflections", SigOf("XPWR"), 273, 0, false, true, -1 },
-    { "litWater", SigOf("XLTW"), 273, 0, false, false, -1 },
+    { "waterReflections", SigOf("XPWR"), 341, 0, false, true, -1 },
+    { "litWater", SigOf("XLTW"), 341, 0, false, false, -1 },
     { "waterCurrentCount", SigOf("XWCN"), 43, 0, false, false, -1 },
     { "waterVelocity", SigOf("XWCU"), 100, 0, false, false, -1 },
     { "unknownXcvl", SigOf("XCVL"), 30, 0, false, false, -1 },
-    { "teleport", SigOf("XTEL"), 279, 0, false, false, -1 },
-    { "teleportMessage", SigOf("XTNM"), 280, 0, false, false, -1 },
-    { "navmeshDoor", SigOf("XNDP"), 282, 0, false, false, -1 },
-    { "lock", SigOf("XLOC"), 284, 0, false, false, -1 },
+    { "teleport", SigOf("XTEL"), 347, 0, false, false, -1 },
+    { "teleportMessage", SigOf("XTNM"), 328, 0, false, false, -1 },
+    { "navmeshDoor", SigOf("XNDP"), 349, 0, false, false, -1 },
+    { "lock", SigOf("XLOC"), 351, 0, false, false, -1 },
     { "activateParentFlags", SigOf("XAPD"), 1, 0, false, false, -1 },
-    { "activateParents", SigOf("XAPR"), 285, 0, false, true, -1 },
+    { "activateParents", SigOf("XAPR"), 352, 0, false, true, -1 },
     { "actionFlags", SigOf("XACT"), 43, 0, false, false, -1 },
-    { "attachRef", SigOf("XATR"), 273, 0, false, false, -1 },
+    { "attachRef", SigOf("XATR"), 341, 0, false, false, -1 },
     { "enableParent", SigOf("XESP"), 49, 0, false, false, -1 },
     { "owner", SigOf("XOWN"), 7, 0, false, false, -1 },
     { "factionRank", SigOf("XRNK"), 12, 0, false, false, -1 },
-    { "encounterZone", SigOf("XEZN"), 286, 0, false, false, -1 },
+    { "encounterZone", SigOf("XEZN"), 353, 0, false, false, -1 },
     { "location", SigOf("XLCN"), 37, 0, false, false, -1 },
     { "locationRefTypes", SigOf("XLRT"), 38, 0, false, true, -1 },
     { "levelModifier", SigOf("XLCM"), 12, 0, false, false, -1 },
-    { "leveledItemBase", SigOf("XLIB"), 287, 0, false, false, -1 },
+    { "leveledItemBase", SigOf("XLIB"), 354, 0, false, false, -1 },
     { "count", SigOf("XCNT"), 12, 0, false, false, -1 },
-    { "spawnContainer", SigOf("XSPC"), 273, 0, false, false, -1 },
-    { "currentZoneCell", SigOf("XCZC"), 288, 0, false, false, -1 },
+    { "spawnContainer", SigOf("XSPC"), 341, 0, false, false, -1 },
+    { "currentZoneCell", SigOf("XCZC"), 259, 0, false, false, -1 },
     { "currentZoneAction", SigOf("XCZA"), 43, 0, false, false, -1 },
-    { "multiBoundRef", SigOf("XMBR"), 273, 0, false, false, -1 },
-    { "linkedRefs", SigOf("XLKR"), 290, 0, false, true, -1 },
+    { "multiBoundRef", SigOf("XMBR"), 341, 0, false, false, -1 },
+    { "linkedRefs", SigOf("XLKR"), 356, 0, false, true, -1 },
     { "patrolIdleTime", SigOf("XPRD"), 13, 0, false, false, -1 },
     { "patrolScriptMarker", SigOf("XPPA"), 41, 0, false, false, -1 },
     { "patrolTopic", SigOf("PDTO"), 47, 0, false, false, -1 },
@@ -2084,8 +2426,8 @@ inline constexpr MemberDef kMembers[] = {
     { "mapMarker", SigOf("XMRK"), 41, 0, false, false, -1 },
     { "mapMarkerFlags", SigOf("FNAM"), 1, 0, false, false, -1 },
     { "mapMarkerName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "mapMarkerType", SigOf("TNAM"), 291, 0, false, false, -1 },
-    { "alpha", SigOf("XALP"), 292, 0, false, false, -1 },
+    { "mapMarkerType", SigOf("TNAM"), 357, 0, false, false, -1 },
+    { "alpha", SigOf("XALP"), 358, 0, false, false, -1 },
     { "ragdollData", SigOf("XRGD"), 32, 0, false, false, -1 },
     { "ragdollBiped", SigOf("XRGB"), 30, 0, false, false, -1 },
     { "headTrackingWeight", SigOf("XHTW"), 13, 0, false, false, -1 },
@@ -2100,18 +2442,72 @@ inline constexpr MemberDef kMembers[] = {
     { "worldspace", SigOf("WNAM"), 7, 0, false, false, -1 },
     { "areaData", SigOf("RPLI"), 24, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
-    { "data", SigOf("DATA"), 295, 0, false, false, -1 },
+    { "data", SigOf("DATA"), 360, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "data", SigOf("DATA"), 24, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
-    { "data", SigOf("DATA"), 296, 0, false, false, -1 },
+    { "data", SigOf("DATA"), 361, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
-    { "quest", SigOf("PNAM"), 7, 0, false, false, -1 },
+    { "phases", 0, 0, 180, true, true, -1 },
+    { "actors", 0, 0, 184, true, true, -1 },
+    { "actions", 0, 0, 185, true, true, -1 },
+    { "beginScriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "beginScriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "beginScriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "endScript", 0, 0, 186, true, false, -1 },
+    { "quest", SigOf("PNAM"), 169, 0, false, false, -1 },
     { "lastActionIndex", SigOf("INAM"), 43, 0, false, false, -1 },
-    { "conditions", 0, 0, 161, true, true, -1 },
-    { "data", SigOf("CTDA"), 303, 0, false, false, -1 },
+    { "unknownVnam", SigOf("VNAM"), 273, 0, false, false, -1 },
+    { "conditions", 0, 0, 187, true, true, -1 },
+    { "start", SigOf("HNAM"), 41, 0, false, false, -1 },
+    { "name", SigOf("NAM0"), 0, 0, false, false, -1 },
+    { "startConditions", 0, 0, 181, true, true, -1 },
+    { "completion", 0, 0, 182, true, false, -1 },
+    { "endScriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "endScriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "endScriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "editorWidth", SigOf("WNAM"), 43, 0, false, false, -1 },
+    { "end", SigOf("HNAM"), 41, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 368, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "open", SigOf("NEXT"), 41, 0, false, false, -1 },
+    { "conditions", 0, 0, 183, true, true, -1 },
+    { "beginScriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "beginScriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "beginScriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "close", SigOf("NEXT"), 41, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 375, 0, false, false, -1 },
+    { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
+    { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
+    { "aliasId", SigOf("ALID"), 12, 0, false, false, -1 },
+    { "flags", SigOf("LNAM"), 43, 0, false, false, -1 },
+    { "behaviorFlags", SigOf("DNAM"), 43, 0, false, false, -1 },
+    { "type", SigOf("ANAM"), 8, 0, false, false, -1 },
+    { "name", SigOf("NAM0"), 0, 0, false, false, -1 },
+    { "actorId", SigOf("ALID"), 12, 0, false, false, -1 },
+    { "index", SigOf("INAM"), 43, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "startPhaseOrTimer", SigOf("SNAM"), 43, 0, false, true, -1 },
+    { "endPhase", SigOf("ENAM"), 43, 0, false, false, -1 },
+    { "packages", SigOf("PNAM"), 330, 0, false, true, -1 },
+    { "topic", SigOf("DATA"), 44, 0, false, false, -1 },
+    { "headTrackActorId", SigOf("HTID"), 12, 0, false, true, -1 },
+    { "loopingMax", SigOf("DMAX"), 13, 0, false, false, -1 },
+    { "loopingMin", SigOf("DMIN"), 13, 0, false, false, -1 },
+    { "emotionType", SigOf("DEMO"), 43, 0, false, false, -1 },
+    { "emotionValue", SigOf("DEVA"), 43, 0, false, false, -1 },
+    { "scriptHeader", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "scriptText", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "scriptQuests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "end", SigOf("ANAM"), 41, 0, false, false, -1 },
+    { "separator", SigOf("NEXT"), 41, 0, false, false, -1 },
+    { "header", SigOf("SCHR"), 170, 0, false, false, -1 },
+    { "text", SigOf("SCTX"), 53, 0, false, false, -1 },
+    { "quests", SigOf("QNAM"), 169, 0, false, true, -1 },
+    { "data", SigOf("CTDA"), 382, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2122,28 +2518,28 @@ inline constexpr MemberDef kMembers[] = {
     { "menuDisplayObject", SigOf("MDOB"), 7, 0, false, false, -1 },
     { "equipType", SigOf("ETYP"), 7, 0, false, false, -1 },
     { "description", SigOf("DESC"), 77, 0, false, false, -1 },
-    { "model", 0, 0, 163, true, false, -1 },
+    { "model", 0, 0, 189, true, false, -1 },
     { "valueWeight", SigOf("DATA"), 79, 0, false, false, -1 },
-    { "spit", SigOf("SPIT"), 304, 0, false, false, -1 },
+    { "spit", SigOf("SPIT"), 383, 0, false, false, -1 },
     { "effects", SigOf("EFID"), 7, 0, false, true, -1 },
     { "effectItems", SigOf("EFIT"), 65, 0, false, true, -1 },
-    { "conditions", 0, 0, 164, true, true, -1 },
+    { "conditions", 0, 0, 190, true, true, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
-    { "data", SigOf("CTDA"), 311, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 390, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
     { "menuDisplayObject", SigOf("MDOB"), 7, 0, false, false, -1 },
     { "description", SigOf("DESC"), 77, 0, false, false, -1 },
-    { "words", SigOf("SNAM"), 312, 0, false, true, -1 },
+    { "words", SigOf("SNAM"), 391, 0, false, true, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 167, true, false, -1 },
+    { "model", 0, 0, 193, true, false, -1 },
     { "icon", SigOf("ICON"), 0, 0, false, false, -1 },
     { "msgIcon", SigOf("MICO"), 0, 0, false, false, -1 },
     { "pickupSound", SigOf("YNAM"), 7, 0, false, false, -1 },
@@ -2164,8 +2560,8 @@ inline constexpr MemberDef kMembers[] = {
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
     { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
-    { "conditions", 0, 0, 169, true, true, -1 },
-    { "data", SigOf("CTDA"), 319, 0, false, false, -1 },
+    { "conditions", 0, 0, 195, true, true, -1 },
+    { "data", SigOf("CTDA"), 398, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2175,8 +2571,8 @@ inline constexpr MemberDef kMembers[] = {
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
     { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
-    { "conditions", 0, 0, 171, true, true, -1 },
-    { "data", SigOf("CTDA"), 326, 0, false, false, -1 },
+    { "conditions", 0, 0, 197, true, true, -1 },
+    { "data", SigOf("CTDA"), 405, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2186,8 +2582,8 @@ inline constexpr MemberDef kMembers[] = {
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
     { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
-    { "conditions", 0, 0, 173, true, true, -1 },
-    { "data", SigOf("CTDA"), 333, 0, false, false, -1 },
+    { "conditions", 0, 0, 199, true, true, -1 },
+    { "data", SigOf("CTDA"), 412, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2201,11 +2597,11 @@ inline constexpr MemberDef kMembers[] = {
     { "category", SigOf("GNAM"), 7, 0, false, false, -1 },
     { "altSound", SigOf("SNAM"), 7, 0, false, false, -1 },
     { "soundFiles", SigOf("ANAM"), 0, 0, false, true, -1 },
-    { "outputModel", SigOf("ONAM"), 334, 0, false, false, -1 },
+    { "outputModel", SigOf("ONAM"), 413, 0, false, false, -1 },
     { "flags", SigOf("LNAM"), 43, 0, false, false, -1 },
-    { "values", SigOf("BNAM"), 335, 0, false, false, -1 },
-    { "conditions", 0, 0, 176, true, true, -1 },
-    { "data", SigOf("CTDA"), 342, 0, false, false, -1 },
+    { "values", SigOf("BNAM"), 414, 0, false, false, -1 },
+    { "conditions", 0, 0, 202, true, true, -1 },
+    { "data", SigOf("CTDA"), 421, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2216,7 +2612,7 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "soundFile", SigOf("FNAM"), 0, 0, false, false, -1 },
-    { "soundData", SigOf("SNDD"), 343, 0, false, false, -1 },
+    { "soundData", SigOf("SNDD"), 422, 0, false, false, -1 },
     { "descriptor", SigOf("SDSC"), 7, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
@@ -2226,16 +2622,16 @@ inline constexpr MemberDef kMembers[] = {
     { "menuDisplayObject", SigOf("MDOB"), 7, 0, false, false, -1 },
     { "equipType", SigOf("ETYP"), 7, 0, false, false, -1 },
     { "description", SigOf("DESC"), 77, 0, false, false, -1 },
-    { "model", 0, 0, 180, true, false, -1 },
+    { "model", 0, 0, 206, true, false, -1 },
     { "valueWeight", SigOf("DATA"), 79, 0, false, false, -1 },
-    { "spit", SigOf("SPIT"), 304, 0, false, false, -1 },
+    { "spit", SigOf("SPIT"), 383, 0, false, false, -1 },
     { "effects", SigOf("EFID"), 7, 0, false, true, -1 },
     { "effectItems", SigOf("EFIT"), 65, 0, false, true, -1 },
-    { "conditions", 0, 0, 181, true, true, -1 },
+    { "conditions", 0, 0, 207, true, true, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
-    { "data", SigOf("CTDA"), 350, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 429, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2243,9 +2639,9 @@ inline constexpr MemberDef kMembers[] = {
     { "particleTexture", SigOf("ICON"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
-    { "model", 0, 0, 184, true, false, -1 },
-    { "data", SigOf("DNAM"), 352, 0, false, false, -1 },
-    { "lodNames", SigOf("MNAM"), 354, 0, false, false, -1 },
+    { "model", 0, 0, 210, true, false, -1 },
+    { "data", SigOf("DNAM"), 431, 0, false, false, -1 },
+    { "lodNames", SigOf("MNAM"), 433, 0, false, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
@@ -2253,7 +2649,7 @@ inline constexpr MemberDef kMembers[] = {
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 186, true, false, -1 },
+    { "model", 0, 0, 212, true, false, -1 },
     { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
     { "voiceType", SigOf("VNAM"), 7, 0, false, false, -1 },
     { "loopSound", SigOf("SNAM"), 7, 0, false, false, -1 },
@@ -2263,7 +2659,7 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 188, true, false, -1 },
+    { "model", 0, 0, 214, true, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
@@ -2295,7 +2691,7 @@ inline constexpr MemberDef kMembers[] = {
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 194, true, false, -1 },
+    { "model", 0, 0, 220, true, false, -1 },
     { "enchantment", SigOf("EITM"), 7, 0, false, false, -1 },
     { "enchantAmount", SigOf("EAMT"), 8, 0, false, false, -1 },
     { "equipType", SigOf("ETYP"), 7, 0, false, false, -1 },
@@ -2315,9 +2711,9 @@ inline constexpr MemberDef kMembers[] = {
     { "idleSound", SigOf("UNAM"), 7, 0, false, false, -1 },
     { "equipSound", SigOf("NAM9"), 7, 0, false, false, -1 },
     { "unequipSound", SigOf("NAM8"), 7, 0, false, false, -1 },
-    { "basic", SigOf("DATA"), 355, 0, false, false, -1 },
-    { "weaponData", SigOf("DNAM"), 356, 0, false, false, -1 },
-    { "crit", SigOf("CRDT"), 357, 0, false, false, -1 },
+    { "basic", SigOf("DATA"), 434, 0, false, false, -1 },
+    { "weaponData", SigOf("DNAM"), 435, 0, false, false, -1 },
+    { "crit", SigOf("CRDT"), 436, 0, false, false, -1 },
     { "detectionLevel", SigOf("VNAM"), 43, 0, false, false, -1 },
     { "templateWeapon", SigOf("CNAM"), 7, 0, false, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
@@ -2328,7 +2724,7 @@ inline constexpr MemberDef kMembers[] = {
     { "translation", SigOf("TNAM"), 52, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "center", SigOf("WCTR"), 358, 0, false, false, -1 },
+    { "center", SigOf("WCTR"), 437, 0, false, false, -1 },
     { "interiorLighting", SigOf("LTMP"), 7, 0, false, false, -1 },
     { "encounterZone", SigOf("XEZN"), 7, 0, false, false, -1 },
     { "location", SigOf("XLCN"), 7, 0, false, false, -1 },
@@ -2336,13 +2732,13 @@ inline constexpr MemberDef kMembers[] = {
     { "water", SigOf("NAM2"), 7, 0, false, false, -1 },
     { "lodWaterType", SigOf("NAM3"), 7, 0, false, false, -1 },
     { "lodWaterHeight", SigOf("NAM4"), 13, 0, false, false, -1 },
-    { "defaults", SigOf("DNAM"), 359, 0, false, false, -1 },
+    { "defaults", SigOf("DNAM"), 438, 0, false, false, -1 },
     { "mapData", SigOf("MNAM"), 24, 0, false, false, -1 },
     { "mapOffset", SigOf("ONAM"), 24, 0, false, false, -1 },
     { "distantLodMult", SigOf("NAMA"), 13, 0, false, false, -1 },
     { "flags", SigOf("DATA"), 1, 0, false, false, -1 },
-    { "boundsMin", SigOf("NAM0"), 360, 0, false, false, -1 },
-    { "boundsMax", SigOf("NAM9"), 360, 0, false, false, -1 },
+    { "boundsMin", SigOf("NAM0"), 439, 0, false, false, -1 },
+    { "boundsMax", SigOf("NAM9"), 439, 0, false, false, -1 },
     { "parentWorld", SigOf("WNAM"), 7, 0, false, false, -1 },
     { "parentFlags", SigOf("PNAM"), 8, 0, false, false, -1 },
     { "music", SigOf("ZNAM"), 7, 0, false, false, -1 },
@@ -3311,13 +3707,68 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("VMAD"), 1 },
     { SigOf("PKDT"), 2 },
     { SigOf("PSDT"), 3 },
-    { SigOf("PKCU"), 4 },
-    { SigOf("CTDA"), 5 },
-    { SigOf("CIS1"), 5 },
-    { SigOf("CIS2"), 5 },
+    { SigOf("CTDA"), 4 },
+    { SigOf("CIS1"), 4 },
+    { SigOf("CIS2"), 4 },
+    { SigOf("IDLF"), 5 },
+    { SigOf("IDLC"), 6 },
+    { SigOf("IDLT"), 7 },
+    { SigOf("IDLA"), 8 },
+    { SigOf("CNAM"), 9 },
+    { SigOf("QNAM"), 10 },
+    { SigOf("PKCU"), 11 },
+    { SigOf("ANAM"), 12 },
+    { SigOf("XNAM"), 13 },
+    { SigOf("UNAM"), 14 },
+    { SigOf("POBA"), 15 },
+    { SigOf("POEA"), 16 },
+    { SigOf("POCA"), 17 },
     { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("ANAM"), 0 },
+    { SigOf("CNAM"), 1 },
+    { SigOf("PLDT"), 2 },
+    { SigOf("PTDA"), 3 },
+    { SigOf("TPIC"), 4 },
+    { SigOf("PDTO"), 5 },
+    { SigOf("CITC"), 6 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("CIS1"), 7 },
+    { SigOf("CIS2"), 7 },
+    { SigOf("PRCB"), 8 },
+    { SigOf("PNAM"), 9 },
+    { SigOf("FNAM"), 10 },
+    { SigOf("PKC2"), 11 },
+    { SigOf("PFOR"), 12 },
+    { SigOf("PFO2"), 13 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("UNAM"), 0 },
+    { SigOf("BNAM"), 1 },
+    { SigOf("PNAM"), 2 },
+    { SigOf("POBA"), 0 },
+    { SigOf("INAM"), 1 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
+    { SigOf("QNAM"), 4 },
+    { SigOf("TNAM"), 5 },
+    { SigOf("PDTO"), 6 },
+    { SigOf("POEA"), 0 },
+    { SigOf("INAM"), 1 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
+    { SigOf("QNAM"), 4 },
+    { SigOf("TNAM"), 5 },
+    { SigOf("PDTO"), 6 },
+    { SigOf("POCA"), 0 },
+    { SigOf("INAM"), 1 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
+    { SigOf("QNAM"), 4 },
+    { SigOf("TNAM"), 5 },
+    { SigOf("PDTO"), 6 },
     { SigOf("EDID"), 0 },
     { SigOf("VMAD"), 1 },
     { SigOf("FULL"), 2 },
@@ -3327,6 +3778,23 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("CTDA"), 6 },
     { SigOf("CIS1"), 6 },
     { SigOf("CIS2"), 6 },
+    { SigOf("DATA"), 7 },
+    { SigOf("PRKE"), 8 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("PRKE"), 0 },
+    { SigOf("DATA"), 1 },
+    { SigOf("PRKC"), 2 },
+    { SigOf("EPFT"), 3 },
+    { SigOf("EPF2"), 4 },
+    { SigOf("EPF3"), 5 },
+    { SigOf("EPFD"), 6 },
+    { SigOf("PRKF"), 7 },
+    { SigOf("PRKC"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 1 },
     { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
@@ -3387,15 +3855,114 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("ENAM"), 4 },
     { SigOf("QTGL"), 5 },
     { SigOf("FLTR"), 6 },
-    { SigOf("INDX"), 7 },
-    { SigOf("QSDT"), 8 },
-    { SigOf("CNAM"), 9 },
-    { SigOf("NNAM"), 10 },
-    { SigOf("CTDA"), 11 },
-    { SigOf("CIS1"), 11 },
-    { SigOf("CIS2"), 11 },
-    { SigOf("ANAM"), 12 },
-    { SigOf("NEXT"), 13 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("CIS1"), 7 },
+    { SigOf("CIS2"), 7 },
+    { SigOf("NEXT"), 8 },
+    { SigOf("INDX"), 9 },
+    { SigOf("QOBJ"), 10 },
+    { SigOf("ANAM"), 11 },
+    { SigOf("ALST"), 12 },
+    { SigOf("ALLS"), 13 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("INDX"), 0 },
+    { SigOf("QSDT"), 1 },
+    { SigOf("QSDT"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 1 },
+    { SigOf("CNAM"), 2 },
+    { SigOf("NAM0"), 3 },
+    { SigOf("SCHR"), 4 },
+    { SigOf("SCTX"), 5 },
+    { SigOf("QNAM"), 6 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("QOBJ"), 0 },
+    { SigOf("FNAM"), 1 },
+    { SigOf("NNAM"), 2 },
+    { SigOf("QSTA"), 3 },
+    { SigOf("QSTA"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 1 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("ALST"), 0 },
+    { SigOf("ALID"), 1 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("ALFI"), 3 },
+    { SigOf("ALFL"), 4 },
+    { SigOf("ALFR"), 5 },
+    { SigOf("ALUA"), 6 },
+    { SigOf("ALFA"), 7 },
+    { SigOf("ALRT"), 8 },
+    { SigOf("ALEQ"), 9 },
+    { SigOf("ALEA"), 10 },
+    { SigOf("ALCO"), 11 },
+    { SigOf("ALCA"), 12 },
+    { SigOf("ALCL"), 13 },
+    { SigOf("ALNA"), 14 },
+    { SigOf("ALNT"), 15 },
+    { SigOf("ALFE"), 16 },
+    { SigOf("ALFD"), 17 },
+    { SigOf("KNAM"), 18 },
+    { SigOf("CTDA"), 19 },
+    { SigOf("CIS1"), 19 },
+    { SigOf("CIS2"), 19 },
+    { SigOf("KSIZ"), 20 },
+    { SigOf("KWDA"), 21 },
+    { SigOf("COCT"), 22 },
+    { SigOf("CNTO"), 23 },
+    { SigOf("SPOR"), 24 },
+    { SigOf("ECOR"), 25 },
+    { SigOf("ALDN"), 26 },
+    { SigOf("ALSP"), 27 },
+    { SigOf("ALFC"), 28 },
+    { SigOf("ALPC"), 29 },
+    { SigOf("VTCK"), 30 },
+    { SigOf("ALED"), 31 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("ALLS"), 0 },
+    { SigOf("ALID"), 1 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("ALFI"), 3 },
+    { SigOf("ALFL"), 4 },
+    { SigOf("ALFR"), 5 },
+    { SigOf("ALUA"), 6 },
+    { SigOf("ALFA"), 7 },
+    { SigOf("ALRT"), 8 },
+    { SigOf("ALEQ"), 9 },
+    { SigOf("ALEA"), 10 },
+    { SigOf("ALCO"), 11 },
+    { SigOf("ALCA"), 12 },
+    { SigOf("ALCL"), 13 },
+    { SigOf("ALNA"), 14 },
+    { SigOf("ALNT"), 15 },
+    { SigOf("ALFE"), 16 },
+    { SigOf("ALFD"), 17 },
+    { SigOf("KNAM"), 18 },
+    { SigOf("CTDA"), 19 },
+    { SigOf("CIS1"), 19 },
+    { SigOf("CIS2"), 19 },
+    { SigOf("KSIZ"), 20 },
+    { SigOf("KWDA"), 21 },
+    { SigOf("COCT"), 22 },
+    { SigOf("CNTO"), 23 },
+    { SigOf("SPOR"), 24 },
+    { SigOf("ECOR"), 25 },
+    { SigOf("ALDN"), 26 },
+    { SigOf("ALSP"), 27 },
+    { SigOf("ALFC"), 28 },
+    { SigOf("ALPC"), 29 },
+    { SigOf("VTCK"), 30 },
+    { SigOf("ALED"), 31 },
     { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
@@ -3532,11 +4099,66 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("EDID"), 0 },
     { SigOf("VMAD"), 1 },
     { SigOf("FNAM"), 2 },
-    { SigOf("PNAM"), 3 },
-    { SigOf("INAM"), 4 },
-    { SigOf("CTDA"), 5 },
-    { SigOf("CIS1"), 5 },
-    { SigOf("CIS2"), 5 },
+    { SigOf("HNAM"), 3 },
+    { SigOf("ALID"), 4 },
+    { SigOf("ANAM"), 5 },
+    { SigOf("SCHR"), 6 },
+    { SigOf("SCTX"), 7 },
+    { SigOf("QNAM"), 8 },
+    { SigOf("NEXT"), 9 },
+    { SigOf("PNAM"), 10 },
+    { SigOf("INAM"), 11 },
+    { SigOf("VNAM"), 12 },
+    { SigOf("CTDA"), 13 },
+    { SigOf("CIS1"), 13 },
+    { SigOf("CIS2"), 13 },
+    { SigOf("HNAM"), 0 },
+    { SigOf("NAM0"), 1 },
+    { SigOf("CTDA"), 2 },
+    { SigOf("CIS1"), 2 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("NEXT"), 3 },
+    { SigOf("SCHR"), 4 },
+    { SigOf("SCTX"), 5 },
+    { SigOf("QNAM"), 6 },
+    { SigOf("WNAM"), 7 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("NEXT"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 1 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
+    { SigOf("QNAM"), 4 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("ALID"), 0 },
+    { SigOf("LNAM"), 1 },
+    { SigOf("DNAM"), 2 },
+    { SigOf("ANAM"), 0 },
+    { SigOf("NAM0"), 1 },
+    { SigOf("ALID"), 2 },
+    { SigOf("INAM"), 3 },
+    { SigOf("FNAM"), 4 },
+    { SigOf("SNAM"), 5 },
+    { SigOf("ENAM"), 6 },
+    { SigOf("PNAM"), 7 },
+    { SigOf("DATA"), 8 },
+    { SigOf("HTID"), 9 },
+    { SigOf("DMAX"), 10 },
+    { SigOf("DMIN"), 11 },
+    { SigOf("DEMO"), 12 },
+    { SigOf("DEVA"), 13 },
+    { SigOf("SCHR"), 14 },
+    { SigOf("SCTX"), 15 },
+    { SigOf("QNAM"), 16 },
+    { SigOf("NEXT"), 0 },
+    { SigOf("SCHR"), 1 },
+    { SigOf("SCTX"), 2 },
+    { SigOf("QNAM"), 3 },
     { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
@@ -3807,226 +4429,252 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("MNAM"), 2 },
 };
 inline constexpr GroupDef kGroups[] = {
-    { "Action", 0, 2, 0, 2, false },  // 0
-    { "PlacedNpc", 2, 22, 2, 22, false },  // 1
-    { "Activator", 24, 11, 24, 18, false },  // 2
-    { "Model", 35, 3, 42, 3, true },  // 3
-    { "Destructible", 38, 2, 45, 6, true },  // 4
-    { "DestructibleStages", 40, 5, 51, 5, true },  // 5
-    { "AddonNode", 45, 6, 56, 8, false },  // 6
-    { "Model", 51, 3, 64, 3, true },  // 7
-    { "Ingestible", 54, 15, 67, 19, false },  // 8
-    { "Model", 69, 3, 86, 3, true },  // 9
-    { "Condition", 72, 3, 89, 3, true },  // 10
-    { "Ammunition", 75, 13, 92, 15, false },  // 11
-    { "Model", 88, 3, 107, 3, true },  // 12
-    { "AnimatedObject", 91, 3, 110, 5, false },  // 13
-    { "Model", 94, 3, 115, 3, true },  // 14
-    { "Apparatus", 97, 10, 118, 12, false },  // 15
-    { "Model", 107, 3, 130, 3, true },  // 16
-    { "ArmorAddon", 110, 16, 133, 24, false },  // 17
-    { "Model", 126, 3, 157, 3, true },  // 18
-    { "Model", 129, 3, 160, 3, true },  // 19
-    { "Model", 132, 3, 163, 3, true },  // 20
-    { "Model", 135, 3, 166, 3, true },  // 21
-    { "Armor", 138, 27, 169, 31, false },  // 22
-    { "Model", 165, 3, 200, 3, true },  // 23
-    { "Model", 168, 3, 203, 3, true },  // 24
-    { "ArtObject", 171, 4, 206, 6, false },  // 25
-    { "Model", 175, 3, 212, 3, true },  // 26
-    { "AcousticSpace", 178, 5, 215, 5, false },  // 27
-    { "AssociationType", 183, 6, 220, 6, false },  // 28
-    { "ActorValueInfo", 189, 4, 226, 4, false },  // 29
-    { "Book", 193, 15, 230, 17, false },  // 30
-    { "Model", 208, 3, 247, 3, true },  // 31
-    { "BodyPartData", 211, 2, 250, 4, false },  // 32
-    { "Model", 213, 3, 254, 3, true },  // 33
-    { "CameraShot", 216, 4, 257, 6, false },  // 34
-    { "Model", 220, 3, 263, 3, true },  // 35
-    { "Cell", 223, 25, 266, 25, false },  // 36
-    { "Class", 248, 5, 291, 5, false },  // 37
-    { "ColorForm", 253, 4, 296, 4, false },  // 38
-    { "Climate", 257, 6, 300, 8, false },  // 39
-    { "Model", 263, 3, 308, 3, true },  // 40
-    { "ConstructibleObject", 266, 7, 311, 9, false },  // 41
-    { "Condition", 273, 3, 320, 3, true },  // 42
-    { "CollisionLayer", 276, 8, 323, 8, false },  // 43
-    { "Container", 284, 8, 331, 10, false },  // 44
-    { "Model", 292, 3, 341, 3, true },  // 45
-    { "CameraPath", 295, 5, 344, 7, false },  // 46
-    { "Condition", 300, 3, 351, 3, true },  // 47
-    { "CombatStyle", 303, 6, 354, 6, false },  // 48
-    { "Debris", 309, 1, 360, 1, false },  // 49
-    { "DialogTopic", 310, 8, 361, 8, false },  // 50
-    { "DialogBranch", 318, 5, 369, 5, false },  // 51
-    { "DialogView", 323, 6, 374, 6, false },  // 52
-    { "DefaultObjectManager", 329, 2, 380, 2, false },  // 53
-    { "Door", 331, 6, 382, 8, false },  // 54
-    { "Model", 337, 3, 390, 3, true },  // 55
-    { "DualCastData", 340, 3, 393, 3, false },  // 56
-    { "EncounterZone", 343, 2, 396, 2, false },  // 57
-    { "EffectShader", 345, 7, 398, 7, false },  // 58
-    { "ObjectEffect", 352, 7, 405, 9, false },  // 59
-    { "Condition", 359, 3, 414, 3, true },  // 60
-    { "EquipType", 362, 3, 417, 3, false },  // 61
-    { "Explosion", 365, 6, 420, 8, false },  // 62
-    { "Model", 371, 3, 428, 3, true },  // 63
-    { "Eyes", 374, 4, 431, 4, false },  // 64
-    { "Faction", 378, 18, 435, 20, false },  // 65
-    { "Condition", 396, 3, 455, 3, true },  // 66
-    { "Flora", 399, 12, 458, 14, false },  // 67
-    { "Model", 411, 3, 472, 3, true },  // 68
-    { "FormList", 414, 2, 475, 2, false },  // 69
-    { "Footstep", 416, 3, 477, 3, false },  // 70
-    { "FootstepSet", 419, 3, 480, 3, false },  // 71
-    { "Furniture", 422, 14, 483, 21, false },  // 72
-    { "Model", 436, 3, 504, 3, true },  // 73
-    { "Destructible", 439, 2, 507, 6, true },  // 74
-    { "DestructibleStages", 441, 5, 513, 5, true },  // 75
-    { "Global", 446, 3, 518, 3, false },  // 76
-    { "GameSetting", 449, 2, 521, 2, false },  // 77
-    { "Grass", 451, 4, 523, 6, false },  // 78
-    { "Model", 455, 3, 529, 3, true },  // 79
-    { "Hazard", 458, 6, 532, 8, false },  // 80
-    { "Model", 464, 3, 540, 3, true },  // 81
-    { "HeadPart", 467, 11, 543, 13, false },  // 82
-    { "Model", 478, 3, 556, 3, true },  // 83
-    { "IdleAnimation", 481, 5, 559, 7, false },  // 84
-    { "Condition", 486, 3, 566, 3, true },  // 85
-    { "IdleMarker", 489, 6, 569, 6, false },  // 86
-    { "ImageSpaceAdapter", 495, 1, 575, 1, false },  // 87
-    { "ImageSpace", 496, 6, 576, 6, false },  // 88
-    { "DialogResponses", 502, 22, 582, 24, false },  // 89
-    { "Condition", 524, 3, 606, 3, true },  // 90
-    { "Ingredient", 527, 16, 609, 20, false },  // 91
-    { "Model", 543, 3, 629, 3, true },  // 92
-    { "Condition", 546, 3, 632, 3, true },  // 93
-    { "Impact", 549, 9, 635, 11, false },  // 94
-    { "Model", 558, 3, 646, 3, true },  // 95
-    { "ImpactDataSet", 561, 2, 649, 2, false },  // 96
-    { "Key", 563, 15, 651, 17, false },  // 97
-    { "Model", 578, 3, 668, 3, true },  // 98
-    { "Keyword", 581, 2, 671, 2, false },  // 99
-    { "Landscape", 583, 7, 673, 7, false },  // 100
-    { "LocationReferenceType", 590, 2, 680, 2, false },  // 101
-    { "Location", 592, 9, 682, 9, false },  // 102
-    { "LightingTemplate", 601, 3, 691, 3, false },  // 103
-    { "Light", 604, 7, 694, 9, false },  // 104
-    { "Model", 611, 3, 703, 3, true },  // 105
-    { "LoadScreen", 614, 9, 706, 11, false },  // 106
-    { "Condition", 623, 3, 717, 3, true },  // 107
-    { "LandscapeTexture", 626, 6, 720, 6, false },  // 108
-    { "LeveledItem", 632, 8, 726, 10, false },  // 109
-    { "Model", 640, 3, 736, 3, true },  // 110
-    { "LeveledNpc", 643, 8, 739, 10, false },  // 111
-    { "Model", 651, 3, 749, 3, true },  // 112
-    { "LeveledSpell", 654, 8, 752, 10, false },  // 113
-    { "Model", 662, 3, 762, 3, true },  // 114
-    { "MaterialObject", 665, 4, 765, 4, false },  // 115
-    { "MaterialType", 669, 7, 769, 7, false },  // 116
-    { "Message", 676, 9, 776, 11, false },  // 117
-    { "Condition", 685, 3, 787, 3, true },  // 118
-    { "MagicEffect", 688, 10, 790, 12, false },  // 119
-    { "Condition", 698, 3, 802, 3, true },  // 120
-    { "MiscItem", 701, 12, 805, 14, false },  // 121
-    { "Model", 713, 3, 819, 3, true },  // 122
-    { "MovementType", 716, 4, 822, 4, false },  // 123
-    { "MoveableStatic", 720, 6, 826, 13, false },  // 124
-    { "Model", 726, 3, 839, 3, true },  // 125
-    { "Destructible", 729, 2, 842, 6, true },  // 126
-    { "DestructibleStages", 731, 5, 848, 5, true },  // 127
-    { "MusicType", 736, 5, 853, 5, false },  // 128
-    { "MusicTrack", 741, 11, 858, 13, false },  // 129
-    { "Condition", 752, 3, 871, 3, true },  // 130
-    { "NavigationMeshInfoMap", 755, 1, 874, 1, false },  // 131
-    { "NavigationMesh", 756, 1, 875, 1, false },  // 132
-    { "Npc", 757, 51, 876, 59, false },  // 133
-    { "NpcTintLayers", 808, 4, 935, 4, true },  // 134
-    { "Destructible", 812, 2, 939, 6, true },  // 135
-    { "DestructibleStages", 814, 5, 945, 5, true },  // 136
-    { "Outfit", 819, 2, 950, 2, false },  // 137
-    { "Package", 821, 6, 952, 8, false },  // 138
-    { "Condition", 827, 3, 960, 3, true },  // 139
-    { "Perk", 830, 7, 963, 9, false },  // 140
-    { "Condition", 837, 3, 972, 3, true },  // 141
-    { "PlacedGrenade", 840, 6, 975, 6, false },  // 142
-    { "PlacedHazard", 846, 6, 981, 6, false },  // 143
-    { "Projectile", 852, 8, 987, 15, false },  // 144
-    { "Model", 860, 3, 1002, 3, true },  // 145
-    { "Destructible", 863, 2, 1005, 6, true },  // 146
-    { "DestructibleStages", 865, 5, 1011, 5, true },  // 147
-    { "PlaceableWater", 870, 4, 1016, 6, false },  // 148
-    { "Model", 874, 3, 1022, 3, true },  // 149
-    { "Quest", 877, 14, 1025, 16, false },  // 150
-    { "Condition", 891, 3, 1041, 3, true },  // 151
-    { "Race", 894, 43, 1044, 49, false },  // 152
-    { "RaceTintLayers", 937, 5, 1093, 7, true },  // 153
-    { "RaceTintLayersPresets", 942, 3, 1100, 3, true },  // 154
-    { "PlacedObject", 945, 61, 1103, 61, false },  // 155
-    { "Region", 1006, 4, 1164, 4, false },  // 156
-    { "Relationship", 1010, 2, 1168, 2, false },  // 157
-    { "ReverbParameters", 1012, 2, 1170, 2, false },  // 158
-    { "VisualEffect", 1014, 2, 1172, 2, false },  // 159
-    { "Scene", 1016, 6, 1174, 8, false },  // 160
-    { "Condition", 1022, 3, 1182, 3, true },  // 161
-    { "Scroll", 1025, 14, 1185, 18, false },  // 162
-    { "Model", 1039, 3, 1203, 3, true },  // 163
-    { "Condition", 1042, 3, 1206, 3, true },  // 164
-    { "Shout", 1045, 5, 1209, 5, false },  // 165
-    { "SoulGem", 1050, 15, 1214, 17, false },  // 166
-    { "Model", 1065, 3, 1231, 3, true },  // 167
-    { "StoryManagerBranchNode", 1068, 8, 1234, 10, false },  // 168
-    { "Condition", 1076, 3, 1244, 3, true },  // 169
-    { "StoryManagerEventNode", 1079, 8, 1247, 10, false },  // 170
-    { "Condition", 1087, 3, 1257, 3, true },  // 171
-    { "StoryManagerQuestNode", 1090, 8, 1260, 10, false },  // 172
-    { "Condition", 1098, 3, 1270, 3, true },  // 173
-    { "SoundCategory", 1101, 6, 1273, 6, false },  // 174
-    { "SoundDescriptor", 1107, 9, 1279, 11, false },  // 175
-    { "Condition", 1116, 3, 1290, 3, true },  // 176
-    { "SoundOutputModel", 1119, 5, 1293, 5, false },  // 177
-    { "SoundMarker", 1124, 5, 1298, 5, false },  // 178
-    { "Spell", 1129, 14, 1303, 18, false },  // 179
-    { "Model", 1143, 3, 1321, 3, true },  // 180
-    { "Condition", 1146, 3, 1324, 3, true },  // 181
-    { "ShaderParticleGeometry", 1149, 3, 1327, 3, false },  // 182
-    { "Static", 1152, 5, 1330, 7, false },  // 183
-    { "Model", 1157, 3, 1337, 3, true },  // 184
-    { "TalkingActivator", 1160, 8, 1340, 10, false },  // 185
-    { "Model", 1168, 3, 1350, 3, true },  // 186
-    { "Tree", 1171, 4, 1353, 6, false },  // 187
-    { "Model", 1175, 3, 1359, 3, true },  // 188
-    { "TextureSet", 1178, 12, 1362, 12, false },  // 189
-    { "VolumetricLighting", 1190, 1, 1374, 1, false },  // 190
-    { "VoiceType", 1191, 2, 1375, 2, false },  // 191
-    { "Water", 1193, 9, 1377, 9, false },  // 192
-    { "Weapon", 1202, 29, 1386, 31, false },  // 193
-    { "Model", 1231, 3, 1417, 3, true },  // 194
-    { "WordOfPower", 1234, 3, 1420, 3, false },  // 195
-    { "Worldspace", 1237, 24, 1423, 24, false },  // 196
-    { "Weather", 1261, 3, 1447, 3, false },  // 197
+    { "Action", 0, 2, 0, 2, false, 0, 0 },  // 0
+    { "PlacedNpc", 2, 22, 2, 22, false, 0, 0 },  // 1
+    { "Activator", 24, 11, 24, 18, false, 0, 0 },  // 2
+    { "Model", 35, 3, 42, 3, true, 0, 0 },  // 3
+    { "Destructible", 38, 2, 45, 6, true, 0, 0 },  // 4
+    { "DestructibleStages", 40, 5, 51, 5, true, 0, 0 },  // 5
+    { "AddonNode", 45, 6, 56, 8, false, 0, 0 },  // 6
+    { "Model", 51, 3, 64, 3, true, 0, 0 },  // 7
+    { "Ingestible", 54, 15, 67, 19, false, 0, 0 },  // 8
+    { "Model", 69, 3, 86, 3, true, 0, 0 },  // 9
+    { "Condition", 72, 3, 89, 3, true, 0, 0 },  // 10
+    { "Ammunition", 75, 13, 92, 15, false, 0, 0 },  // 11
+    { "Model", 88, 3, 107, 3, true, 0, 0 },  // 12
+    { "AnimatedObject", 91, 3, 110, 5, false, 0, 0 },  // 13
+    { "Model", 94, 3, 115, 3, true, 0, 0 },  // 14
+    { "Apparatus", 97, 10, 118, 12, false, 0, 0 },  // 15
+    { "Model", 107, 3, 130, 3, true, 0, 0 },  // 16
+    { "ArmorAddon", 110, 16, 133, 24, false, 0, 0 },  // 17
+    { "Model", 126, 3, 157, 3, true, 0, 0 },  // 18
+    { "Model", 129, 3, 160, 3, true, 0, 0 },  // 19
+    { "Model", 132, 3, 163, 3, true, 0, 0 },  // 20
+    { "Model", 135, 3, 166, 3, true, 0, 0 },  // 21
+    { "Armor", 138, 27, 169, 31, false, 0, 0 },  // 22
+    { "Model", 165, 3, 200, 3, true, 0, 0 },  // 23
+    { "Model", 168, 3, 203, 3, true, 0, 0 },  // 24
+    { "ArtObject", 171, 4, 206, 6, false, 0, 0 },  // 25
+    { "Model", 175, 3, 212, 3, true, 0, 0 },  // 26
+    { "AcousticSpace", 178, 5, 215, 5, false, 0, 0 },  // 27
+    { "AssociationType", 183, 6, 220, 6, false, 0, 0 },  // 28
+    { "ActorValueInfo", 189, 4, 226, 4, false, 0, 0 },  // 29
+    { "Book", 193, 15, 230, 17, false, 0, 0 },  // 30
+    { "Model", 208, 3, 247, 3, true, 0, 0 },  // 31
+    { "BodyPartData", 211, 2, 250, 4, false, 0, 0 },  // 32
+    { "Model", 213, 3, 254, 3, true, 0, 0 },  // 33
+    { "CameraShot", 216, 4, 257, 6, false, 0, 0 },  // 34
+    { "Model", 220, 3, 263, 3, true, 0, 0 },  // 35
+    { "Cell", 223, 25, 266, 25, false, 0, 0 },  // 36
+    { "Class", 248, 5, 291, 5, false, 0, 0 },  // 37
+    { "ColorForm", 253, 4, 296, 4, false, 0, 0 },  // 38
+    { "Climate", 257, 6, 300, 8, false, 0, 0 },  // 39
+    { "Model", 263, 3, 308, 3, true, 0, 0 },  // 40
+    { "ConstructibleObject", 266, 7, 311, 9, false, 0, 0 },  // 41
+    { "Condition", 273, 3, 320, 3, true, 0, 0 },  // 42
+    { "CollisionLayer", 276, 8, 323, 8, false, 0, 0 },  // 43
+    { "Container", 284, 8, 331, 10, false, 0, 0 },  // 44
+    { "Model", 292, 3, 341, 3, true, 0, 0 },  // 45
+    { "CameraPath", 295, 5, 344, 7, false, 0, 0 },  // 46
+    { "Condition", 300, 3, 351, 3, true, 0, 0 },  // 47
+    { "CombatStyle", 303, 6, 354, 6, false, 0, 0 },  // 48
+    { "Debris", 309, 1, 360, 1, false, 0, 0 },  // 49
+    { "DialogTopic", 310, 8, 361, 8, false, 0, 0 },  // 50
+    { "DialogBranch", 318, 5, 369, 5, false, 0, 0 },  // 51
+    { "DialogView", 323, 6, 374, 6, false, 0, 0 },  // 52
+    { "DefaultObjectManager", 329, 2, 380, 2, false, 0, 0 },  // 53
+    { "Door", 331, 6, 382, 8, false, 0, 0 },  // 54
+    { "Model", 337, 3, 390, 3, true, 0, 0 },  // 55
+    { "DualCastData", 340, 3, 393, 3, false, 0, 0 },  // 56
+    { "EncounterZone", 343, 2, 396, 2, false, 0, 0 },  // 57
+    { "EffectShader", 345, 7, 398, 7, false, 0, 0 },  // 58
+    { "ObjectEffect", 352, 7, 405, 9, false, 0, 0 },  // 59
+    { "Condition", 359, 3, 414, 3, true, 0, 0 },  // 60
+    { "EquipType", 362, 3, 417, 3, false, 0, 0 },  // 61
+    { "Explosion", 365, 6, 420, 8, false, 0, 0 },  // 62
+    { "Model", 371, 3, 428, 3, true, 0, 0 },  // 63
+    { "Eyes", 374, 4, 431, 4, false, 0, 0 },  // 64
+    { "Faction", 378, 18, 435, 20, false, 0, 0 },  // 65
+    { "Condition", 396, 3, 455, 3, true, 0, 0 },  // 66
+    { "Flora", 399, 12, 458, 14, false, 0, 0 },  // 67
+    { "Model", 411, 3, 472, 3, true, 0, 0 },  // 68
+    { "FormList", 414, 2, 475, 2, false, 0, 0 },  // 69
+    { "Footstep", 416, 3, 477, 3, false, 0, 0 },  // 70
+    { "FootstepSet", 419, 3, 480, 3, false, 0, 0 },  // 71
+    { "Furniture", 422, 14, 483, 21, false, 0, 0 },  // 72
+    { "Model", 436, 3, 504, 3, true, 0, 0 },  // 73
+    { "Destructible", 439, 2, 507, 6, true, 0, 0 },  // 74
+    { "DestructibleStages", 441, 5, 513, 5, true, 0, 0 },  // 75
+    { "Global", 446, 3, 518, 3, false, 0, 0 },  // 76
+    { "GameSetting", 449, 2, 521, 2, false, 0, 0 },  // 77
+    { "Grass", 451, 4, 523, 6, false, 0, 0 },  // 78
+    { "Model", 455, 3, 529, 3, true, 0, 0 },  // 79
+    { "Hazard", 458, 6, 532, 8, false, 0, 0 },  // 80
+    { "Model", 464, 3, 540, 3, true, 0, 0 },  // 81
+    { "HeadPart", 467, 11, 543, 13, false, 0, 0 },  // 82
+    { "Model", 478, 3, 556, 3, true, 0, 0 },  // 83
+    { "IdleAnimation", 481, 5, 559, 7, false, 0, 0 },  // 84
+    { "Condition", 486, 3, 566, 3, true, 0, 0 },  // 85
+    { "IdleMarker", 489, 6, 569, 6, false, 0, 0 },  // 86
+    { "ImageSpaceAdapter", 495, 1, 575, 1, false, 0, 0 },  // 87
+    { "ImageSpace", 496, 6, 576, 6, false, 0, 0 },  // 88
+    { "DialogResponses", 502, 22, 582, 24, false, 0, 0 },  // 89
+    { "Condition", 524, 3, 606, 3, true, 0, 0 },  // 90
+    { "Ingredient", 527, 16, 609, 20, false, 0, 0 },  // 91
+    { "Model", 543, 3, 629, 3, true, 0, 0 },  // 92
+    { "Condition", 546, 3, 632, 3, true, 0, 0 },  // 93
+    { "Impact", 549, 9, 635, 11, false, 0, 0 },  // 94
+    { "Model", 558, 3, 646, 3, true, 0, 0 },  // 95
+    { "ImpactDataSet", 561, 2, 649, 2, false, 0, 0 },  // 96
+    { "Key", 563, 15, 651, 17, false, 0, 0 },  // 97
+    { "Model", 578, 3, 668, 3, true, 0, 0 },  // 98
+    { "Keyword", 581, 2, 671, 2, false, 0, 0 },  // 99
+    { "Landscape", 583, 7, 673, 7, false, 0, 0 },  // 100
+    { "LocationReferenceType", 590, 2, 680, 2, false, 0, 0 },  // 101
+    { "Location", 592, 9, 682, 9, false, 0, 0 },  // 102
+    { "LightingTemplate", 601, 3, 691, 3, false, 0, 0 },  // 103
+    { "Light", 604, 7, 694, 9, false, 0, 0 },  // 104
+    { "Model", 611, 3, 703, 3, true, 0, 0 },  // 105
+    { "LoadScreen", 614, 9, 706, 11, false, 0, 0 },  // 106
+    { "Condition", 623, 3, 717, 3, true, 0, 0 },  // 107
+    { "LandscapeTexture", 626, 6, 720, 6, false, 0, 0 },  // 108
+    { "LeveledItem", 632, 8, 726, 10, false, 0, 0 },  // 109
+    { "Model", 640, 3, 736, 3, true, 0, 0 },  // 110
+    { "LeveledNpc", 643, 8, 739, 10, false, 0, 0 },  // 111
+    { "Model", 651, 3, 749, 3, true, 0, 0 },  // 112
+    { "LeveledSpell", 654, 8, 752, 10, false, 0, 0 },  // 113
+    { "Model", 662, 3, 762, 3, true, 0, 0 },  // 114
+    { "MaterialObject", 665, 4, 765, 4, false, 0, 0 },  // 115
+    { "MaterialType", 669, 7, 769, 7, false, 0, 0 },  // 116
+    { "Message", 676, 9, 776, 11, false, 0, 0 },  // 117
+    { "Condition", 685, 3, 787, 3, true, 0, 0 },  // 118
+    { "MagicEffect", 688, 10, 790, 12, false, 0, 0 },  // 119
+    { "Condition", 698, 3, 802, 3, true, 0, 0 },  // 120
+    { "MiscItem", 701, 12, 805, 14, false, 0, 0 },  // 121
+    { "Model", 713, 3, 819, 3, true, 0, 0 },  // 122
+    { "MovementType", 716, 4, 822, 4, false, 0, 0 },  // 123
+    { "MoveableStatic", 720, 6, 826, 13, false, 0, 0 },  // 124
+    { "Model", 726, 3, 839, 3, true, 0, 0 },  // 125
+    { "Destructible", 729, 2, 842, 6, true, 0, 0 },  // 126
+    { "DestructibleStages", 731, 5, 848, 5, true, 0, 0 },  // 127
+    { "MusicType", 736, 5, 853, 5, false, 0, 0 },  // 128
+    { "MusicTrack", 741, 11, 858, 13, false, 0, 0 },  // 129
+    { "Condition", 752, 3, 871, 3, true, 0, 0 },  // 130
+    { "NavigationMeshInfoMap", 755, 1, 874, 1, false, 0, 0 },  // 131
+    { "NavigationMesh", 756, 1, 875, 1, false, 0, 0 },  // 132
+    { "Npc", 757, 51, 876, 59, false, 0, 0 },  // 133
+    { "NpcTintLayers", 808, 4, 935, 4, true, 0, 0 },  // 134
+    { "Destructible", 812, 2, 939, 6, true, 0, 0 },  // 135
+    { "DestructibleStages", 814, 5, 945, 5, true, 0, 0 },  // 136
+    { "Outfit", 819, 2, 950, 2, false, 0, 0 },  // 137
+    { "Package", 821, 18, 952, 20, false, 0, 0 },  // 138
+    { "Condition", 839, 3, 972, 3, true, 0, 0 },  // 139
+    { "PackageSections", 842, 14, 975, 16, false, SigOf("ANAM"), 0 },  // 140
+    { "Condition", 856, 3, 991, 3, true, 0, 0 },  // 141
+    { "PackageInputs", 859, 3, 994, 3, false, SigOf("UNAM"), 0 },  // 142
+    { "PackageEvent", 862, 7, 997, 7, false, SigOf("POBA"), 0 },  // 143
+    { "PackageEvent", 869, 7, 1004, 7, false, SigOf("POEA"), 0 },  // 144
+    { "PackageEvent", 876, 7, 1011, 7, false, SigOf("POCA"), 0 },  // 145
+    { "Perk", 883, 9, 1018, 11, false, 0, 0 },  // 146
+    { "Condition", 892, 3, 1029, 3, true, 0, 0 },  // 147
+    { "PerkEntries", 895, 8, 1032, 8, false, SigOf("PRKE"), SigOf("PRKF") },  // 148
+    { "PerkEntriesConditionTabs", 903, 2, 1040, 4, false, SigOf("PRKC"), 0 },  // 149
+    { "Condition", 905, 3, 1044, 3, true, 0, 0 },  // 150
+    { "PlacedGrenade", 908, 6, 1047, 6, false, 0, 0 },  // 151
+    { "PlacedHazard", 914, 6, 1053, 6, false, 0, 0 },  // 152
+    { "Projectile", 920, 8, 1059, 15, false, 0, 0 },  // 153
+    { "Model", 928, 3, 1074, 3, true, 0, 0 },  // 154
+    { "Destructible", 931, 2, 1077, 6, true, 0, 0 },  // 155
+    { "DestructibleStages", 933, 5, 1083, 5, true, 0, 0 },  // 156
+    { "PlaceableWater", 938, 4, 1088, 6, false, 0, 0 },  // 157
+    { "Model", 942, 3, 1094, 3, true, 0, 0 },  // 158
+    { "Quest", 945, 14, 1097, 16, false, 0, 0 },  // 159
+    { "Condition", 959, 3, 1113, 3, true, 0, 0 },  // 160
+    { "QuestStages", 962, 2, 1116, 2, false, SigOf("INDX"), 0 },  // 161
+    { "QuestStagesLogEntries", 964, 7, 1118, 9, false, SigOf("QSDT"), 0 },  // 162
+    { "Condition", 971, 3, 1127, 3, true, 0, 0 },  // 163
+    { "QuestObjectives", 974, 4, 1130, 4, false, SigOf("QOBJ"), 0 },  // 164
+    { "QuestObjectivesTargets", 978, 2, 1134, 4, false, SigOf("QSTA"), 0 },  // 165
+    { "Condition", 980, 3, 1138, 3, true, 0, 0 },  // 166
+    { "QuestAlias", 983, 32, 1141, 34, false, SigOf("ALST"), SigOf("ALED") },  // 167
+    { "Condition", 1015, 3, 1175, 3, true, 0, 0 },  // 168
+    { "QuestAlias", 1018, 32, 1178, 34, false, SigOf("ALLS"), SigOf("ALED") },  // 169
+    { "Condition", 1050, 3, 1212, 3, true, 0, 0 },  // 170
+    { "Race", 1053, 43, 1215, 49, false, 0, 0 },  // 171
+    { "RaceTintLayers", 1096, 5, 1264, 7, true, 0, 0 },  // 172
+    { "RaceTintLayersPresets", 1101, 3, 1271, 3, true, 0, 0 },  // 173
+    { "PlacedObject", 1104, 61, 1274, 61, false, 0, 0 },  // 174
+    { "Region", 1165, 4, 1335, 4, false, 0, 0 },  // 175
+    { "Relationship", 1169, 2, 1339, 2, false, 0, 0 },  // 176
+    { "ReverbParameters", 1171, 2, 1341, 2, false, 0, 0 },  // 177
+    { "VisualEffect", 1173, 2, 1343, 2, false, 0, 0 },  // 178
+    { "Scene", 1175, 14, 1345, 16, false, 0, 0 },  // 179
+    { "ScenePhases", 1189, 9, 1361, 10, false, SigOf("HNAM"), SigOf("HNAM") },  // 180
+    { "Condition", 1198, 3, 1371, 3, true, 0, 0 },  // 181
+    { "ScenePhasesCompletion", 1201, 6, 1374, 7, false, SigOf("NEXT"), SigOf("NEXT") },  // 182
+    { "Condition", 1207, 3, 1381, 3, true, 0, 0 },  // 183
+    { "SceneActors", 1210, 3, 1384, 3, false, SigOf("ALID"), 0 },  // 184
+    { "SceneActions", 1213, 18, 1387, 17, false, SigOf("ANAM"), SigOf("ANAM") },  // 185
+    { "SceneEndScript", 1231, 4, 1404, 4, false, SigOf("NEXT"), 0 },  // 186
+    { "Condition", 1235, 3, 1408, 3, true, 0, 0 },  // 187
+    { "Scroll", 1238, 14, 1411, 18, false, 0, 0 },  // 188
+    { "Model", 1252, 3, 1429, 3, true, 0, 0 },  // 189
+    { "Condition", 1255, 3, 1432, 3, true, 0, 0 },  // 190
+    { "Shout", 1258, 5, 1435, 5, false, 0, 0 },  // 191
+    { "SoulGem", 1263, 15, 1440, 17, false, 0, 0 },  // 192
+    { "Model", 1278, 3, 1457, 3, true, 0, 0 },  // 193
+    { "StoryManagerBranchNode", 1281, 8, 1460, 10, false, 0, 0 },  // 194
+    { "Condition", 1289, 3, 1470, 3, true, 0, 0 },  // 195
+    { "StoryManagerEventNode", 1292, 8, 1473, 10, false, 0, 0 },  // 196
+    { "Condition", 1300, 3, 1483, 3, true, 0, 0 },  // 197
+    { "StoryManagerQuestNode", 1303, 8, 1486, 10, false, 0, 0 },  // 198
+    { "Condition", 1311, 3, 1496, 3, true, 0, 0 },  // 199
+    { "SoundCategory", 1314, 6, 1499, 6, false, 0, 0 },  // 200
+    { "SoundDescriptor", 1320, 9, 1505, 11, false, 0, 0 },  // 201
+    { "Condition", 1329, 3, 1516, 3, true, 0, 0 },  // 202
+    { "SoundOutputModel", 1332, 5, 1519, 5, false, 0, 0 },  // 203
+    { "SoundMarker", 1337, 5, 1524, 5, false, 0, 0 },  // 204
+    { "Spell", 1342, 14, 1529, 18, false, 0, 0 },  // 205
+    { "Model", 1356, 3, 1547, 3, true, 0, 0 },  // 206
+    { "Condition", 1359, 3, 1550, 3, true, 0, 0 },  // 207
+    { "ShaderParticleGeometry", 1362, 3, 1553, 3, false, 0, 0 },  // 208
+    { "Static", 1365, 5, 1556, 7, false, 0, 0 },  // 209
+    { "Model", 1370, 3, 1563, 3, true, 0, 0 },  // 210
+    { "TalkingActivator", 1373, 8, 1566, 10, false, 0, 0 },  // 211
+    { "Model", 1381, 3, 1576, 3, true, 0, 0 },  // 212
+    { "Tree", 1384, 4, 1579, 6, false, 0, 0 },  // 213
+    { "Model", 1388, 3, 1585, 3, true, 0, 0 },  // 214
+    { "TextureSet", 1391, 12, 1588, 12, false, 0, 0 },  // 215
+    { "VolumetricLighting", 1403, 1, 1600, 1, false, 0, 0 },  // 216
+    { "VoiceType", 1404, 2, 1601, 2, false, 0, 0 },  // 217
+    { "Water", 1406, 9, 1603, 9, false, 0, 0 },  // 218
+    { "Weapon", 1415, 29, 1612, 31, false, 0, 0 },  // 219
+    { "Model", 1444, 3, 1643, 3, true, 0, 0 },  // 220
+    { "WordOfPower", 1447, 3, 1646, 3, false, 0, 0 },  // 221
+    { "Worldspace", 1450, 24, 1649, 24, false, 0, 0 },  // 222
+    { "Weather", 1474, 3, 1673, 3, false, 0, 0 },  // 223
 };
 inline constexpr RecordDef kRecords[] = {
-    { SigOf("RELA"), "Relationship", 157 },
+    { SigOf("RELA"), "Relationship", 176 },
     { SigOf("ARMA"), "ArmorAddon", 17 },
     { SigOf("APPA"), "Apparatus", 15 },
     { SigOf("GLOB"), "Global", 76 },
-    { SigOf("REVB"), "ReverbParameters", 158 },
+    { SigOf("REVB"), "ReverbParameters", 177 },
     { SigOf("ASPC"), "AcousticSpace", 27 },
     { SigOf("MISC"), "MiscItem", 121 },
     { SigOf("MUSC"), "MusicType", 128 },
     { SigOf("IMAD"), "ImageSpaceAdapter", 87 },
-    { SigOf("SPGD"), "ShaderParticleGeometry", 182 },
-    { SigOf("WRLD"), "Worldspace", 196 },
+    { SigOf("SPGD"), "ShaderParticleGeometry", 208 },
+    { SigOf("WRLD"), "Worldspace", 222 },
     { SigOf("LAND"), "Landscape", 100 },
     { SigOf("BPTD"), "BodyPartData", 32 },
     { SigOf("KYWD"), "Keyword", 99 },
     { SigOf("HAZD"), "Hazard", 80 },
-    { SigOf("PHZD"), "PlacedHazard", 143 },
-    { SigOf("RACE"), "Race", 152 },
-    { SigOf("TREE"), "Tree", 187 },
+    { SigOf("PHZD"), "PlacedHazard", 152 },
+    { SigOf("RACE"), "Race", 171 },
+    { SigOf("TREE"), "Tree", 213 },
     { SigOf("IDLE"), "IdleAnimation", 84 },
-    { SigOf("PGRE"), "PlacedGrenade", 142 },
+    { SigOf("PGRE"), "PlacedGrenade", 151 },
     { SigOf("MGEF"), "MagicEffect", 119 },
     { SigOf("AVIF"), "ActorValueInfo", 29 },
     { SigOf("MESG"), "Message", 117 },
@@ -4035,40 +4683,40 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("LIGH"), "Light", 104 },
     { SigOf("EFSH"), "EffectShader", 58 },
     { SigOf("CPTH"), "CameraPath", 46 },
-    { SigOf("VOLI"), "VolumetricLighting", 190 },
+    { SigOf("VOLI"), "VolumetricLighting", 216 },
     { SigOf("LVLI"), "LeveledItem", 109 },
     { SigOf("ACTI"), "Activator", 2 },
     { SigOf("NAVI"), "NavigationMeshInfoMap", 131 },
     { SigOf("COBJ"), "ConstructibleObject", 41 },
     { SigOf("DOBJ"), "DefaultObjectManager", 53 },
-    { SigOf("PROJ"), "Projectile", 144 },
+    { SigOf("PROJ"), "Projectile", 153 },
     { SigOf("PACK"), "Package", 138 },
     { SigOf("BOOK"), "Book", 30 },
-    { SigOf("PERK"), "Perk", 140 },
+    { SigOf("PERK"), "Perk", 146 },
     { SigOf("DIAL"), "DialogTopic", 50 },
     { SigOf("DUAL"), "DualCastData", 56 },
-    { SigOf("SPEL"), "Spell", 179 },
+    { SigOf("SPEL"), "Spell", 205 },
     { SigOf("CELL"), "Cell", 36 },
     { SigOf("COLL"), "CollisionLayer", 43 },
     { SigOf("EXPL"), "Explosion", 62 },
-    { SigOf("SCRL"), "Scroll", 162 },
+    { SigOf("SCRL"), "Scroll", 188 },
     { SigOf("CLFM"), "ColorForm", 38 },
-    { SigOf("SLGM"), "SoulGem", 166 },
+    { SigOf("SLGM"), "SoulGem", 192 },
     { SigOf("IDLM"), "IdleMarker", 86 },
-    { SigOf("SOPM"), "SoundOutputModel", 177 },
+    { SigOf("SOPM"), "SoundOutputModel", 203 },
     { SigOf("LGTM"), "LightingTemplate", 103 },
     { SigOf("NAVM"), "NavigationMesh", 132 },
     { SigOf("KEYM"), "Key", 97 },
-    { SigOf("SMBN"), "StoryManagerBranchNode", 168 },
+    { SigOf("SMBN"), "StoryManagerBranchNode", 194 },
     { SigOf("ADDN"), "AddonNode", 6 },
-    { SigOf("SCEN"), "Scene", 160 },
-    { SigOf("SMEN"), "StoryManagerEventNode", 170 },
-    { SigOf("REGN"), "Region", 156 },
+    { SigOf("SCEN"), "Scene", 179 },
+    { SigOf("SMEN"), "StoryManagerEventNode", 196 },
+    { SigOf("REGN"), "Region", 175 },
     { SigOf("LVLN"), "LeveledNpc", 111 },
-    { SigOf("SMQN"), "StoryManagerQuestNode", 172 },
+    { SigOf("SMQN"), "StoryManagerQuestNode", 198 },
     { SigOf("FURN"), "Furniture", 72 },
     { SigOf("LCTN"), "Location", 102 },
-    { SigOf("SOUN"), "SoundMarker", 178 },
+    { SigOf("SOUN"), "SoundMarker", 204 },
     { SigOf("ECZN"), "EncounterZone", 57 },
     { SigOf("INFO"), "DialogResponses", 89 },
     { SigOf("ANIO"), "AnimatedObject", 13 },
@@ -4076,24 +4724,24 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("ARMO"), "Armor", 22 },
     { SigOf("MATO"), "MaterialObject", 115 },
     { SigOf("ARTO"), "ArtObject", 25 },
-    { SigOf("WEAP"), "Weapon", 193 },
-    { SigOf("WOOP"), "WordOfPower", 195 },
+    { SigOf("WEAP"), "Weapon", 219 },
+    { SigOf("WOOP"), "WordOfPower", 221 },
     { SigOf("LVSP"), "LeveledSpell", 113 },
     { SigOf("ASTP"), "AssociationType", 28 },
     { SigOf("FSTP"), "Footstep", 70 },
     { SigOf("EQUP"), "EquipType", 61 },
-    { SigOf("VTYP"), "VoiceType", 191 },
+    { SigOf("VTYP"), "VoiceType", 217 },
     { SigOf("DEBR"), "Debris", 49 },
     { SigOf("DLBR"), "DialogBranch", 51 },
     { SigOf("LSCR"), "LoadScreen", 106 },
-    { SigOf("SNDR"), "SoundDescriptor", 175 },
-    { SigOf("REFR"), "PlacedObject", 155 },
+    { SigOf("SNDR"), "SoundDescriptor", 201 },
+    { SigOf("REFR"), "PlacedObject", 174 },
     { SigOf("INGR"), "Ingredient", 91 },
     { SigOf("ACHR"), "PlacedNpc", 1 },
-    { SigOf("WTHR"), "Weather", 197 },
+    { SigOf("WTHR"), "Weather", 223 },
     { SigOf("FLOR"), "Flora", 67 },
     { SigOf("DOOR"), "Door", 54 },
-    { SigOf("WATR"), "Water", 192 },
+    { SigOf("WATR"), "Water", 218 },
     { SigOf("CLAS"), "Class", 37 },
     { SigOf("GRAS"), "Grass", 78 },
     { SigOf("IPDS"), "ImpactDataSet", 96 },
@@ -4101,13 +4749,13 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("IMGS"), "ImageSpace", 88 },
     { SigOf("CAMS"), "CameraShot", 34 },
     { SigOf("FSTS"), "FootstepSet", 71 },
-    { SigOf("STAT"), "Static", 183 },
-    { SigOf("PWAT"), "PlaceableWater", 148 },
+    { SigOf("STAT"), "Static", 209 },
+    { SigOf("PWAT"), "PlaceableWater", 157 },
     { SigOf("AACT"), "Action", 0 },
     { SigOf("FACT"), "Faction", 65 },
-    { SigOf("TACT"), "TalkingActivator", 185 },
-    { SigOf("RFCT"), "VisualEffect", 159 },
-    { SigOf("SNCT"), "SoundCategory", 174 },
+    { SigOf("TACT"), "TalkingActivator", 211 },
+    { SigOf("RFCT"), "VisualEffect", 178 },
+    { SigOf("SNCT"), "SoundCategory", 200 },
     { SigOf("IPCT"), "Impact", 94 },
     { SigOf("OTFT"), "Outfit", 137 },
     { SigOf("CLMT"), "Climate", 39 },
@@ -4117,12 +4765,12 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("FLST"), "FormList", 69 },
     { SigOf("GMST"), "GameSetting", 77 },
     { SigOf("MUST"), "MusicTrack", 129 },
-    { SigOf("QUST"), "Quest", 150 },
-    { SigOf("TXST"), "TextureSet", 189 },
+    { SigOf("QUST"), "Quest", 159 },
+    { SigOf("TXST"), "TextureSet", 215 },
     { SigOf("MATT"), "MaterialType", 116 },
     { SigOf("MSTT"), "MoveableStatic", 124 },
     { SigOf("MOVT"), "MovementType", 123 },
-    { SigOf("SHOU"), "Shout", 165 },
+    { SigOf("SHOU"), "Shout", 191 },
     { SigOf("DLVW"), "DialogView", 52 },
     { SigOf("LTEX"), "LandscapeTexture", 108 },
     { SigOf("CSTY"), "CombatStyle", 48 },
@@ -4331,149 +4979,279 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 145, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 145, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 146, 0 },
-    { "form", 249, false, false, false, 0LL, 0LL, 146, 1 },
+    { "form", 248, false, false, false, 0LL, 0LL, 146, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 147, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 149, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 149, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 150, 0 },
-    { "form", 251, false, false, false, 0LL, 0LL, 150, 1 },
+    { "form", 250, false, false, false, 0LL, 0LL, 150, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 151, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 153, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 153, 1 },
     { "value", 43, false, true, false, 0LL, 0LL, 154, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 154, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 155, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 155, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 156, 0 },
-    { "form", 256, false, false, false, 0LL, 0LL, 156, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 157, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 159, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 159, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 160, 0 },
-    { "form", 258, false, false, false, 0LL, 0LL, 160, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 161, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 163, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 163, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 164, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 164, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 165, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 165, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 166, 0 },
-    { "form", 265, false, false, false, 0LL, 0LL, 166, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 167, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 169, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 169, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 170, 0 },
-    { "form", 267, false, false, false, 0LL, 0LL, 170, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 171, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 173, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 173, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 174, 0 },
-    { "v16", 156, false, false, false, 0LL, 0LL, 174, 1 },
-    { "v20", 276, false, false, false, 0LL, 0LL, 175, 1 },
-    { "keyed", 289, false, false, false, 0LL, 0LL, 176, 1 },
-    { "plain", 34, false, false, false, 0LL, 0LL, 177, 1 },
-    { "global", 67, false, false, false, 0LL, 0LL, 178, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 179, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 179, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 180, 0 },
-    { "form", 298, false, false, false, 0LL, 0LL, 180, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 181, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 183, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 183, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 184, 0 },
-    { "form", 300, false, false, false, 0LL, 0LL, 184, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 185, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 187, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 187, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 188, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 188, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 189, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 189, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 190, 0 },
-    { "form", 306, false, false, false, 0LL, 0LL, 190, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 191, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 193, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 193, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 194, 0 },
-    { "form", 308, false, false, false, 0LL, 0LL, 194, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 195, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 197, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 197, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 198, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 198, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 199, 0 },
+    { "byte", 1, false, false, false, 0LL, 0LL, 154, 1 },
+    { "word", 43, false, false, false, 0LL, 0LL, 155, 1 },
+    { "reference", 34, false, false, false, 0LL, 0LL, 156, 1 },
+    { "cell", 259, false, false, false, 0LL, 0LL, 157, 1 },
+    { "keyword", 33, false, false, false, 0LL, 0LL, 158, 1 },
+    { "number", 12, false, false, false, 0LL, 0LL, 159, 6 },
+    { "reference", 34, false, false, false, 0LL, 0LL, 165, 1 },
+    { "object", 7, false, false, false, 0LL, 0LL, 166, 1 },
+    { "keyword", 33, false, false, false, 0LL, 0LL, 167, 1 },
+    { "number", 12, false, false, false, 0LL, 0LL, 168, 3 },
+    { "global", 67, false, false, false, 0LL, 0LL, 171, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 172, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 172, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 173, 0 },
+    { "form", 265, false, false, false, 0LL, 0LL, 173, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 174, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 176, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 176, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 177, 0 },
+    { "form", 267, false, false, false, 0LL, 0LL, 177, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 178, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 180, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 180, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 181, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 181, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 182, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 182, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 183, 0 },
+    { "form", 275, false, false, false, 0LL, 0LL, 183, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 184, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 186, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 186, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 187, 0 },
+    { "form", 277, false, false, false, 0LL, 0LL, 187, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 188, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 190, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 190, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 191, 0 },
+    { "questStage", 283, false, false, false, 0LL, 0LL, 191, 1 },
+    { "ability", 91, false, false, false, 0LL, 0LL, 192, 1 },
+    { "entryPoint", 284, false, false, false, 0LL, 0LL, 193, 1 },
+    { "global", 67, false, false, false, 0LL, 0LL, 194, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 195, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 195, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 196, 0 },
+    { "form", 287, false, false, false, 0LL, 0LL, 196, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 197, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 199, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 199, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 200, 0 },
-    { "form", 314, false, false, false, 0LL, 0LL, 200, 1 },
+    { "form", 289, false, false, false, 0LL, 0LL, 200, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 201, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 203, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 203, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 204, 0 },
-    { "form", 316, false, false, false, 0LL, 0LL, 204, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 205, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 207, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 207, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 208, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 208, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 209, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 209, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 210, 0 },
-    { "form", 321, false, false, false, 0LL, 0LL, 210, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 211, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 213, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 213, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 214, 0 },
-    { "form", 323, false, false, false, 0LL, 0LL, 214, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 215, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 217, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 217, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 218, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 218, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 219, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 219, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 220, 0 },
-    { "form", 328, false, false, false, 0LL, 0LL, 220, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 221, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 223, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 223, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 224, 0 },
-    { "form", 330, false, false, false, 0LL, 0LL, 224, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 225, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 227, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 227, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 228, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 228, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 229, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 229, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 230, 0 },
-    { "form", 337, false, false, false, 0LL, 0LL, 230, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 231, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 233, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 233, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 234, 0 },
-    { "form", 339, false, false, false, 0LL, 0LL, 234, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 235, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 237, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 237, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 238, 0 },
-    { "global", 67, false, false, false, 0LL, 0LL, 238, 1 },
-    { "value", 13, false, true, false, 0LL, 0LL, 239, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 239, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 240, 0 },
-    { "form", 345, false, false, false, 0LL, 0LL, 240, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 241, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 243, 0 },
-    { "alias", 12, false, false, false, 0LL, 0LL, 243, 1 },
-    { "ref", 7, false, true, false, 0LL, 0LL, 244, 0 },
-    { "form", 347, false, false, false, 0LL, 0LL, 244, 1 },
-    { "value", 43, false, false, false, 0LL, 0LL, 245, 2 },
-    { "unclassified", 71, false, true, false, 0LL, 0LL, 247, 0 },
-    { "ref", 7, false, false, false, 0LL, 0LL, 247, 1 },
-    { "value", 43, false, true, false, 0LL, 0LL, 248, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 203, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 204, 0 },
+    { "value", 13, false, false, false, 0LL, 0LL, 204, 1 },
+    { "range", 293, false, false, false, 0LL, 0LL, 205, 1 },
+    { "spell", 91, false, false, false, 0LL, 0LL, 206, 2 },
+    { "text", 0, false, false, false, 0LL, 0LL, 208, 1 },
+    { "unknown7", 43, false, false, false, 0LL, 0LL, 209, 1 },
+    { "global", 67, false, false, false, 0LL, 0LL, 210, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 211, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 211, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 212, 0 },
+    { "form", 297, false, false, false, 0LL, 0LL, 212, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 213, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 215, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 215, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 216, 0 },
+    { "form", 299, false, false, false, 0LL, 0LL, 216, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 217, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 219, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 219, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 220, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 220, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 221, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 221, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 222, 0 },
+    { "form", 305, false, false, false, 0LL, 0LL, 222, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 223, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 225, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 225, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 226, 0 },
+    { "form", 307, false, false, false, 0LL, 0LL, 226, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 227, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 229, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 229, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 230, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 230, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 231, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 231, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 232, 0 },
+    { "form", 313, false, false, false, 0LL, 0LL, 232, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 233, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 235, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 235, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 236, 0 },
+    { "form", 315, false, false, false, 0LL, 0LL, 236, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 237, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 239, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 239, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 240, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 240, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 241, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 241, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 242, 0 },
+    { "form", 321, false, false, false, 0LL, 0LL, 242, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 243, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 245, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 245, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 246, 0 },
+    { "form", 323, false, false, false, 0LL, 0LL, 246, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 247, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 249, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 249, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 250, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 250, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 251, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 251, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 252, 0 },
+    { "form", 333, false, false, false, 0LL, 0LL, 252, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 253, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 255, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 255, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 256, 0 },
+    { "form", 335, false, false, false, 0LL, 0LL, 256, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 257, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 259, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 259, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 260, 0 },
+    { "v16", 156, false, false, false, 0LL, 0LL, 260, 1 },
+    { "v20", 344, false, false, false, 0LL, 0LL, 261, 1 },
+    { "keyed", 355, false, false, false, 0LL, 0LL, 262, 1 },
+    { "plain", 34, false, false, false, 0LL, 0LL, 263, 1 },
+    { "global", 67, false, false, false, 0LL, 0LL, 264, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 265, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 265, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 266, 0 },
+    { "form", 363, false, false, false, 0LL, 0LL, 266, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 267, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 269, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 269, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 270, 0 },
+    { "form", 365, false, false, false, 0LL, 0LL, 270, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 271, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 273, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 273, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 274, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 274, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 275, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 275, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 276, 0 },
+    { "form", 370, false, false, false, 0LL, 0LL, 276, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 277, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 279, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 279, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 280, 0 },
+    { "form", 372, false, false, false, 0LL, 0LL, 280, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 281, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 283, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 283, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 284, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 284, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 285, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 285, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 286, 0 },
+    { "form", 377, false, false, false, 0LL, 0LL, 286, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 287, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 289, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 289, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 290, 0 },
+    { "form", 379, false, false, false, 0LL, 0LL, 290, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 291, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 293, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 293, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 294, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 294, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 295, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 295, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 296, 0 },
+    { "form", 385, false, false, false, 0LL, 0LL, 296, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 297, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 299, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 299, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 300, 0 },
+    { "form", 387, false, false, false, 0LL, 0LL, 300, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 301, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 303, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 303, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 304, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 304, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 305, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 305, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 306, 0 },
+    { "form", 393, false, false, false, 0LL, 0LL, 306, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 307, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 309, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 309, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 310, 0 },
+    { "form", 395, false, false, false, 0LL, 0LL, 310, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 311, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 313, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 313, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 314, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 314, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 315, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 315, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 316, 0 },
+    { "form", 400, false, false, false, 0LL, 0LL, 316, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 317, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 319, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 319, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 320, 0 },
+    { "form", 402, false, false, false, 0LL, 0LL, 320, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 321, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 323, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 323, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 324, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 324, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 325, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 325, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 326, 0 },
+    { "form", 407, false, false, false, 0LL, 0LL, 326, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 327, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 329, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 329, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 330, 0 },
+    { "form", 409, false, false, false, 0LL, 0LL, 330, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 331, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 333, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 333, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 334, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 334, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 335, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 335, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 336, 0 },
+    { "form", 416, false, false, false, 0LL, 0LL, 336, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 337, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 339, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 339, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 340, 0 },
+    { "form", 418, false, false, false, 0LL, 0LL, 340, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 341, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 343, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 343, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 344, 0 },
+    { "global", 67, false, false, false, 0LL, 0LL, 344, 1 },
+    { "value", 13, false, true, false, 0LL, 0LL, 345, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 345, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 346, 0 },
+    { "form", 424, false, false, false, 0LL, 0LL, 346, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 347, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 349, 0 },
+    { "alias", 12, false, false, false, 0LL, 0LL, 349, 1 },
+    { "ref", 7, false, true, false, 0LL, 0LL, 350, 0 },
+    { "form", 426, false, false, false, 0LL, 0LL, 350, 1 },
+    { "value", 43, false, false, false, 0LL, 0LL, 351, 2 },
+    { "unclassified", 71, false, true, false, 0LL, 0LL, 353, 0 },
+    { "ref", 7, false, false, false, 0LL, 0LL, 353, 1 },
+    { "value", 43, false, true, false, 0LL, 0LL, 354, 0 },
 };
 inline constexpr uint64_t kCaseValues[] = {
-    1ULL, 2ULL, 1ULL, 2ULL, 3ULL, 4ULL, 5ULL, 11ULL, 12ULL, 13ULL, 14ULL, 15ULL, 1ULL, 2ULL, 8ULL, 4ULL, 0ULL, 1ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 1ULL, 2ULL, 48ULL, 64ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 16ULL, 20ULL, 8ULL, 4ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL,
+    1ULL, 2ULL, 1ULL, 2ULL, 3ULL, 4ULL, 5ULL, 11ULL, 12ULL, 13ULL, 14ULL, 15ULL, 1ULL, 2ULL, 8ULL, 4ULL, 0ULL, 1ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 1ULL, 2ULL, 48ULL, 64ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 4ULL, 0ULL, 1ULL, 6ULL, 2ULL, 3ULL, 8ULL, 9ULL, 11ULL, 12ULL, 0ULL, 1ULL, 3ULL, 2ULL, 4ULL, 6ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 8ULL, 4ULL, 3ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 4ULL, 5ULL, 6ULL, 7ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 16ULL, 20ULL, 8ULL, 4ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 4ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL, 1ULL, 2ULL, 3ULL, 2ULL,
 };
 inline constexpr LookupDef kLookups[] = {
     { "ctdaFunctions.param1", 0, 401 },
@@ -4585,14 +5363,14 @@ inline constexpr LookupRow kLookupRows[] = {
 
 inline constexpr SchemaSet kSchema{
     kTypes,
-    std::span<const FieldDef>(kFields, 710),
-    std::span<const uint32_t>(kLinks, 48),
+    std::span<const FieldDef>(kFields, 814),
+    std::span<const uint32_t>(kLinks, 56),
     kMembers, kEntries, kGroups, kRecords,
-    std::span<const CaseDef>(kCases, 342),
-    std::span<const uint64_t>(kCaseValues, 248),
+    std::span<const CaseDef>(kCases, 472),
+    std::span<const uint64_t>(kCaseValues, 354),
     std::span<const LookupDef>(kLookups, 2),
     std::span<const LookupRow>(kLookupRows, 802),
-    "0.1.0", "0.3",
+    "0.1.0", "0.5",
 };
 
 } // namespace esper::schema::tables

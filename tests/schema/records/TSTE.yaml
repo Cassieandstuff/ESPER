@@ -1,0 +1,30 @@
+# Member selectors (a union chosen by an earlier sibling subrecord) and a
+# delimited group whose opener and end share a signature.
+record: TSTE
+name: TestSiblings
+members:
+  - { sig: EDID, name: editorId, type: zstring }
+  - group: entries
+    repeat: true
+    open: PRKE
+    end: PRKF
+    members:
+      - { sig: PRKE, name: header,       type: u8 }
+      - { sig: EPFT, name: functionType, type: u8 }
+      - sig: EPFD
+        name: functionData
+        union:
+          by: { member: functionType }
+          cases:
+            - { when: 1, name: value, type: f32 }
+            - { when: 4, name: spell, type: formid, to: [TSTB] }
+            - { when: 6, name: text,  type: zstring }
+      - { sig: PRKF, name: end, type: marker }
+  - group: phases
+    repeat: true
+    open: HNAM
+    end: HNAM
+    members:
+      - { sig: HNAM, name: start, type: marker }
+      - { sig: NAM0, name: name,  type: zstring }
+      - { sig: HNAM, name: end,   type: marker }

@@ -1,6 +1,6 @@
 # ESPER schema language — specification
 
-**Language version 0.3.** This document is normative. It defines what a descriptor in `schema/`
+**Language version 0.5.** This document is normative. It defines what a descriptor in `schema/`
 means, so that any implementation can decode and encode Skyrim SE/AE plugin records exactly as
 ESPER's engine does. When this document and the code disagree, that is a bug in one of them.
 `tools/schemagen` is the reference validator, and `esper::Record` is the reference engine. The
@@ -133,11 +133,17 @@ A union picks one of several layouts at decode time.
 | `{ field: name }` | the value of an earlier field |
 | `{ field: name, mask: N }` | that value ANDed with `N` |
 | `{ lookup: { table, key, column } }` | the `column` value of the `table` row whose key equals the earlier field `key`; cases are written as column values |
+| `{ member: name }` | the value of an earlier **subrecord** member, for layouts that depend on a sibling subrecord (PERK `EPFD` by `EPFT`) |
 
 - **Field references** resolve to the **nearest earlier field** with that name in the enclosing
   structs, searching outward. A union can therefore select on a field of a struct that contains
   it, such as VMAD's `objFormat`. Fields are looked up within the same subrecord only. A name that
   isn't a field anywhere in the schema is rejected.
+- **Member references** look in the current group instance for the latest occurrence of the
+  subrecord member `name` decoded so far. If there's none, they search the enclosing instances
+  outward. The member's value must be an integer. A name that isn't a subrecord member anywhere
+  in the schema is rejected. If no occurrence is found, the selector has no value: only
+  `default` can match.
 - **Cases** match `when:` a value, a list of values, or `{ min, max }` (inclusive; either bound
   may be omitted). Cases are tried in order, then `default`.
   - A case without a payload (no `type`/`fields`/`union`) matches and consumes nothing.
@@ -250,6 +256,49 @@ member.
 - **Validation:** remapping happens before validation, so the ambiguity rule sees the real
   signatures.
 
+### 6.4 Delimited groups
+
+Some sections are bracketed by marker subrecords, and different kinds of section reuse the same
+member signatures. QUST reference aliases (`ALST` … `ALED`) and location aliases (`ALLS` …
+`ALED`) are the main example. `open:` and `end:` model them:
+
+```yaml
+  - group: referenceAliases
+    repeat: true
+    open: ALST          # the first member; the only way in
+    end: ALED           # the last member; placing it closes the instance
+    members:
+      - { sig: ALST, name: id,   type: u32 }
+      - { sig: ALID, name: name, type: zstring }
+      - { sig: ALED, name: end,  type: marker }
+```
+
+- **`open: SIG`:** `SIG` must be the group's first member, and singular. The group's entry
+  signatures in its parent are just `{ SIG }`, so groups whose other members share signatures
+  don't conflict. Within an open instance, `SIG` is never resolved: it falls outward, and the
+  parent opens a new instance.
+- **`end: SIG`:** requires `open`. `SIG` must be the last member, and singular. Placing it closes
+  the instance.
+- **Unordered inside.** A delimited instance is unordered, like a record root. Members may appear
+  in any order, and a second occurrence of a singular member is raw. Without `end`, an instance
+  closes when its opener reappears or when a subrecord resolves in an enclosing scope.
+- **Same signature for both.** `open` and `end` may name the same signature, as in SCEN phases
+  (`HNAM` … `HNAM`). Its first occurrence opens an instance and binds the first member. Inside an
+  open instance, it binds the last member and closes the instance. The group's first and last
+  members both carry that signature; the last one is matched by position, not as an entry
+  signature, so the two don't conflict.
+
+```yaml
+  - group: phases
+    repeat: true
+    open: HNAM
+    end: HNAM
+    members:
+      - { sig: HNAM, name: start, type: marker }
+      - { sig: NAM0, name: name,  type: zstring }
+      - { sig: HNAM, name: end,   type: marker }
+```
+
 ## 7. Semantics
 
 ### 7.1 Decoding a record
@@ -267,7 +316,11 @@ The decoder keeps a stack of open scopes, starting with the root. Each open scop
 2. **Check it may go there.** Let *m* be the member it selects in that scope.
    - **Ordered scope:** *s* is acceptable if *m*'s position is after the last position, or equal
      to it when *m* is `repeat`. If not, continue the search outward from the next scope.
-   - **Root scope:** if *m* is singular and already has an occurrence, *s* is **raw**.
+   - **Root scope or delimited group (§6.4):** if *m* is singular and already has an occurrence,
+     *s* is **raw**.
+   - **An instance's own opener** is never resolved inside that instance; the search continues
+     outward. This doesn't apply when the instance was just opened by *s* itself. If the opener
+     is also the instance's `end`, *s* instead selects the `end` member (§6.4).
 3. **Accept it.**
    - Close every scope inside the accepting one.
    - **If *m* is a group member:** open a new instance of that group in the accepting scope,
@@ -275,8 +328,9 @@ The decoder keeps a stack of open scopes, starting with the root. Each open scop
      it from step 1.
    - **If *m* is a subrecord member:** parse the payload with *m*'s type. On success the
      payload must be consumed exactly, so a layout that doesn't account for every byte refuses.
-     The subrecord is then bound to *m*, and the scope's last position becomes *m*. On failure,
-     *s* is **raw**, stays in place, and doesn't advance the position.
+     The subrecord is then bound to *m*, and the scope's last position becomes *m*. If *m* is the
+     scope's `end` member, the instance closes. On failure, *s* is **raw**, stays in place, and
+     doesn't advance the position.
 
 Refusal is normal, not an error. Raw subrecords keep their bytes and their position.
 
@@ -349,7 +403,6 @@ language version rejects them by name.
 
 | Construct | Purpose |
 |---|---|
-| `open:` / `end:` on groups | explicit marker-delimited instances |
 | `T[count: <field>]` | an array counted by an earlier field |
 | `enum:`, `flags:`, `unit:` and `enum` descriptors | rendering hints |
 
@@ -366,3 +419,5 @@ language version rejects them by name.
 | 0.1 | Initial: scalars, strings, bytes, structs with breaks, arrays, groups (ordinal rule, reuse with remapping), `countOf`, `to:`, `formIds: none` |
 | 0.2 | adds `marker` |
 | 0.3 | adds unions (`size`, `formVersion`, `record`, `field`, `field` + `mask` and `lookup` selectors), `if:`, `remapUnsafe`, `table` descriptors, and named union structs |
+| 0.5 | adds the `member` selector, and `open`/`end` sharing a signature |
+| 0.4 | adds delimited groups (`open:` / `end:`) |

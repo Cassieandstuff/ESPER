@@ -1,0 +1,38 @@
+# Delimited groups (open/end): two alias kinds sharing member sigs, nested
+# conditions, an opener-only stage group, and a root FNAM scoped apart from
+# the aliases' FNAM.
+record: TSTD
+name: TestDelimited
+members:
+  - { sig: EDID, name: editorId,  type: zstring }
+  - { sig: FNAM, name: rootFlags, type: u32 }
+  - { sig: ROOT, name: rootByte,  type: u8 }
+  - group: refAliases
+    repeat: true
+    open: ALST
+    end: ALED
+    members:
+      - { sig: ALST, name: id,    type: u32 }
+      - { sig: ALID, name: name,  type: zstring }
+      - { sig: FNAM, name: flags, type: u32 }
+      - group: conditions
+        repeat: true
+        members:
+          - { sig: CTDA, name: data,  type: u32 }
+          - { sig: CIS1, name: param, type: zstring }
+      - { sig: ALED, name: end,   type: marker }
+  - group: locAliases
+    repeat: true
+    open: ALLS
+    end: ALED
+    members:
+      - { sig: ALLS, name: id,    type: u32 }
+      - { sig: ALID, name: name,  type: zstring }
+      - { sig: FNAM, name: flags, type: u32 }
+      - { sig: ALED, name: end,   type: marker }
+  - group: stages
+    repeat: true
+    open: INDX
+    members:
+      - { sig: INDX, name: index, type: u16 }
+      - { sig: CNAM, name: text,  type: zstring }

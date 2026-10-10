@@ -538,6 +538,108 @@ void TestUnions() {
     }
 }
 
+void TestDelimited() {
+    std::printf("T15 delimited groups: open/end markers, shared member sigs, reopening\n");
+    auto decode = [](const Bytes& payload, esper::Record& rec) {
+        std::string err;
+        const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTD"), payload, {}, rec, &err);
+        if (!ok) std::printf("  decode error: %s\n", err.c_str());
+        return ok;
+    };
+    Payload p;
+    p.Z("EDID", "Q")
+     .Sub("ALST", U32(1)).Z("ALID", "a").Sub("FNAM", U32(5))
+         .Sub("CTDA", U32(7)).Z("CIS1", "x").Sub("CTDA", U32(8)).Sub("ALED", {})
+     .Sub("FNAM", U32(0xAA))                                                   // root again: ALED closed the alias
+     .Sub("ALLS", U32(2)).Sub("FNAM", U32(6)).Z("ALID", "b").Sub("ALED", {})   // members out of order
+     .Sub("ALST", U32(3))                                                      // no ALED: closed by the next opener
+     .Sub("ALST", U32(4)).Sub("ALED", {})
+     .Sub("INDX", U16(10)).Z("CNAM", "s1").Sub("INDX", U16(20)).Z("CNAM", "s2");
+    esper::Record rec;
+    CHECK(decode(p.bytes(), rec));
+    CHECK(rec.RawCount() == 0);
+    CheckRoundTrip(rec, p.bytes());
+    tv::TestDelimited d(rec);
+    CHECK(d.RootFlags() == 0xAAu);
+    const auto refs = d.RefAliases();
+    CHECK(refs.size() == 3);
+    if (refs.size() == 3) {
+        CHECK(refs[0].Id() == 1u && refs[0].Name() == std::string("a") && refs[0].Flags() == 5u);
+        CHECK(refs[0].Conditions().size() == 2);
+        CHECK(refs[0].End());
+        CHECK(refs[1].Id() == 3u && !refs[1].End());
+        CHECK(refs[2].Id() == 4u && refs[2].End());
+    }
+    const auto locs = d.LocAliases();
+    CHECK(locs.size() == 1 && locs[0].Id() == 2u && locs[0].Name() == std::string("b") && locs[0].Flags() == 6u);
+    const auto stages = d.Stages();
+    CHECK(stages.size() == 2 && stages[1].Index() == uint16_t(20) && stages[1].Text() == std::string("s2"));
+
+    // A root sig inside an open alias closes it; alias members after that have
+    // nowhere to go (they're entered only through ALST) and stay raw.
+    Payload q;
+    q.Sub("ALST", U32(1)).Sub("ROOT", Bytes{ 9 }).Z("ALID", "late");
+    esper::Record r2;
+    CHECK(decode(q.bytes(), r2));
+    CHECK(r2.RawCount() == 1);
+    CHECK(tv::TestDelimited(r2).RootByte() == uint8_t(9));
+    CheckRoundTrip(r2, q.bytes());
+
+    // Built through the API, an instance encodes opener first and end last,
+    // and reads back as one instance.
+    esper::Record r3;
+    CHECK(esper::Record::Create(TestSchema(), Sig("TSTD"), {}, r3));
+    auto alias = tv::TestDelimited(r3).AddRefAliases();
+    alias.SetEnd(true);
+    alias.SetName("n");
+    alias.SetId(9);
+    CHECK((SigsOf(r3.Encode()) == std::vector<uint32_t>{ Sig("ALST"), Sig("ALID"), Sig("ALED") }));
+    esper::Record back;
+    CHECK(decode(r3.Encode(), back));
+    CHECK(back.RawCount() == 0 && tv::TestDelimited(back).RefAliases().size() == 1);
+}
+
+void TestSiblings() {
+    std::printf("T16 member selectors and same-sig open/end\n");
+    auto decode = [](const Bytes& payload, esper::Record& rec) {
+        std::string err;
+        const bool ok = esper::Record::Decode(TestSchema(), Sig("TSTE"), payload, {}, rec, &err);
+        if (!ok) std::printf("  decode error: %s\n", err.c_str());
+        return ok;
+    };
+    Payload p;
+    p.Sub("PRKE", Bytes{ 0 }).Sub("EPFT", Bytes{ 1 }).Sub("EPFD", F32(1.5f)).Sub("PRKF", {})
+     .Sub("PRKE", Bytes{ 1 }).Sub("EPFT", Bytes{ 4 }).Sub("EPFD", U32(0x01000801)).Sub("PRKF", {})
+     .Sub("PRKE", Bytes{ 2 }).Sub("EPFT", Bytes{ 6 }).Z("EPFD", "hello").Sub("PRKF", {})
+     .Sub("PRKE", Bytes{ 3 }).Sub("EPFT", Bytes{ 9 }).Sub("EPFD", U32(5)).Sub("PRKF", {})      // no case: raw
+     .Sub("PRKE", Bytes{ 4 }).Sub("EPFD", U32(5)).Sub("PRKF", {})                             // no EPFT: raw
+     .Sub("HNAM", {}).Z("NAM0", "a").Sub("HNAM", {})
+     .Sub("HNAM", {}).Z("NAM0", "b").Sub("HNAM", {});
+    esper::Record rec;
+    CHECK(decode(p.bytes(), rec));
+    CHECK(rec.RawCount() == 2);
+    CheckRoundTrip(rec, p.bytes());
+    tv::TestSiblings t(rec);
+    const auto entries = t.Entries();
+    CHECK(entries.size() == 5);
+    if (entries.size() == 5) {
+        CHECK(entries[0].FunctionDataValue() == 1.5f);
+        CHECK(entries[1].FunctionDataSpell() && entries[1].FunctionDataSpell()->id.raw == 0x01000801u);
+        CHECK(entries[2].FunctionDataText() == std::string("hello"));
+        CHECK(!entries[3].FunctionDataCase().has_value());
+        for (const auto& e : entries) CHECK(e.End());
+    }
+    size_t ids = 0;
+    rec.ForEachFormId([&](uint32_t, std::span<const uint32_t>) { ++ids; });
+    CHECK(ids == 1);
+    const auto phases = t.Phases();
+    CHECK(phases.size() == 2);
+    if (phases.size() == 2) {
+        CHECK(phases[0].Start() && phases[0].End() && phases[0].Name() == std::string("a"));
+        CHECK(phases[1].Start() && phases[1].End() && phases[1].Name() == std::string("b"));
+    }
+}
+
 void TestRealSchema() {
     std::printf("T12 real schema: ARMO model slots, views, old-path parity\n");
     Payload p;
@@ -589,6 +691,8 @@ int main() {
     TestXxxx();
     TestMarker();
     TestUnions();
+    TestDelimited();
+    TestSiblings();
     TestRealSchema();
     if (g_failures == 0) {
         std::printf("RESULT: PASS\n");

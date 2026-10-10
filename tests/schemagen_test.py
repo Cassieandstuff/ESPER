@@ -61,12 +61,45 @@ class Rejects(unittest.TestCase):
     def test_unknown_type(self):
         self.rejects("unknown type", "- { sig: DATA, name: d, type: Nope }")
 
-    def test_group_markers_not_yet(self):
-        self.rejects("not supported in language", """
+    def test_open_must_be_first_member(self):
+        self.rejects("must be the group's first member", """
             - group: g
               open: NAM0
               members:
                 - { sig: NAM1, name: a, type: u8 }
+                - { sig: NAM0, name: b, type: u8 }
+        """)
+
+    def test_end_must_be_last_member(self):
+        self.rejects("must be the group's last member", """
+            - group: g
+              open: NAM0
+              end: NAM9
+              members:
+                - { sig: NAM0, name: a, type: u8 }
+                - { sig: NAM9, name: z, type: marker }
+                - { sig: NAM1, name: b, type: u8 }
+        """)
+
+    def test_end_needs_open(self):
+        self.rejects("'end' needs 'open'", """
+            - group: g
+              end: NAM9
+              members:
+                - { sig: NAM0, name: a, type: u8 }
+                - { sig: NAM9, name: z, type: marker }
+        """)
+
+    def test_shared_member_sigs_need_delimiters(self):
+        self.rejects("ambiguous", """
+            - group: a
+              members:
+                - { sig: ALST, name: id, type: u32 }
+                - { sig: ALID, name: name, type: zstring }
+            - group: b
+              members:
+                - { sig: ALLS, name: id, type: u32 }
+                - { sig: ALID, name: name, type: zstring }
         """)
 
     def test_union_needs_a_case(self):
@@ -110,6 +143,13 @@ class Rejects(unittest.TestCase):
               fields:
                 - { name: a, type: u8 }
                 - { name: b, type: u8, if: { field: nope, min: 1 } }
+        """)
+
+    def test_selector_member_must_exist(self):
+        self.rejects("isn't a subrecord member anywhere", """
+            - sig: EPFD
+              name: d
+              union: { by: { member: nope }, cases: [ { when: 1, type: f32 } ] }
         """)
 
     def test_if_needs_a_condition(self):
@@ -180,6 +220,26 @@ class Rejects(unittest.TestCase):
 
 
 class Accepts(unittest.TestCase):
+    def test_delimited_groups_may_share_member_sigs(self):
+        s = record("""
+            - group: refAlias
+              open: ALST
+              end: ALED
+              members:
+                - { sig: ALST, name: id, type: u32 }
+                - { sig: ALID, name: name, type: zstring }
+                - { sig: ALED, name: end, type: marker }
+            - group: locAlias
+              open: ALLS
+              end: ALED
+              members:
+                - { sig: ALLS, name: id, type: u32 }
+                - { sig: ALID, name: name, type: zstring }
+                - { sig: ALED, name: end, type: marker }
+        """)
+        root = s.groups[s.records[0][2]]
+        self.assertEqual(sorted(sig for sig, _ in root.entries), ["ALLS", "ALST"])
+
     def test_remapped_groups_do_not_collide(self):
         s = record("""
             - { use: G, name: a }

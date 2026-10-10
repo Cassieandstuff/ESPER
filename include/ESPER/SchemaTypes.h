@@ -16,7 +16,8 @@
 //              group is entered by any of its own entry sigs, so the generator
 //              flattens those here and guarantees each sig is unique per scope.
 //   GroupDef   a scope: a member range + entry range. A record's root scope is
-//              unordered; nested groups follow the ordinal rule.
+//              unordered; nested groups follow the ordinal rule, except
+//              delimited groups (open/end markers), which are unordered inside.
 //   RecordDef  a record signature → its root GroupDef.
 //   CaseDef    one case of a union: the values it matches (→ caseValues, or a
 //              min/max range) and its payload type; a union's default case is last.
@@ -49,6 +50,7 @@ enum class Selector : uint8_t {
     Record,       // the enclosing record's signature
     Field,        // an earlier field's value (optionally masked), by name
     Lookup,       // a table column, keyed by an earlier field's value
+    Member,       // an earlier subrecord member's value, by name (same or enclosing scope)
 };
 
 enum class LenKind : uint8_t {
@@ -78,7 +80,7 @@ struct TypeDef {
     const char* name      = nullptr;  // named struct type, for diagnostics
     // Union only (ref/refCount = the CaseDef range):
     Selector    selector  = Selector::None;
-    const char* selField  = nullptr;  // Field / Lookup: the key field's name
+    const char* selField  = nullptr;  // Field / Lookup: the key field's name; Member: the member's
     uint64_t    selMask   = 0;        // Field: AND mask (0 = none)
     uint16_t    lookup    = 0;        // Lookup: LookupDef
 };
@@ -133,7 +135,9 @@ struct GroupDef {
     uint16_t    memberCount = 0;
     uint16_t    firstEntry  = 0;
     uint16_t    entryCount  = 0;
-    bool        ordered     = true;  // false for a record's root scope
+    bool        ordered     = true;  // false for a record's root scope and delimited groups
+    uint32_t    openSig     = 0;     // delimited: only this sig (the first member) opens an instance
+    uint32_t    endSig      = 0;     // delimited: placing this sig (the last member) closes it
 };
 
 struct RecordDef {
