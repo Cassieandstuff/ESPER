@@ -610,6 +610,13 @@ int32_t Record::FirstNode(uint32_t inst, uint16_t member) const {
     return -1;
 }
 
+int32_t Record::NthNode(uint32_t inst, uint16_t member, size_t n) const {
+    for (size_t i = 0; i < nodes_.size(); ++i)
+        if (nodes_[i].inst == inst && nodes_[i].member == static_cast<int16_t>(member) && n-- == 0)
+            return static_cast<int32_t>(i);
+    return -1;
+}
+
 size_t Record::InsertPos(uint32_t inst, uint16_t slot) const {
     int64_t best = -1, firstGreater = -1;
     for (size_t i = 0; i < nodes_.size(); ++i) {
@@ -686,6 +693,8 @@ const TypeDef* Record::TypeAt(uint32_t inst, const RelPath& p) const {
     for (uint8_t d = p.memberDepth; d < p.depth && t; ++d) {
         if (t->kind == Kind::Struct) {
             t = &FieldType(*t, p.idx[d]);
+        } else if (t->kind == Kind::Array) {
+            t = &set_->types[t->ref];                       // an element index
         } else if (t->kind == Kind::Union) {
             if (p.idx[d] >= t->refCount) return nullptr;
             const schema::CaseDef& cd = set_->cases[t->ref + p.idx[d]];
@@ -707,6 +716,12 @@ const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p)
             if (v->bits != i || v->items.empty()) return nullptr;     // other case taken
             t = &set_->types[set_->cases[t->ref + i].type];
             v = &v->items[0];
+            continue;
+        }
+        if (t->kind == Kind::Array) {
+            if (i >= v->items.size()) return nullptr;
+            t = &set_->types[t->ref];
+            v = &v->items[i];
             continue;
         }
         if (t->kind != Kind::Struct) return nullptr;
@@ -738,7 +753,7 @@ const Value* Record::LatestMemberValue(uint32_t inst, std::string_view name) con
 const Value* Record::FindValue(uint32_t inst, const RelPath& p) const {
     const int32_t scope = WalkGroupsConst(inst, p);
     if (scope < 0) return nullptr;
-    const int32_t ni = FirstNode(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]);
+    const int32_t ni = NthNode(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1], p.occurrence);
     if (ni < 0) return nullptr;
     return Descend(NodeValue(nodes_[static_cast<size_t>(ni)]),
                    MemberOf(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]).type, p);
@@ -796,7 +811,8 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
     const uint32_t s = static_cast<uint32_t>(scope);
     const uint16_t m = p.idx[p.memberDepth - 1];
     const schema::MemberDef& md = MemberOf(s, m);
-    const int32_t ni = FirstNode(s, m);
+    const int32_t ni = NthNode(s, m, p.occurrence);
+    if (ni < 0 && p.occurrence > 0) return;      // only the first occurrence is created on write
 
     Value whole = ni >= 0 ? NodeValue(nodes_[static_cast<size_t>(ni)]) : DefaultValue(md.type);
     if (p.depth == p.memberDepth) {
@@ -816,6 +832,12 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
                 }
                 cur = &cur->items[0];
                 t = &set_->types[cd.type];
+                continue;
+            }
+            if (t->kind == Kind::Array) {
+                if (i >= cur->items.size()) return;
+                cur = &cur->items[i];
+                t = &set_->types[t->ref];
                 continue;
             }
             if (cur->present != Value::kAll && i >= cur->present) {
@@ -898,6 +920,50 @@ void Record::ClearAt(uint32_t inst, const RelPath& p) {
         return n.inst == static_cast<uint32_t>(scope) && n.member == static_cast<int16_t>(m);
     });
     UpdateCount(static_cast<uint32_t>(scope), m);
+}
+
+size_t Record::CountAt(uint32_t inst, const RelPath& p) const {
+    if (p.memberDepth == 0) return 0;
+    const int32_t scope = WalkGroupsConst(inst, p);
+    if (scope < 0) return 0;
+    const uint16_t m = p.idx[p.memberDepth - 1];
+    size_t n = 0;
+    for (const Node& node : nodes_)
+        n += node.inst == static_cast<uint32_t>(scope) && node.member == static_cast<int16_t>(m);
+    return n;
+}
+
+size_t Record::AppendAt(uint32_t inst, const RelPath& p) {
+    if (!TypeAt(inst, RelPath{ p.idx, p.memberDepth, p.memberDepth })) return 0;
+    const int32_t scope = WalkGroups(inst, p, true);
+    if (scope < 0) return 0;
+    const uint32_t s = static_cast<uint32_t>(scope);
+    const uint16_t m = p.idx[p.memberDepth - 1];
+    const schema::MemberDef& md = MemberOf(s, m);
+    size_t count = 0, pos = InsertPos(s, m);
+    for (size_t i = 0; i < nodes_.size(); ++i)
+        if (nodes_[i].inst == s && nodes_[i].member == static_cast<int16_t>(m)) { ++count; pos = i + 1; }
+    if (count > 0 && !md.repeat) return 0;       // a singular member has one occurrence
+    Node n;
+    n.sig     = md.sig;
+    n.inst    = s;
+    n.member  = static_cast<int16_t>(m);
+    n.dirty   = true;
+    n.decoded = true;
+    n.value   = DefaultValue(md.type);
+    nodes_.insert(nodes_.begin() + static_cast<std::ptrdiff_t>(pos), std::move(n));
+    UpdateCount(s, m);
+    return count;
+}
+
+void Record::ResizeAt(uint32_t inst, const RelPath& p, size_t n) {
+    const TypeDef* t = TypeAt(inst, p);
+    if (!t || t->kind != Kind::Array || t->len == LenKind::Fixed) return;
+    const Value* have = FindValue(inst, p);
+    Value v = have ? *have : Value{};
+    if (v.items.size() > n) v.items.resize(n);
+    while (v.items.size() < n) v.items.push_back(DefaultValue(t->ref));
+    StoreValue(inst, p, std::move(v));
 }
 
 void Record::UpdateCount(uint32_t inst, uint16_t member) {

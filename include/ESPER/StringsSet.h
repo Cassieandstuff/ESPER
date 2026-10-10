@@ -1,5 +1,5 @@
 #pragma once
-#include <ESPER/Schema.h>
+#include <ESPER/SchemaTypes.h>
 #include <ESPER/StringsTable.h>
 
 #include <functional>
@@ -30,30 +30,28 @@ public:
         }
     }
 
-    bool Find(StrVariant variant, uint32_t id, std::string& out) {
-        const int v = static_cast<int>(variant);
-        if (!loaded_[v]) Load(variant);
+    // Looks `id` up in the plugin's sidecar for `table` (None reads as Strings).
+    bool Find(schema::StrTable table, uint32_t id, std::string& out) {
+        const int v = Slot(table);
+        if (!loaded_[v]) Load(v);
         return tables_[v].Find(id, out);
     }
 
-    // Resolves an Lstring decoded from a LOCALIZED plugin (its `variant` was
-    // stamped by the field's codec). Inline strings return directly.
-    bool Resolve(const Lstring& s, std::string& out) {
-        if (s.text) { out = *s.text; return true; }
-        return Find(s.variant, s.id, out);
-    }
-
 private:
-    static const char* Extension(StrVariant v) {
-        switch (v) {
-        case StrVariant::ILStrings: return ".ILSTRINGS";
-        case StrVariant::DLStrings: return ".DLSTRINGS";
-        default:                    return ".STRINGS";
+    // Slots: 0 .STRINGS, 1 .ILSTRINGS, 2 .DLSTRINGS.
+    static int Slot(schema::StrTable t) {
+        switch (t) {
+        case schema::StrTable::ILStrings: return 1;
+        case schema::StrTable::DLStrings: return 2;
+        default:                          return 0;
         }
     }
+    static const char* Extension(int v) {
+        static const char* kExt[3] = { ".STRINGS", ".ILSTRINGS", ".DLSTRINGS" };
+        return kExt[v];
+    }
 
-    void Load(StrVariant variant) {
-        const int v = static_cast<int>(variant);
+    void Load(int v) {
         loaded_[v] = true;
         if (!fetch_) return;
 
@@ -62,11 +60,11 @@ private:
         if (dot != std::string::npos) base.resize(dot);
 
         const std::string path =
-            "Strings/" + base + "_" + language_ + Extension(variant);
+            "Strings/" + base + "_" + language_ + Extension(v);
         std::vector<uint8_t> bytes;
         if (!fetch_(path, bytes)) return;
         // .STRINGS is NUL-terminated framing; IL/DL are length-prefixed.
-        tables_[v].Parse(bytes, variant != StrVariant::Strings);
+        tables_[v].Parse(bytes, v != 0);
     }
 
     StringsTable tables_[3];

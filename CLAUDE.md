@@ -39,8 +39,6 @@ and its current step. Spec: [docs/schema-language.md](docs/schema-language.md).
 
 - **Engine:** `esper::Record` (`include/ESPER/Record.h`, `cpp/engine/`) interprets generated
   tables. It's one generic engine; never add per-record code to it.
-- **Old path:** the typed `Records*.h` path still ships until the migration's final step. Don't
-  extend it; new coverage goes in `schema/`.
 - **No host-language escape hatches.** If the language can't express something, the language
   grows (spec + generator + engine).
 
@@ -50,9 +48,12 @@ and its current step. Spec: [docs/schema-language.md](docs/schema-language.md).
   `include/ESPER/generated/`, `tests/generated/` or `schema.json` by hand. Regenerate them with
   the `esper-schemagen` target and commit them in the same change as the YAML. CTest's
   `*-fresh` checks fail on stale output.
-- **Real-data gate:** a descriptor change must pass `roundtrip-gate --schema <Data>`. That means
-  byte-exact decode and encode (verbatim and forced re-encode), no more raw subrecords than the
-  typed path, FormID parity with the typed path, and every `to:` link target verified.
+- **Real-data gate:** a descriptor change must pass
+  `roundtrip-gate --schema --baseline tools/gate-baseline.tsv <Data>`. That means byte-exact
+  decode and encode (verbatim and forced re-encode), every `to:` link target verified, and no
+  regression against the baseline: per record type, no more raw subrecords, no fewer visible
+  FormIDs, no fewer remap-safe records. A change that improves coverage rewrites the baseline
+  (`--write-baseline tools/gate-baseline.tsv`) in the same commit.
 - **Claims about data:** `to:` and `formIds: none` describe the data, so add them only when the
   gate confirms them on the vanilla masters. Clean-room: never take layouts from xEdit or
   Mutagen definitions.

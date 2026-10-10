@@ -5,8 +5,8 @@
 #include <ESPER/ByteWriter.h>
 #include <ESPER/CaseUtil.h>
 #include <ESPER/PluginFlags.h>
+#include <ESPER/Record.h>
 #include <ESPER/RecordHeader.h>
-#include <ESPER/SchemaRegistry.h>
 #include <ESPER/Subrecords.h>
 
 #include <cstdio>
@@ -147,14 +147,15 @@ namespace {
 struct SelfIndexBump {
     uint32_t oldSelf;
     uint32_t newSelf;
-    static void Apply(uint32_t& id, void* ctxRaw) {
-        auto* ctx = static_cast<SelfIndexBump*>(ctxRaw);
+    // Returns true when it changed `id`.
+    bool Apply(uint32_t& id) const {
         // A null FormID (0) is "no reference", not object 0 of master 0 —
         // it must never be renumbered (a masterless plugin has oldSelf == 0,
         // which would otherwise capture every null ref).
-        if (id == 0) return;
-        if ((id >> 24) == ctx->oldSelf)
-            id = (ctx->newSelf << 24) | (id & 0x00FFFFFFu);
+        if (id == 0) return false;
+        if ((id >> 24) != oldSelf) return false;
+        id = (newSelf << 24) | (id & 0x00FFFFFFu);
+        return true;
     }
 };
 } // namespace
@@ -169,56 +170,40 @@ Result<int> EnsureMaster(Plugin& p, const std::string& masterName) {
     const uint32_t oldSelf = static_cast<uint32_t>(p.masters.size());
     const uint32_t newSelf = oldSelf + 1u;
 
-    // Renumbering self-index records requires seeing every FormID they carry;
-    // DRY-RUN the remap (no-op visitor) so every refusal — missing schema,
-    // unknown-passthrough bytes, remap-opaque rows like CTDA — surfaces
-    // BEFORE anything is mutated, keeping EnsureMaster atomic on failure.
-    SchemaCtx ctx;
-    ctx.localized = p.localized;
+    // Renumbering needs every FormID each record carries. Decode them all and
+    // check remap safety BEFORE mutating anything, so a refusal leaves the
+    // plugin untouched.
+    std::vector<std::pair<RecordNode*, Record>> decoded;
+    decoded.reserve(p.index.size());
     for (auto& [formId, node] : p.index) {
         (void)formId;
-        const auto pr = node->Payload();
-        if (!pr) return Wrap(pr.error(), "EnsureMaster: record {:08X} unreadable", node->header.formId);
-        const std::span<const uint8_t> payload = *pr;
-        if (payload.empty()) continue;
-        const SchemaOps* ops = FindSchema(node->header.sig);
-        if (!ops || !ops->remapIds)
-            return Fail("EnsureMaster: record {:08X} ({}) has no FormID-visiting schema; "
-                        "add masters before creating such records",
+        auto rec = Record::Decode(p, *node);
+        if (!rec)
+            return Wrap(rec.error(), "EnsureMaster: record {:08X} ({}) can't be renumbered",
                         node->header.formId, SigName(node->header.sig));
-        std::vector<uint8_t> scratch;
-        std::string why;
-        if (!ops->remapIds(payload, ctx, [](uint32_t&, void*) {}, nullptr, scratch, why))
-            return Fail("EnsureMaster: record {:08X} cannot be renumbered: {}", node->header.formId, why);
+        if (auto safe = rec->CheckRemapSafe(); !safe)
+            return Wrap(safe.error(), "EnsureMaster: record {:08X} ({}) can't be renumbered",
+                        node->header.formId, SigName(node->header.sig));
+        decoded.emplace_back(node, std::move(*rec));
     }
 
     p.masters.push_back(masterName);
     p.masterData.push_back(0);
 
-    // Renumber: payload references first (via schema), then record headers.
-    SelfIndexBump bump{ oldSelf, newSelf };
-    for (auto& [formId, node] : p.index) {
-        (void)formId;
-        const auto pr = node->Payload();
-        if (!pr || pr->empty()) continue;
-        const std::span<const uint8_t> payload = *pr;
-
-        const SchemaOps* ops = FindSchema(node->header.sig);
-        std::vector<uint8_t> remapped;
-        std::string why;
-        if (!ops->remapIds(payload, ctx, &SelfIndexBump::Apply, &bump, remapped, why))
-            // masters already appended; caller should discard the plugin
-            return Fail("EnsureMaster: remap of {:08X} failed: {}", node->header.formId, why);
-        if (remapped.size() != payload.size() ||
-            std::memcmp(remapped.data(), payload.data(), payload.size()) != 0) {
-            if (auto r = SetRecordPayload(p, *node, std::move(remapped)); !r)
-                return std::unexpected(r.error());
+    // Renumber: payload references first, then record headers.
+    const SelfIndexBump bump{ oldSelf, newSelf };
+    for (auto& [node, rec] : decoded) {
+        bool changed = false;
+        if (auto visited = rec.VisitFormIds([&](FormId& id) { changed |= bump.Apply(id.raw); }); !visited)
+            return Wrap(visited.error(), "EnsureMaster: remap of {:08X} failed", node->header.formId);
+        if (changed) {
+            if (auto r = SetRecordPayload(p, *node, rec.Encode()); !r) return std::unexpected(r.error());
         }
     }
     for (auto& [formId, node] : p.index) {
         (void)formId;
         uint32_t id = node->header.formId;
-        SelfIndexBump::Apply(id, &bump);
+        bump.Apply(id);
         node->header.formId = id;
     }
     RebuildIndex(p);

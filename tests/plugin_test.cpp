@@ -23,11 +23,10 @@
 #include <ESPER/LoadOrderReader.h>
 #include <ESPER/Plugin.h>
 #include <ESPER/PluginFlags.h>
+#include <ESPER/Record.h>
 #include <ESPER/RecordHeader.h>
-#include <ESPER/RecordsActor.h>
-#include <ESPER/RecordsMagic.h>
-#include <ESPER/RecordsWorld.h>
 #include <ESPER/Subrecords.h>
+#include <ESPER/generated/Views.h>
 #include <ESPER/WorldIndex.h>
 #include <ESPER/Writer.h>
 
@@ -746,18 +745,16 @@ int main() {
               "T10 new record formId = self-index 1, object 0x800");
 
         if (node) {
-            NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, np, *node, npc).has_value(),
-                  "T10 DecodeNode on empty new record");
-            npc.editorId = "MadeNord";
-            npc.fullName = Lstring{};
-            npc.fullName->text = "Made Nord";
-            npc.race     = FormRef{ raceRef };
-            AcbsData acbs{};
-            acbs.flags = 0x1u;   // female
-            npc.acbs   = acbs;
-            CHECK(CommitNode(kNpcSchema, np, *node, npc).has_value(),
-                  "T10 CommitNode");
+            auto rec = Record::Decode(np, *node);
+            CHECK(rec.has_value(), "T10 decode the empty new record");
+            if (rec) {
+                auto npc = *view::As<view::Npc>(*rec);
+                npc.SetEditorId("MadeNord");
+                npc.SetFullName({ 0, "Made Nord" });
+                npc.SetRace(FormId{ raceRef });
+                npc.Acbs().SetFlags(0x1u);   // female
+                CHECK(Record::Commit(np, *node, *rec).has_value(), "T10 Record::Commit");
+            }
         }
 
         // Adding ANOTHER master after the record exists must renumber the
@@ -772,9 +769,8 @@ int main() {
               "T10 record header self index bumped to 2 after master append");
         // The race ref (master index 0) must be untouched.
         if (renumbered) {
-            NpcRec check;
-            CHECK(DecodeNode(kNpcSchema, np, *renumbered, check).has_value() &&
-                  check.race && check.race->id == kRaceId,
+            auto check = Record::Decode(np, *renumbered);
+            CHECK(check && view::As<view::Npc>(*check)->Race() == FormId{ kRaceId },
                   "T10 master-index ref survived the renumber");
         }
 
@@ -795,20 +791,21 @@ int main() {
 
         if (!re.index.empty()) {
             RecordNode* rn = re.index.begin()->second;
-            NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, re, *rn, npc).has_value(),
-                  "T10 decode reloaded NPC");
-            CHECK(npc.editorId && *npc.editorId == "MadeNord", "T10 EDID round-tripped");
-            CHECK(npc.fullName && npc.fullName->text &&
-                  *npc.fullName->text == "Made Nord", "T10 FULL round-tripped");
-            CHECK(npc.race && npc.race->id == kRaceId, "T10 RNAM round-tripped");
-            CHECK(npc.IsFemale(), "T10 ACBS female flag round-tripped");
-            CHECK(npc.unknown.empty(), "T10 authored record has zero unknown subs");
+            auto rec = Record::Decode(re, *rn);
+            CHECK(rec.has_value(), "T10 decode reloaded NPC");
+            if (rec) {
+                auto npc = *view::As<view::Npc>(*rec);
+                CHECK(npc.EditorId() == std::string("MadeNord"), "T10 EDID round-tripped");
+                CHECK(npc.FullName() && npc.FullName()->text == "Made Nord", "T10 FULL round-tripped");
+                CHECK(npc.Race() == FormId{ kRaceId }, "T10 RNAM round-tripped");
+                CHECK((npc.Acbs().Flags().value_or(0) & 1u) != 0, "T10 ACBS female flag round-tripped");
+                CHECK(rec->RawCount() == 0, "T10 authored record has zero raw subrecords");
 
-            // Resolve through a load order: the ref reaches the master's RACE.
-            FormKey raceKey = re.FormIdToKey(npc.race->id);
-            CHECK(raceKey.plugin == "AuthorMaster.esm" && raceKey.localId == kRaceId,
-                  "T10 reloaded ref resolves to the master's RACE");
+                // Resolve through a load order: the ref reaches the master's RACE.
+                FormKey raceKey = re.FormIdToKey(npc.Race().value_or(FormId{}).raw);
+                CHECK(raceKey.plugin == "AuthorMaster.esm" && raceKey.localId == kRaceId,
+                      "T10 reloaded ref resolves to the master's RACE");
+            }
         }
 
         // ESL object-id exhaustion errors cleanly.
@@ -955,6 +952,20 @@ int main() {
     // ══ T12: condition remap safety + null-FormID renumber guard ════════════════
     std::printf("ESPER T12: remap safety\n");
     {
+        // A CTDA row: op, comparison 0.0, function, params, run on subject.
+        auto ctda = [](uint16_t fn, uint32_t p1) {
+            std::vector<uint8_t> v(32, 0);
+            std::memcpy(v.data() + 8, &fn, 2);
+            std::memcpy(v.data() + 12, &p1, 4);
+            return Sub(Sig4("CTDA"), v);
+        };
+        auto spell = [&](Plugin& p, const char* edid, std::vector<std::vector<uint8_t>> conds) {
+            RecordNode* sn = CreateRecord(p, Sig4("SPEL")).value_or(nullptr);
+            if (!sn) return false;
+            std::vector<uint8_t> payload = Sub(Sig4("EDID"), ZStr(edid));
+            for (const auto& c : conds) PutBytes(payload, c);
+            return SetRecordPayload(p, *sn, std::move(payload)).has_value();
+        };
         fs::path tmp = MakeTempDir("remap");
         CHECK(!tmp.empty(), "create temp dir");
 
@@ -965,19 +976,8 @@ int main() {
         {
             Plugin p;
             CreateEmptyPlugin(p, "UnkCond.esp", /*light=*/false);
-            RecordNode* sn = CreateRecord(p, Sig4("SPEL")).value_or(nullptr);
-            CHECK(sn != nullptr, "T12 create SPEL (unknown fn)");
-            if (sn) {
-                SpellRec spell;
-                (void)DecodeNode(kSpelSchema, p, *sn, spell);
-                spell.editorId = "UnkCond";
-                CondData c{};
-                c.functionIndex = 60000;         // not in the table → unknown
-                c.param1        = 0x00000800u;   // maybe a form — but we don't know
-                spell.conds.conditions.push_back(c);
-                CHECK(CommitNode(kSpelSchema, p, *sn, spell).has_value(),
-                      "T12 commit unknown-fn SPEL");
-            }
+            // Function 60000 isn't in the table: its param may be a form, but we don't know.
+            CHECK(spell(p, "UnkCond", { ctda(60000, 0x00000800u) }), "T12 create unknown-fn SPEL");
             const auto idx = EnsureMaster(p, "Skyrim.esm");
             const std::string rerr = idx ? std::string() : idx.error().message;
             CHECK(!idx, "T12 EnsureMaster refuses over an UNKNOWN condition function");
@@ -992,38 +992,25 @@ int main() {
         {
             Plugin p;
             CreateEmptyPlugin(p, "KnownCond.esp", /*light=*/false);
-            RecordNode* sn = CreateRecord(p, Sig4("SPEL")).value_or(nullptr);
-            CHECK(sn != nullptr, "T12 create SPEL (known fn)");
-            if (sn) {
-                SpellRec spell;
-                (void)DecodeNode(kSpelSchema, p, *sn, spell);
-                spell.editorId = "KnownCond";
-                CondData formCond{};
-                formCond.functionIndex = 71;          // GetInFaction — p1 = Form
-                formCond.param1        = 0x00000801u; // self-index ref (top byte 0)
-                spell.conds.conditions.push_back(formCond);
-                CondData intCond{};
-                intCond.functionIndex = 70;           // GetIsSex — p1 = Int
-                intCond.param1        = 0x00000123u;  // int that resembles a self-ref
-                spell.conds.conditions.push_back(intCond);
-                CHECK(CommitNode(kSpelSchema, p, *sn, spell).has_value(),
-                      "T12 commit known-fn SPEL");
-            }
-            const int idx = EnsureMaster(p, "Skyrim.esm").value_or(-1);
-            CHECK(idx == 0, "T12 EnsureMaster succeeds over KNOWN condition functions");
-            if (idx < 0) std::printf("  err='%s'\n", err);
+            // GetInFaction (71): p1 is a Form, here a self-index ref (top byte 0).
+            // GetIsSex (70): p1 is an Int that happens to resemble a self-ref.
+            CHECK(spell(p, "KnownCond", { ctda(71, 0x00000801u), ctda(70, 0x00000123u) }),
+                  "T12 create known-fn SPEL");
+            const auto idx = EnsureMaster(p, "Skyrim.esm");
+            CHECK(idx && *idx == 0, "T12 EnsureMaster succeeds over KNOWN condition functions");
+            if (!idx) std::printf("  err='%s'\n", idx.error().message.c_str());
 
-            RecordNode* rn = nullptr;
-            for (auto& [fid, n] : p.index) if (n->header.sig == Sig4("SPEL")) rn = n;
+            RecordNode* rn = p.Records(Sig4("SPEL")).empty() ? nullptr : p.Records(Sig4("SPEL")).front();
             if (rn) {
-                SpellRec spell;
-                CHECK(DecodeNode(kSpelSchema, p, *rn, spell).has_value() &&
-                      spell.conds.conditions.size() == 2, "T12 re-decode known-fn SPEL");
-                if (spell.conds.conditions.size() == 2) {
-                    CHECK((spell.conds.conditions[0].param1 >> 24) == 1u &&
-                          (spell.conds.conditions[0].param1 & 0xFFFFFFu) == 0x801u,
+                auto rec = Record::Decode(p, *rn);
+                const auto conds = rec ? view::As<view::Spell>(*rec)->Conditions()
+                                       : std::vector<view::Condition>{};
+                CHECK(conds.size() == 2, "T12 re-decode known-fn SPEL");
+                if (conds.size() == 2) {
+                    const auto f = conds[0].Data().Param1FormRef();
+                    CHECK(f && (f->raw >> 24) == 1u && (f->raw & 0xFFFFFFu) == 0x801u,
                           "T12 GetInFaction Form param self-index bumped 0 → 1");
-                    CHECK(spell.conds.conditions[1].param1 == 0x00000123u,
+                    CHECK(conds[1].Data().Param1Value() == 0x00000123u,
                           "T12 GetIsSex Int param left untouched by the remap");
                 }
             }
@@ -1036,26 +1023,26 @@ int main() {
         RecordNode* n2 = CreateRecord(p2, Sig4("NPC_")).value_or(nullptr);
         CHECK(n2 != nullptr, "T12 create NPC in second plugin");
         if (n2) {
-            NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, p2, *n2, npc).has_value(),
-                  "T12 decode");
-            npc.editorId  = "NullRefNord";
-            npc.deathItem = FormRef{ 0 };
-            CHECK(CommitNode(kNpcSchema, p2, *n2, npc).has_value(),
-                  "T12 commit");
+            auto rec = Record::Create(p2, Sig4("NPC_"));
+            CHECK(rec.has_value(), "T12 create");
+            if (rec) {
+                auto npc = *view::As<view::Npc>(*rec);
+                npc.SetEditorId("NullRefNord");
+                npc.SetDeathItem(FormId{ 0 });
+                CHECK(Record::Commit(p2, *n2, *rec).has_value(), "T12 commit");
+            }
         }
-        const int m = EnsureMaster(p2, "Skyrim.esm").value_or(-1);
-        CHECK(m == 0, "T12 EnsureMaster succeeds without conditions");
-        if (m < 0) std::printf("  err='%s'\n", err);
+        const auto m = EnsureMaster(p2, "Skyrim.esm");
+        CHECK(m && *m == 0, "T12 EnsureMaster succeeds without conditions");
+        if (!m) std::printf("  err='%s'\n", m.error().message.c_str());
         RecordNode* after = nullptr;
         for (auto& [fid, rn] : p2.index)
             if (rn->header.sig == Sig4("NPC_")) after = rn;
         CHECK(after && (after->header.formId >> 24) == 1u,
               "T12 record header renumbered 0 → 1");
         if (after) {
-            NpcRec npc;
-            CHECK(DecodeNode(kNpcSchema, p2, *after, npc).has_value() &&
-                  npc.deathItem && npc.deathItem->id == 0u,
+            auto rec = Record::Decode(p2, *after);
+            CHECK(rec && view::As<view::Npc>(*rec)->DeathItem() == FormId{ 0 },
                   "T12 null FormID stayed null through the renumber");
         }
 

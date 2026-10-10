@@ -26,6 +26,7 @@
 
 #include <cstdint>
 #include <span>
+#include <string_view>
 
 namespace esper::schema {
 
@@ -146,6 +147,17 @@ struct RecordDef {
     uint16_t    root = 0;            // GroupDef
 };
 
+// A schema table (schema/tables/*.yaml) for consumers: every column as text,
+// rows sorted by their integer key. Read it with SchemaSet::TableValue.
+struct TableDef {
+    const char* name        = nullptr;
+    uint16_t    firstColumn = 0;    // into SchemaSet::tableColumns
+    uint16_t    columnCount = 0;
+    uint32_t    firstRow    = 0;    // into SchemaSet::tableKeys
+    uint32_t    rowCount    = 0;
+    uint32_t    firstCell   = 0;    // into SchemaSet::tableCells, row-major
+};
+
 struct SchemaSet {
     std::span<const TypeDef>   types;
     std::span<const FieldDef>  fields;
@@ -158,6 +170,10 @@ struct SchemaSet {
     std::span<const uint64_t>  caseValues;
     std::span<const LookupDef> lookups;
     std::span<const LookupRow> lookupRows;
+    std::span<const TableDef>  tables;
+    std::span<const char* const> tableColumns;
+    std::span<const uint32_t>  tableKeys;
+    std::span<const char* const> tableCells;
     const char*                schemaVersion   = nullptr;
     const char*                languageVersion = nullptr;
 
@@ -169,6 +185,28 @@ struct SchemaSet {
             else hi = mid;
         }
         return (lo < records.size() && records[lo].sig == sig) ? &records[lo] : nullptr;
+    }
+
+    // The `column` cell of the row keyed `key` in `table`, as written in the
+    // schema: TableValue("ctdaFunctions", 58, "name") == "GetStage". nullptr
+    // when the table, row or column doesn't exist.
+    const char* TableValue(std::string_view table, uint32_t key, std::string_view column) const {
+        for (const TableDef& t : tables) {
+            if (table != t.name) continue;
+            int col = -1;
+            for (uint16_t c = 0; c < t.columnCount; ++c)
+                if (column == tableColumns[t.firstColumn + c]) col = c;
+            if (col < 0) return nullptr;
+            size_t lo = 0, hi = t.rowCount;
+            while (lo < hi) {
+                const size_t mid = (lo + hi) / 2;
+                if (tableKeys[t.firstRow + mid] < key) lo = mid + 1;
+                else hi = mid;
+            }
+            if (lo == t.rowCount || tableKeys[t.firstRow + lo] != key) return nullptr;
+            return tableCells[t.firstCell + lo * t.columnCount + static_cast<size_t>(col)];
+        }
+        return nullptr;
     }
 };
 

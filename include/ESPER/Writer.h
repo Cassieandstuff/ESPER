@@ -1,6 +1,6 @@
 #pragma once
 #include <ESPER/Plugin.h>
-#include <ESPER/Schema.h>
+#include <ESPER/RecordHeader.h>
 #include <ESPER/Zlib.h>
 
 #include <cstdint>
@@ -47,8 +47,9 @@ Result<uint32_t> AllocateFormId(Plugin& p);
 
 // Appends `masterName` to the MAST list if absent and returns its index.
 // Appending shifts the self index, so every existing record is renumbered:
-// record headers mechanically, payload references through their schema's
-// remapIds (which refuses records with unknown-passthrough subrecords).
+// record headers mechanically, payload FormIDs through the schema engine
+// (Record::VisitFormIds). Atomic: if any record isn't remap-safe (no schema,
+// raw subrecords, opaque bytes), nothing changes and the error names it.
 Result<int> EnsureMaster(Plugin& p, const std::string& masterName);
 
 // Builds the on-disk FormID for a reference to `key` from inside `p`:
@@ -76,30 +77,6 @@ void RebuildIndex(Plugin& p);
 // from Bethesda's zlib — the gate's compressed criterion is
 // decompressed-payload equality). Marks the node dirty.
 Result<void> SetRecordPayload(Plugin& p, RecordNode& node, std::vector<uint8_t> payload);
-
-// Typed edit round-trip over one node: decode via `schema` (empty payload →
-// default-initialized record), mutate, then CommitNode to write back.
-template <class Rec, size_t N>
-Result<void> DecodeNode(const RecordSchema<Rec, N>& schema, const Plugin& p,
-                        RecordNode& node, Rec& out) {
-    const auto payload = node.Payload();
-    if (!payload) return std::unexpected(payload.error());
-    SchemaCtx ctx;
-    ctx.localized = p.localized;
-    if (!DecodeRecord(schema, *payload, ctx, out))
-        return Fail("DecodeNode: malformed subrecord stream in {:08X}", node.header.formId);
-    return {};
-}
-
-template <class Rec, size_t N>
-Result<void> CommitNode(const RecordSchema<Rec, N>& schema, Plugin& p,
-                        RecordNode& node, const Rec& rec) {
-    SchemaCtx ctx;
-    ctx.localized = p.localized;
-    ByteWriter w;
-    EncodeRecord(schema, rec, ctx, w);
-    return SetRecordPayload(p, node, std::move(w.buf));
-}
 
 // Save-time finalization: rebuilds the TES4 payload from the Plugin's decoded
 // fields (HEDR with the empirically locked numRecords = records + groups

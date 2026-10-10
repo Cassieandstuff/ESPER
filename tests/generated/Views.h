@@ -142,8 +142,8 @@ public:
     void SetVersion(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(0), v); }
     std::optional<uint8_t> Status() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(1), 0)); }
     void SetStatus(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(1), 0), v); }
-    std::optional<std::vector<::esper::Value>> Items() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(2)); }
-    void SetItems(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(2), v); }
+    std::vector<::esper_test::view::TestItem> Items() const { std::vector<::esper_test::view::TestItem> o; const size_t n = s_.at.Size(s_.Field(2)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(2), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeItems(size_t n) const { s_.at.Resize(s_.Field(2), n); }
 private:
     ::esper::StructCursor s_;
 };

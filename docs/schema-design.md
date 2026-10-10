@@ -396,11 +396,14 @@ These go in the spec, because anyone else's engine has to behave the same way:
     unlike Mutagen's ~1.4M generated lines for Skyrim.
 
 - **Gates.**
-  - `esper-test`: synthetic fixtures, run by CTest.
-  - `roundtrip-gate <Data>`: real masters, with **forced re-encode**. Every modeled subrecord is
-    re-encoded from its value tree, ignoring the verbatim shortcut, and the result must be
-    byte-identical. This is how a codec bug is caught even though clean records would normally
-    never be re-encoded.
+  - `esper-test`, `esper-schema-test`, `esper-loadorder-test`: synthetic fixtures, run by CTest.
+  - `roundtrip-gate --schema <Data>`: real masters, with **forced re-encode**. Every modeled
+    subrecord is re-encoded from its value tree, ignoring the verbatim shortcut, and the result
+    must be byte-identical. This is how a codec bug is caught even though clean records would
+    normally never be re-encoded. It also verifies every `to:` link, and compares coverage with
+    `tools/gate-baseline.tsv`. Per record type, raw subrecords may not grow, and visible FormIDs
+    and remap-safe records may not shrink. Until step 8, the typed path was the oracle here; the
+    baseline replaced it.
 
 ## Load order: `esper::LoadOrderDocument`
 
@@ -479,7 +482,7 @@ Mutagen (C#) was studied for **mechanism only**. Its record definitions were not
 
 ## Migration plan
 
-Each step ships on its own. The typed `Records*.h` path keeps working until step 7.
+Each step ships on its own. The typed `Records*.h` path kept working until step 8 deleted it.
 
 1. **Done (2026-10-09). Spec, generator, engine skeleton.** Write `docs/schema-language.md` v0, and the generator with
    validation and its outputs (`schema.json`, handles, views, tables; handles were dropped in the
@@ -630,9 +633,22 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    use string paths (`Record::Find`).
 7. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
    ESPER pin is bumped.
-8. **Delete the typed world:** `Records*.h`, the `Field<>`/`MakeSchema` templates, the old
-   `SchemaRegistry`, `CtdaFunctions.cpp` (now `tables/ctda-functions.yaml`), and the hand-written
-   VMAD codec.
+8. **Done (2026-10-10). Delete the typed world.** Done before the SCT port, so SCT ports once, to
+   the final API. Removed:
+   - `Records*.h`;
+   - `Schema.h` (the `Field<>`/`MakeSchema` templates);
+   - `SchemaRegistry`;
+   - `Conditions.h` and `CtdaFunctions.cpp` (now `tables/ctdaFunctions.yaml`);
+   - the hand-written VMAD codec.
+
+   Follow-on changes:
+   - `EnsureMaster` renumbers through `Record::VisitFormIds`.
+   - The gate's parity oracle became the coverage baseline.
+   - Schema tables are emitted whole (`SchemaSet::TableValue`), so tools read CTDA function names
+     from the schema.
+   - Views gained the two shapes the typed path had and views lacked: repeated struct members
+     (one view per occurrence, plus `Add`) and arrays of structs (element views, plus `Resize`).
+     Both rest on a new `RelPath::occurrence` and array-element path steps.
 
 ## Decisions
 

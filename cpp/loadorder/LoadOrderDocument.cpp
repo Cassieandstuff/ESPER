@@ -24,14 +24,6 @@ bool LivesInChildren(uint32_t sig) {
     return std::find(std::begin(kSigs), std::end(kSigs), sig) != std::end(kSigs);
 }
 
-StrVariant VariantOf(schema::StrTable t) {
-    switch (t) {
-    case schema::StrTable::DLStrings: return StrVariant::DLStrings;
-    case schema::StrTable::ILStrings: return StrVariant::ILStrings;
-    default:                          return StrVariant::Strings;
-    }
-}
-
 std::string JsonString(std::string_view s) {
     std::string out = "\"";
     for (const char c : s) {
@@ -152,7 +144,7 @@ StringsSet* LoadOrderDocument::StringsFor(const Plugin& owner) const {
 std::string LoadOrderDocument::Text(const Plugin& owner, const LocalizedString& s) const {
     if (!owner.localized) return s.text;
     std::string out;
-    if (s.id == 0 || !StringsFor(owner)->Find(VariantOf(s.table), s.id, out)) return {};
+    if (s.id == 0 || !StringsFor(owner)->Find(s.table, s.id, out)) return {};
     return out;
 }
 
@@ -252,7 +244,7 @@ Result<RecordNode*> LoadOrderDocument::OverrideInto(Plugin& target, const FormKe
         const Plugin& owner = *w->owner;
         const auto lookup = [&](uint32_t id, schema::StrTable table) -> std::optional<std::string> {
             std::string text;
-            if (!StringsFor(owner)->Find(VariantOf(table), id, text)) return std::nullopt;
+            if (!StringsFor(owner)->Find(table, id, text)) return std::nullopt;
             return text;
         };
         if (auto r = rec.Relocalize(target.localized, lookup); !r) return fail(r.error().message);

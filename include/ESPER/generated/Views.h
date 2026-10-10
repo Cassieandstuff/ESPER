@@ -349,8 +349,8 @@ public:
     void SetName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(0), v); }
     std::optional<uint8_t> Status() const { return s_.at.Get<uint8_t>(::esper::Extend(s_.Field(1), 0)); }
     void SetStatus(const uint8_t& v) const { s_.at.Set<uint8_t>(::esper::Extend(s_.Field(1), 0), v); }
-    std::optional<std::vector<::esper::Value>> Properties() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(2)); }
-    void SetProperties(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(2), v); }
+    std::vector<::esper::view::VmadProperty> Properties() const { std::vector<::esper::view::VmadProperty> o; const size_t n = s_.at.Size(s_.Field(2)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(2), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeProperties(size_t n) const { s_.at.Resize(s_.Field(2), n); }
 private:
     ::esper::StructCursor s_;
 };
@@ -359,8 +359,8 @@ class VmadBodySupportedScripts {
 public:
     explicit VmadBodySupportedScripts(::esper::StructCursor s) : s_(s) {}
     bool IsPresent() const { return s_.Has(); }
-    std::optional<std::vector<::esper::Value>> Scripts() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(0)); }
-    void SetScripts(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(0), v); }
+    std::vector<::esper::view::VmadScript> Scripts() const { std::vector<::esper::view::VmadScript> o; const size_t n = s_.at.Size(s_.Field(0)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(0), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeScripts(size_t n) const { s_.at.Resize(s_.Field(0), n); }
     std::optional<std::vector<uint8_t>> Fragments() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(1)); }
     void SetFragments(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(1), v); }
 private:
@@ -801,8 +801,7 @@ public:
     void SetFogClipDistance(const float& v) const { s_.at.Set<float>(s_.Field(8), v); }
     std::optional<float> FogPower() const { return s_.at.Get<float>(s_.Field(9)); }
     void SetFogPower(const float& v) const { s_.at.Set<float>(s_.Field(9), v); }
-    std::optional<std::vector<::esper::Value>> DirectionalAmbient() const { return s_.at.Get<std::vector<::esper::Value>>(s_.Field(10)); }
-    void SetDirectionalAmbient(const std::vector<::esper::Value>& v) const { s_.at.Set<std::vector<::esper::Value>>(s_.Field(10), v); }
+    std::vector<::esper::view::ColorRgba> DirectionalAmbient() const { std::vector<::esper::view::ColorRgba> o; const size_t n = s_.at.Size(s_.Field(10)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(10), static_cast<uint16_t>(i)) }); return o; }
     ::esper::view::ColorRgba Specular() const { return ::esper::view::ColorRgba(::esper::StructCursor{ s_.at, s_.Field(11) }); }
     std::optional<float> FresnelPower() const { return s_.at.Get<float>(s_.Field(12)); }
     void SetFresnelPower(const float& v) const { s_.at.Set<float>(s_.Field(12), v); }
@@ -2289,8 +2288,9 @@ public:
     void SetData(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearData() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // MO2S
-    std::optional<std::vector<::esper::Value>> Swap() const { return c_.Get<std::vector<::esper::Value>>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetSwap(const std::vector<::esper::Value>& v) const { c_.Set<std::vector<::esper::Value>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    std::vector<::esper::view::AlternateTexture> Swap() const;
+    void ResizeSwap(size_t n) const { c_.Resize(::esper::RelPath{ { 2 }, 1, 1 }, n); }
+    bool HasSwap() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
     void ClearSwap() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
@@ -2737,16 +2737,19 @@ public:
     bool HasColors() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
     void ClearColors() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // BTXT (repeated)
-    ::esper::view::LandBaseTexture BaseTextures() const;
+    std::vector<::esper::view::LandBaseTexture> BaseTextures() const;
+    ::esper::view::LandBaseTexture AddBaseTextures() const;
     bool HasBaseTextures() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
     void ClearBaseTextures() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // ATXT (repeated)
-    ::esper::view::LandAlphaTexture AlphaTextures() const;
+    std::vector<::esper::view::LandAlphaTexture> AlphaTextures() const;
+    ::esper::view::LandAlphaTexture AddAlphaTextures() const;
     bool HasAlphaTextures() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
     void ClearAlphaTextures() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // VTXT (repeated)
-    std::vector<std::vector<::esper::Value>> AlphaCells() const { return c_.GetAll<std::vector<::esper::Value>>(::esper::RelPath{ { 6 }, 1, 1 }); }
-    void SetAlphaCells(const std::vector<std::vector<::esper::Value>>& v) const { c_.SetAll<std::vector<::esper::Value>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    std::vector<std::vector<::esper::view::LandAlphaCell>> AlphaCells() const;
+    std::vector<::esper::view::LandAlphaCell> AddAlphaCells(size_t n) const;
+    bool HasAlphaCells() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
     void ClearAlphaCells() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
@@ -3235,8 +3238,9 @@ public:
     bool HasData() const { return c_.Has(::esper::RelPath{ { 8 }, 1, 1 }); }
     void ClearData() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
     // SNDD
-    std::optional<std::vector<::esper::Value>> Sounds() const { return c_.Get<std::vector<::esper::Value>>(::esper::RelPath{ { 9 }, 1, 1 }); }
-    void SetSounds(const std::vector<::esper::Value>& v) const { c_.Set<std::vector<::esper::Value>>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
+    std::vector<::esper::view::MagicEffectSound> Sounds() const;
+    void ResizeSounds(size_t n) const { c_.Resize(::esper::RelPath{ { 9 }, 1, 1 }, n); }
+    bool HasSounds() const { return c_.Has(::esper::RelPath{ { 9 }, 1, 1 }); }
     void ClearSounds() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
@@ -3371,7 +3375,8 @@ public:
     void SetEffects(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 12 }, 1, 1 }, v); }
     void ClearEffects() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
     // EFIT (repeated)
-    ::esper::view::EffectItem EffectItems() const;
+    std::vector<::esper::view::EffectItem> EffectItems() const;
+    ::esper::view::EffectItem AddEffectItems() const;
     bool HasEffectItems() const { return c_.Has(::esper::RelPath{ { 13 }, 1, 1 }); }
     void ClearEffectItems() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
     // group conditions
@@ -3408,7 +3413,8 @@ public:
     void SetEffects(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
     void ClearEffects() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // EFIT (repeated)
-    ::esper::view::EffectItem EffectItems() const;
+    std::vector<::esper::view::EffectItem> EffectItems() const;
+    ::esper::view::EffectItem AddEffectItems() const;
     bool HasEffectItems() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
     void ClearEffectItems() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // group conditions
@@ -3567,7 +3573,8 @@ public:
     void SetEntryCount(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearEntryCount() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // LVLO (repeated)
-    ::esper::view::LeveledEntry Entries() const;
+    std::vector<::esper::view::LeveledEntry> Entries() const;
+    ::esper::view::LeveledEntry AddEntries() const;
     bool HasEntries() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
     void ClearEntries() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // group model
@@ -3595,8 +3602,9 @@ public:
     void SetHashes(const std::vector<uint8_t>& v) const { c_.Set<std::vector<uint8_t>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
     void ClearHashes() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // DMDS
-    std::optional<std::vector<::esper::Value>> Textures() const { return c_.Get<std::vector<::esper::Value>>(::esper::RelPath{ { 3 }, 1, 1 }); }
-    void SetTextures(const std::vector<::esper::Value>& v) const { c_.Set<std::vector<::esper::Value>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    std::vector<::esper::view::AlternateTexture> Textures() const;
+    void ResizeTextures(size_t n) const { c_.Resize(::esper::RelPath{ { 3 }, 1, 1 }, n); }
+    bool HasTextures() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
     void ClearTextures() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // DSTF
     bool End() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
@@ -3703,7 +3711,8 @@ public:
     void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // CNTO (repeated)
-    ::esper::view::ContainerEntry Components() const;
+    std::vector<::esper::view::ContainerEntry> Components() const;
+    ::esper::view::ContainerEntry AddComponents() const;
     bool HasComponents() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
     void ClearComponents() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // CNAM
@@ -4296,7 +4305,8 @@ public:
     void SetEffects(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
     void ClearEffects() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
     // EFIT (repeated)
-    ::esper::view::EffectItem EffectItems() const;
+    std::vector<::esper::view::EffectItem> EffectItems() const;
+    ::esper::view::EffectItem AddEffectItems() const;
     bool HasEffectItems() const { return c_.Has(::esper::RelPath{ { 12 }, 1, 1 }); }
     void ClearEffectItems() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
     // group conditions
@@ -4557,7 +4567,8 @@ public:
     void SetEffects(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 11 }, 1, 1 }, v); }
     void ClearEffects() const { c_.Clear(::esper::RelPath{ { 11 }, 1, 1 }); }
     // EFIT (repeated)
-    ::esper::view::EffectItem EffectItems() const;
+    std::vector<::esper::view::EffectItem> EffectItems() const;
+    ::esper::view::EffectItem AddEffectItems() const;
     bool HasEffectItems() const { return c_.Has(::esper::RelPath{ { 12 }, 1, 1 }); }
     void ClearEffectItems() const { c_.Clear(::esper::RelPath{ { 12 }, 1, 1 }); }
     // group conditions
@@ -5266,7 +5277,8 @@ public:
     void SetEntryCount(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearEntryCount() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // LVLO (repeated)
-    ::esper::view::LeveledEntry Entries() const;
+    std::vector<::esper::view::LeveledEntry> Entries() const;
+    ::esper::view::LeveledEntry AddEntries() const;
     bool HasEntries() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
     void ClearEntries() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // group model
@@ -5359,7 +5371,8 @@ public:
     bool HasWorkbench() const { return c_.Has(::esper::RelPath{ { 8 }, 1, 1 }); }
     void ClearWorkbench() const { c_.Clear(::esper::RelPath{ { 8 }, 1, 1 }); }
     // FNPR (repeated)
-    ::esper::view::FurnitureMarkerEntries MarkerEntries() const;
+    std::vector<::esper::view::FurnitureMarkerEntries> MarkerEntries() const;
+    ::esper::view::FurnitureMarkerEntries AddMarkerEntries() const;
     bool HasMarkerEntries() const { return c_.Has(::esper::RelPath{ { 9 }, 1, 1 }); }
     void ClearMarkerEntries() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
     // KNAM
@@ -5510,7 +5523,8 @@ public:
     void SetResponseData(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
     void ClearResponseData() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // TRDT (repeated)
-    ::esper::view::ResponseData Responses() const;
+    std::vector<::esper::view::ResponseData> Responses() const;
+    ::esper::view::ResponseData AddResponses() const;
     bool HasResponses() const { return c_.Has(::esper::RelPath{ { 7 }, 1, 1 }); }
     void ClearResponses() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
     // NAM1 (repeated)
@@ -5999,7 +6013,8 @@ public:
     void SetEntryCount(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearEntryCount() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // LVLO (repeated)
-    ::esper::view::LeveledEntry Entries() const;
+    std::vector<::esper::view::LeveledEntry> Entries() const;
+    ::esper::view::LeveledEntry AddEntries() const;
     bool HasEntries() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
     void ClearEntries() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // group model
@@ -6352,7 +6367,8 @@ public:
     void SetActivateParentFlags(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 24 }, 1, 1 }, v); }
     void ClearActivateParentFlags() const { c_.Clear(::esper::RelPath{ { 24 }, 1, 1 }); }
     // XAPR (repeated)
-    ::esper::view::PlacedObjectActivateParents ActivateParents() const;
+    std::vector<::esper::view::PlacedObjectActivateParents> ActivateParents() const;
+    ::esper::view::PlacedObjectActivateParents AddActivateParents() const;
     bool HasActivateParents() const { return c_.Has(::esper::RelPath{ { 25 }, 1, 1 }); }
     void ClearActivateParents() const { c_.Clear(::esper::RelPath{ { 25 }, 1, 1 }); }
     // XACT
@@ -6459,8 +6475,9 @@ public:
     bool HasAlpha() const { return c_.Has(::esper::RelPath{ { 51 }, 1, 1 }); }
     void ClearAlpha() const { c_.Clear(::esper::RelPath{ { 51 }, 1, 1 }); }
     // XRGD
-    std::optional<std::vector<::esper::Value>> RagdollData() const { return c_.Get<std::vector<::esper::Value>>(::esper::RelPath{ { 52 }, 1, 1 }); }
-    void SetRagdollData(const std::vector<::esper::Value>& v) const { c_.Set<std::vector<::esper::Value>>(::esper::RelPath{ { 52 }, 1, 1 }, v); }
+    std::vector<::esper::view::RagdollBone> RagdollData() const;
+    void ResizeRagdollData(size_t n) const { c_.Resize(::esper::RelPath{ { 52 }, 1, 1 }, n); }
+    bool HasRagdollData() const { return c_.Has(::esper::RelPath{ { 52 }, 1, 1 }); }
     void ClearRagdollData() const { c_.Clear(::esper::RelPath{ { 52 }, 1, 1 }); }
     // XRGB
     std::optional<std::vector<float>> RagdollBiped() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 53 }, 1, 1 }); }
@@ -6560,7 +6577,8 @@ public:
     void SetEffects(const std::vector<::esper::FormId>& v) const { c_.SetAll<::esper::FormId>(::esper::RelPath{ { 13 }, 1, 1 }, v); }
     void ClearEffects() const { c_.Clear(::esper::RelPath{ { 13 }, 1, 1 }); }
     // EFIT (repeated)
-    ::esper::view::EffectItem EffectItems() const;
+    std::vector<::esper::view::EffectItem> EffectItems() const;
+    ::esper::view::EffectItem AddEffectItems() const;
     bool HasEffectItems() const { return c_.Has(::esper::RelPath{ { 14 }, 1, 1 }); }
     void ClearEffectItems() const { c_.Clear(::esper::RelPath{ { 14 }, 1, 1 }); }
     // group conditions
@@ -6593,8 +6611,9 @@ public:
     void SetEncounterZone(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
     void ClearEncounterZone() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // XRGD
-    std::optional<std::vector<::esper::Value>> RagdollData() const { return c_.Get<std::vector<::esper::Value>>(::esper::RelPath{ { 4 }, 1, 1 }); }
-    void SetRagdollData(const std::vector<::esper::Value>& v) const { c_.Set<std::vector<::esper::Value>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
+    std::vector<::esper::view::RagdollBone> RagdollData() const;
+    void ResizeRagdollData(size_t n) const { c_.Resize(::esper::RelPath{ { 4 }, 1, 1 }, n); }
+    bool HasRagdollData() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
     void ClearRagdollData() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // XRGB
     std::optional<std::vector<float>> RagdollBiped() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 5 }, 1, 1 }); }
@@ -6616,7 +6635,8 @@ public:
     void SetActivateParentFlags(const uint8_t& v) const { c_.Set<uint8_t>(::esper::RelPath{ { 9 }, 1, 1 }, v); }
     void ClearActivateParentFlags() const { c_.Clear(::esper::RelPath{ { 9 }, 1, 1 }); }
     // XAPR (repeated)
-    ::esper::view::PlacedNpcActivateParents ActivateParents() const;
+    std::vector<::esper::view::PlacedNpcActivateParents> ActivateParents() const;
+    ::esper::view::PlacedNpcActivateParents AddActivateParents() const;
     bool HasActivateParents() const { return c_.Has(::esper::RelPath{ { 10 }, 1, 1 }); }
     void ClearActivateParents() const { c_.Clear(::esper::RelPath{ { 10 }, 1, 1 }); }
     // XPRD
@@ -6891,7 +6911,8 @@ public:
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
     // PNAM (repeated)
-    ::esper::view::ImpactMapping Mappings() const;
+    std::vector<::esper::view::ImpactMapping> Mappings() const;
+    ::esper::view::ImpactMapping AddMappings() const;
     bool HasMappings() const { return c_.Has(::esper::RelPath{ { 1 }, 1, 1 }); }
     void ClearMappings() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
 private:
@@ -7092,7 +7113,8 @@ public:
     void SetFullName(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearFullName() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // XNAM (repeated)
-    ::esper::view::FactionRelation Relations() const;
+    std::vector<::esper::view::FactionRelation> Relations() const;
+    ::esper::view::FactionRelation AddRelations() const;
     bool HasRelations() const { return c_.Has(::esper::RelPath{ { 2 }, 1, 1 }); }
     void ClearRelations() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // DATA
@@ -7381,7 +7403,8 @@ public:
     void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
     void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // CNTO (repeated)
-    ::esper::view::ContainerEntry Items() const;
+    std::vector<::esper::view::ContainerEntry> Items() const;
+    ::esper::view::ContainerEntry AddItems() const;
     bool HasItems() const { return c_.Has(::esper::RelPath{ { 7 }, 1, 1 }); }
     void ClearItems() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
 private:
@@ -7743,7 +7766,8 @@ public:
     void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 22 }, 1, 1 }, v); }
     void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 22 }, 1, 1 }); }
     // CNTO (repeated)
-    ::esper::view::ContainerEntry Items() const;
+    std::vector<::esper::view::ContainerEntry> Items() const;
+    ::esper::view::ContainerEntry AddItems() const;
     bool HasItems() const { return c_.Has(::esper::RelPath{ { 23 }, 1, 1 }); }
     void ClearItems() const { c_.Clear(::esper::RelPath{ { 23 }, 1, 1 }); }
     // SPOR
@@ -8020,7 +8044,8 @@ public:
     void SetDescription(const ::esper::LocalizedString& v) const { c_.Set<::esper::LocalizedString>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
     void ClearDescription() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // SNAM (repeated)
-    ::esper::view::ShoutWord Words() const;
+    std::vector<::esper::view::ShoutWord> Words() const;
+    ::esper::view::ShoutWord AddWords() const;
     bool HasWords() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
     void ClearWords() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
 private:
@@ -8177,7 +8202,8 @@ public:
     bool HasAcbs() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
     void ClearAcbs() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // SNAM (repeated)
-    ::esper::view::FactionRank Factions() const;
+    std::vector<::esper::view::FactionRank> Factions() const;
+    ::esper::view::FactionRank AddFactions() const;
     bool HasFactions() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
     void ClearFactions() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // INAM
@@ -8316,7 +8342,8 @@ public:
     void SetPerkCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 38 }, 1, 1 }, v); }
     void ClearPerkCount() const { c_.Clear(::esper::RelPath{ { 38 }, 1, 1 }); }
     // PRKR (repeated)
-    ::esper::view::PerkEntry Perks() const;
+    std::vector<::esper::view::PerkEntry> Perks() const;
+    ::esper::view::PerkEntry AddPerks() const;
     bool HasPerks() const { return c_.Has(::esper::RelPath{ { 39 }, 1, 1 }); }
     void ClearPerks() const { c_.Clear(::esper::RelPath{ { 39 }, 1, 1 }); }
     // COCT
@@ -8324,7 +8351,8 @@ public:
     void SetItemCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 40 }, 1, 1 }, v); }
     void ClearItemCount() const { c_.Clear(::esper::RelPath{ { 40 }, 1, 1 }); }
     // CNTO (repeated)
-    ::esper::view::ContainerEntry Items() const;
+    std::vector<::esper::view::ContainerEntry> Items() const;
+    ::esper::view::ContainerEntry AddItems() const;
     bool HasItems() const { return c_.Has(::esper::RelPath{ { 41 }, 1, 1 }); }
     void ClearItems() const { c_.Clear(::esper::RelPath{ { 41 }, 1, 1 }); }
     // AIDT
@@ -8367,6 +8395,7 @@ private:
 };
 
 inline ::esper::view::RelationshipData Relationship::Data() const { return ::esper::view::RelationshipData(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline std::vector<::esper::view::AlternateTexture> Model::Swap() const { std::vector<::esper::view::AlternateTexture> o; const size_t n = c_.Size(::esper::RelPath{ { 2 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 2 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline ::esper::view::BipedBodyTemplate ArmorAddon::Biped() const { return ::esper::view::BipedBodyTemplate(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ArmaDnam ArmorAddon::Data() const { return ::esper::view::ArmaDnam(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::ArmorAddonLegacyBiped ArmorAddon::LegacyBiped() const { return ::esper::view::ArmorAddonLegacyBiped(::esper::StructCursor{ c_, ::esper::RelPath{ { 15 }, 1, 1 } }); }
@@ -8384,8 +8413,12 @@ inline ::esper::view::WorldCorner Worldspace::BoundsMax() const { return ::esper
 inline ::esper::view::LandVertexTriples Landscape::Normals() const { return ::esper::view::LandVertexTriples(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::LandHeights Landscape::Heights() const { return ::esper::view::LandHeights(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::LandVertexTriples Landscape::Colors() const { return ::esper::view::LandVertexTriples(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper::view::LandBaseTexture Landscape::BaseTextures() const { return ::esper::view::LandBaseTexture(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
-inline ::esper::view::LandAlphaTexture Landscape::AlphaTextures() const { return ::esper::view::LandAlphaTexture(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline std::vector<::esper::view::LandBaseTexture> Landscape::BaseTextures() const { std::vector<::esper::view::LandBaseTexture> o; const size_t n = c_.Count(::esper::RelPath{ { 4 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::LandBaseTexture Landscape::AddBaseTextures() const { return ::esper::view::LandBaseTexture(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, c_.Append(::esper::RelPath{ { 4 }, 1, 1 })) }); }
+inline std::vector<::esper::view::LandAlphaTexture> Landscape::AlphaTextures() const { std::vector<::esper::view::LandAlphaTexture> o; const size_t n = c_.Count(::esper::RelPath{ { 5 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::LandAlphaTexture Landscape::AddAlphaTextures() const { return ::esper::view::LandAlphaTexture(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, c_.Append(::esper::RelPath{ { 5 }, 1, 1 })) }); }
+inline std::vector<std::vector<::esper::view::LandAlphaCell>> Landscape::AlphaCells() const { std::vector<std::vector<::esper::view::LandAlphaCell>> o; const size_t n = c_.Count(::esper::RelPath{ { 6 }, 1, 1 }); for (size_t k = 0; k < n; ++k) { const ::esper::RelPath p = ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, k); std::vector<::esper::view::LandAlphaCell> e; const size_t m = c_.Size(p); for (size_t i = 0; i < m; ++i) e.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(p, static_cast<uint16_t>(i)) }); o.push_back(std::move(e)); } return o; }
+inline std::vector<::esper::view::LandAlphaCell> Landscape::AddAlphaCells(size_t n) const { const ::esper::RelPath p = ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, c_.Append(::esper::RelPath{ { 6 }, 1, 1 })); c_.Resize(p, n); std::vector<::esper::view::LandAlphaCell> e; for (size_t i = 0; i < n; ++i) e.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(p, static_cast<uint16_t>(i)) }); return e; }
 inline ::esper::view::ColorRgba Keyword::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Hazard::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::HazardData Hazard::Data() const { return ::esper::view::HazardData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
@@ -8401,23 +8434,29 @@ inline ::esper::view::EnableParent PlacedGrenade::EnableParent() const { return 
 inline ::esper::view::Placement PlacedGrenade::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::Vmad MagicEffect::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::MagicEffectData MagicEffect::Data() const { return ::esper::view::MagicEffectData(::esper::StructCursor{ c_, ::esper::RelPath{ { 8 }, 1, 1 } }); }
+inline std::vector<::esper::view::MagicEffectSound> MagicEffect::Sounds() const { std::vector<::esper::view::MagicEffectSound> o; const size_t n = c_.Size(::esper::RelPath{ { 9 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 9 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline ::esper::view::ObjectBounds Ingestible::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::PotionData Ingestible::Potion() const { return ::esper::view::PotionData(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
-inline ::esper::view::EffectItem Ingestible::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 13 }, 1, 1 } }); }
+inline std::vector<::esper::view::EffectItem> Ingestible::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 13 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 13 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::EffectItem Ingestible::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 13 }, 1, 1 }, c_.Append(::esper::RelPath{ { 13 }, 1, 1 })) }); }
 inline ::esper::view::ObjectBounds ObjectEffect::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::EnchantData ObjectEffect::Data() const { return ::esper::view::EnchantData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper::view::EffectItem ObjectEffect::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline std::vector<::esper::view::EffectItem> ObjectEffect::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 5 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::EffectItem ObjectEffect::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, c_.Append(::esper::RelPath{ { 5 }, 1, 1 })) }); }
 inline ::esper::view::Vmad Light::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Light::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::LightData Light::Data() const { return ::esper::view::LightData(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds LeveledItem::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::LeveledEntry LeveledItem::Entries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
+inline std::vector<::esper::view::LeveledEntry> LeveledItem::Entries() const { std::vector<::esper::view::LeveledEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 6 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::LeveledEntry LeveledItem::AddEntries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, c_.Append(::esper::RelPath{ { 6 }, 1, 1 })) }); }
 inline ::esper::view::DestructionStage DestructibleStages::Data() const { return ::esper::view::DestructionStage(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
+inline std::vector<::esper::view::AlternateTexture> DestructibleStages::Textures() const { std::vector<::esper::view::AlternateTexture> o; const size_t n = c_.Size(::esper::RelPath{ { 3 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 3 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline ::esper::view::DestructibleHeader Destructible::Header() const { return ::esper::view::DestructibleHeader(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
 inline ::esper::view::Vmad Activator::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Activator::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba Activator::MarkerColor() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
-inline ::esper::view::ContainerEntry ConstructibleObject::Components() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
+inline std::vector<::esper::view::ContainerEntry> ConstructibleObject::Components() const { std::vector<::esper::view::ContainerEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 2 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 2 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ContainerEntry ConstructibleObject::AddComponents() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 2 }, 1, 1 }, c_.Append(::esper::RelPath{ { 2 }, 1, 1 })) }); }
 inline ::esper::view::ObjectBounds Projectile::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::LocationData PackageSections::Location() const { return ::esper::view::LocationData(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::TargetData PackageSections::Target() const { return ::esper::view::TargetData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
@@ -8440,7 +8479,8 @@ inline ::esper::view::DualData DualCastData::Data() const { return ::esper::view
 inline ::esper::view::ObjectBounds Spell::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Spell::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 9 }, 1, 1 } }); }
 inline ::esper::view::SpellData Spell::Spit() const { return ::esper::view::SpellData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
-inline ::esper::view::EffectItem Spell::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
+inline std::vector<::esper::view::EffectItem> Spell::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 12 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 12 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::EffectItem Spell::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 12 }, 1, 1 }, c_.Append(::esper::RelPath{ { 12 }, 1, 1 })) }); }
 inline ::esper::view::CellGrid Cell::Grid() const { return ::esper::view::CellGrid(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::CellLighting Cell::Lighting() const { return ::esper::view::CellLighting(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::CellMaxHeight Cell::MaxHeight() const { return ::esper::view::CellMaxHeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
@@ -8449,7 +8489,8 @@ inline ::esper::view::ObjectBounds Explosion::Bounds() const { return ::esper::v
 inline ::esper::view::ObjectBounds Scroll::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Scroll::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 9 }, 1, 1 } }); }
 inline ::esper::view::SpellData Scroll::Spit() const { return ::esper::view::SpellData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
-inline ::esper::view::EffectItem Scroll::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
+inline std::vector<::esper::view::EffectItem> Scroll::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 12 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 12 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::EffectItem Scroll::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 12 }, 1, 1 }, c_.Append(::esper::RelPath{ { 12 }, 1, 1 })) }); }
 inline ::esper::view::ColorRgba ColorForm::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::Vmad SoulGem::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds SoulGem::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
@@ -8463,16 +8504,19 @@ inline ::esper::view::AddonFlags AddonNode::Flags() const { return ::esper::view
 inline ::esper::view::Vmad Scene::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba Region::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds LeveledNpc::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::LeveledEntry LeveledNpc::Entries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
+inline std::vector<::esper::view::LeveledEntry> LeveledNpc::Entries() const { std::vector<::esper::view::LeveledEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 6 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::LeveledEntry LeveledNpc::AddEntries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, c_.Append(::esper::RelPath{ { 6 }, 1, 1 })) }); }
 inline ::esper::view::Vmad Furniture::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Furniture::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::FurnitureWorkbench Furniture::Workbench() const { return ::esper::view::FurnitureWorkbench(::esper::StructCursor{ c_, ::esper::RelPath{ { 8 }, 1, 1 } }); }
-inline ::esper::view::FurnitureMarkerEntries Furniture::MarkerEntries() const { return ::esper::view::FurnitureMarkerEntries(::esper::StructCursor{ c_, ::esper::RelPath{ { 9 }, 1, 1 } }); }
+inline std::vector<::esper::view::FurnitureMarkerEntries> Furniture::MarkerEntries() const { std::vector<::esper::view::FurnitureMarkerEntries> o; const size_t n = c_.Count(::esper::RelPath{ { 9 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 9 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::FurnitureMarkerEntries Furniture::AddMarkerEntries() const { return ::esper::view::FurnitureMarkerEntries(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 9 }, 1, 1 }, c_.Append(::esper::RelPath{ { 9 }, 1, 1 })) }); }
 inline ::esper::view::ObjectBounds SoundMarker::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::EncounterZoneData EncounterZone::Data() const { return ::esper::view::EncounterZoneData(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::Vmad DialogResponses::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::InfoFlags DialogResponses::Flags() const { return ::esper::view::InfoFlags(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
-inline ::esper::view::ResponseData DialogResponses::Responses() const { return ::esper::view::ResponseData(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
+inline std::vector<::esper::view::ResponseData> DialogResponses::Responses() const { std::vector<::esper::view::ResponseData> o; const size_t n = c_.Count(::esper::RelPath{ { 7 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 7 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ResponseData DialogResponses::AddResponses() const { return ::esper::view::ResponseData(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 7 }, 1, 1 }, c_.Append(::esper::RelPath{ { 7 }, 1, 1 })) }); }
 inline ::esper::view::DialogResponsesData DialogResponses::Data() const { return ::esper::view::DialogResponsesData(::esper::StructCursor{ c_, ::esper::RelPath{ { 18 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ammunition::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::AmmoData Ammunition::Data() const { return ::esper::view::AmmoData(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
@@ -8487,7 +8531,8 @@ inline ::esper::view::WeaponBasic Weapon::Basic() const { return ::esper::view::
 inline ::esper::view::WeaponData Weapon::WeaponData() const { return ::esper::view::WeaponData(::esper::StructCursor{ c_, ::esper::RelPath{ { 25 }, 1, 1 } }); }
 inline ::esper::view::WeaponCrit Weapon::Crit() const { return ::esper::view::WeaponCrit(::esper::StructCursor{ c_, ::esper::RelPath{ { 26 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds LeveledSpell::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::LeveledEntry LeveledSpell::Entries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
+inline std::vector<::esper::view::LeveledEntry> LeveledSpell::Entries() const { std::vector<::esper::view::LeveledEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 6 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::LeveledEntry LeveledSpell::AddEntries() const { return ::esper::view::LeveledEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, c_.Append(::esper::RelPath{ { 6 }, 1, 1 })) }); }
 inline ::esper::view::LoadScreenRotationLimits LoadScreen::RotationLimits() const { return ::esper::view::LoadScreenRotationLimits(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::SoundDescriptorValues SoundDescriptor::Values() const { return ::esper::view::SoundDescriptorValues(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
 inline ::esper::view::Vmad PlacedObject::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
@@ -8497,19 +8542,24 @@ inline ::esper::view::PlacedObjectRoomMarker PlacedObject::RoomMarker() const { 
 inline ::esper::view::TeleportDest PlacedObject::Teleport() const { return ::esper::view::TeleportDest(::esper::StructCursor{ c_, ::esper::RelPath{ { 20 }, 1, 1 } }); }
 inline ::esper::view::PlacedObjectNavmeshDoor PlacedObject::NavmeshDoor() const { return ::esper::view::PlacedObjectNavmeshDoor(::esper::StructCursor{ c_, ::esper::RelPath{ { 22 }, 1, 1 } }); }
 inline ::esper::view::LockData PlacedObject::Lock() const { return ::esper::view::LockData(::esper::StructCursor{ c_, ::esper::RelPath{ { 23 }, 1, 1 } }); }
-inline ::esper::view::PlacedObjectActivateParents PlacedObject::ActivateParents() const { return ::esper::view::PlacedObjectActivateParents(::esper::StructCursor{ c_, ::esper::RelPath{ { 25 }, 1, 1 } }); }
+inline std::vector<::esper::view::PlacedObjectActivateParents> PlacedObject::ActivateParents() const { std::vector<::esper::view::PlacedObjectActivateParents> o; const size_t n = c_.Count(::esper::RelPath{ { 25 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 25 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::PlacedObjectActivateParents PlacedObject::AddActivateParents() const { return ::esper::view::PlacedObjectActivateParents(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 25 }, 1, 1 }, c_.Append(::esper::RelPath{ { 25 }, 1, 1 })) }); }
 inline ::esper::view::EnableParent PlacedObject::EnableParent() const { return ::esper::view::EnableParent(::esper::StructCursor{ c_, ::esper::RelPath{ { 28 }, 1, 1 } }); }
 inline ::esper::view::TopicData PlacedObject::PatrolTopic() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 44 }, 1, 1 } }); }
 inline ::esper::view::PlacedObjectMapMarkerType PlacedObject::MapMarkerType() const { return ::esper::view::PlacedObjectMapMarkerType(::esper::StructCursor{ c_, ::esper::RelPath{ { 50 }, 1, 1 } }); }
 inline ::esper::view::PlacedObjectAlpha PlacedObject::Alpha() const { return ::esper::view::PlacedObjectAlpha(::esper::StructCursor{ c_, ::esper::RelPath{ { 51 }, 1, 1 } }); }
+inline std::vector<::esper::view::RagdollBone> PlacedObject::RagdollData() const { std::vector<::esper::view::RagdollBone> o; const size_t n = c_.Size(::esper::RelPath{ { 52 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 52 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline ::esper::view::Placement PlacedObject::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 60 }, 1, 1 } }); }
 inline ::esper::view::Vmad Ingredient::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ingredient::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ItemValueWeight Ingredient::ValueWeight() const { return ::esper::view::ItemValueWeight(::esper::StructCursor{ c_, ::esper::RelPath{ { 11 }, 1, 1 } }); }
 inline ::esper::view::IngredientData Ingredient::Data() const { return ::esper::view::IngredientData(::esper::StructCursor{ c_, ::esper::RelPath{ { 12 }, 1, 1 } }); }
-inline ::esper::view::EffectItem Ingredient::EffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::RelPath{ { 14 }, 1, 1 } }); }
+inline std::vector<::esper::view::EffectItem> Ingredient::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 14 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 14 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::EffectItem Ingredient::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 14 }, 1, 1 }, c_.Append(::esper::RelPath{ { 14 }, 1, 1 })) }); }
 inline ::esper::view::Vmad PlacedNpc::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::PlacedNpcActivateParents PlacedNpc::ActivateParents() const { return ::esper::view::PlacedNpcActivateParents(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
+inline std::vector<::esper::view::RagdollBone> PlacedNpc::RagdollData() const { std::vector<::esper::view::RagdollBone> o; const size_t n = c_.Size(::esper::RelPath{ { 4 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 4 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
+inline std::vector<::esper::view::PlacedNpcActivateParents> PlacedNpc::ActivateParents() const { std::vector<::esper::view::PlacedNpcActivateParents> o; const size_t n = c_.Count(::esper::RelPath{ { 10 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 10 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::PlacedNpcActivateParents PlacedNpc::AddActivateParents() const { return ::esper::view::PlacedNpcActivateParents(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 10 }, 1, 1 }, c_.Append(::esper::RelPath{ { 10 }, 1, 1 })) }); }
 inline ::esper::view::TopicData PlacedNpc::PatrolTopic() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 14 }, 1, 1 } }); }
 inline ::esper::view::EnableParent PlacedNpc::EnableParent() const { return ::esper::view::EnableParent(::esper::StructCursor{ c_, ::esper::RelPath{ { 19 }, 1, 1 } }); }
 inline ::esper::view::Placement PlacedNpc::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 21 }, 1, 1 } }); }
@@ -8519,14 +8569,16 @@ inline ::esper::view::Vmad Door::Vmad() const { return ::esper::view::Vmad(::esp
 inline ::esper::view::ObjectBounds Door::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Grass::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::GrassData Grass::Data() const { return ::esper::view::GrassData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper::view::ImpactMapping ImpactDataSet::Mappings() const { return ::esper::view::ImpactMapping(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
+inline std::vector<::esper::view::ImpactMapping> ImpactDataSet::Mappings() const { std::vector<::esper::view::ImpactMapping> o; const size_t n = c_.Count(::esper::RelPath{ { 1 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 1 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ImpactMapping ImpactDataSet::AddMappings() const { return ::esper::view::ImpactMapping(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 1 }, 1, 1 }, c_.Append(::esper::RelPath{ { 1 }, 1, 1 })) }); }
 inline ::esper::view::ImageSpaceDof ImageSpace::Dof() const { return ::esper::view::ImageSpaceDof(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Static::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::StatData Static::Data() const { return ::esper::view::StatData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::StaticLodNames Static::LodNames() const { return ::esper::view::StaticLodNames(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds PlaceableWater::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ColorRgba Action::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline ::esper::view::FactionRelation Faction::Relations() const { return ::esper::view::FactionRelation(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
+inline std::vector<::esper::view::FactionRelation> Faction::Relations() const { std::vector<::esper::view::FactionRelation> o; const size_t n = c_.Count(::esper::RelPath{ { 2 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 2 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::FactionRelation Faction::AddRelations() const { return ::esper::view::FactionRelation(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 2 }, 1, 1 }, c_.Append(::esper::RelPath{ { 2 }, 1, 1 })) }); }
 inline ::esper::view::VendorValues Faction::VendorValues() const { return ::esper::view::VendorValues(::esper::StructCursor{ c_, ::esper::RelPath{ { 15 }, 1, 1 } }); }
 inline ::esper::view::CrimeValues Faction::CrimeValues() const { return ::esper::view::CrimeValues(::esper::StructCursor{ c_, ::esper::RelPath{ { 17 }, 1, 1 } }); }
 inline ::esper::view::Vmad TalkingActivator::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
@@ -8537,28 +8589,34 @@ inline ::esper::view::DecalData Impact::Decal() const { return ::esper::view::De
 inline ::esper::view::Vmad Container::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Container::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::ContainerData Container::Data() const { return ::esper::view::ContainerData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
-inline ::esper::view::ContainerEntry Container::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 7 }, 1, 1 } }); }
+inline std::vector<::esper::view::ContainerEntry> Container::Items() const { std::vector<::esper::view::ContainerEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 7 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 7 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ContainerEntry Container::AddItems() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 7 }, 1, 1 }, c_.Append(::esper::RelPath{ { 7 }, 1, 1 })) }); }
 inline ::esper::view::ColorRgba LocationReferenceType::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::QuestStageIndex QuestStages::Stage() const { return ::esper::view::QuestStageIndex(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
 inline ::esper::view::QuestObjectivesTargetsTarget QuestObjectivesTargets::Target() const { return ::esper::view::QuestObjectivesTargetsTarget(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
-inline ::esper::view::ContainerEntry QuestAlias::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 23 }, 1, 1 } }); }
+inline std::vector<::esper::view::ContainerEntry> QuestAlias::Items() const { std::vector<::esper::view::ContainerEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 23 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 23 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ContainerEntry QuestAlias::AddItems() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 23 }, 1, 1 }, c_.Append(::esper::RelPath{ { 23 }, 1, 1 })) }); }
 inline ::esper::view::Vmad Quest::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::QuestData Quest::Data() const { return ::esper::view::QuestData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds TextureSet::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::DecalData TextureSet::Decal() const { return ::esper::view::DecalData(::esper::StructCursor{ c_, ::esper::RelPath{ { 10 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds MoveableStatic::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::MovementSpeeds MovementType::Speeds() const { return ::esper::view::MovementSpeeds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
-inline ::esper::view::ShoutWord Shout::Words() const { return ::esper::view::ShoutWord(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
+inline std::vector<::esper::view::ShoutWord> Shout::Words() const { std::vector<::esper::view::ShoutWord> o; const size_t n = c_.Count(::esper::RelPath{ { 4 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ShoutWord Shout::AddWords() const { return ::esper::view::ShoutWord(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, c_.Append(::esper::RelPath{ { 4 }, 1, 1 })) }); }
 inline ::esper::view::LtexHavok LandscapeTexture::Havok() const { return ::esper::view::LtexHavok(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
 inline ::esper::view::TintColor NpcTintLayers::Color() const { return ::esper::view::TintColor(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::Vmad Npc::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Npc::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper::view::AcbsData Npc::Acbs() const { return ::esper::view::AcbsData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
-inline ::esper::view::FactionRank Npc::Factions() const { return ::esper::view::FactionRank(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
+inline std::vector<::esper::view::FactionRank> Npc::Factions() const { std::vector<::esper::view::FactionRank> o; const size_t n = c_.Count(::esper::RelPath{ { 4 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::FactionRank Npc::AddFactions() const { return ::esper::view::FactionRank(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, c_.Append(::esper::RelPath{ { 4 }, 1, 1 })) }); }
 inline ::esper::view::FaceMorphs Npc::FaceMorphs() const { return ::esper::view::FaceMorphs(::esper::StructCursor{ c_, ::esper::RelPath{ { 33 }, 1, 1 } }); }
 inline ::esper::view::FaceParts Npc::FaceParts() const { return ::esper::view::FaceParts(::esper::StructCursor{ c_, ::esper::RelPath{ { 34 }, 1, 1 } }); }
-inline ::esper::view::PerkEntry Npc::Perks() const { return ::esper::view::PerkEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 39 }, 1, 1 } }); }
-inline ::esper::view::ContainerEntry Npc::Items() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::RelPath{ { 41 }, 1, 1 } }); }
+inline std::vector<::esper::view::PerkEntry> Npc::Perks() const { std::vector<::esper::view::PerkEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 39 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 39 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::PerkEntry Npc::AddPerks() const { return ::esper::view::PerkEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 39 }, 1, 1 }, c_.Append(::esper::RelPath{ { 39 }, 1, 1 })) }); }
+inline std::vector<::esper::view::ContainerEntry> Npc::Items() const { std::vector<::esper::view::ContainerEntry> o; const size_t n = c_.Count(::esper::RelPath{ { 41 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 41 }, 1, 1 }, k) }); return o; }
+inline ::esper::view::ContainerEntry Npc::AddItems() const { return ::esper::view::ContainerEntry(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 41 }, 1, 1 }, c_.Append(::esper::RelPath{ { 41 }, 1, 1 })) }); }
 inline ::esper::view::AiData Npc::AiData() const { return ::esper::view::AiData(::esper::StructCursor{ c_, ::esper::RelPath{ { 42 }, 1, 1 } }); }
 inline ::esper::view::NpcSkills Npc::Skills() const { return ::esper::view::NpcSkills(::esper::StructCursor{ c_, ::esper::RelPath{ { 48 }, 1, 1 } }); }
 inline ::esper::view::SkinTone Npc::SkinTone() const { return ::esper::view::SkinTone(::esper::StructCursor{ c_, ::esper::RelPath{ { 49 }, 1, 1 } }); }

@@ -277,6 +277,20 @@ inline constexpr LookupDef kLookups[] = {
 inline constexpr LookupRow kLookupRows[] = {
     { 1, 1 }, { 2, 2 }, { 5, 3 },
 };
+inline constexpr TableDef kTables[] = {
+    { "testFuncs", 0, 3, 0, 3, 0 },
+};
+inline constexpr const char* kTableColumns[] = {
+    "index", "name", "p1",
+};
+inline constexpr uint32_t kTableKeys[] = {
+    1, 2, 5,
+};
+inline constexpr const char* kTableCells[] = {
+    "1", "Alpha", "form",
+    "2", "Beta", "int",
+    "5", "Gamma", "none",
+};
 
 inline constexpr SchemaSet kSchema{
     kTypes,
@@ -287,6 +301,10 @@ inline constexpr SchemaSet kSchema{
     std::span<const uint64_t>(kCaseValues, 16),
     std::span<const LookupDef>(kLookups, 1),
     std::span<const LookupRow>(kLookupRows, 3),
+    std::span<const TableDef>(kTables, 1),
+    std::span<const char* const>(kTableColumns, 3),
+    std::span<const uint32_t>(kTableKeys, 3),
+    std::span<const char* const>(kTableCells, 9),
     "0.0.1", "0.5",
 };
 

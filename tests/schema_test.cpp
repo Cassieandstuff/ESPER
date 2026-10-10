@@ -507,7 +507,7 @@ void TestUnions() {
         CHECK(!tv::As<tv::TestUnions>(r3)->Versioned().Status().has_value());
         CHECK(tv::As<tv::TestUnions>(r4)->Versioned().Status() == uint8_t(9));
         const auto items = tv::As<tv::TestUnions>(r3)->Versioned().Items();
-        CHECK(items && items->size() == 2);
+        CHECK(items.size() == 2);
         size_t ids = 0;
         r3.ForEachFormId([&](esper::FormId fid, std::span<const uint32_t>) { const uint32_t id = fid.raw; ids += id == 0x01000001u; });
         CHECK(ids == 1);
@@ -669,12 +669,55 @@ void TestRealSchema() {
     CHECK(armor.Biped().ArmorType() == 1u);
     CHECK(armor.Keywords() && armor.Keywords()->size() == 1);
 
-    // The typed path decodes the same payload to the same values and bytes.
-    esper::ArmoRec old;
-    CHECK(esper::DecodeRecord(esper::kArmoSchema, p.bytes(), esper::SchemaCtx{}, old));
-    CHECK(old.unknown.empty());
-    CHECK(old.maleModel == std::string("male.nif"));
-    CHECK(old.armatures.size() == 2);
+}
+
+void TestRepeatedStructs() {
+    std::printf("T17 views over repeated structs and arrays of structs (LAND)\n");
+    // BTXT is a repeated struct member; VTXT a repeated array of structs.
+    Payload p;
+    p.Sub("BTXT", Cat({ U32(0x01000A01), Bytes{ 0, 0 }, Bytes{ 0, 0 } }))
+     .Sub("BTXT", Cat({ U32(0x01000A02), Bytes{ 3, 0 }, Bytes{ 0, 0 } }))
+     .Sub("ATXT", Cat({ U32(0x01000A03), Bytes{ 1, 0 }, Bytes{ 2, 0 } }))
+     .Sub("VTXT", Cat({ Bytes{ 5, 0, 0, 0 }, F32(0.25f), Bytes{ 6, 0, 0, 0 }, F32(0.5f) }));
+    esper::Record rec;
+    CHECK(Decode(p.bytes(), rec, false, Sig("LAND"), &esper::schema::Main()));
+    CHECK(rec.RawCount() == 0);
+    CheckRoundTrip(rec, p.bytes());
+    auto land = *esper::view::As<esper::view::Landscape>(rec);
+
+    const auto base = land.BaseTextures();
+    CHECK(base.size() == 2);
+    if (base.size() == 2) {
+        CHECK(base[0].LandTexture()->raw == 0x01000A01u && base[1].LandTexture()->raw == 0x01000A02u);
+        CHECK(base[1].Quadrant() == uint8_t(3));
+        base[1].SetQuadrant(2);                                  // writes the second occurrence only
+    }
+    const auto cells = land.AlphaCells();
+    CHECK(cells.size() == 1 && cells[0].size() == 2);
+    if (cells.size() == 1 && cells[0].size() == 2) {
+        CHECK(cells[0][1].Position() == uint16_t(6) && cells[0][1].Opacity() == 0.5f);
+        cells[0][0].SetOpacity(1.0f);
+    }
+    Payload want;
+    want.Sub("BTXT", Cat({ U32(0x01000A01), Bytes{ 0, 0 }, Bytes{ 0, 0 } }))
+        .Sub("BTXT", Cat({ U32(0x01000A02), Bytes{ 2, 0 }, Bytes{ 0, 0 } }))
+        .Sub("ATXT", Cat({ U32(0x01000A03), Bytes{ 1, 0 }, Bytes{ 2, 0 } }))
+        .Sub("VTXT", Cat({ Bytes{ 5, 0, 0, 0 }, F32(1.0f), Bytes{ 6, 0, 0, 0 }, F32(0.5f) }));
+    CHECK(rec.Encode() == want.bytes());
+
+    // Built through the views: occurrences and elements land in schema order.
+    esper::Record made;
+    CHECK(Into(esper::Record::Create(esper::schema::Main(), Sig("LAND"), {}), made));
+    auto mv = *esper::view::As<esper::view::Landscape>(made);
+    auto cellsMade = mv.AddAlphaCells(1);
+    CHECK(cellsMade.size() == 1);
+    if (!cellsMade.empty()) cellsMade[0].SetPosition(7);
+    mv.AddBaseTextures().SetQuadrant(1);
+    mv.AddBaseTextures().SetQuadrant(2);
+    CHECK((SigsOf(made.Encode()) == std::vector<uint32_t>{ Sig("BTXT"), Sig("BTXT"), Sig("VTXT") }));
+    const auto madeBase = mv.BaseTextures();
+    CHECK(madeBase.size() == 2 && madeBase[0].Quadrant() == uint8_t(1) && madeBase[1].Quadrant() == uint8_t(2));
+    CHECK(mv.AlphaCells().size() == 1 && mv.AlphaCells()[0][0].Position() == uint16_t(7));
 }
 
 } // namespace
@@ -696,6 +739,7 @@ int main() {
     TestDelimited();
     TestSiblings();
     TestRealSchema();
+    TestRepeatedStructs();
     if (g_failures == 0) {
         std::printf("RESULT: PASS\n");
         return 0;

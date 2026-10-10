@@ -78,12 +78,21 @@ struct Value {
 
 // A path from a scope (a record root or a group instance): `memberDepth`
 // member indices descend through nested groups to a subrecord member, then the
-// remaining indices descend through struct fields (breaks not counted).
+// remaining indices descend through struct fields (breaks not counted), union
+// cases and array elements. `occurrence` picks which occurrence of a repeated
+// subrecord member the path reads and writes (0 = the first).
 struct RelPath {
     std::array<uint16_t, 8> idx{};
-    uint8_t memberDepth = 0;
-    uint8_t depth       = 0;
+    uint8_t  memberDepth = 0;
+    uint8_t  depth       = 0;
+    uint16_t occurrence  = 0;
 };
+
+// `p` addressing occurrence `k` of its repeated subrecord member.
+inline RelPath AtOccurrence(RelPath p, size_t k) {
+    p.occurrence = static_cast<uint16_t>(k);
+    return p;
+}
 
 // `p` extended by one step (a struct field index or a union case index).
 inline RelPath Extend(RelPath p, uint16_t i) {
@@ -110,6 +119,14 @@ struct Cursor {
     template <class T> void             SetAll(const RelPath& p, const std::vector<T>& v) const;
     bool                                Has(const RelPath& p) const;
     void                                Clear(const RelPath& p) const;
+    // Occurrences of the subrecord member `p` names; Append adds one with
+    // default values and returns its occurrence index.
+    size_t                              Count(const RelPath& p) const;
+    size_t                              Append(const RelPath& p) const;
+    // Elements in the array at `p`; Resize grows it with default elements or
+    // truncates it (creating the subrecord if needed).
+    size_t                              Size(const RelPath& p) const;
+    void                                Resize(const RelPath& p, size_t n) const;
     std::vector<Cursor>                 Groups(const RelPath& p) const;
     Cursor                              EnsureGroup(const RelPath& p) const;
     Cursor                              AddGroup(const RelPath& p) const;
@@ -195,6 +212,9 @@ public:
     template <class T> void             SetAllAt(uint32_t inst, const RelPath& p, const std::vector<T>& v);
     bool                HasAt(uint32_t inst, const RelPath& p) const { return FindValue(inst, p) != nullptr; }
     void                ClearAt(uint32_t inst, const RelPath& p);
+    size_t              CountAt(uint32_t inst, const RelPath& p) const;
+    size_t              AppendAt(uint32_t inst, const RelPath& p);
+    void                ResizeAt(uint32_t inst, const RelPath& p, size_t n);
     std::vector<Cursor> GroupsAt(uint32_t inst, const RelPath& p);
     Cursor              EnsureGroupAt(uint32_t inst, const RelPath& p);
     Cursor              AddGroupAt(uint32_t inst, const RelPath& p);
@@ -240,6 +260,7 @@ private:
     int32_t                  ChildAtLevel(uint32_t nodeInst, uint32_t level) const;
     std::vector<uint32_t>    InstancesOf(uint32_t parent, uint16_t slot) const;
     int32_t                  FirstNode(uint32_t inst, uint16_t member) const;
+    int32_t                  NthNode(uint32_t inst, uint16_t member, size_t n) const;
     size_t                   InsertPos(uint32_t inst, uint16_t slot) const;
     // Walks the member part of `p` from `inst`. Returns the scope holding the
     // final subrecord member, or -1 when a group on the way is absent.
@@ -381,6 +402,13 @@ template <class T> void Cursor::Set(const RelPath& p, const T& v) const { rec->S
 template <class T> void Cursor::SetAll(const RelPath& p, const std::vector<T>& v) const { rec->SetAllAt<T>(inst, p, v); }
 inline bool                Cursor::Has(const RelPath& p) const { return rec->HasAt(inst, p); }
 inline void                Cursor::Clear(const RelPath& p) const { rec->ClearAt(inst, p); }
+inline size_t              Cursor::Count(const RelPath& p) const { return rec->CountAt(inst, p); }
+inline size_t              Cursor::Append(const RelPath& p) const { return rec->AppendAt(inst, p); }
+inline size_t              Cursor::Size(const RelPath& p) const {
+    const Value* v = rec->FindValue(inst, p);
+    return v ? v->items.size() : 0;
+}
+inline void                Cursor::Resize(const RelPath& p, size_t n) const { rec->ResizeAt(inst, p, n); }
 inline std::vector<Cursor> Cursor::Groups(const RelPath& p) const { return rec->GroupsAt(inst, p); }
 inline Cursor              Cursor::EnsureGroup(const RelPath& p) const { return rec->EnsureGroupAt(inst, p); }
 inline Cursor              Cursor::AddGroup(const RelPath& p) const { return rec->AddGroupAt(inst, p); }

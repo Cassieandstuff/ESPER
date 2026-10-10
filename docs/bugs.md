@@ -5,7 +5,32 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
 
 ## Open
 
-### FormID remap silently skips FormIDs inside `Blob`-bound subrecords — OPEN
+None.
+
+## Fixed
+
+### Typed views exposed only the first occurrence of a repeated struct, and arrays of structs as untyped values — FIXED
+- **Symptom:** the generated view for a repeated struct member returned one struct view, the
+  first occurrence. Later occurrences were unreachable through views. LAND has several `BTXT`
+  base textures and `ATXT` alpha layers per record. An array of structs (LAND `VTXT`, a list of
+  `LandAlphaCell`) came back as `std::vector<esper::Value>`. Found 2026-10-10 while moving the
+  gate's LAND check off the typed path, which had both as typed vectors.
+- **Root cause:** the generator's struct branch ([schemagen.py](../tools/schemagen/schemagen.py),
+  `emit_views` / `accessors`) ignored `repeat`. Paths had no way to name an occurrence or an
+  array element: `FindValue`/`StoreValue` always used the first node, and `Descend` stepped only
+  through structs and unions.
+- **Fix (step 8):**
+  - `RelPath::occurrence` names an occurrence of a repeated member.
+  - Paths step into array elements (`Descend`, `TypeAt`, `StoreValue`).
+  - Engine primitives `CountAt`/`AppendAt`/`ResizeAt`, exposed on `Cursor` as
+    `Count`/`Append`/`Size`/`Resize`.
+  - Repeated struct members generate `std::vector<View> X()` and `View AddX()`.
+  - Arrays of structs generate element views and `ResizeX(n)`; repeated ones generate
+    `std::vector<std::vector<View>> X()` and `AddX(n)`.
+  - `esper-schema-test` T17 covers read, in-place write of a later occurrence or element, and
+    authoring.
+
+### FormID remap silently skips FormIDs inside `Blob`-bound subrecords — FIXED
 - **Symptom:** `SchemaOps::remapIds` accepts records whose opaque blobs contain FormIDs, visits none of
   those FormIDs, and returns success. Every caller that renumbers masters, including
   `EnsureMaster`/`SelfIndexBump`, then leaves those references pointing at the old master index.
@@ -58,8 +83,13 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
     present, used for every blob not known to be FormID-free.
   - Schema design: a non-empty `bytes` field is remap-unsafe unless the descriptor declares
     `formIds: none` (see [schema-design.md](schema-design.md)).
-
-## Fixed
+- **Fix (step 8, the typed path deleted):** `SchemaOps::remapIds` and every `Blob` row are gone.
+  `EnsureMaster` now decodes each record with the schema engine and renumbers through
+  `Record::VisitFormIds`. That refuses a record with a raw subrecord, a non-empty `bytes` value
+  not declared `formIds: none`, or a `remapUnsafe` value, so an unseen FormID can no longer be
+  skipped. `OverrideInto` already used the engine. The rows measured above are typed FormIDs in
+  the schema now (SNDR `ONAM`, RELA/ECZN `DATA`, `MODS`), with `to:` targets the gate verifies.
+  `esper-test` T12 checks that `EnsureMaster` refuses an unclassifiable condition parameter.
 
 ### A handle or view for one record type reads another record type's fields silently — FIXED
 - **Symptom:** you can apply a `fields::<SIG>::…` handle or a `view::<Name>` to a `Record` of a

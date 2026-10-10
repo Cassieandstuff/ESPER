@@ -130,26 +130,21 @@ Python 3 and PyYAML:
 # edit schema/..., then:
 cmake --build build --target esper-schemagen      # regenerate (commit the result)
 ctest --test-dir build -C RelWithDebInfo          # includes the freshness + validation checks
-roundtrip-gate --schema "<Skyrim>/Data"           # the real-data gate (ESPER_BUILD_TOOLS=ON)
+roundtrip-gate --schema --baseline tools/gate-baseline.tsv "<Skyrim>/Data"   # the real-data gate
 ```
 
-```cpp
-esper::Record rec;
-esper::Record::Decode(plugin, node, rec);
-esper::view::Armor armor(rec);
-if (auto slot = armor.MaleModel()) use(slot->Path());
-armor.SetEditorId("MyArmor");                      // only that subrecord is re-encoded
-esper::Record::Commit(plugin, node, rec);
-```
+The real-data gate needs `-DESPER_BUILD_TOOLS=ON` and a game install. It fails on any byte
+difference, any `to:` link that points at the wrong record type, and any regression against
+`tools/gate-baseline.tsv` (per record type: raw subrecords, visible FormIDs, remap-safe records).
 
 ## Status
 
-ESPER is moving from hand-written typed record structs (`Records*.h`) to the schema-driven
-engine (`esper::Record`); the plan is in [docs/schema-design.md](docs/schema-design.md). Both
-paths ship side by side until the migration completes. The schema covers all 120 record types the
-typed path does, and round-trips the entire vanilla load order byte-exactly. Conditions, VMAD
-script data and tint layers are fully typed. Next comes modeling the sections that are still
-opaque. The public API will change while that lands.
+Records are read and written by one schema-driven engine (`esper::Record`); the plan and its
+progress are in [docs/schema-design.md](docs/schema-design.md). The schema covers 120 record
+types and round-trips the entire vanilla load order byte-exactly, with 98% of vanilla subrecords
+modeled. Conditions, VMAD script data, tint layers and the sectioned records (quests, packages,
+scenes, perks) are typed. Still opaque: navmesh geometry, CELL `TVDT`, INFO responses and a long
+tail. The public API may still change before 1.0.
 
 ## License
 

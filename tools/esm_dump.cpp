@@ -3,7 +3,7 @@
 //
 // Purpose: ground-truth inspection of shipped game data — Story Manager node
 // linkage (SMBN/SMQN/SMEN + PNAM parent graph), quest alias/package sections,
-// and CTDA condition rows (decoded via the clean-room function table). Answers
+// and CTDA condition rows (named via the schema's ctdaFunctions table). Answers
 // the cutscene-trigger research questions from real bytes instead of inference.
 //
 // Read-only: never writes a plugin. Opt-in target (ESPER_BUILD_TOOLS).
@@ -75,34 +75,44 @@ static const char* FillTypeName(uint32_t sig) {
     }
 }
 
+// One CTDA row, raw: the byte layout of schema/groups/Condition.yaml, with the
+// function's name and parameter kinds from the schema's ctdaFunctions table.
 static void DumpCtda(const uint8_t* d, uint32_t n, const Plugin& p) {
-    if (n < sizeof(CondData)) { std::printf("      (short CTDA %u)\n", n); return; }
-    CondData c{};
-    std::memcpy(&c, d, sizeof(CondData));
-    CtdaFuncInfo info;
-    const bool known = LookupCtdaFunc(c.functionIndex, info);
+    if (n < 28) { std::printf("      (short CTDA %u)\n", n); return; }
+    auto u32 = [&](uint32_t at) { uint32_t v = 0; std::memcpy(&v, d + at, 4); return v; };
+    const uint8_t  op     = d[0];
+    const uint32_t cmp    = u32(4);
+    uint16_t       fn     = 0;
+    std::memcpy(&fn, d + 8, 2);
+    const uint32_t p1 = u32(12), p2 = u32(16), runOn = u32(20), ref = n >= 28 ? u32(24) : 0;
+    const bool useGlobal = (op & 0x04) != 0, aliases = (op & 0x02) != 0, isOr = (op & 0x01) != 0;
+
+    const schema::SchemaSet& s = schema::Main();
+    const char* name  = s.TableValue("ctdaFunctions", fn, "name");
+    const char* kind1 = s.TableValue("ctdaFunctions", fn, "param1");
+    const char* kind2 = s.TableValue("ctdaFunctions", fn, "param2");
     static const char* kOps[] = {"==", "!=", ">", ">=", "<", "<=", "?6", "?7"};
-    std::printf("      CTDA fn=%u(%s) op %s ", c.functionIndex,
-                known ? info.name : "??", kOps[c.CompareOp() & 7]);
-    if (c.UsesGlobal())
-        std::printf("GLOB[%s]", p.FormIdToKey(c.comparisonRaw).ToString().c_str());
-    else
-        std::printf("%.3f", c.ComparisonValue());
-    // Parameters, classified by the function table when known.
-    auto pparam = [&](uint32_t v, CtdaParam kind) {
+    std::printf("      CTDA fn=%u(%s) op %s ", fn, name ? name : "??", kOps[(op >> 5) & 7]);
+    if (useGlobal) {
+        std::printf("GLOB[%s]", p.FormIdToKey(cmp).ToString().c_str());
+    } else {
+        float f = 0;
+        std::memcpy(&f, &cmp, 4);
+        std::printf("%.3f", f);
+    }
+    auto pparam = [&](uint32_t v, const char* kind) {
         if (v == 0) { std::printf("0"); return; }
-        if (kind == CtdaParam::Form && !c.ParamsUseAliases())
+        if (kind && std::strcmp(kind, "form") == 0 && !aliases)
             std::printf("%s", p.FormIdToKey(v).ToString().c_str());
         else
             std::printf("%u", v);
     };
-    std::printf("  p1="); pparam(c.param1, known ? info.p1 : CtdaParam::Int);
-    std::printf(" p2="); pparam(c.param2, known ? info.p2 : CtdaParam::Int);
-    std::printf("  runOn=%u", c.runOnType);
-    if (c.runOnType == CondData::kRunOnReference && c.reference)
-        std::printf("(ref %s)", p.FormIdToKey(c.reference).ToString().c_str());
-    if (c.ParamsUseAliases()) std::printf(" [params=aliasIdx]");
-    if (c.IsOr()) std::printf(" [OR]");
+    std::printf("  p1="); pparam(p1, kind1);
+    std::printf(" p2="); pparam(p2, kind2);
+    std::printf("  runOn=%u", runOn);
+    if (runOn == 2 && ref) std::printf("(ref %s)", p.FormIdToKey(ref).ToString().c_str());
+    if (aliases) std::printf(" [params=aliasIdx]");
+    if (isOr) std::printf(" [OR]");
     std::printf("\n");
 }
 

@@ -842,9 +842,21 @@ def flatten(schema: Schema):
         rows = sorted((int(r[ki]), schema.value_id(str(r[ci]))) for r in t["rows"])
         lookups.append(dict(name=f"{table}.{column}", firstRow=len(lookup_rows), rowCount=len(rows)))
         lookup_rows.extend(rows)
+    tables, table_columns, table_keys, table_cells = [], [], [], []
+    for name in sorted(schema.table_defs):
+        td = schema.table_defs[name]
+        ki = td["columns"].index(td["key"])
+        rows = sorted(td["rows"], key=lambda r: int(r[ki]))
+        tables.append(dict(name=name, firstColumn=len(table_columns), columnCount=len(td["columns"]),
+                           firstRow=len(table_keys), rowCount=len(rows), firstCell=len(table_cells)))
+        table_columns.extend(td["columns"])
+        for r in rows:
+            table_keys.append(int(r[ki]))
+            table_cells.extend(str(c) for c in r)
     return dict(types=type_rows, fields=fields, links=links, members=members, entries=entries,
                 groups=group_rows, cases=cases, caseValues=case_values, lookups=lookups,
-                lookupRows=lookup_rows)
+                lookupRows=lookup_rows, tables=tables, tableColumns=table_columns,
+                tableKeys=table_keys, tableCells=table_cells)
 
 
 def i64(v: int) -> str:
@@ -910,6 +922,28 @@ def emit_tables(schema: Schema, ns: str) -> str:
     else:
         out.append("    {},")
     out.append("};")
+    arr("TableDef", "kTables", [
+        f"    {{ {c_str(t['name'])}, {t['firstColumn']}, {t['columnCount']}, {t['firstRow']}, "
+        f"{t['rowCount']}, {t['firstCell']} }},"
+        for t in f["tables"]], "{}")
+    out.append("inline constexpr const char* kTableColumns[] = {")
+    out.append("    " + (", ".join(c_str(c) for c in f["tableColumns"]) if f["tableColumns"] else "nullptr") + ",")
+    out.append("};")
+    out.append("inline constexpr uint32_t kTableKeys[] = {")
+    keys = f["tableKeys"]
+    for k in range(0, max(len(keys), 1), 16):
+        out.append("    " + (", ".join(str(v) for v in keys[k:k + 16]) if keys else "0") + ",")
+    out.append("};")
+    out.append("inline constexpr const char* kTableCells[] = {")
+    cells, ncols = f["tableCells"], 1
+    for t in f["tables"]:
+        ncols = t["columnCount"]
+        for r in range(t["rowCount"]):
+            at = t["firstCell"] + r * ncols
+            out.append("    " + ", ".join(c_str(c) for c in cells[at:at + ncols]) + ",")
+    if not cells:
+        out.append("    nullptr,")
+    out.append("};")
     out.append("")
     out.append("inline constexpr SchemaSet kSchema{")
     out.append("    kTypes,")
@@ -920,6 +954,10 @@ def emit_tables(schema: Schema, ns: str) -> str:
     out.append(f"    std::span<const uint64_t>(kCaseValues, {len(f['caseValues'])}),")
     out.append(f"    std::span<const LookupDef>(kLookups, {len(f['lookups'])}),")
     out.append(f"    std::span<const LookupRow>(kLookupRows, {len(rows)}),")
+    out.append(f"    std::span<const TableDef>(kTables, {len(f['tables'])}),")
+    out.append(f"    std::span<const char* const>(kTableColumns, {len(f['tableColumns'])}),")
+    out.append(f"    std::span<const uint32_t>(kTableKeys, {len(f['tableKeys'])}),")
+    out.append(f"    std::span<const char* const>(kTableCells, {len(f['tableCells'])}),")
     out.append(f"    {c_str(schema.manifest['schemaVersion'])}, {c_str(LANGUAGE_VERSION)},")
     out.append("};")
     out.append("")
@@ -1021,6 +1059,52 @@ def emit_views(schema: Schema, ns: str) -> str:
             body.append(f"    bool {acc}() const {{ return {cursor}.Has({pe}); }}")
             body.append(f"    void Set{acc}(bool on) const {{ if (on) {cursor}.Set<std::vector<uint8_t>>({pe}, {{}}); else {cursor}.Clear({pe}); }}")
             return
+        if t.kind == "Struct" and repeat and kind == "lit":
+            # A repeated struct member: one view per occurrence.
+            sv = q(t.name)
+            body.append(f"    std::vector<{sv}> {acc}() const;")
+            body.append(f"    {sv} Add{acc}() const;")
+            body.append(f"    bool Has{acc}() const {{ return {cursor}.Has({pe}); }}")
+            deferred.append(f"inline std::vector<{sv}> {cls}::{acc}() const {{ std::vector<{sv}> o; "
+                            f"const size_t n = c_.Count({pe}); for (size_t k = 0; k < n; ++k) "
+                            f"o.emplace_back(::esper::StructCursor{{ c_, ::esper::AtOccurrence({pe}, k) }}); return o; }}")
+            deferred.append(f"inline {sv} {cls}::Add{acc}() const {{ return {sv}(::esper::StructCursor{{ c_, "
+                            f"::esper::AtOccurrence({pe}, c_.Append({pe})) }}); }}")
+            return
+        et = schema.types[t.ref] if t.kind == "Array" else None
+        if et is not None and et.kind == "Struct" and et.name:
+            # An array of structs: element views (and a resize for the variable-length ones).
+            ev = q(et.name)
+            at = "c_" if kind == "lit" else "s_.at"
+            if repeat:
+                sig = f"std::vector<std::vector<{ev}>> {acc}() const"
+                impl = (f"{{ std::vector<std::vector<{ev}>> o; const size_t n = {at}.Count({pe}); "
+                        f"for (size_t k = 0; k < n; ++k) {{ const ::esper::RelPath p = ::esper::AtOccurrence({pe}, k); "
+                        f"std::vector<{ev}> e; const size_t m = {at}.Size(p); "
+                        f"for (size_t i = 0; i < m; ++i) e.emplace_back(::esper::StructCursor{{ {at}, ::esper::Extend(p, static_cast<uint16_t>(i)) }}); "
+                        f"o.push_back(std::move(e)); }} return o; }}")
+            else:
+                sig = f"std::vector<{ev}> {acc}() const"
+                impl = (f"{{ std::vector<{ev}> o; const size_t n = {at}.Size({pe}); "
+                        f"for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{{ {at}, ::esper::Extend({pe}, static_cast<uint16_t>(i)) }}); return o; }}")
+            if kind == "lit":
+                body.append(f"    {sig};")
+                deferred.append(f"inline {sig.replace(f' {acc}()', f' {cls}::{acc}()')} {impl}")
+            else:
+                body.append(f"    {sig} {impl}")
+            if not repeat and t.len != "Fixed":
+                body.append(f"    void Resize{acc}(size_t n) const {{ {at}.Resize({pe}, n); }}")
+            if repeat and kind == "lit":
+                # A new occurrence holding `n` default elements.
+                body.append(f"    std::vector<{ev}> Add{acc}(size_t n) const;")
+                deferred.append(
+                    f"inline std::vector<{ev}> {cls}::Add{acc}(size_t n) const {{ "
+                    f"const ::esper::RelPath p = ::esper::AtOccurrence({pe}, c_.Append({pe})); c_.Resize(p, n); "
+                    f"std::vector<{ev}> e; for (size_t i = 0; i < n; ++i) "
+                    f"e.emplace_back(::esper::StructCursor{{ c_, ::esper::Extend(p, static_cast<uint16_t>(i)) }}); return e; }}")
+            if kind == "lit" and not extra:
+                body.append(f"    bool Has{acc}() const {{ return {cursor}.Has({pe}); }}")
+            return
         if t.kind == "Struct":
             sv = q(t.name)
             if kind == "lit":
@@ -1063,6 +1147,8 @@ def emit_views(schema: Schema, ns: str) -> str:
         t = schema.types[tidx]
         if t.kind == "Struct" and t.name:
             return [tidx]
+        if t.kind == "Array":
+            return struct_deps(t.ref)
         if t.kind == "Union":
             return [d for c in t.cases if c.type is not None for d in struct_deps(c.type)]
         return []
