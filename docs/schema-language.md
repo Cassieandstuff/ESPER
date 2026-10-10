@@ -151,7 +151,7 @@ A union picks one of several layouts at decode time.
 - **Refusal:** if no case matches and there is no `default`, the subrecord is refused (§7.1).
 - **`name`** on a case is optional and names its generated accessor.
 - **Value model:** a union's value records which case was taken. Its payload is that case's
-  value. Paths (handles) step through a union by **case index**.
+  value. Paths step through a union by **case index**.
 
 ### 4.3 Conditional fields
 
@@ -162,8 +162,8 @@ A union picks one of several layouts at decode time.
 ```
 
 The condition is `{ field, [mask], min/max | equals | in: [..] }`. It is shorthand for a union
-selecting on that field: one case with the value, and an empty default. Handles and views
-address the value directly.
+selecting on that field: one case with the value, and an empty default. Views address the value
+directly.
 
 ### 4.4 Tables
 
@@ -393,8 +393,7 @@ consumers never run the generator.
 |---|---|
 | `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. A union type is `{ kind: union, by, cases: [{ when \| default, name?, type? }] }`. `remapUnsafe` appears where set. `tables` holds every table. Reusable groups and named structs appear expanded at each use. |
 | `include/ESPER/generated/Tables.h` | the engine's constexpr tables (`esper::schema::SchemaSet`) |
-| `include/ESPER/generated/Fields.h` | typed handles: `esper::fields::<SIG>::<member>[::<field>]`; composite members expose `::self` |
-| `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`): accessors only, over the generic engine |
+| `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`, made with `esper::view::As<Name>(record)`): accessors only, over the generic engine. A union gets an `<Acc>Kind` enum of its cases, `<Acc>Case()` and `<Acc>Is<Case>()`. |
 
 ## 10. Reserved for later versions
 

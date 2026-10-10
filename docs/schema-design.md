@@ -11,7 +11,7 @@ in the same repo is the schema's reference implementation and the thing that ver
 | Layer | What it is | Who uses it |
 |---|---|---|
 | **Schema** | the descriptor-language spec, the `schema/` YAML descriptors, and a generated `schema.json` bundle | anyone, in any language; this is the primary product |
-| **Generated C++** | field handles, typed views and schema tables, generated from the schema by ESPER's generator and committed to the repo | the engine and C++ consumers; consumers compile them like any other source and never touch YAML |
+| **Generated C++** | typed views and schema tables, generated from the schema by ESPER's generator and committed to the repo | the engine and C++ consumers; consumers compile them like any other source and never touch YAML |
 | **`esper::esper`** | the engine: plugin container (GRUP tree, compression, FormKeys, STRINGS), record decode/encode/visit, writer and master remap | C++ consumers; it also runs the gate that proves the schema |
 | **`esper::loadorder`** (optional) | `esper::LoadOrderDocument`: resolve, load and query a whole load order | tools that want "the game's data as the game sees it" without writing that plumbing |
 
@@ -22,8 +22,7 @@ is the schema's only check. (Mutagen's *mechanism* was studied; see Prior art. I
 
 ```
 schema/**/*.yaml ──► tools/schemagen ──┬─► schema.json                          (data consumers)
-   (authored)        (Python, PyYAML)  ├─► include/ESPER/generated/Fields.h      (public handles)
-                                       ├─► include/ESPER/generated/Views.h       (public typed views)
+   (authored)        (Python, PyYAML)  ├─► include/ESPER/generated/Views.h       (public typed views)
                                        └─► include/ESPER/generated/Tables.h      (engine tables)
                                                         │
                        esper::esper (engine) ◄──────────┘
@@ -321,9 +320,6 @@ These go in the spec, because anyone else's engine has to behave the same way:
 
 - **`schema.json`:** the whole schema, references resolved, plus `schemaVersion` and
   `languageVersion`. Any language can read it with the JSON support in its standard library.
-- **`include/ESPER/generated/Fields.h`** (public): constexpr handles like `f::NPC_::race` and
-  `f::RACE::tintLayers::texture`. Each handle carries its value type, so a wrong name or wrong type
-  is a compile error.
 - **`include/ESPER/generated/Views.h`** (public): typed views, described under Engine below.
 - **`include/ESPER/generated/Tables.h`:** flat constexpr arrays (fields, structs, members, records,
   tables) linked by index. Included by the engine's .cpp files only.
@@ -486,7 +482,8 @@ Mutagen (C#) was studied for **mechanism only**. Its record definitions were not
 Each step ships on its own. The typed `Records*.h` path keeps working until step 7.
 
 1. **Done (2026-10-09). Spec, generator, engine skeleton.** Write `docs/schema-language.md` v0, and the generator with
-   validation and all four outputs (`schema.json`, handles, views, tables). Build the engine for
+   validation and its outputs (`schema.json`, handles, views, tables; handles were dropped in the
+   API pass). Build the engine for
    scalars, structs (including `break`), members and arrays. Bring five simple records (KYWD, GLOB,
    TXST, MISC, ARMO) through it, with unit tests. ARMO exercises reusable groups and sig remapping.
 
@@ -613,7 +610,7 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    her localized name and her race link resolves to NordRace. 55 vanilla records override into a
    new plugin, which saves and reloads clean; 45 are refused, all for opaque blobs. 49
    worldspaces index in 175 ms.
-6. **API pass (2026-10-10): done except handles.** A usability review of the consumer surface
+6. **Done (2026-10-10). API pass.** A usability review of the consumer surface
    found that SCT used none of the schema engine. It used the typed path plus hand-walked
    subrecords, and built its own facade over ESPER's gaps. Changes:
    - `Result<T>` errors everywhere;
@@ -628,8 +625,9 @@ Each step ships on its own. The typed `Records*.h` path keeps working until step
    - `FormId` in FormID callbacks;
    - `SigName`.
 
-   **Open:** whether field handles (`Fields.h`) stay public. Nothing outside tests uses them, and
-   they still skip the record-type check that views now have.
+   **Field handles (`Fields.h`) dropped.** Nothing outside tests used them, and they duplicated
+   the views without the views' record-type check. One typed API remains: views. Generic tools
+   use string paths (`Record::Find`).
 7. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
    ESPER pin is bumped.
 8. **Delete the typed world:** `Records*.h`, the `Field<>`/`MakeSchema` templates, the old
@@ -645,7 +643,8 @@ Settled 2026-10-08:
 - **YAML descriptors.** A Python generator produces `schema.json` and C++ headers, which are
   committed. C++ consumers build from the generated headers and never touch YAML or Python.
 - **Verbatim unless modified,** with a forced re-encode real-data gate.
-- **Generated field handles,** plus string paths.
+- **Generated field handles,** plus string paths. (Superseded 2026-10-10: handles were dropped in
+  favor of typed views; string paths remain.)
 - **Clean-room.** Descriptors are written from real-data verification only. xEdit and Mutagen record
   definitions are never consulted.
 

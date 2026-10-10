@@ -105,7 +105,7 @@ set(_ESPER_GEN_MAIN
 set(_ESPER_GEN_TEST
     --schema "${CMAKE_CURRENT_SOURCE_DIR}/tests/schema"
     --out "${CMAKE_CURRENT_SOURCE_DIR}/tests/generated"
-    --tables-ns esper_test::tables --fields-ns esper_test::fields --views-ns esper_test::view)
+    --tables-ns esper_test::tables --views-ns esper_test::view)
 
 if(ESPER_SCHEMAGEN_AVAILABLE)
     add_custom_target(esper-schemagen

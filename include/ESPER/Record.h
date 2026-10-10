@@ -91,22 +91,6 @@ inline RelPath Extend(RelPath p, uint16_t i) {
     return p;
 }
 
-// Generated handles (include/ESPER/generated/Fields.h). `T` is the value type
-// the schema gives the field, so a wrong name or type fails to compile.
-template <class T>
-struct FieldRef {
-    uint32_t record = 0;
-    RelPath  path;
-};
-struct GroupRef {
-    uint32_t record = 0;
-    RelPath  path;
-};
-struct StructRef {
-    uint32_t record = 0;
-    RelPath  path;
-};
-
 struct DecodeCtx {
     bool     localized   = false;   // the owning plugin's TES4 localized flag
     uint16_t formVersion = 0;
@@ -177,15 +161,6 @@ public:
     size_t                RawCount() const;
     std::vector<uint32_t> RawSigs() const;
     size_t                SubrecordCount() const { return nodes_.size(); }
-
-    // ── Typed access through generated handles ──────────────────────────────
-    template <class T> std::optional<T> Get(const FieldRef<T>& f) const { return GetAt<T>(0, f.path); }
-    template <class T> std::vector<T>   GetAll(const FieldRef<T>& f) const { return GetAllAt<T>(0, f.path); }
-    template <class T> void Set(const FieldRef<T>& f, const T& v) { SetAt<T>(0, f.path, v); }
-    template <class T> void SetAll(const FieldRef<T>& f, const std::vector<T>& v) { SetAllAt<T>(0, f.path, v); }
-    template <class T> bool Has(const FieldRef<T>& f) const { return HasAt(0, f.path); }
-    template <class T> void Clear(const FieldRef<T>& f) { ClearAt(0, f.path); }
-    std::vector<Cursor> Groups(const GroupRef& g) { return GroupsAt(0, g.path); }
 
     // ── Untyped access (tools/UIs): "editorId", "maleModel/path", "data/weight"
     std::optional<RelPath> Find(std::string_view path) const;

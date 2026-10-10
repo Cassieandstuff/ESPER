@@ -6,7 +6,6 @@
 
 Emits, into --out:
     Tables.h   constexpr tables the engine interprets (esper::schema::SchemaSet)
-    Fields.h   typed handles (esper::FieldRef<T> / GroupRef / StructRef)
     Views.h    typed views (thin accessors over esper::Cursor)
 
 The descriptor language is specified in docs/schema-language.md. This file is
@@ -53,14 +52,6 @@ NOT_YET = {"enum": "enum hints", "flags": "flag hints", "unit": "unit hints"}
 # Options that shape a value's type (allowed wherever a value is described).
 VALUE_OPTS = {"type", "fields", "union", "if", "table", "size", "formIds", "to", "remapUnsafe"}
 
-CPP_KEYWORDS = set("""alignas alignof and and_eq asm auto bitand bitor bool break case catch char
-char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast
-continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum
-explicit export extern false float for friend goto if inline int long mutable namespace new
-noexcept not not_eq nullptr operator or or_eq private protected public register
-reinterpret_cast requires return short signed sizeof static static_assert static_cast struct
-switch template this thread_local throw true try typedef typeid typename union unsigned using
-virtual void volatile wchar_t while xor xor_eq""".split())
 RESERVED = {"record", "cursor", "self"}
 
 
@@ -70,10 +61,6 @@ class SchemaError(Exception):
 
 def fail(where: str, msg: str):
     raise SchemaError(f"{where}: {msg}")
-
-
-def ident(name: str) -> str:
-    return name + "_" if name in CPP_KEYWORDS else name
 
 
 def pascal(name: str) -> str:
@@ -961,55 +948,6 @@ def case_label(c: Case, i: int) -> str:
     return c.name or ("default" if c.default else f"case{i}")
 
 
-def emit_fields(schema: Schema, ns: str) -> str:
-    out = ["#pragma once", HEADER, "#include <ESPER/Record.h>", "",
-           "#include <cstdint>", "#include <string>", "#include <vector>", "",
-           f"namespace {ns} {{", "", "using ::esper::schema::SigOf;", ""]
-
-    def value_handles(name: str, tidx: int, p: list[int], md: int, sig: str, indent: str):
-        t = schema.types[tidx]
-        if t.kind == "Union" and t.is_if:                  # transparent: the field itself
-            value_handles(name, t.cases[0].type, p + [0], md, sig, indent)
-            return
-        if t.kind == "Struct":
-            out.append(f"{indent}namespace {ident(name)} {{")
-            out.append(f"{indent}    inline constexpr ::esper::StructRef self{{ SigOf(\"{sig}\"), {relpath_init(p, md)} }};")
-            for fname, ft, vi in value_fields(schema, tidx):
-                value_handles(fname, ft, p + [vi], md, sig, indent + "    ")
-            out.append(f"{indent}}}")
-            return
-        if t.kind == "Union":
-            out.append(f"{indent}namespace {ident(name)} {{")
-            out.append(f"{indent}    inline constexpr ::esper::FieldRef<::esper::Value> self{{ SigOf(\"{sig}\"), {relpath_init(p, md)} }};")
-            for i, c in enumerate(t.cases):
-                if c.name and c.type is not None:
-                    value_handles(c.name, c.type, p + [i], md, sig, indent + "    ")
-            out.append(f"{indent}}}")
-            return
-        out.append(f"{indent}inline constexpr ::esper::FieldRef<{t.cpp}> {ident(name)}"
-                   f"{{ SigOf(\"{sig}\"), {relpath_init(p, md)} }};")
-
-    def scope(gidx: int, path: list[int], sig: str, indent: str):
-        for i, m in enumerate(schema.groups[gidx].members):
-            p = path + [i]
-            if m.is_group:
-                out.append(f"{indent}namespace {ident(m.name)} {{")
-                out.append(f"{indent}    inline constexpr ::esper::GroupRef self{{ SigOf(\"{sig}\"), {relpath_init(p, len(p))} }};")
-                scope(m.group, p, sig, indent + "    ")
-                out.append(f"{indent}}}")
-            else:
-                value_handles(m.name, m.type, p, len(p), sig, indent)
-
-    for sig, name, root in schema.records:
-        out.append(f"// {sig} — {name}")
-        out.append(f"namespace {ident(sig)} {{")
-        scope(root, [], sig, "    ")
-        out.append("}")
-        out.append("")
-    out.append(f"}} // namespace {ns}")
-    return "\n".join(out) + "\n"
-
-
 def emit_views(schema: Schema, ns: str) -> str:
     """Views are accessors only: every call goes through esper::Cursor."""
     by_sig = {sig: name for sig, name, _ in schema.records}
@@ -1270,10 +1208,9 @@ def emit_json(schema: Schema) -> str:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--schema", required=True, type=Path)
-    ap.add_argument("--out", required=True, type=Path, help="directory for Tables.h/Fields.h/Views.h")
+    ap.add_argument("--out", required=True, type=Path, help="directory for Tables.h/Views.h")
     ap.add_argument("--json", type=Path, help="path for the schema.json bundle")
     ap.add_argument("--tables-ns", default="esper::schema::tables")
-    ap.add_argument("--fields-ns", default="esper::fields")
     ap.add_argument("--views-ns", default="esper::view")
     ap.add_argument("--check", action="store_true", help="verify outputs are up to date")
     args = ap.parse_args(argv)
@@ -1284,7 +1221,6 @@ def main(argv=None) -> int:
         schema.build()
         outputs = {
             args.out / "Tables.h": emit_tables(schema, args.tables_ns),
-            args.out / "Fields.h": emit_fields(schema, args.fields_ns),
             args.out / "Views.h": emit_views(schema, args.views_ns),
         }
         if args.json:

@@ -121,8 +121,7 @@ specified in [docs/schema-language.md](docs/schema-language.md). `tools/schemage
 schema into:
 
 - [`schema.json`](schema.json), the whole schema resolved into one file, for tools in any language;
-- `include/ESPER/generated/`, the engine's tables plus typed handles (`esper::fields`) and typed
-  views (`esper::view`).
+- `include/ESPER/generated/`, the engine's tables and the typed views (`esper::view`).
 
 All of these are committed, so consumers never need Python. To change the schema, you need
 Python 3 and PyYAML:

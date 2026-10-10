@@ -6,7 +6,6 @@
 
 #include <ESPER.h>
 
-#include "generated/Fields.h"
 #include "generated/Tables.h"
 #include "generated/Views.h"
 
@@ -30,7 +29,6 @@ int g_failures = 0;
     } while (0)
 
 using Bytes = std::vector<uint8_t>;
-namespace tf = esper_test::fields;
 namespace tv = esper_test::view;
 const esper::schema::SchemaSet& TestSchema() { return esper_test::tables::kSchema; }
 
@@ -70,6 +68,9 @@ std::vector<uint32_t> SigsOf(const Bytes& payload) {
     while (it.Next(s)) out.push_back(s.sig);
     return out;
 }
+
+// The TestAlpha view of a record decoded as TSTA.
+tv::TestAlpha A(esper::Record& r) { return *tv::As<tv::TestAlpha>(r); }
 
 // Moves a decoded record into `rec`, printing the error on failure.
 bool Into(esper::Result<esper::Record> r, esper::Record& rec) {
@@ -131,44 +132,45 @@ void TestDecodeAndRead() {
     CHECK(rec.RawCount() == 0);
     CheckRoundTrip(rec, payload);
 
-    CHECK(rec.Get(tf::TSTA::editorId) == std::string("Alpha"));
-    CHECK(rec.Get(tf::TSTA::fullName)->text == "Alpha Name");
-    CHECK(rec.Get(tf::TSTA::versioned::flags) == 7u);
-    CHECK(rec.Get(tf::TSTA::versioned::radius) == 2.5f);
-    CHECK(rec.Get(tf::TSTA::versioned::target)->raw == 0x01000801u);
-    CHECK(rec.Get(tf::TSTA::outer::inner::a) == 3);
-    CHECK(rec.Get(tf::TSTA::outer::inner::b) == -9);
-    CHECK(rec.Get(tf::TSTA::outer::ref)->raw == 0x01000802u);
-    CHECK((rec.Get(tf::TSTA::fixed) == std::vector<uint16_t>{ 1, 2, 3 }));
-    CHECK((rec.Get(tf::TSTA::prefixed) == std::vector<uint32_t>{ 10, 20 }));
-    CHECK(rec.Get(tf::TSTA::wide) == std::string("wide"));
-    CHECK(rec.Get(tf::TSTA::keywords)->size() == 2);
-    CHECK(rec.GetAll(tf::TSTA::refs).size() == 2);
-    CHECK((rec.Get(tf::TSTA::hash) == Bytes{ 9, 9, 9 }));
-    CHECK(rec.Get(tf::TSTA::data::value) == -100);
-    CHECK(rec.Get(tf::TSTA::data::weight) == 3.5f);
-    CHECK(rec.Get(tf::TSTA::first::first) == std::string("pairA"));
-    CHECK(rec.Get(tf::TSTA::second::first) == std::string("pairB"));   // remapped sigs
-    CHECK(rec.Get(tf::TSTA::second::second) == uint8_t(6));
+    CHECK(A(rec).EditorId() == std::string("Alpha"));
+    CHECK(A(rec).FullName()->text == "Alpha Name");
+    CHECK(A(rec).Versioned().Flags() == 7u);
+    CHECK(A(rec).Versioned().Radius() == 2.5f);
+    CHECK(A(rec).Versioned().Target()->id.raw == 0x01000801u);
+    CHECK(A(rec).Outer().Inner().A() == 3);
+    CHECK(A(rec).Outer().Inner().B() == -9);
+    CHECK(A(rec).Outer().Ref()->raw == 0x01000802u);
+    CHECK((A(rec).Fixed() == std::vector<uint16_t>{ 1, 2, 3 }));
+    CHECK((A(rec).Prefixed() == std::vector<uint32_t>{ 10, 20 }));
+    CHECK(A(rec).Wide() == std::string("wide"));
+    CHECK(A(rec).Keywords()->size() == 2);
+    CHECK(A(rec).Refs().size() == 2);
+    CHECK((A(rec).Hash() == Bytes{ 9, 9, 9 }));
+    CHECK(A(rec).Data().Value() == -100);
+    CHECK(A(rec).Data().Weight() == 3.5f);
+    CHECK(A(rec).First()->First() == std::string("pairA"));
+    CHECK(A(rec).Second()->First() == std::string("pairB"));   // remapped sigs
+    CHECK(A(rec).Second()->Second() == uint8_t(6));
 }
 
 void TestOrdinalGroups() {
     std::printf("T2 groups: ordinal rule, optional first member, nesting\n");
     esper::Record rec;
     CHECK(Decode(FullAlpha(), rec));
-    const auto layers = rec.Groups(tf::TSTA::layers::self);
+    const auto layers = A(rec).Layers();
     CHECK(layers.size() == 2);
     if (layers.size() != 2) return;
-    CHECK(layers[0].Get<uint16_t>(esper::RelPath{ { 0 }, 1, 1 }) == uint16_t(0));
-    CHECK(layers[0].Get<std::string>(esper::RelPath{ { 1 }, 1, 1 }) == std::string("tex0"));
-    CHECK(layers[0].Groups(esper::RelPath{ { 2 }, 1, 1 }).size() == 2);
-    CHECK(!layers[1].Get<uint16_t>(esper::RelPath{ { 0 }, 1, 1 }).has_value());
-    CHECK(layers[1].Get<std::string>(esper::RelPath{ { 1 }, 1, 1 }) == std::string("tex1"));
-    CHECK(layers[1].Groups(esper::RelPath{ { 2 }, 1, 1 }).size() == 1);
+    CHECK(layers[0].Index() == uint16_t(0));
+    CHECK(layers[0].Texture() == std::string("tex0"));
+    CHECK(layers[0].Presets().size() == 2);
+    CHECK(!layers[1].Index().has_value());
+    CHECK(layers[1].Texture() == std::string("tex1"));
+    CHECK(layers[1].Presets().size() == 1);
+    CHECK(layers[0].Presets()[0].Value() == 0.5f);
 
-    // Through handles: the first instance on each level.
-    CHECK(rec.Get(tf::TSTA::layers::texture) == std::string("tex0"));
-    CHECK(rec.Get(tf::TSTA::layers::presets::value) == 0.5f);
+    // The same group through raw cursors and paths.
+    const auto cursors = rec.Root().Groups(*rec.Find("layers"));
+    CHECK(cursors.size() == 2 && cursors[1].Get<std::string>(esper::RelPath{ { 1 }, 1, 1 }) == std::string("tex1"));
 
     // The same singular member twice in a row starts a new instance.
     Payload p;
@@ -177,12 +179,12 @@ void TestOrdinalGroups() {
     CHECK(Decode(p.bytes(), r2));
     CHECK(r2.RawCount() == 0);
     CheckRoundTrip(r2, p.bytes());
-    const auto two = r2.Groups(tf::TSTA::layers::self);
+    const auto two = A(r2).Layers();
     CHECK(two.size() == 2);
     if (two.size() == 2) {
-        CHECK(two[0].Get<std::string>(esper::RelPath{ { 1 }, 1, 1 }) == std::string("a"));
-        CHECK(two[1].Get<std::string>(esper::RelPath{ { 1 }, 1, 1 }) == std::string("b"));
-        CHECK(two[1].Groups(esper::RelPath{ { 2 }, 1, 1 }).size() == 2);   // PCOL, PCOL
+        CHECK(two[0].Texture() == std::string("a"));
+        CHECK(two[1].Texture() == std::string("b"));
+        CHECK(two[1].Presets().size() == 2);   // PCOL, PCOL
     }
 
     // A singular group may not repeat: its second occurrence stays raw.
@@ -202,10 +204,10 @@ void TestBreak() {
     CHECK(Decode(p.bytes(), rec));
     CHECK(rec.RawCount() == 0);
     CheckRoundTrip(rec, p.bytes());
-    CHECK(rec.Get(tf::TSTA::versioned::radius) == 1.5f);
-    CHECK(!rec.Get(tf::TSTA::versioned::falloff).has_value());
+    CHECK(A(rec).Versioned().Radius() == 1.5f);
+    CHECK(!A(rec).Versioned().Falloff().has_value());
 
-    rec.Set(tf::TSTA::versioned::falloff, 9.0f);
+    A(rec).Versioned().SetFalloff(9.0f);
     Payload want;
     want.Z("EDID", "B").Sub("VERS", Cat({ U32(1), F32(1.5f), F32(9.0f), U32(0) }));
     CHECK(rec.Encode() == want.bytes());
@@ -233,8 +235,8 @@ void TestRefusal() {
     CHECK(Decode(p.bytes(), rec));
     CHECK(rec.RawCount() == 6);
     CheckRoundTrip(rec, p.bytes());
-    CHECK(rec.Get(tf::TSTA::fullName)->text == "ok");
-    CHECK(!rec.Get(tf::TSTA::editorId).has_value());
+    CHECK(A(rec).FullName()->text == "ok");
+    CHECK(!A(rec).EditorId().has_value());
     const auto safe = rec.CheckRemapSafe();
     CHECK(!safe && safe.error().message.find("raw subrecord") != std::string::npos);
 }
@@ -246,7 +248,7 @@ void TestLocalized() {
     esper::Record rec;
     CHECK(Decode(p.bytes(), rec, /*localized=*/true));
     CHECK(rec.RawCount() == 0);
-    CHECK(rec.Get(tf::TSTA::fullName)->id == 0x1234u);
+    CHECK(A(rec).FullName()->id == 0x1234u);
     CheckRoundTrip(rec, p.bytes());
     // The same bytes in a non-localized plugin are not a valid zstring.
     esper::Record r2;
@@ -264,11 +266,11 @@ void TestVerbatimUnlessModified() {
     CheckRoundTrip(rec, p.bytes());
 
     // Setting a value to what it already is changes nothing.
-    rec.Set(tf::TSTA::editorId, std::string("N"));
+    A(rec).SetEditorId(std::string("N"));
     CHECK(rec.Encode() == p.bytes());
 
     // Editing one field re-encodes only that subrecord.
-    rec.Set(tf::TSTA::editorId, std::string("M"));
+    A(rec).SetEditorId(std::string("M"));
     Payload want;
     want.Z("EDID", "M").Sub("DATA", Cat({ U32(1), U32(0x7FC01234) }));
     CHECK(rec.Encode() == want.bytes());
@@ -279,21 +281,21 @@ void TestCreateAndOrder() {
     esper::Record rec;
     CHECK(Into(esper::Record::Create(TestSchema(), Sig("TSTA"), {}), rec));
     // Set in reverse schema order.
-    rec.Set(tf::TSTA::data::weight, 2.0f);
-    rec.Set(tf::TSTA::keywords, std::vector<esper::FormId>{ { 1 }, { 2 }, { 3 } });
-    rec.Set(tf::TSTA::editorId, std::string("New"));
+    A(rec).Data().SetWeight(2.0f);
+    A(rec).SetKeywords({ { { 1 } }, { { 2 } }, { { 3 } } });
+    A(rec).SetEditorId(std::string("New"));
     const Bytes out = rec.Encode();
     CHECK((SigsOf(out) == std::vector<uint32_t>{ Sig("EDID"), Sig("KSIZ"), Sig("KWDA"), Sig("DATA") }));
-    CHECK(rec.Get(tf::TSTA::keywordCount) == 3u);
+    CHECK(A(rec).KeywordCount() == 3u);
 
     esper::Record back;
     CHECK(Decode(out, back));
     CHECK(back.RawCount() == 0);
-    CHECK(back.Get(tf::TSTA::data::weight) == 2.0f);
-    CHECK(back.Get(tf::TSTA::data::value) == 0);
+    CHECK(A(back).Data().Weight() == 2.0f);
+    CHECK(A(back).Data().Value() == 0);
 
-    rec.Clear(tf::TSTA::keywords);
-    CHECK(!rec.Get(tf::TSTA::keywordCount).has_value());
+    A(rec).ClearKeywords();
+    CHECK(!A(rec).KeywordCount().has_value());
     CHECK((SigsOf(rec.Encode()) == std::vector<uint32_t>{ Sig("EDID"), Sig("DATA") }));
 }
 
@@ -302,17 +304,17 @@ void TestRepeated() {
     esper::Record rec;
     const Bytes payload = FullAlpha();
     CHECK(Decode(payload, rec));
-    rec.SetAll(tf::TSTA::refs, std::vector<esper::FormId>{ { 0x01000805 }, { 0x01000806 } });
+    A(rec).SetRefs(std::vector<esper::FormId>{ { 0x01000805 }, { 0x01000806 } });
     CHECK(rec.Encode() == payload);
-    rec.SetAll(tf::TSTA::refs, std::vector<esper::FormId>{ { 0x01000805 }, { 7 }, { 8 } });
-    const auto refs = rec.GetAll(tf::TSTA::refs);
+    A(rec).SetRefs(std::vector<esper::FormId>{ { 0x01000805 }, { 7 }, { 8 } });
+    const auto refs = A(rec).Refs();
     CHECK(refs.size() == 3 && refs[1].raw == 7u && refs[2].raw == 8u);
-    rec.SetAll(tf::TSTA::refs, std::vector<esper::FormId>{});
-    CHECK(rec.GetAll(tf::TSTA::refs).empty());
+    A(rec).SetRefs(std::vector<esper::FormId>{});
+    CHECK(A(rec).Refs().empty());
     esper::Record back;
     CHECK(Decode(rec.Encode(), back));
     CHECK(back.RawCount() == 0);
-    CHECK(back.GetAll(tf::TSTA::refs).empty());
+    CHECK(A(back).Refs().empty());
 }
 
 void TestFormIds() {
@@ -336,8 +338,8 @@ void TestFormIds() {
     CHECK(remapped == 9);
     esper::Record back;
     CHECK(Decode(rec.Encode(), back));
-    CHECK(back.Get(tf::TSTA::outer::ref)->raw == 0x02000802u);
-    CHECK(back.Get(tf::TSTA::layers::presets::color)->raw == 0x02000807u);
+    CHECK(A(back).Outer().Ref()->raw == 0x02000802u);
+    CHECK(A(back).Layers()[0].Presets()[0].Color()->raw == 0x02000807u);
 
     // Opaque bytes not declared FormID-free make the record refuse.
     Payload p;
@@ -389,7 +391,7 @@ void TestPathsAndViews() {
     CHECK(tv::As<tv::TestAlpha>(back)->Layers().size() == 3);
 
     a.Outer().Inner().SetA(42);
-    CHECK(rec.Get(tf::TSTA::outer::inner::a) == 42);
+    CHECK(A(rec).Outer().Inner().A() == 42);
 }
 
 void TestXxxx() {
@@ -504,7 +506,7 @@ void TestUnions() {
         CheckRoundTrip(rb, bad.bytes());
         CHECK(!tv::As<tv::TestUnions>(r3)->Versioned().Status().has_value());
         CHECK(tv::As<tv::TestUnions>(r4)->Versioned().Status() == uint8_t(9));
-        const auto items = r3.Get(tf::TSTU::versioned::items);
+        const auto items = tv::As<tv::TestUnions>(r3)->Versioned().Items();
         CHECK(items && items->size() == 2);
         size_t ids = 0;
         r3.ForEachFormId([&](esper::FormId fid, std::span<const uint32_t>) { const uint32_t id = fid.raw; ids += id == 0x01000001u; });

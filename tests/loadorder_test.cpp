@@ -15,7 +15,6 @@
 #include <vector>
 
 namespace fs = std::filesystem;
-namespace f = esper::fields;
 
 namespace {
 
@@ -58,6 +57,9 @@ void WriteFile(const fs::path& p, const std::vector<uint8_t>& bytes) {
                                             static_cast<std::streamsize>(bytes.size()));
 }
 
+esper::view::Armor Armo(esper::Record& r) { return *esper::view::As<esper::view::Armor>(r); }
+esper::view::Keyword Kywd(esper::Record& r) { return *esper::view::As<esper::view::Keyword>(r); }
+
 // A new record of `sig` in `p`, filled by `fill` through the schema engine.
 template <class Fill>
 uint32_t AddRecord(esper::Plugin& p, uint32_t sig, Fill&& fill) {
@@ -92,19 +94,19 @@ Fixture Build() {
     esper::CreateEmptyPlugin(master, "Master.esm", false);
     master.isMaster = true;
     master.localized = true;
-    fx.kwA = AddRecord(master, kKywd, [](esper::Record& r) { r.Set(f::KYWD::editorId, std::string("KwA")); });
+    fx.kwA = AddRecord(master, kKywd, [](esper::Record& r) { Kywd(r).SetEditorId("KwA"); });
     fx.armorA = AddRecord(master, kArmo, [&](esper::Record& r) {
-        r.Set(f::ARMO::editorId, std::string("ArmorA"));
-        r.Set(f::ARMO::fullName, esper::LocalizedString{ 1, {} });
-        r.Set(f::ARMO::keywords, std::vector<esper::FormId>{ { fx.kwA } });
+        Armo(r).SetEditorId("ArmorA");
+        Armo(r).SetFullName({ 1, {} });
+        Armo(r).SetKeywords({ { { fx.kwA } } });
     });
     fx.armorLoc = AddRecord(master, kArmo, [&](esper::Record& r) {
-        r.Set(f::ARMO::editorId, std::string("ArmorLoc"));
-        r.Set(f::ARMO::fullName, esper::LocalizedString{ 2, {} });
-        r.Set(f::ARMO::keywords, std::vector<esper::FormId>{ { fx.kwA } });
+        Armo(r).SetEditorId("ArmorLoc");
+        Armo(r).SetFullName({ 2, {} });
+        Armo(r).SetKeywords({ { { fx.kwA } } });
     });
     // A record with a subrecord the schema doesn't know: FormIDs not all visible.
-    fx.armorRaw = AddRecord(master, kArmo, [](esper::Record& r) { r.Set(f::ARMO::editorId, std::string("ArmorRaw")); });
+    fx.armorRaw = AddRecord(master, kArmo, [](esper::Record& r) { Armo(r).SetEditorId("ArmorRaw"); });
     {
         esper::ByteWriter w;
         const char edid[] = "ArmorRaw";
@@ -122,12 +124,12 @@ Fixture Build() {
     esper::CreateEmptyPlugin(mod, "Mod.esp", false);
     const uint32_t kwAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.kwA & 0xFFFFFF }).value_or(0);
     const uint32_t armorAInMod = esper::MakeRef(mod, esper::FormKey{ "Master.esm", fx.armorA & 0xFFFFFF }).value_or(0);
-    fx.kwB = AddRecord(mod, kKywd, [](esper::Record& r) { r.Set(f::KYWD::editorId, std::string("KwB")); });
+    fx.kwB = AddRecord(mod, kKywd, [](esper::Record& r) { Kywd(r).SetEditorId("KwB"); });
     {
         esper::Record rec = esper::Record::Create(mod, kArmo).value();
-        rec.Set(f::ARMO::editorId, std::string("ArmorA"));
-        rec.Set(f::ARMO::fullName, esper::LocalizedString{ 0, "Armor A (modded)" });
-        rec.Set(f::ARMO::keywords, std::vector<esper::FormId>{ { kwAInMod }, { fx.kwB } });
+        Armo(rec).SetEditorId("ArmorA");
+        Armo(rec).SetFullName({ 0, "Armor A (modded)" });
+        Armo(rec).SetKeywords({ { { kwAInMod } }, { { fx.kwB } } });
         esper::RecHeader h{};
         h.sig = kArmo;
         h.formId = armorAInMod;

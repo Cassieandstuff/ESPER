@@ -70,7 +70,6 @@
 
 // Schema-driven records (the successor to the typed Records*.h family; both
 // coexist until the migration in docs/schema-design.md completes):
-// esper::Record + generated handles (esper::fields) + typed views (esper::view).
+// esper::Record + generated typed views (esper::view, made with view::As<V>).
 #include <ESPER/Record.h>
-#include <ESPER/generated/Fields.h>
 #include <ESPER/generated/Views.h>
