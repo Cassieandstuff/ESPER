@@ -1,0 +1,9 @@
+# BODT: the legacy biped data. 12 bytes, or 8 (ends at the break) without the
+# armor type: 9 of 10 vanilla ARMO BODT are 8 bytes; every ARMA BODT is 12.
+struct: LegacyBiped
+fields:
+  - { name: bipedFlags,   type: u32 }
+  - { name: generalFlags, type: u8 }
+  - { name: pad,          type: "u8[3]" }
+  - { break: true }
+  - { name: armorType,    type: u32 }

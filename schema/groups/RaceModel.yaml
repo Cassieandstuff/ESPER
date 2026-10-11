@@ -1,0 +1,7 @@
+# One sex's model in a RACE section (the NAM3 behavior graph), MNAM ... or, with
+# sigs: { MNAM: FNAM }, FNAM ....
+group: RaceModel
+open: MNAM
+members:
+  - { sig: MNAM, name: start, type: marker }
+  - { use: Model, name: model }

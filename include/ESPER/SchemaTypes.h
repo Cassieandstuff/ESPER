@@ -24,6 +24,7 @@
 //   LookupDef  a (table, column) a union selects on: key → value rows, sorted by key.
 // ─────────────────────────────────────────────────────────────────────────────
 
+#include <cstddef>
 #include <cstdint>
 #include <span>
 #include <string_view>
@@ -209,6 +210,21 @@ struct SchemaSet {
         return nullptr;
     }
 };
+
+// The element width of an array the engine stores packed: an array whose
+// element is a plain number (not a FormID, string or composite) keeps its
+// elements as raw little-endian bytes in Value::bytes instead of one Value per
+// element. 0 when `arrayType` isn't such an array.
+constexpr size_t PackedElementWidth(const SchemaSet& s, const TypeDef& arrayType) {
+    if (arrayType.kind != Kind::Array) return 0;
+    switch (s.types[arrayType.ref].kind) {
+    case Kind::U8:  case Kind::I8:  return 1;
+    case Kind::U16: case Kind::I16: return 2;
+    case Kind::U32: case Kind::I32: case Kind::F32: case Kind::Sig4: return 4;
+    case Kind::U64: case Kind::I64: return 8;
+    default: return 0;
+    }
+}
 
 // constexpr signature helper for generated code: SigOf("ARMO").
 constexpr uint32_t SigOf(const char (&s)[5]) {

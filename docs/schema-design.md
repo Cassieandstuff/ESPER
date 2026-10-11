@@ -613,6 +613,26 @@ Each step ships on its own. The typed `Records*.h` path kept working until step 
    her localized name and her race link resolves to NordRace. 55 vanilla records override into a
    new plugin, which saves and reloads clean; 45 are refused, all for opaque blobs. 49
    worldspaces index in 175 ms.
+   **RACE sexed sections (2026-10-10).** Modeled for the SCT port, which needs male and female
+   head parts and tint layers apart. Every male/female block opens with `MNAM`/`FNAM` inside a
+   marker-opened section:
+   - the skeletons;
+   - `NAM1` body data;
+   - `NAM3` behavior graph;
+   - one `NAM0` head-data section per sex: head parts, morphs, presets, hair colors, face
+     textures and tint layers.
+
+   The new groups are `RaceSkeleton`, `RaceBodyParts`, `RaceModel`, `RaceHead` and
+   `RaceTintLayer`.
+
+   Checked through the views against a marker census of all 204 vanilla races, every count
+   matches. For example, head parts are 248 male and 247 female, and tint layers 1,711 and 1,735.
+
+   Gate result:
+   - RACE raw 9,200 → 3,298; what's left is `DATA`, `ATKD` and a few small subrecords;
+   - 2,920 more visible FormIDs;
+   - 3,415 more links verified, 0 wrong;
+   - 98.42% of subrecords modeled overall.
 6. **Done (2026-10-10). API pass.** A usability review of the consumer surface
    found that SCT used none of the schema engine. It used the typed path plus hand-walked
    subrecords, and built its own facade over ESPER's gaps. Changes:
@@ -631,7 +651,22 @@ Each step ships on its own. The typed `Records*.h` path kept working until step 
    **Field handles (`Fields.h`) dropped.** Nothing outside tests used them, and they duplicated
    the views without the views' record-type check. One typed API remains: views. Generic tools
    use string paths (`Record::Find`).
-7. **Port SCT.** sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
+7. **In progress (2026-10-10): port SCT.** On SCT branch `claude/esper-schema-port`. sct-esm's
+   `Database` keeps its public interface but sits on `LoadOrderDocument`, and every hand parser
+   and typed-path struct became a view call.
+
+   Changes to ESPER along the way:
+   - RACE sexed sections, so male and female head data are distinct.
+   - ARMO/ARMA `BODT` as a shared `LegacyBiped` struct with a break, which leaves ARMO with 0
+     raw subrecords.
+   - HDPT morph parts as `NAM0`/`NAM1` groups.
+   - The generator now rejects two groups that would share one view class.
+   - The engine stores arrays of plain numbers packed, and reserves struct and array storage.
+
+   Equivalence: an old-vs-new dump of sct-esm over the vanilla load order matches for every
+   NPC, face tint, armor, armor part and terrain cell. It differs only in two SCT bugs the port
+   fixes, logged in SCT's editor bug log as ED-5 (placed armor got garbage mesh paths) and ED-6
+   (localized worldspace and cell names were empty). Decode speed is logged in bugs.md. sct-esm and Scene Editor v2 move to typed views and `LoadOrderDocument`, and SCT's
    ESPER pin is bumped.
 8. **Done (2026-10-10). Delete the typed world.** Done before the SCT port, so SCT ports once, to
    the final API. Removed:

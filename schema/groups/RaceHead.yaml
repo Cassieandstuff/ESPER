@@ -1,0 +1,24 @@
+# RACE head data for one sex (one NAM0 section), MNAM ... (male) or, with
+# sigs: { MNAM: FNAM, RPRM: RPRF, AHCM: AHCF, FTSM: FTSF, DFTM: DFTF }, FNAM ...
+# (female). Layout from a section census of every vanilla RACE; targets from
+# schema-probe (RPRM/RPRF 100% NPC_, AHCM/AHCF 100% CLFM, FTSM/FTSF/DFTM/DFTF
+# 100% TXST; MPAI is an index 0-3; MPAV has no reference-like offset, --scan).
+group: RaceHead
+open: MNAM
+members:
+  - { sig: MNAM, name: start, type: marker }
+  - group: headParts
+    repeat: true
+    members:
+      - { sig: INDX, name: index, type: u32 }
+      - { sig: HEAD, name: part,  type: formid, to: [HDPT] }
+  - group: morphs
+    repeat: true
+    members:
+      - { sig: MPAI, name: index, type: u32 }
+      - { sig: MPAV, name: flags, type: "u32[8]" }
+  - { sig: RPRM, name: racePresets,        type: formid, repeat: true, to: [NPC_] }
+  - { sig: AHCM, name: hairColors,         type: formid, repeat: true, to: [CLFM] }
+  - { sig: FTSM, name: faceTextures,       type: formid, repeat: true, to: [TXST] }
+  - { sig: DFTM, name: defaultFaceTexture, type: formid, to: [TXST] }
+  - { use: RaceTintLayer, name: tintLayers, repeat: true }

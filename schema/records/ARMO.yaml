@@ -16,6 +16,7 @@ members:
   - { sig: ICO2, name: femaleIcon,      type: zstring }
   - { sig: MIC2, name: femaleMsgIcon,   type: zstring }
   - { sig: BOD2, name: biped,           type: BipedBodyTemplate }
+  - { sig: BODT, name: legacyBiped,     type: LegacyBiped }
   - { sig: YNAM, name: pickupSound,     type: formid, to: [SNDR] }
   - { sig: ZNAM, name: dropSound,       type: formid, to: [SNDR] }
   - { sig: BMCT, name: ragdollTemplate, type: zstring }

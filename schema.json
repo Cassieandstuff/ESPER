@@ -2913,13 +2913,16 @@
                 }
               },
               {
+                "break": true
+              },
+              {
                 "name": "armorType",
                 "type": {
                   "kind": "u32"
                 }
               }
             ],
-            "name": "ArmorAddonLegacyBiped"
+            "name": "LegacyBiped"
           }
         }
       ]
@@ -5238,21 +5241,62 @@
           }
         },
         {
-          "name": "skeletonModels",
-          "sig": "ANAM",
-          "type": {
-            "kind": "zstring"
-          },
-          "repeat": true
+          "name": "maleSkeleton",
+          "group": "RaceSkeleton",
+          "members": [
+            {
+              "name": "start",
+              "sig": "MNAM",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "path",
+              "sig": "ANAM",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "MODT",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            }
+          ],
+          "open": "MNAM"
         },
         {
-          "name": "modelData",
-          "sig": "MODT",
-          "type": {
-            "kind": "bytes",
-            "formIds": "none"
-          },
-          "repeat": true
+          "name": "femaleSkeleton",
+          "group": "RaceSkeleton",
+          "members": [
+            {
+              "name": "start",
+              "sig": "FNAM",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "path",
+              "sig": "ANAM",
+              "type": {
+                "kind": "zstring"
+              }
+            },
+            {
+              "name": "data",
+              "sig": "MODT",
+              "type": {
+                "kind": "bytes",
+                "formIds": "none"
+              }
+            }
+          ],
+          "open": "FNAM"
         },
         {
           "name": "movementNames",
@@ -5300,77 +5344,6 @@
           }
         },
         {
-          "name": "tintLayers",
-          "group": "RaceTintLayers",
-          "members": [
-            {
-              "name": "index",
-              "sig": "TINI",
-              "type": {
-                "kind": "u16"
-              }
-            },
-            {
-              "name": "texture",
-              "sig": "TINT",
-              "type": {
-                "kind": "zstring"
-              }
-            },
-            {
-              "name": "maskType",
-              "sig": "TINP",
-              "type": {
-                "kind": "u16"
-              },
-              "optional": true
-            },
-            {
-              "name": "defaultColor",
-              "sig": "TIND",
-              "type": {
-                "kind": "formid",
-                "to": [
-                  "CLFM"
-                ]
-              },
-              "optional": true
-            },
-            {
-              "name": "presets",
-              "group": "RaceTintLayersPresets",
-              "members": [
-                {
-                  "name": "color",
-                  "sig": "TINC",
-                  "type": {
-                    "kind": "formid",
-                    "to": [
-                      "CLFM"
-                    ]
-                  }
-                },
-                {
-                  "name": "value",
-                  "sig": "TINV",
-                  "type": {
-                    "kind": "f32"
-                  }
-                },
-                {
-                  "name": "id",
-                  "sig": "TIRS",
-                  "type": {
-                    "kind": "u16"
-                  }
-                }
-              ],
-              "repeat": true
-            }
-          ],
-          "repeat": true
-        },
-        {
           "name": "facegenMainClamp",
           "sig": "PNAM",
           "type": {
@@ -5400,20 +5373,356 @@
           "repeat": true
         },
         {
-          "name": "partIndices",
-          "sig": "INDX",
-          "type": {
-            "kind": "u32"
-          },
-          "repeat": true
+          "name": "bodyData",
+          "group": "RaceBodyData",
+          "members": [
+            {
+              "name": "start",
+              "sig": "NAM1",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "male",
+              "group": "RaceBodyParts",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "MNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "parts",
+                  "group": "RaceBodyPartsParts",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "INDX",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "model",
+                      "group": "Model",
+                      "members": [
+                        {
+                          "name": "path",
+                          "sig": "MODL",
+                          "type": {
+                            "kind": "zstring"
+                          }
+                        },
+                        {
+                          "name": "data",
+                          "sig": "MODT",
+                          "type": {
+                            "kind": "bytes",
+                            "formIds": "none"
+                          }
+                        },
+                        {
+                          "name": "swap",
+                          "sig": "MODS",
+                          "type": {
+                            "kind": "array",
+                            "element": {
+                              "kind": "struct",
+                              "fields": [
+                                {
+                                  "name": "name",
+                                  "type": {
+                                    "kind": "array",
+                                    "element": {
+                                      "kind": "u8"
+                                    },
+                                    "countPrefix": "u32"
+                                  }
+                                },
+                                {
+                                  "name": "texture",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "TXST"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "index",
+                                  "type": {
+                                    "kind": "i32"
+                                  }
+                                }
+                              ],
+                              "name": "AlternateTexture"
+                            },
+                            "countPrefix": "u32"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "MNAM"
+            },
+            {
+              "name": "female",
+              "group": "RaceBodyParts",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "FNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "parts",
+                  "group": "RaceBodyPartsParts",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "INDX",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "model",
+                      "group": "Model",
+                      "members": [
+                        {
+                          "name": "path",
+                          "sig": "MODL",
+                          "type": {
+                            "kind": "zstring"
+                          }
+                        },
+                        {
+                          "name": "data",
+                          "sig": "MODT",
+                          "type": {
+                            "kind": "bytes",
+                            "formIds": "none"
+                          }
+                        },
+                        {
+                          "name": "swap",
+                          "sig": "MODS",
+                          "type": {
+                            "kind": "array",
+                            "element": {
+                              "kind": "struct",
+                              "fields": [
+                                {
+                                  "name": "name",
+                                  "type": {
+                                    "kind": "array",
+                                    "element": {
+                                      "kind": "u8"
+                                    },
+                                    "countPrefix": "u32"
+                                  }
+                                },
+                                {
+                                  "name": "texture",
+                                  "type": {
+                                    "kind": "formid",
+                                    "to": [
+                                      "TXST"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "index",
+                                  "type": {
+                                    "kind": "i32"
+                                  }
+                                }
+                              ],
+                              "name": "AlternateTexture"
+                            },
+                            "countPrefix": "u32"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "FNAM"
+            }
+          ],
+          "open": "NAM1"
         },
         {
-          "name": "modelPaths",
-          "sig": "MODL",
-          "type": {
-            "kind": "zstring"
-          },
-          "repeat": true
+          "name": "behaviorGraph",
+          "group": "RaceBehaviorGraph",
+          "members": [
+            {
+              "name": "start",
+              "sig": "NAM3",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "male",
+              "group": "RaceModel",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "MNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "model",
+                  "group": "Model",
+                  "members": [
+                    {
+                      "name": "path",
+                      "sig": "MODL",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "data",
+                      "sig": "MODT",
+                      "type": {
+                        "kind": "bytes",
+                        "formIds": "none"
+                      }
+                    },
+                    {
+                      "name": "swap",
+                      "sig": "MODS",
+                      "type": {
+                        "kind": "array",
+                        "element": {
+                          "kind": "struct",
+                          "fields": [
+                            {
+                              "name": "name",
+                              "type": {
+                                "kind": "array",
+                                "element": {
+                                  "kind": "u8"
+                                },
+                                "countPrefix": "u32"
+                              }
+                            },
+                            {
+                              "name": "texture",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "TXST"
+                                ]
+                              }
+                            },
+                            {
+                              "name": "index",
+                              "type": {
+                                "kind": "i32"
+                              }
+                            }
+                          ],
+                          "name": "AlternateTexture"
+                        },
+                        "countPrefix": "u32"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "open": "MNAM"
+            },
+            {
+              "name": "female",
+              "group": "RaceModel",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "FNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "model",
+                  "group": "Model",
+                  "members": [
+                    {
+                      "name": "path",
+                      "sig": "MODL",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "data",
+                      "sig": "MODT",
+                      "type": {
+                        "kind": "bytes",
+                        "formIds": "none"
+                      }
+                    },
+                    {
+                      "name": "swap",
+                      "sig": "MODS",
+                      "type": {
+                        "kind": "array",
+                        "element": {
+                          "kind": "struct",
+                          "fields": [
+                            {
+                              "name": "name",
+                              "type": {
+                                "kind": "array",
+                                "element": {
+                                  "kind": "u8"
+                                },
+                                "countPrefix": "u32"
+                              }
+                            },
+                            {
+                              "name": "texture",
+                              "type": {
+                                "kind": "formid",
+                                "to": [
+                                  "TXST"
+                                ]
+                              }
+                            },
+                            {
+                              "name": "index",
+                              "type": {
+                                "kind": "i32"
+                              }
+                            }
+                          ],
+                          "name": "AlternateTexture"
+                        },
+                        "countPrefix": "u32"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "open": "FNAM"
+            }
+          ],
+          "open": "NAM3"
         },
         {
           "name": "bodyPartData",
@@ -5547,11 +5856,372 @@
           }
         },
         {
-          "name": "headParts",
-          "sig": "HEAD",
-          "type": {
-            "kind": "formid"
-          },
+          "name": "headData",
+          "group": "RaceHeadData",
+          "members": [
+            {
+              "name": "start",
+              "sig": "NAM0",
+              "type": {
+                "kind": "marker"
+              }
+            },
+            {
+              "name": "male",
+              "group": "RaceHead",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "MNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "headParts",
+                  "group": "RaceHeadHeadParts",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "INDX",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "part",
+                      "sig": "HEAD",
+                      "type": {
+                        "kind": "formid",
+                        "to": [
+                          "HDPT"
+                        ]
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "morphs",
+                  "group": "RaceHeadMorphs",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "MPAI",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "flags",
+                      "sig": "MPAV",
+                      "type": {
+                        "kind": "array",
+                        "element": {
+                          "kind": "u32"
+                        },
+                        "count": 8
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "racePresets",
+                  "sig": "RPRM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "NPC_"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "hairColors",
+                  "sig": "AHCM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "CLFM"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "faceTextures",
+                  "sig": "FTSM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "TXST"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "defaultFaceTexture",
+                  "sig": "DFTM",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "TXST"
+                    ]
+                  }
+                },
+                {
+                  "name": "tintLayers",
+                  "group": "RaceTintLayer",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "TINI",
+                      "type": {
+                        "kind": "u16"
+                      }
+                    },
+                    {
+                      "name": "texture",
+                      "sig": "TINT",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "maskType",
+                      "sig": "TINP",
+                      "type": {
+                        "kind": "u16"
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "defaultColor",
+                      "sig": "TIND",
+                      "type": {
+                        "kind": "formid",
+                        "to": [
+                          "CLFM"
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "presets",
+                      "group": "RaceTintLayerPresets",
+                      "members": [
+                        {
+                          "name": "color",
+                          "sig": "TINC",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "CLFM"
+                            ]
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "sig": "TINV",
+                          "type": {
+                            "kind": "f32"
+                          }
+                        },
+                        {
+                          "name": "id",
+                          "sig": "TIRS",
+                          "type": {
+                            "kind": "u16"
+                          }
+                        }
+                      ],
+                      "repeat": true
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "MNAM"
+            },
+            {
+              "name": "female",
+              "group": "RaceHead",
+              "members": [
+                {
+                  "name": "start",
+                  "sig": "FNAM",
+                  "type": {
+                    "kind": "marker"
+                  }
+                },
+                {
+                  "name": "headParts",
+                  "group": "RaceHeadHeadParts",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "INDX",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "part",
+                      "sig": "HEAD",
+                      "type": {
+                        "kind": "formid",
+                        "to": [
+                          "HDPT"
+                        ]
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "morphs",
+                  "group": "RaceHeadMorphs",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "MPAI",
+                      "type": {
+                        "kind": "u32"
+                      }
+                    },
+                    {
+                      "name": "flags",
+                      "sig": "MPAV",
+                      "type": {
+                        "kind": "array",
+                        "element": {
+                          "kind": "u32"
+                        },
+                        "count": 8
+                      }
+                    }
+                  ],
+                  "repeat": true
+                },
+                {
+                  "name": "racePresets",
+                  "sig": "RPRF",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "NPC_"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "hairColors",
+                  "sig": "AHCF",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "CLFM"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "faceTextures",
+                  "sig": "FTSF",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "TXST"
+                    ]
+                  },
+                  "repeat": true
+                },
+                {
+                  "name": "defaultFaceTexture",
+                  "sig": "DFTF",
+                  "type": {
+                    "kind": "formid",
+                    "to": [
+                      "TXST"
+                    ]
+                  }
+                },
+                {
+                  "name": "tintLayers",
+                  "group": "RaceTintLayer",
+                  "members": [
+                    {
+                      "name": "index",
+                      "sig": "TINI",
+                      "type": {
+                        "kind": "u16"
+                      }
+                    },
+                    {
+                      "name": "texture",
+                      "sig": "TINT",
+                      "type": {
+                        "kind": "zstring"
+                      }
+                    },
+                    {
+                      "name": "maskType",
+                      "sig": "TINP",
+                      "type": {
+                        "kind": "u16"
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "defaultColor",
+                      "sig": "TIND",
+                      "type": {
+                        "kind": "formid",
+                        "to": [
+                          "CLFM"
+                        ]
+                      },
+                      "optional": true
+                    },
+                    {
+                      "name": "presets",
+                      "group": "RaceTintLayerPresets",
+                      "members": [
+                        {
+                          "name": "color",
+                          "sig": "TINC",
+                          "type": {
+                            "kind": "formid",
+                            "to": [
+                              "CLFM"
+                            ]
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "sig": "TINV",
+                          "type": {
+                            "kind": "f32"
+                          }
+                        },
+                        {
+                          "name": "id",
+                          "sig": "TIRS",
+                          "type": {
+                            "kind": "u16"
+                          }
+                        }
+                      ],
+                      "repeat": true
+                    }
+                  ],
+                  "repeat": true
+                }
+              ],
+              "open": "FNAM"
+            }
+          ],
+          "open": "NAM0",
           "repeat": true
         },
         {
@@ -23960,6 +24630,47 @@
           }
         },
         {
+          "name": "legacyBiped",
+          "sig": "BODT",
+          "type": {
+            "kind": "struct",
+            "fields": [
+              {
+                "name": "bipedFlags",
+                "type": {
+                  "kind": "u32"
+                }
+              },
+              {
+                "name": "generalFlags",
+                "type": {
+                  "kind": "u8"
+                }
+              },
+              {
+                "name": "pad",
+                "type": {
+                  "kind": "array",
+                  "element": {
+                    "kind": "u8"
+                  },
+                  "count": 3
+                }
+              },
+              {
+                "break": true
+              },
+              {
+                "name": "armorType",
+                "type": {
+                  "kind": "u32"
+                }
+              }
+            ],
+            "name": "LegacyBiped"
+          }
+        },
+        {
           "name": "pickupSound",
           "sig": "YNAM",
           "type": {
@@ -33468,19 +34179,24 @@
           "repeat": true
         },
         {
-          "name": "partTypes",
-          "sig": "NAM0",
-          "type": {
-            "kind": "u32"
-          },
-          "repeat": true
-        },
-        {
-          "name": "partFiles",
-          "sig": "NAM1",
-          "type": {
-            "kind": "zstring"
-          },
+          "name": "parts",
+          "group": "HeadPartParts",
+          "members": [
+            {
+              "name": "type",
+              "sig": "NAM0",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "file",
+              "sig": "NAM1",
+              "type": {
+                "kind": "zstring"
+              }
+            }
+          ],
           "repeat": true
         },
         {

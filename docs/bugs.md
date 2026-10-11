@@ -5,9 +5,40 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
 
 ## Open
 
-None.
+### Decoding struct-heavy records is several times slower than the deleted typed path — OPEN
+- **Symptom:** found 2026-10-10 porting SCT. Decoding one vanilla LAND takes about 150 µs
+  (Skyrim.esm, 4,000 records), and SCT's terrain query costs about 0.45 ms per cell, against
+  about 0.08 ms before the port. Loading every Tamriel cell would take about 5 s instead of
+  about 1 s. RACE takes about 100 µs per record.
+- **Ruled out:**
+  - Arrays of plain numbers. They're now stored packed (one `Value::bytes`, not a `Value` per
+    element), which took LAND from 198 to 147 µs, together with reserving struct and array
+    storage.
+  - Repeated decodes in SCT. sct-esm now caches its dependency records.
+- **Root cause:** every struct field and every element of a struct array is its own `Value`:
+  ~96 bytes, holding a string and two vectors, so typically one or two heap allocations. LAND's
+  `VTXT` alpha cells (`LandAlphaCell[]`, thousands per record) dominate.
+  ([Record.h](../include/ESPER/Record.h) `Value`;
+  [Record.cpp](../cpp/engine/Record.cpp) `Parse`.)
+- **Fix direction:** a compact value representation. Candidates: store fixed-size, plain-number
+  structs packed like scalar arrays, with views reading fields by offset; or a lighter `Value`
+  with an arena or small-buffer storage. Measure with the per-type decode benchmark first.
 
 ## Fixed
+
+### Two different groups could generate one view class, silently dropping one — FIXED
+- **Symptom:** an inline group whose class name (record name + group name) equals a reusable
+  group's name produced a single view class. One group's accessors were lost, and accessors
+  typed with that name pointed at the wrong group. Found 2026-10-10 modeling RACE: the inline
+  `headData` section (class `RaceHeadData`) collided with a reusable group of that name, so
+  `RaceHeadData::Male()` returned the section's own view instead of one sex's head data.
+- **Root cause:** `check_view_names` ([schemagen.py](../tools/schemagen/schemagen.py)) claimed
+  a group as `group <name>`, so two distinct groups with the same name looked identical. It
+  also skipped delimited groups entirely (it only claimed `ordered` ones). `emit_views` dedups
+  classes by name.
+- **Fix:** groups record their origin (the file or member that defines them). Every non-root
+  group claims its class name with that origin, so every use of one reusable definition shares a
+  class, and two definitions can't. `schemagen_test` covers it; the RACE group is now `RaceHead`.
 
 ### Typed views exposed only the first occurrence of a repeated struct, and arrays of structs as untyped values — FIXED
 - **Symptom:** the generated view for a repeated struct member returned one struct view, the

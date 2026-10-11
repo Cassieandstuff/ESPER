@@ -1,4 +1,6 @@
-# Seeded from the typed path (RaceRec, include/ESPER/Records*.h) in migration step 2.
+# Seeded from the typed path (RaceRec) in migration step 2. Sexed sections
+# (skeleton, NAM1 body data, NAM3 behavior graph, NAM0 head data) modeled from a
+# section census of every vanilla RACE: each sex's block opens with MNAM/FNAM.
 record: RACE
 name: Race
 members:
@@ -11,34 +13,29 @@ members:
   - { sig: BOD2, name: biped, type: BipedBodyTemplate }   # BOD2
   - { sig: KSIZ, name: keywordCount, type: u32, countOf: keywords }   # KSIZ
   - { sig: KWDA, name: keywords, type: "formid[]" }   # KWDA
-  - { sig: ANAM, name: skeletonModels, type: zstring, repeat: true }   # ANAM (male, then female)
-  - { sig: MODT, name: modelData, type: bytes, formIds: none, repeat: true }   # MODT (opaque, follows each model)
+  - { use: RaceSkeleton, name: maleSkeleton }
+  - { use: RaceSkeleton, name: femaleSkeleton, sigs: { MNAM: FNAM } }
   - { sig: MTNM, name: movementNames, type: bytes, repeat: true }   # MTNM (4-char tags)
   - { sig: VTCK, name: voices, type: "formid[]" }   # VTCK (male+female in one sub)
   - { sig: DNAM, name: decapArmors, type: "formid[]" }   # DNAM (male+female)
   - { sig: HCLF, name: defaultHairColors, type: "formid[]" }   # HCLF (male+female)
   - { sig: TINL, name: tintCount, type: u16 }   # TINL
-  # Tint layers (modeled as groups in step 4; the typed path flattened them into
-  # parallel vectors and regrouped them positionally).
-  - group: tintLayers
-    repeat: true
-    members:
-      - { sig: TINI, name: index,        type: u16 }
-      - { sig: TINT, name: texture,      type: zstring }
-      - { sig: TINP, name: maskType,     type: u16, optional: true }
-      - { sig: TIND, name: defaultColor, type: formid, optional: true, to: [CLFM] }
-      - group: presets
-        repeat: true
-        members:
-          - { sig: TINC, name: color, type: formid, to: [CLFM] }
-          - { sig: TINV, name: value, type: f32 }
-          - { sig: TIRS, name: id,    type: u16 }
   - { sig: PNAM, name: facegenMainClamp, type: f32 }   # PNAM
   - { sig: UNAM, name: facegenFaceClamp, type: f32 }   # UNAM
   - { sig: ATKR, name: attackRace, type: formid }   # ATKR
   - { sig: ATKE, name: attackEvents, type: zstring, repeat: true }   # ATKE
-  - { sig: INDX, name: partIndices, type: u32, repeat: true }   # INDX
-  - { sig: MODL, name: modelPaths, type: zstring, repeat: true }   # MODL (egt / behavior graph)
+  - group: bodyData
+    open: NAM1
+    members:
+      - { sig: NAM1, name: start, type: marker }
+      - { use: RaceBodyParts, name: male }
+      - { use: RaceBodyParts, name: female, sigs: { MNAM: FNAM } }
+  - group: behaviorGraph
+    open: NAM3
+    members:
+      - { sig: NAM3, name: start, type: marker }
+      - { use: RaceModel, name: male }
+      - { use: RaceModel, name: female, sigs: { MNAM: FNAM } }
   - { sig: GNAM, name: bodyPartData, type: formid }   # GNAM
   - { sig: NAM4, name: materialType, type: formid }   # NAM4
   - { sig: NAM5, name: impactDataSet, type: formid }   # NAM5
@@ -57,5 +54,12 @@ members:
   - { sig: SNMV, name: baseMoveSwim, type: formid }   # SNMV
   - { sig: FLMV, name: baseMoveFly, type: formid }   # FLMV
   - { sig: SPMV, name: baseMoveSneak, type: formid }   # SNKMV? (kept: SPMV sprint)
-  - { sig: HEAD, name: headParts, type: formid, repeat: true }   # HEAD
+  # Head data: one NAM0 section per sex (male first); a race may have none.
+  - group: headData
+    repeat: true
+    open: NAM0
+    members:
+      - { sig: NAM0, name: start, type: marker }
+      - { use: RaceHead, name: male }
+      - { use: RaceHead, name: female, sigs: { MNAM: FNAM, RPRM: RPRF, AHCM: AHCF, FTSM: FTSF, DFTM: DFTF } }
   - { sig: RNAM, name: armorRace, type: formid }   # RNAM

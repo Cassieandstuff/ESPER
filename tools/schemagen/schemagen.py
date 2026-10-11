@@ -159,6 +159,7 @@ class Group:
     entries: list = field(default_factory=list)   # (sig, member index)
     open_sig: str | None = None                   # delimited: the opening sig (first member)
     end_sig: str | None = None                    # delimited: the closing sig (last member)
+    origin: str = ""                              # where it's defined: one view class per origin
 
 
 class Schema:
@@ -613,7 +614,7 @@ class Schema:
                     remap: dict[str, str], open_sig=None, end_sig=None) -> int:
         if not isinstance(members, list) or not members:
             fail(where, "a scope needs a non-empty members list")
-        group = Group(name=view_name, members=[], ordered=ordered)
+        group = Group(name=view_name, members=[], ordered=ordered, origin=where)
         gidx = len(self.groups)
         self.groups.append(group)
         names = set()
@@ -775,9 +776,10 @@ class Schema:
         for t in self.types:
             if t.kind == "Struct" and t.name:
                 claim(t.name, f"struct {t.name}")
-        for g in self.groups:
-            if g.ordered:
-                claim(g.name, f"group {g.name}")
+        roots = {root for _, _, root in self.records}
+        for i, g in enumerate(self.groups):          # every use of one definition shares a class
+            if i not in roots:
+                claim(g.name, f"the group defined at {g.origin}")
         for g in self.groups:                        # accessor == class name → constructor clash
             for m in g.members:
                 if pascal(m.name) == g.name:

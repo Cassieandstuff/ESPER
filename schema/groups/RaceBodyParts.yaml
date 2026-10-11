@@ -1,0 +1,11 @@
+# RACE body data for one sex (NAM1 section), MNAM ... or, with sigs: { MNAM: FNAM },
+# FNAM ...: indexed body-part models.
+group: RaceBodyParts
+open: MNAM
+members:
+  - { sig: MNAM, name: start, type: marker }
+  - group: parts
+    repeat: true
+    members:
+      - { sig: INDX, name: index, type: u32 }
+      - { use: Model, name: model }

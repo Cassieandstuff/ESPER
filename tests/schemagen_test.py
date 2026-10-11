@@ -145,6 +145,16 @@ class Rejects(unittest.TestCase):
                 - { name: b, type: u8, if: { field: nope, min: 1 } }
         """)
 
+    def test_group_view_names_must_be_unique(self):
+        # An inline group `test.g` is view class TestG, as is a reusable group named TestG.
+        self.rejects("is used by both", """
+            - group: g
+              open: NAM0
+              members:
+                - { sig: NAM0, name: start, type: marker }
+            - { use: TestG, name: other }
+        """, {"groups/TestG.yaml": "group: TestG\nmembers:\n  - { sig: NAM1, name: a, type: u8 }\n"})
+
     def test_selector_member_must_exist(self):
         self.rejects("isn't a subrecord member anywhere", """
             - sig: EPFD

@@ -1,0 +1,9 @@
+# RACE skeleton slot, MNAM ... (male) or, used with sigs: { MNAM: FNAM }, FNAM ...
+# (female): the skeleton model and its texture hashes. From esm-dump and a
+# section census of every vanilla RACE.
+group: RaceSkeleton
+open: MNAM
+members:
+  - { sig: MNAM, name: start, type: marker }
+  - { sig: ANAM, name: path,  type: zstring }
+  - { sig: MODT, name: data,  type: bytes, formIds: none }   # texture hashes

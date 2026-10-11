@@ -1,0 +1,14 @@
+# A RACE tint-layer template: mask texture and its color presets. One sex's set
+# lives in that sex's head data (RaceHead).
+group: RaceTintLayer
+members:
+  - { sig: TINI, name: index,        type: u16 }
+  - { sig: TINT, name: texture,      type: zstring }
+  - { sig: TINP, name: maskType,     type: u16, optional: true }
+  - { sig: TIND, name: defaultColor, type: formid, optional: true, to: [CLFM] }
+  - group: presets
+    repeat: true
+    members:
+      - { sig: TINC, name: color, type: formid, to: [CLFM] }
+      - { sig: TINV, name: value, type: f32 }
+      - { sig: TIRS, name: id,    type: u16 }

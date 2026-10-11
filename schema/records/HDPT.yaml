@@ -8,8 +8,12 @@ members:
   - { sig: DATA, name: flags, type: u8 }   # DATA
   - { sig: PNAM, name: type, type: u32 }   # PNAM (0=misc 1=face 2=eyes 3=hair …)
   - { sig: HNAM, name: extraParts, type: formid, repeat: true }   # HNAM (repeated)
-  - { sig: NAM0, name: partTypes, type: u32, repeat: true }   # NAM0 (0=race morph 1=tri 2=chargen)
-  - { sig: NAM1, name: partFiles, type: zstring, repeat: true }   # NAM1
+  # Morph files: NAM0 (0 race morph, 1 tri, 2 chargen) then its NAM1 path.
+  - group: parts
+    repeat: true
+    members:
+      - { sig: NAM0, name: type, type: u32 }
+      - { sig: NAM1, name: file, type: zstring }
   - { sig: TNAM, name: textureSet, type: formid }   # TNAM
   - { sig: CNAM, name: color, type: formid }   # CNAM (CLFM)
   - { sig: RNAM, name: validRaces, type: formid }   # RNAM (FLST)

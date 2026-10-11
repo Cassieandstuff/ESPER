@@ -65,6 +65,8 @@ struct LocalizedString {
 // A decoded value. Scalars, FormIDs, f32 bits and lstring ids live in `bits`
 // (floats are stored as their raw bits so NaN payloads survive); strings in
 // `str`; opaque bytes in `bytes`; struct fields and array elements in `items`.
+// An array of plain numbers (schema::PackedElementWidth) is stored packed: its
+// elements are the little-endian bytes in `bytes`, and `items` stays empty.
 // A struct decoded from a truncated (break) form has `present` < its field count.
 struct Value {
     static constexpr uint16_t kAll = 0xFFFF;
@@ -322,6 +324,16 @@ T Record::FromValue(const Value& v, const schema::TypeDef& t, const schema::Sche
             return out;
         }
         const schema::TypeDef& et = s.types[t.ref];
+        if (const size_t w = schema::PackedElementWidth(s, t)) {
+            out.reserve(v.bytes.size() / w);
+            Value item;
+            for (size_t at = 0; at + w <= v.bytes.size(); at += w) {
+                item.bits = 0;
+                for (size_t b = 0; b < w; ++b) item.bits |= static_cast<uint64_t>(v.bytes[at + b]) << (8 * b);
+                out.push_back(FromValue<E>(item, et, s));
+            }
+            return out;
+        }
         out.reserve(v.items.size());
         for (const Value& item : v.items) out.push_back(FromValue<E>(item, et, s));
         return out;
@@ -355,6 +367,14 @@ Value Record::ToValue(const T& x, const schema::TypeDef& t, const schema::Schema
             return v;
         }
         const schema::TypeDef& et = s.types[t.ref];
+        if (const size_t w = schema::PackedElementWidth(s, t)) {
+            v.bytes.reserve(x.size() * w);
+            for (const E& e : x) {
+                const uint64_t bits = ToValue<E>(e, et, s).bits;
+                for (size_t b = 0; b < w; ++b) v.bytes.push_back(static_cast<uint8_t>(bits >> (8 * b)));
+            }
+            return v;
+        }
         v.items.reserve(x.size());
         for (const E& e : x) v.items.push_back(ToValue<E>(e, et, s));
     } else {
@@ -406,7 +426,10 @@ inline size_t              Cursor::Count(const RelPath& p) const { return rec->C
 inline size_t              Cursor::Append(const RelPath& p) const { return rec->AppendAt(inst, p); }
 inline size_t              Cursor::Size(const RelPath& p) const {
     const Value* v = rec->FindValue(inst, p);
-    return v ? v->items.size() : 0;
+    if (!v) return 0;
+    const schema::TypeDef* t = rec->TypeAt(inst, p);
+    const size_t w = t ? schema::PackedElementWidth(rec->Schema(), *t) : 0;
+    return w ? v->bytes.size() / w : v->items.size();
 }
 inline void                Cursor::Resize(const RelPath& p, size_t n) const { rec->ResizeAt(inst, p, n); }
 inline std::vector<Cursor> Cursor::Groups(const RelPath& p) const { return rec->GroupsAt(inst, p); }

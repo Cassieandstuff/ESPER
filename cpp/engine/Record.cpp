@@ -172,6 +172,7 @@ bool Parse(ParseCtx& pc, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end
     }
     case Kind::Struct: {
         pc.frames.push_back(Frame{ &t, &out });
+        out.items.reserve(t.refCount);
         uint16_t present = 0;
         bool ok = true, truncated = false;
         for (uint16_t i = 0; i < t.refCount; ++i) {
@@ -190,12 +191,19 @@ bool Parse(ParseCtx& pc, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end
     }
     case Kind::Array: {
         uint64_t count = 0;
+        const size_t packed = schema::PackedElementWidth(s, t);
         switch (t.len) {
         case LenKind::Fixed:    count = t.count; break;
         case LenKind::Prefix8:  if (!ReadLE(p, end, 1, count)) return false; break;
         case LenKind::Prefix16: if (!ReadLE(p, end, 2, count)) return false; break;
         case LenKind::Prefix32: if (!ReadLE(p, end, 4, count)) return false; break;
         case LenKind::Rest:
+            if (packed) {                          // whole elements to the end
+                if (static_cast<size_t>(end - p) % packed != 0) return false;
+                out.bytes.assign(p, end);
+                p = end;
+                return true;
+            }
             while (p < end) {
                 const uint8_t* before = p;
                 out.items.emplace_back();
@@ -208,6 +216,13 @@ bool Parse(ParseCtx& pc, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end
         // Every element occupies at least one byte, so a count larger than the
         // bytes left is malformed: refuse it before looping.
         if (count > static_cast<uint64_t>(end - p)) return false;
+        if (packed) {
+            if (count * packed > static_cast<uint64_t>(end - p)) return false;
+            out.bytes.assign(p, p + count * packed);
+            p += count * packed;
+            return true;
+        }
+        out.items.reserve(static_cast<size_t>(count));
         for (uint64_t i = 0; i < count; ++i) {
             out.items.emplace_back();
             if (!Parse(pc, t.ref, p, end, out.items.back())) return false;
@@ -270,15 +285,24 @@ void Write(const SchemaSet& s, uint16_t typeIdx, const Value& v, const DecodeCtx
         }
         return;
     }
-    case Kind::Array:
+    case Kind::Array: {
+        const size_t packed = schema::PackedElementWidth(s, t);
+        const size_t count  = packed ? v.bytes.size() / packed : v.items.size();
         switch (t.len) {
-        case LenKind::Prefix8:  WriteLE(w, v.items.size(), 1); break;
-        case LenKind::Prefix16: WriteLE(w, v.items.size(), 2); break;
-        case LenKind::Prefix32: WriteLE(w, v.items.size(), 4); break;
+        case LenKind::Prefix8:  WriteLE(w, count, 1); break;
+        case LenKind::Prefix16: WriteLE(w, count, 2); break;
+        case LenKind::Prefix32: WriteLE(w, count, 4); break;
         default: break;
+        }
+        if (packed) {
+            // A fixed-count array always emits exactly `count` elements.
+            const size_t want = t.len == LenKind::Fixed ? t.count * packed : count * packed;
+            for (size_t i = 0; i < want; ++i) w.U8(i < v.bytes.size() ? v.bytes[i] : 0);
+            return;
         }
         for (const Value& item : v.items) Write(s, t.ref, item, ctx, w);
         return;
+    }
     case Kind::Union: {
         if (v.bits >= t.refCount) return;
         const schema::CaseDef& cd = s.cases[t.ref + static_cast<uint16_t>(v.bits)];
@@ -384,6 +408,8 @@ bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
         return false;
     }
     case Kind::Array:
+        if (schema::PackedElementWidth(s, t))
+            return !v.bytes.empty() && (s.types[t.ref].flags & schema::kRemapUnsafe);
         for (const Value& item : v.items)
             if (HasUnsafeBytes(s, t.ref, item)) return true;
         return false;
@@ -719,6 +745,7 @@ const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p)
             continue;
         }
         if (t->kind == Kind::Array) {
+            if (schema::PackedElementWidth(*set_, *t)) return nullptr;   // read the whole array
             if (i >= v->items.size()) return nullptr;
             t = &set_->types[t->ref];
             v = &v->items[i];
@@ -785,8 +812,10 @@ Value Record::DefaultValue(uint16_t typeIdx) const {
         }
         break;
     case Kind::Array:
-        if (t.len == LenKind::Fixed)
-            for (uint32_t i = 0; i < t.count; ++i) v.items.push_back(DefaultValue(t.ref));
+        if (t.len == LenKind::Fixed) {
+            if (const size_t w = schema::PackedElementWidth(*set_, t)) v.bytes.assign(t.count * w, 0);
+            else for (uint32_t i = 0; i < t.count; ++i) v.items.push_back(DefaultValue(t.ref));
+        }
         break;
     case Kind::Union: {
         // The default case if there is one, otherwise the first.
@@ -835,6 +864,7 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
                 continue;
             }
             if (t->kind == Kind::Array) {
+                if (schema::PackedElementWidth(*set_, *t)) return;   // set the whole array
                 if (i >= cur->items.size()) return;
                 cur = &cur->items[i];
                 t = &set_->types[t->ref];
@@ -961,8 +991,12 @@ void Record::ResizeAt(uint32_t inst, const RelPath& p, size_t n) {
     if (!t || t->kind != Kind::Array || t->len == LenKind::Fixed) return;
     const Value* have = FindValue(inst, p);
     Value v = have ? *have : Value{};
-    if (v.items.size() > n) v.items.resize(n);
-    while (v.items.size() < n) v.items.push_back(DefaultValue(t->ref));
+    if (const size_t w = schema::PackedElementWidth(*set_, *t)) {
+        v.bytes.resize(n * w, 0);
+    } else {
+        if (v.items.size() > n) v.items.resize(n);
+        while (v.items.size() < n) v.items.push_back(DefaultValue(t->ref));
+    }
     StoreValue(inst, p, std::move(v));
 }
 
@@ -980,7 +1014,9 @@ void Record::UpdateCount(uint32_t inst, uint16_t member) {
             if (k) count = k;
         } else if (const int32_t ni = FirstNode(inst, member); ni >= 0) {
             const Value& v = NodeValue(nodes_[static_cast<size_t>(ni)]);
-            count = set_->types[md.type].kind == Kind::Bytes ? v.bytes.size() : v.items.size();
+            const TypeDef& mt = set_->types[md.type];
+            const size_t w = schema::PackedElementWidth(*set_, mt);
+            count = mt.kind == Kind::Bytes ? v.bytes.size() : w ? v.bytes.size() / w : v.items.size();
         }
         RelPath cp;
         cp.idx[0] = c;
