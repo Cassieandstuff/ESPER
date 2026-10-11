@@ -4,12 +4,33 @@
 
 #include <ESPER/Record.h>
 
+#include <array>
+#include <bit>
 #include <cstdint>
 #include <optional>
 #include <string>
 #include <vector>
 
 namespace esper_test::view {
+
+static_assert(std::endian::native == std::endian::little,
+              "value structs mirror the little-endian packed layout");
+namespace value {
+#pragma pack(push, 1)
+struct Inner {
+    static constexpr size_t kPlainSize = 6;
+    uint16_t a{};
+    int32_t b{};
+};
+static_assert(sizeof(Inner) == 6);
+struct TestAlphaData {
+    static constexpr size_t kPlainSize = 8;
+    int32_t value{};
+    float weight{};
+};
+static_assert(sizeof(TestAlphaData) == 8);
+#pragma pack(pop)
+} // namespace value
 
 class Inner;
 class Outer;

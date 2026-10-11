@@ -393,7 +393,7 @@ consumers never run the generator.
 |---|---|
 | `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. A union type is `{ kind: union, by, cases: [{ when \| default, name?, type? }] }`. `remapUnsafe` appears where set. `tables` holds every table. Reusable groups and named structs appear expanded at each use. |
 | `include/ESPER/generated/Tables.h` | the engine's constexpr tables (`esper::schema::SchemaSet`) |
-| `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`, made with `esper::view::As<Name>(record)`): accessors only, over the generic engine. A union gets an `<Acc>Kind` enum of its cases, `<Acc>Case()` and `<Acc>Is<Case>()`. |
+| `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`, made with `esper::view::As<Name>(record)`): accessors only, over the generic engine. A union gets an `<Acc>Kind` enum of its cases, `<Acc>Case()` and `<Acc>Is<Case>()`. A *plain* struct (fixed size, numbers only: no FormIDs, strings, bytes, unions or breaks) also gets a packed value struct `esper::view::value::<Name>`; an array of plain structs reads and writes as `std::vector` of it. |
 
 ## 10. Reserved for later versions
 

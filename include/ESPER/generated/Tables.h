@@ -11,448 +11,448 @@ namespace esper::schema::tables {
 using namespace ::esper::schema;
 
 inline constexpr TypeDef kTypes[] = {
-    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 0: zstring
-    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 1: u8
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 4, 0, 0, "ColorRgba", Selector::None, nullptr, 0ULL, 0 },  // 2: struct:ColorRgba
-    { Kind::I16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 3: i16
-    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 4: wstring
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 0, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 5: if:structs/VmadScript.yaml field 1:VmadScriptStatus
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 2, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 6: if:structs/VmadProperty.yaml field 2:VmadPropertyStatus
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 7: formid
-    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 8: u16
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 4, 3, 0, 0, "VmadObjectV1", Selector::None, nullptr, 0ULL, 0 },  // 9: inline:VmadObjectV1
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 3, 0, 0, "VmadObjectV2", Selector::None, nullptr, 0ULL, 0 },  // 10: inline:VmadObjectV2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 4, 2, 0, 0, "VmadObject", Selector::Field, "objFormat", 0ULL, 0 },  // 11: union:structs/VmadObject.yaml:VmadObject
-    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 12: i32
-    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 13: f32
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 11, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 14: union:structs/VmadObject.yaml:VmadObject[count: u32]
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 15: wstring[count: u32]
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 12, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 16: i32[count: u32]
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 17: f32[count: u32]
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 18: u8[count: u32]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 6, 10, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 19: union:structs/VmadProperty.yaml field 3:VmadPropertyValue
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 10, 4, 0, 0, "VmadProperty", Selector::None, nullptr, 0ULL, 0 },  // 20: struct:VmadProperty
-    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 20, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 21: struct:VmadProperty[count: u16]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 14, 3, 0, 0, "VmadScript", Selector::None, nullptr, 0ULL, 0 },  // 22: struct:VmadScript
-    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 22, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 23: struct:VmadScript[count: u16]
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 24: bytes
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 17, 2, 0, 0, "VmadBodySupportedScripts", Selector::None, nullptr, 0ULL, 0 },  // 25: inline:VmadBodySupportedScripts
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 16, 1, 0, 0, nullptr, Selector::Field, "objFormat", 0ULL, 0 },  // 26: union:structs/Vmad.yaml field 2 case 0:VmadBodySupported
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 17, 1, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 27: union:structs/Vmad.yaml field 2:VmadBody
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 19, 3, 0, 0, "Vmad", Selector::None, nullptr, 0ULL, 0 },  // 28: struct:Vmad
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 29: u8[4]
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 30: f32[3]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 3, 0, 0, "RagdollBone", Selector::None, nullptr, 0ULL, 0 },  // 31: struct:RagdollBone
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 31, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 32: struct:RagdollBone[]
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 33: formid->KYWD
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 1, 4, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 34: formid->REFR,ACHR,PGRE,PHZD
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 25, 2, 0, 0, "PlacedNpcLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0 },  // 35: inline:PlacedNpcLinkedRefsKeyed
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 18, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 36: union:records/ACHR.yaml member 6:PlacedNpcLinkedRefs
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 5, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 37: formid->LCTN
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 6, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 38: formid->LCRT
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 7, 2, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 39: formid->REFR,ACHR
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 27, 2, 0, 0, "PlacedNpcActivateParents", Selector::None, nullptr, 0ULL, 0 },  // 40: inline:PlacedNpcActivateParents
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 41: marker
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 9, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 42: formid->IMGS
-    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 43: u32
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 10, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 44: formid->DIAL
-    { Kind::Sig4, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 45: sig4
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 20, 2, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 46: union:structs/TopicData.yaml field 1:TopicDataTopic
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 29, 2, 0, 0, "TopicData", Selector::None, nullptr, 0ULL, 0 },  // 47: struct:TopicData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 11, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 48: formid->ACHR
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 31, 2, 0, 0, "EnableParent", Selector::None, nullptr, 0ULL, 0 },  // 49: struct:EnableParent
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 33, 6, 0, 0, "Placement", Selector::None, nullptr, 0ULL, 0 },  // 50: struct:Placement
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 39, 6, 0, 0, "ObjectBounds", Selector::None, nullptr, 0ULL, 0 },  // 51: struct:ObjectBounds
-    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 52: lstring:strings
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 53: bytes:noids
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 12, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 54: formid->TXST
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 45, 3, 0, 0, "AlternateTexture", Selector::None, nullptr, 0ULL, 0 },  // 55: struct:AlternateTexture
-    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 55, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 56: struct:AlternateTexture[count: u32]
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 33, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 57: formid->KYWD[]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 48, 4, 0, 0, "DestructibleHeader", Selector::None, nullptr, 0ULL, 0 },  // 58: struct:DestructibleHeader
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 13, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 59: formid->EXPL
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 14, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 60: formid->DEBR
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 52, 7, 0, 0, "DestructionStage", Selector::None, nullptr, 0ULL, 0 },  // 61: struct:DestructionStage
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 59, 2, 0, 0, "AddonFlags", Selector::None, nullptr, 0ULL, 0 },  // 62: struct:AddonFlags
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 7, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 63: formid[]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 61, 5, 0, 0, "PotionData", Selector::None, nullptr, 0ULL, 0 },  // 64: struct:PotionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 66, 3, 0, 0, "EffectItem", Selector::None, nullptr, 0ULL, 0 },  // 65: struct:EffectItem
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 66: u8[3]
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 15, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 67: formid->GLOB
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 68: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 2, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 69: u8[2]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 70: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::U32, LenKind::None, StrTable::None, 2, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 71: u32
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 26, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 72: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 29, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 73: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 31, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 74: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 34, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 75: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 69, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 76: inline:ConditionData
-    { Kind::LString, LenKind::None, StrTable::DLStrings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 77: lstring:dlstrings
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 79, 4, 0, 0, "AmmoData", Selector::None, nullptr, 0ULL, 0 },  // 78: struct:AmmoData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 83, 2, 0, 0, "ItemValueWeight", Selector::None, nullptr, 0ULL, 0 },  // 79: struct:ItemValueWeight
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 85, 2, 0, 0, "BipedBodyTemplate", Selector::None, nullptr, 0ULL, 0 },  // 80: struct:BipedBodyTemplate
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 87, 8, 0, 0, "ArmaDnam", Selector::None, nullptr, 0ULL, 0 },  // 81: struct:ArmaDnam
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 95, 5, 0, 0, "LegacyBiped", Selector::None, nullptr, 0ULL, 0 },  // 82: struct:LegacyBiped
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 16, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 83: formid->ENCH
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 17, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 84: formid->SNDR
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 18, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 85: formid->EQUP
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 19, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 86: formid->IPDS
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 20, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 87: formid->MATT
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 21, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 88: formid->RACE
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 22, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 89: formid->ARMA
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 23, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 90: formid->ARMO
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 24, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 91: formid->SPEL
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 36, 2, 0, 0, nullptr, Selector::Field, "flags", 4ULL, 0 },  // 92: union:structs/BookData.yaml field 3:BookDataTeaches
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 100, 6, 0, 0, "BookData", Selector::None, nullptr, 0ULL, 0 },  // 93: struct:BookData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 38, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 94: union:records/CELL.yaml member 2:CellFlags
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 106, 3, 0, 0, "CellGrid", Selector::None, nullptr, 0ULL, 0 },  // 95: struct:CellGrid
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 6, 2, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 96: struct:ColorRgba[6]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 109, 19, 0, 0, "CellLighting", Selector::None, nullptr, 0ULL, 0 },  // 97: struct:CellLighting
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 1024, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 98: u8[1024]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 128, 2, 0, 0, "CellMaxHeight", Selector::None, nullptr, 0ULL, 0 },  // 99: inline:CellMaxHeight
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 12, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 100: f32[12]
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 16, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 101: f32[16]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 40, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 102: union:records/CELL.yaml member 10:CellWaterVelocity
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 130, 2, 0, 0, "ContainerEntry", Selector::None, nullptr, 0ULL, 0 },  // 103: struct:ContainerEntry
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 42, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 104: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 44, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 105: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 46, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 106: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 49, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 107: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 51, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 108: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 54, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 109: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 132, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 110: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 142, 2, 0, 0, "ContainerData", Selector::None, nullptr, 0ULL, 0 },  // 111: inline:ContainerData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 56, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 112: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 58, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 113: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 60, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 114: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 63, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 115: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 65, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 116: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 68, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 117: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 144, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 118: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 154, 3, 0, 0, "DialData", Selector::None, nullptr, 0ULL, 0 },  // 119: struct:DialData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 157, 6, 0, 0, "DualData", Selector::None, nullptr, 0ULL, 0 },  // 120: struct:DualData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 25, 2, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 121: formid->FACT,NPC_
-    { Kind::I8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 122: i8
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 163, 7, 0, 0, "EncounterZoneData", Selector::None, nullptr, 0ULL, 0 },  // 123: struct:EncounterZoneData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 170, 9, 0, 0, "EnchantData", Selector::None, nullptr, 0ULL, 0 },  // 124: struct:EnchantData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 70, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 125: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 72, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 126: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 74, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 127: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 77, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 128: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 79, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 129: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 82, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 130: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 179, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 131: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 189, 3, 0, 0, "FactionRelation", Selector::None, nullptr, 0ULL, 0 },  // 132: struct:FactionRelation
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 192, 6, 0, 0, "VendorValues", Selector::None, nullptr, 0ULL, 0 },  // 133: struct:VendorValues
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 84, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 134: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 86, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 135: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 88, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 136: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 91, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 137: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 93, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 138: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 96, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 139: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 198, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 140: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 208, 12, 0, 0, "CrimeValues", Selector::None, nullptr, 0ULL, 0 },  // 141: struct:CrimeValues
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 220, 2, 0, 0, "FurnitureWorkbench", Selector::None, nullptr, 0ULL, 0 },  // 142: inline:FurnitureWorkbench
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 222, 2, 0, 0, "FurnitureMarkerEntries", Selector::None, nullptr, 0ULL, 0 },  // 143: inline:FurnitureMarkerEntries
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 98, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 144: union:records/GMST.yaml member 1:GameSettingValue
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 224, 13, 0, 0, "GrassData", Selector::None, nullptr, 0ULL, 0 },  // 145: struct:GrassData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 237, 10, 0, 0, "HazardData", Selector::None, nullptr, 0ULL, 0 },  // 146: struct:HazardData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 247, 5, 0, 0, "IdleAnimationData", Selector::None, nullptr, 0ULL, 0 },  // 147: inline:IdleAnimationData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 100, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 148: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 102, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 149: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 104, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 150: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 107, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 151: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 109, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 152: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 112, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 153: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 252, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 154: inline:ConditionData
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 9, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 155: f32[9]
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 156: f32[4]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 262, 5, 0, 0, "ImageSpaceDof", Selector::None, nullptr, 0ULL, 0 },  // 157: inline:ImageSpaceDof
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 267, 2, 0, 0, "InfoFlags", Selector::None, nullptr, 0ULL, 0 },  // 158: struct:InfoFlags
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 269, 8, 0, 0, "ResponseData", Selector::None, nullptr, 0ULL, 0 },  // 159: struct:ResponseData
-    { Kind::LString, LenKind::None, StrTable::ILStrings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 160: lstring:ilstrings
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 114, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 161: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 116, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 162: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 118, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 163: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 121, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 164: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 123, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 165: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 126, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 166: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 277, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 167: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 287, 3, 0, 0, "DialogResponsesData", Selector::None, nullptr, 0ULL, 0 },  // 168: inline:DialogResponsesData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 27, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 169: formid->QUST
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 170: u32[5]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 290, 2, 0, 0, "IngredientData", Selector::None, nullptr, 0ULL, 0 },  // 171: struct:IngredientData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 128, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 172: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 130, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 173: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 132, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 174: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 135, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 175: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 137, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 176: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 140, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 177: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 292, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 178: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 302, 8, 0, 0, "ImpactData", Selector::None, nullptr, 0ULL, 0 },  // 179: struct:ImpactData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 310, 11, 0, 0, "DecalData", Selector::None, nullptr, 0ULL, 0 },  // 180: struct:DecalData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, "ImpactMapping", Selector::None, nullptr, 0ULL, 0 },  // 181: struct:ImpactMapping
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3267, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 182: u8[3267]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 323, 1, 0, 0, "LandVertexTriples", Selector::None, nullptr, 0ULL, 0 },  // 183: struct:LandVertexTriples
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 1089, 122, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 184: i8[1089]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 324, 3, 0, 0, "LandHeights", Selector::None, nullptr, 0ULL, 0 },  // 185: struct:LandHeights
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 327, 4, 0, 0, "LandBaseTexture", Selector::None, nullptr, 0ULL, 0 },  // 186: struct:LandBaseTexture
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 331, 4, 0, 0, "LandAlphaTexture", Selector::None, nullptr, 0ULL, 0 },  // 187: struct:LandAlphaTexture
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 335, 3, 0, 0, "LandAlphaCell", Selector::None, nullptr, 0ULL, 0 },  // 188: struct:LandAlphaCell
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 188, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 189: struct:LandAlphaCell[]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 338, 12, 0, 0, "LightData", Selector::None, nullptr, 0ULL, 0 },  // 190: struct:LightData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 142, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 191: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 144, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 192: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 146, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 193: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 149, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 194: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 151, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 195: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 154, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 196: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 350, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 197: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 360, 2, 0, 0, "LoadScreenRotationLimits", Selector::None, nullptr, 0ULL, 0 },  // 198: inline:LoadScreenRotationLimits
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 3, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 199: i16[3]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 362, 2, 0, 0, "LtexHavok", Selector::None, nullptr, 0ULL, 0 },  // 200: struct:LtexHavok
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 364, 3, 0, 0, "LeveledEntry", Selector::None, nullptr, 0ULL, 0 },  // 201: struct:LeveledEntry
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 156, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 202: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 158, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 203: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 160, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 204: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 163, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 205: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 165, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 206: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 168, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 207: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 367, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 208: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 170, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 209: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 172, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 210: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 174, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 211: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 177, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 212: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 179, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 213: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 182, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 214: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 377, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 215: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 28, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 216: formid->LIGH
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 29, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 217: formid->EFSH
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 30, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 218: formid->PROJ
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 31, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 219: formid->ARTO
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 32, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 220: formid->DUAL
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 33, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 221: formid->IMAD
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 34, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 222: formid->PERK
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 387, 39, 0, 0, "MagicEffectData", Selector::None, nullptr, 0ULL, 0 },  // 223: struct:MagicEffectData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 426, 2, 0, 0, "MagicEffectSound", Selector::None, nullptr, 0ULL, 0 },  // 224: struct:MagicEffectSound
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 224, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 225: struct:MagicEffectSound[]
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 11, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 226: f32[11]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 428, 1, 0, 0, "MovementSpeeds", Selector::None, nullptr, 0ULL, 0 },  // 227: struct:MovementSpeeds
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 429, 2, 0, 0, "MusicPriority", Selector::None, nullptr, 0ULL, 0 },  // 228: struct:MusicPriority
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 184, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 229: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 186, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 230: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 188, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 231: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 191, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 232: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 193, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 233: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 196, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 234: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 431, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 235: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 441, 11, 0, 0, "AcbsData", Selector::None, nullptr, 0ULL, 0 },  // 236: struct:AcbsData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 452, 3, 0, 0, "FactionRank", Selector::None, nullptr, 0ULL, 0 },  // 237: struct:FactionRank
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 19, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 238: f32[19]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 455, 1, 0, 0, "FaceMorphs", Selector::None, nullptr, 0ULL, 0 },  // 239: struct:FaceMorphs
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 456, 4, 0, 0, "FaceParts", Selector::None, nullptr, 0ULL, 0 },  // 240: struct:FaceParts
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 460, 4, 0, 0, "TintColor", Selector::None, nullptr, 0ULL, 0 },  // 241: struct:TintColor
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 464, 3, 0, 0, "PerkEntry", Selector::None, nullptr, 0ULL, 0 },  // 242: struct:PerkEntry
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 467, 11, 0, 0, "AiData", Selector::None, nullptr, 0ULL, 0 },  // 243: struct:AiData
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 18, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 244: u8[18]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 478, 9, 0, 0, "NpcSkills", Selector::None, nullptr, 0ULL, 0 },  // 245: struct:NpcSkills
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 487, 3, 0, 0, "SkinTone", Selector::None, nullptr, 0ULL, 0 },  // 246: struct:SkinTone
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 198, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 247: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 200, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 248: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 202, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 249: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 205, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 250: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 207, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 251: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 210, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 252: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 490, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 253: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 35, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 254: formid->IDLE
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 254, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 255: formid->IDLE[]
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 36, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 256: formid->CSTY
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 500, 3, 0, 0, "PackCounter", Selector::None, nullptr, 0ULL, 0 },  // 257: struct:PackCounter
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 212, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 258: union:records/PACK.yaml member 12 member 1:PackageSectionsValue
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 37, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 259: formid->CELL
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 214, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 260: union:structs/LocationData.yaml field 1:LocationDataValue
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 503, 3, 0, 0, "LocationData", Selector::None, nullptr, 0ULL, 0 },  // 261: struct:LocationData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 218, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0 },  // 262: union:structs/TargetData.yaml field 1:TargetDataValue
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 506, 3, 0, 0, "TargetData", Selector::None, nullptr, 0ULL, 0 },  // 263: struct:TargetData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 222, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 264: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 224, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 265: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 226, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 266: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 229, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 267: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 231, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 268: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 234, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 269: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 509, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 270: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 519, 2, 0, 0, "PackageSectionsBranch", Selector::None, nullptr, 0ULL, 0 },  // 271: inline:PackageSectionsBranch
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 272: u32[3]
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 273: u32[4]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 236, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 274: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 238, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 275: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 240, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 276: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 243, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 277: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 245, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 278: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 248, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 279: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 521, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 280: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 531, 5, 0, 0, "PerkData", Selector::None, nullptr, 0ULL, 0 },  // 281: inline:PerkData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 536, 3, 0, 0, "PerkEntriesHeader", Selector::None, nullptr, 0ULL, 0 },  // 282: inline:PerkEntriesHeader
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 539, 3, 0, 0, "PerkEntriesDataQuestStage", Selector::None, nullptr, 0ULL, 0 },  // 283: inline:PerkEntriesDataQuestStage
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 542, 3, 0, 0, "PerkEntriesDataEntryPoint", Selector::None, nullptr, 0ULL, 0 },  // 284: inline:PerkEntriesDataEntryPoint
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 250, 3, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 285: union:records/PERK.yaml member 8 member 1:PerkEntriesData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 253, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 286: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 255, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 287: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 257, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 288: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 260, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 289: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 262, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 290: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 265, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 291: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 545, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 292: inline:ConditionData
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 2, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 293: f32[2]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 267, 5, 0, 0, nullptr, Selector::Member, "functionType", 0ULL, 0 },  // 294: union:records/PERK.yaml member 8 member 6:PerkEntriesFunctionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 555, 5, 0, 0, "QuestData", Selector::None, nullptr, 0ULL, 0 },  // 295: struct:QuestData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 272, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 296: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 274, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 297: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 276, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 298: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 279, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 299: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 281, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 300: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 284, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 301: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 560, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 302: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 570, 3, 0, 0, "QuestStageIndex", Selector::None, nullptr, 0ULL, 0 },  // 303: struct:QuestStageIndex
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 286, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 304: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 288, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 305: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 290, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 306: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 293, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 307: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 295, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 308: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 298, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 309: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 573, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 310: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 583, 2, 0, 0, "QuestObjectivesTargetsTarget", Selector::None, nullptr, 0ULL, 0 },  // 311: inline:QuestObjectivesTargetsTarget
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 300, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 312: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 302, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 313: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 304, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 314: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 307, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 315: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 309, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 316: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 312, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 317: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 585, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 318: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 38, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 319: formid->NPC_
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 314, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 320: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 316, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 321: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 318, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 322: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 323: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 323, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 324: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 326, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 325: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 595, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 326: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 39, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 327: formid->FLST
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 40, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 328: formid->MESG
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 41, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 329: formid->FACT
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 42, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 330: formid->PACK
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 43, 3, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 331: formid->FLST,VTYP,NPC_
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 328, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 332: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 330, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 333: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 332, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 334: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 335, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 335: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 337, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 336: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 340, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 337: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 605, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 338: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 46, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 339: formid->HDPT
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 8, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 340: u32[8]
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 47, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 341: formid->CLFM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 615, 4, 0, 0, "PlacedObjectPrimitive", Selector::None, nullptr, 0ULL, 0 },  // 342: inline:PlacedObjectPrimitive
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 48, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 343: formid->REFR
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 619, 2, 0, 0, "PlacedObjectPortal", Selector::None, nullptr, 0ULL, 0 },  // 344: inline:PlacedObjectPortal
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 621, 2, 0, 0, "PlacedObjectRoomMarker", Selector::None, nullptr, 0ULL, 0 },  // 345: inline:PlacedObjectRoomMarker
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 346: f32[5]
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 342, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 347: union:records/REFR.yaml member 11:PlacedObjectLight
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 49, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 348: formid->LGTM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 623, 3, 0, 0, "TeleportDest", Selector::None, nullptr, 0ULL, 0 },  // 349: struct:TeleportDest
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 50, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 350: formid->NAVM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 626, 3, 0, 0, "PlacedObjectNavmeshDoor", Selector::None, nullptr, 0ULL, 0 },  // 351: inline:PlacedObjectNavmeshDoor
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 51, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 352: formid->KEYM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 629, 7, 0, 0, "LockData", Selector::None, nullptr, 0ULL, 0 },  // 353: struct:LockData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 636, 2, 0, 0, "PlacedObjectActivateParents", Selector::None, nullptr, 0ULL, 0 },  // 354: inline:PlacedObjectActivateParents
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 52, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 355: formid->ECZN
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 53, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 356: formid->LVLI
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 638, 2, 0, 0, "PlacedObjectLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0 },  // 357: inline:PlacedObjectLinkedRefsKeyed
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 344, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 358: union:records/REFR.yaml member 41:PlacedObjectLinkedRefs
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 640, 2, 0, 0, "PlacedObjectMapMarkerType", Selector::None, nullptr, 0ULL, 0 },  // 359: inline:PlacedObjectMapMarkerType
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 642, 2, 0, 0, "PlacedObjectAlpha", Selector::None, nullptr, 0ULL, 0 },  // 360: inline:PlacedObjectAlpha
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 54, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 361: formid->ASTP
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 644, 7, 0, 0, "RelationshipData", Selector::None, nullptr, 0ULL, 0 },  // 362: struct:RelationshipData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 651, 3, 0, 0, "VisualEffectData", Selector::None, nullptr, 0ULL, 0 },  // 363: struct:VisualEffectData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 346, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 364: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 348, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 365: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 350, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 366: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 353, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 367: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 355, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 368: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 358, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 369: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 654, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 370: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 360, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 371: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 362, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 372: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 364, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 373: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 367, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 374: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 369, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 375: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 372, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 376: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 664, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 377: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 374, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 378: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 376, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 379: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 378, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 380: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 381, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 381: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 383, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 382: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 386, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 383: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 674, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 384: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 684, 9, 0, 0, "SpellData", Selector::None, nullptr, 0ULL, 0 },  // 385: struct:SpellData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 388, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 386: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 390, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 387: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 392, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 388: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 395, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 389: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 397, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 390: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 400, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 391: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 693, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 392: inline:ConditionData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 703, 3, 0, 0, "ShoutWord", Selector::None, nullptr, 0ULL, 0 },  // 393: struct:ShoutWord
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 402, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 394: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 404, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 395: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 406, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 396: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 409, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 397: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 411, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 398: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 414, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 399: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 706, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 400: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 416, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 401: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 418, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 402: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 420, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 403: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 423, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 404: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 425, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 405: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 428, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 406: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 716, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 407: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 430, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 408: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 432, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 409: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 434, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 410: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 437, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 411: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 439, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 412: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 442, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 413: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 726, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 414: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 55, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 415: formid->SOPM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 736, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0 },  // 416: inline:SoundDescriptorValues
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 444, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 417: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 446, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 418: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 448, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 419: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 451, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 420: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 453, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 421: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 456, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 422: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 741, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 423: inline:ConditionData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 424: bytes:36:noids
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 458, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0 },  // 425: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 460, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 426: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 462, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0 },  // 427: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 465, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 428: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 467, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1 },  // 429: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 470, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0 },  // 430: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 751, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0 },  // 431: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 56, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 432: formid->MATO
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 761, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0 },  // 433: struct:StatData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 434: bytes:260:noids
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 765, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0 },  // 435: inline:StaticLodNames
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 769, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0 },  // 436: struct:WeaponBasic
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 772, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0 },  // 437: struct:WeaponData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 802, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0 },  // 438: struct:WeaponCrit
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 809, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0 },  // 439: struct:WorldCenter
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 811, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0 },  // 440: struct:WorldDefaults
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 813, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0 },  // 441: struct:WorldCorner
+    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 0: zstring
+    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 1 },  // 1: u8
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 4, 0, 0, "ColorRgba", Selector::None, nullptr, 0ULL, 0, 4 },  // 2: struct:ColorRgba
+    { Kind::I16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 2 },  // 3: i16
+    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 4: wstring
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 0, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0, 0 },  // 5: if:structs/VmadScript.yaml field 1:VmadScriptStatus
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 2, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0, 0 },  // 6: if:structs/VmadProperty.yaml field 2:VmadPropertyStatus
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 7: formid
+    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 2 },  // 8: u16
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 4, 3, 0, 0, "VmadObjectV1", Selector::None, nullptr, 0ULL, 0, 0 },  // 9: inline:VmadObjectV1
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 3, 0, 0, "VmadObjectV2", Selector::None, nullptr, 0ULL, 0, 0 },  // 10: inline:VmadObjectV2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 4, 2, 0, 0, "VmadObject", Selector::Field, "objFormat", 0ULL, 0, 0 },  // 11: union:structs/VmadObject.yaml:VmadObject
+    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 12: i32
+    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 13: f32
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 11, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 14: union:structs/VmadObject.yaml:VmadObject[count: u32]
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 15: wstring[count: u32]
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 12, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 16: i32[count: u32]
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 17: f32[count: u32]
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 18: u8[count: u32]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 6, 10, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0, 0 },  // 19: union:structs/VmadProperty.yaml field 3:VmadPropertyValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 10, 4, 0, 0, "VmadProperty", Selector::None, nullptr, 0ULL, 0, 0 },  // 20: struct:VmadProperty
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 20, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 21: struct:VmadProperty[count: u16]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 14, 3, 0, 0, "VmadScript", Selector::None, nullptr, 0ULL, 0, 0 },  // 22: struct:VmadScript
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 22, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 23: struct:VmadScript[count: u16]
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 24: bytes
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 17, 2, 0, 0, "VmadBodySupportedScripts", Selector::None, nullptr, 0ULL, 0, 0 },  // 25: inline:VmadBodySupportedScripts
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 16, 1, 0, 0, nullptr, Selector::Field, "objFormat", 0ULL, 0, 0 },  // 26: union:structs/Vmad.yaml field 2 case 0:VmadBodySupported
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 17, 1, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0, 0 },  // 27: union:structs/Vmad.yaml field 2:VmadBody
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 19, 3, 0, 0, "Vmad", Selector::None, nullptr, 0ULL, 0, 0 },  // 28: struct:Vmad
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 29: u8[4]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 12 },  // 30: f32[3]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 3, 0, 0, "RagdollBone", Selector::None, nullptr, 0ULL, 0, 28 },  // 31: struct:RagdollBone
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 31, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 32: struct:RagdollBone[]
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 33: formid->KYWD
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 1, 4, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 34: formid->REFR,ACHR,PGRE,PHZD
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 25, 2, 0, 0, "PlacedNpcLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0, 0 },  // 35: inline:PlacedNpcLinkedRefsKeyed
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 18, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 36: union:records/ACHR.yaml member 6:PlacedNpcLinkedRefs
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 5, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 37: formid->LCTN
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 6, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 38: formid->LCRT
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 7, 2, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 39: formid->REFR,ACHR
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 27, 2, 0, 0, "PlacedNpcActivateParents", Selector::None, nullptr, 0ULL, 0, 0 },  // 40: inline:PlacedNpcActivateParents
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 41: marker
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 9, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 42: formid->IMGS
+    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 43: u32
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 10, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 44: formid->DIAL
+    { Kind::Sig4, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 45: sig4
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 20, 2, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0, 0 },  // 46: union:structs/TopicData.yaml field 1:TopicDataTopic
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 29, 2, 0, 0, "TopicData", Selector::None, nullptr, 0ULL, 0, 0 },  // 47: struct:TopicData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 11, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 48: formid->ACHR
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 31, 2, 0, 0, "EnableParent", Selector::None, nullptr, 0ULL, 0, 0 },  // 49: struct:EnableParent
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 33, 6, 0, 0, "Placement", Selector::None, nullptr, 0ULL, 0, 24 },  // 50: struct:Placement
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 39, 6, 0, 0, "ObjectBounds", Selector::None, nullptr, 0ULL, 0, 12 },  // 51: struct:ObjectBounds
+    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 52: lstring:strings
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 53: bytes:noids
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 12, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 54: formid->TXST
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 45, 3, 0, 0, "AlternateTexture", Selector::None, nullptr, 0ULL, 0, 0 },  // 55: struct:AlternateTexture
+    { Kind::Array, LenKind::Prefix32, StrTable::None, 0, 0, 55, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 56: struct:AlternateTexture[count: u32]
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 33, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 57: formid->KYWD[]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 48, 4, 0, 0, "DestructibleHeader", Selector::None, nullptr, 0ULL, 0, 8 },  // 58: struct:DestructibleHeader
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 13, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 59: formid->EXPL
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 14, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 60: formid->DEBR
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 52, 7, 0, 0, "DestructionStage", Selector::None, nullptr, 0ULL, 0, 0 },  // 61: struct:DestructionStage
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 59, 2, 0, 0, "AddonFlags", Selector::None, nullptr, 0ULL, 0, 4 },  // 62: struct:AddonFlags
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 7, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 63: formid[]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 61, 5, 0, 0, "PotionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 64: struct:PotionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 66, 3, 0, 0, "EffectItem", Selector::None, nullptr, 0ULL, 0, 12 },  // 65: struct:EffectItem
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 3 },  // 66: u8[3]
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 15, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 67: formid->GLOB
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 68: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 2, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 2 },  // 69: u8[2]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 70: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::U32, LenKind::None, StrTable::None, 2, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 71: u32
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 26, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 72: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 29, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 73: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 31, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 74: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 34, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 75: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 69, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 76: inline:ConditionData
+    { Kind::LString, LenKind::None, StrTable::DLStrings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 77: lstring:dlstrings
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 79, 4, 0, 0, "AmmoData", Selector::None, nullptr, 0ULL, 0, 0 },  // 78: struct:AmmoData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 83, 2, 0, 0, "ItemValueWeight", Selector::None, nullptr, 0ULL, 0, 8 },  // 79: struct:ItemValueWeight
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 85, 2, 0, 0, "BipedBodyTemplate", Selector::None, nullptr, 0ULL, 0, 8 },  // 80: struct:BipedBodyTemplate
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 87, 8, 0, 0, "ArmaDnam", Selector::None, nullptr, 0ULL, 0, 12 },  // 81: struct:ArmaDnam
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 95, 5, 0, 0, "LegacyBiped", Selector::None, nullptr, 0ULL, 0, 0 },  // 82: struct:LegacyBiped
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 16, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 83: formid->ENCH
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 17, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 84: formid->SNDR
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 18, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 85: formid->EQUP
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 19, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 86: formid->IPDS
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 20, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 87: formid->MATT
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 21, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 88: formid->RACE
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 22, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 89: formid->ARMA
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 23, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 90: formid->ARMO
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 24, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 91: formid->SPEL
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 36, 2, 0, 0, nullptr, Selector::Field, "flags", 4ULL, 0, 0 },  // 92: union:structs/BookData.yaml field 3:BookDataTeaches
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 100, 6, 0, 0, "BookData", Selector::None, nullptr, 0ULL, 0, 0 },  // 93: struct:BookData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 38, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 94: union:records/CELL.yaml member 2:CellFlags
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 106, 3, 0, 0, "CellGrid", Selector::None, nullptr, 0ULL, 0, 12 },  // 95: struct:CellGrid
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 6, 2, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 24 },  // 96: struct:ColorRgba[6]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 109, 19, 0, 0, "CellLighting", Selector::None, nullptr, 0ULL, 0, 0 },  // 97: struct:CellLighting
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 1024, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 1024 },  // 98: u8[1024]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 128, 2, 0, 0, "CellMaxHeight", Selector::None, nullptr, 0ULL, 0, 1028 },  // 99: inline:CellMaxHeight
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 12, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 48 },  // 100: f32[12]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 16, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 64 },  // 101: f32[16]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 40, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 102: union:records/CELL.yaml member 10:CellWaterVelocity
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 130, 2, 0, 0, "ContainerEntry", Selector::None, nullptr, 0ULL, 0, 0 },  // 103: struct:ContainerEntry
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 42, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 104: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 44, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 105: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 46, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 106: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 49, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 107: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 51, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 108: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 54, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 109: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 132, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 110: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 142, 2, 0, 0, "ContainerData", Selector::None, nullptr, 0ULL, 0, 5 },  // 111: inline:ContainerData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 56, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 112: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 58, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 113: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 60, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 114: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 63, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 115: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 65, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 116: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 68, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 117: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 144, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 118: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 154, 3, 0, 0, "DialData", Selector::None, nullptr, 0ULL, 0, 4 },  // 119: struct:DialData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 157, 6, 0, 0, "DualData", Selector::None, nullptr, 0ULL, 0, 0 },  // 120: struct:DualData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 25, 2, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 121: formid->FACT,NPC_
+    { Kind::I8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 1 },  // 122: i8
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 163, 7, 0, 0, "EncounterZoneData", Selector::None, nullptr, 0ULL, 0, 0 },  // 123: struct:EncounterZoneData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 170, 9, 0, 0, "EnchantData", Selector::None, nullptr, 0ULL, 0, 0 },  // 124: struct:EnchantData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 70, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 125: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 72, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 126: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 74, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 127: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 77, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 128: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 79, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 129: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 82, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 130: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 179, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 131: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 189, 3, 0, 0, "FactionRelation", Selector::None, nullptr, 0ULL, 0, 0 },  // 132: struct:FactionRelation
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 192, 6, 0, 0, "VendorValues", Selector::None, nullptr, 0ULL, 0, 12 },  // 133: struct:VendorValues
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 84, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 134: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 86, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 135: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 88, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 136: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 91, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 137: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 93, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 138: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 96, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 139: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 198, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 140: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 208, 12, 0, 0, "CrimeValues", Selector::None, nullptr, 0ULL, 0, 0 },  // 141: struct:CrimeValues
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 220, 2, 0, 0, "FurnitureWorkbench", Selector::None, nullptr, 0ULL, 0, 2 },  // 142: inline:FurnitureWorkbench
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 222, 2, 0, 0, "FurnitureMarkerEntries", Selector::None, nullptr, 0ULL, 0, 4 },  // 143: inline:FurnitureMarkerEntries
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 98, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 144: union:records/GMST.yaml member 1:GameSettingValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 224, 13, 0, 0, "GrassData", Selector::None, nullptr, 0ULL, 0, 32 },  // 145: struct:GrassData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 237, 10, 0, 0, "HazardData", Selector::None, nullptr, 0ULL, 0, 0 },  // 146: struct:HazardData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 247, 5, 0, 0, "IdleAnimationData", Selector::None, nullptr, 0ULL, 0, 6 },  // 147: inline:IdleAnimationData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 100, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 148: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 102, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 149: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 104, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 150: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 107, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 151: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 109, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 152: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 112, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 153: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 252, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 154: inline:ConditionData
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 9, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 36 },  // 155: f32[9]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 16 },  // 156: f32[4]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 262, 5, 0, 0, "ImageSpaceDof", Selector::None, nullptr, 0ULL, 0, 0 },  // 157: inline:ImageSpaceDof
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 267, 2, 0, 0, "InfoFlags", Selector::None, nullptr, 0ULL, 0, 4 },  // 158: struct:InfoFlags
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 269, 8, 0, 0, "ResponseData", Selector::None, nullptr, 0ULL, 0, 0 },  // 159: struct:ResponseData
+    { Kind::LString, LenKind::None, StrTable::ILStrings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 160: lstring:ilstrings
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 114, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 161: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 116, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 162: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 118, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 163: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 121, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 164: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 123, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 165: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 126, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 166: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 277, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 167: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 287, 3, 0, 0, "DialogResponsesData", Selector::None, nullptr, 0ULL, 0, 8 },  // 168: inline:DialogResponsesData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 27, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 169: formid->QUST
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 20 },  // 170: u32[5]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 290, 2, 0, 0, "IngredientData", Selector::None, nullptr, 0ULL, 0, 8 },  // 171: struct:IngredientData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 128, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 172: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 130, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 173: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 132, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 174: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 135, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 175: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 137, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 176: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 140, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 177: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 292, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 178: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 302, 8, 0, 0, "ImpactData", Selector::None, nullptr, 0ULL, 0, 24 },  // 179: struct:ImpactData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 310, 11, 0, 0, "DecalData", Selector::None, nullptr, 0ULL, 0, 36 },  // 180: struct:DecalData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, "ImpactMapping", Selector::None, nullptr, 0ULL, 0, 0 },  // 181: struct:ImpactMapping
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3267, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 3267 },  // 182: u8[3267]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 323, 1, 0, 0, "LandVertexTriples", Selector::None, nullptr, 0ULL, 0, 3267 },  // 183: struct:LandVertexTriples
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 1089, 122, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 1089 },  // 184: i8[1089]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 324, 3, 0, 0, "LandHeights", Selector::None, nullptr, 0ULL, 0, 1096 },  // 185: struct:LandHeights
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 327, 4, 0, 0, "LandBaseTexture", Selector::None, nullptr, 0ULL, 0, 0 },  // 186: struct:LandBaseTexture
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 331, 4, 0, 0, "LandAlphaTexture", Selector::None, nullptr, 0ULL, 0, 0 },  // 187: struct:LandAlphaTexture
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 335, 3, 0, 0, "LandAlphaCell", Selector::None, nullptr, 0ULL, 0, 8 },  // 188: struct:LandAlphaCell
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 188, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 189: struct:LandAlphaCell[]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 338, 12, 0, 0, "LightData", Selector::None, nullptr, 0ULL, 0, 48 },  // 190: struct:LightData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 142, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 191: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 144, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 192: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 146, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 193: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 149, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 194: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 151, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 195: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 154, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 196: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 350, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 197: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 360, 2, 0, 0, "LoadScreenRotationLimits", Selector::None, nullptr, 0ULL, 0, 4 },  // 198: inline:LoadScreenRotationLimits
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 3, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 6 },  // 199: i16[3]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 362, 2, 0, 0, "LtexHavok", Selector::None, nullptr, 0ULL, 0, 2 },  // 200: struct:LtexHavok
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 364, 3, 0, 0, "LeveledEntry", Selector::None, nullptr, 0ULL, 0, 0 },  // 201: struct:LeveledEntry
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 156, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 202: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 158, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 203: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 160, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 204: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 163, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 205: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 165, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 206: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 168, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 207: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 367, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 208: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 170, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 209: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 172, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 210: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 174, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 211: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 177, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 212: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 179, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 213: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 182, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 214: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 377, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 215: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 28, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 216: formid->LIGH
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 29, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 217: formid->EFSH
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 30, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 218: formid->PROJ
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 31, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 219: formid->ARTO
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 32, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 220: formid->DUAL
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 33, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 221: formid->IMAD
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 34, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 222: formid->PERK
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 387, 39, 0, 0, "MagicEffectData", Selector::None, nullptr, 0ULL, 0, 0 },  // 223: struct:MagicEffectData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 426, 2, 0, 0, "MagicEffectSound", Selector::None, nullptr, 0ULL, 0, 0 },  // 224: struct:MagicEffectSound
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 224, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 225: struct:MagicEffectSound[]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 11, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 44 },  // 226: f32[11]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 428, 1, 0, 0, "MovementSpeeds", Selector::None, nullptr, 0ULL, 0, 44 },  // 227: struct:MovementSpeeds
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 429, 2, 0, 0, "MusicPriority", Selector::None, nullptr, 0ULL, 0, 4 },  // 228: struct:MusicPriority
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 184, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 229: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 186, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 230: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 188, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 231: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 191, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 232: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 193, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 233: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 196, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 234: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 431, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 235: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 441, 11, 0, 0, "AcbsData", Selector::None, nullptr, 0ULL, 0, 24 },  // 236: struct:AcbsData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 452, 3, 0, 0, "FactionRank", Selector::None, nullptr, 0ULL, 0, 0 },  // 237: struct:FactionRank
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 19, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 76 },  // 238: f32[19]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 455, 1, 0, 0, "FaceMorphs", Selector::None, nullptr, 0ULL, 0, 76 },  // 239: struct:FaceMorphs
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 456, 4, 0, 0, "FaceParts", Selector::None, nullptr, 0ULL, 0, 16 },  // 240: struct:FaceParts
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 460, 4, 0, 0, "TintColor", Selector::None, nullptr, 0ULL, 0, 4 },  // 241: struct:TintColor
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 464, 3, 0, 0, "PerkEntry", Selector::None, nullptr, 0ULL, 0, 0 },  // 242: struct:PerkEntry
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 467, 11, 0, 0, "AiData", Selector::None, nullptr, 0ULL, 0, 20 },  // 243: struct:AiData
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 18, 1, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 18 },  // 244: u8[18]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 478, 9, 0, 0, "NpcSkills", Selector::None, nullptr, 0ULL, 0, 52 },  // 245: struct:NpcSkills
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 487, 3, 0, 0, "SkinTone", Selector::None, nullptr, 0ULL, 0, 12 },  // 246: struct:SkinTone
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 198, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 247: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 200, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 248: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 202, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 249: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 205, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 250: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 207, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 251: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 210, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 252: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 490, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 253: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 35, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 254: formid->IDLE
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 254, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 255: formid->IDLE[]
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 36, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 256: formid->CSTY
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 500, 3, 0, 0, "PackCounter", Selector::None, nullptr, 0ULL, 0, 0 },  // 257: struct:PackCounter
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 212, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 258: union:records/PACK.yaml member 12 member 1:PackageSectionsValue
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 37, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 259: formid->CELL
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 214, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0, 0 },  // 260: union:structs/LocationData.yaml field 1:LocationDataValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 503, 3, 0, 0, "LocationData", Selector::None, nullptr, 0ULL, 0, 0 },  // 261: struct:LocationData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 218, 4, 0, 0, nullptr, Selector::Field, "type", 0ULL, 0, 0 },  // 262: union:structs/TargetData.yaml field 1:TargetDataValue
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 506, 3, 0, 0, "TargetData", Selector::None, nullptr, 0ULL, 0, 0 },  // 263: struct:TargetData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 222, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 264: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 224, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 265: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 226, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 266: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 229, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 267: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 231, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 268: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 234, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 269: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 509, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 270: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 519, 2, 0, 0, "PackageSectionsBranch", Selector::None, nullptr, 0ULL, 0, 8 },  // 271: inline:PackageSectionsBranch
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 12 },  // 272: u32[3]
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 4, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 16 },  // 273: u32[4]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 236, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 274: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 238, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 275: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 240, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 276: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 243, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 277: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 245, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 278: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 248, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 279: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 521, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 280: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 531, 5, 0, 0, "PerkData", Selector::None, nullptr, 0ULL, 0, 5 },  // 281: inline:PerkData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 536, 3, 0, 0, "PerkEntriesHeader", Selector::None, nullptr, 0ULL, 0, 3 },  // 282: inline:PerkEntriesHeader
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 539, 3, 0, 0, "PerkEntriesDataQuestStage", Selector::None, nullptr, 0ULL, 0, 0 },  // 283: inline:PerkEntriesDataQuestStage
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 542, 3, 0, 0, "PerkEntriesDataEntryPoint", Selector::None, nullptr, 0ULL, 0, 3 },  // 284: inline:PerkEntriesDataEntryPoint
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 250, 3, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 285: union:records/PERK.yaml member 8 member 1:PerkEntriesData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 253, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 286: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 255, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 287: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 257, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 288: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 260, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 289: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 262, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 290: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 265, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 291: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 545, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 292: inline:ConditionData
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 2, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 8 },  // 293: f32[2]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 267, 5, 0, 0, nullptr, Selector::Member, "functionType", 0ULL, 0, 0 },  // 294: union:records/PERK.yaml member 8 member 6:PerkEntriesFunctionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 555, 5, 0, 0, "QuestData", Selector::None, nullptr, 0ULL, 0, 12 },  // 295: struct:QuestData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 272, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 296: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 274, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 297: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 276, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 298: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 279, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 299: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 281, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 300: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 284, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 301: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 560, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 302: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 570, 3, 0, 0, "QuestStageIndex", Selector::None, nullptr, 0ULL, 0, 4 },  // 303: struct:QuestStageIndex
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 286, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 304: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 288, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 305: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 290, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 306: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 293, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 307: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 295, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 308: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 298, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 309: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 573, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 310: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 583, 2, 0, 0, "QuestObjectivesTargetsTarget", Selector::None, nullptr, 0ULL, 0, 8 },  // 311: inline:QuestObjectivesTargetsTarget
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 300, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 312: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 302, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 313: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 304, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 314: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 307, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 315: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 309, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 316: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 312, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 317: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 585, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 318: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 38, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 319: formid->NPC_
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 314, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 320: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 316, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 321: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 318, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 322: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 321, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 323: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 323, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 324: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 326, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 325: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 595, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 326: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 39, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 327: formid->FLST
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 40, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 328: formid->MESG
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 41, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 329: formid->FACT
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 42, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 330: formid->PACK
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 43, 3, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 331: formid->FLST,VTYP,NPC_
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 328, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 332: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 330, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 333: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 332, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 334: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 335, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 335: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 337, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 336: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 340, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 337: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 605, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 338: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 46, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 339: formid->HDPT
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 8, 43, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 32 },  // 340: u32[8]
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 47, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 341: formid->CLFM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 615, 4, 0, 0, "PlacedObjectPrimitive", Selector::None, nullptr, 0ULL, 0, 32 },  // 342: inline:PlacedObjectPrimitive
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 48, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 343: formid->REFR
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 619, 2, 0, 0, "PlacedObjectPortal", Selector::None, nullptr, 0ULL, 0, 0 },  // 344: inline:PlacedObjectPortal
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 621, 2, 0, 0, "PlacedObjectRoomMarker", Selector::None, nullptr, 0ULL, 0, 4 },  // 345: inline:PlacedObjectRoomMarker
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 5, 13, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 20 },  // 346: f32[5]
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 342, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 347: union:records/REFR.yaml member 11:PlacedObjectLight
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 49, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 348: formid->LGTM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 623, 3, 0, 0, "TeleportDest", Selector::None, nullptr, 0ULL, 0, 0 },  // 349: struct:TeleportDest
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 50, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 350: formid->NAVM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 626, 3, 0, 0, "PlacedObjectNavmeshDoor", Selector::None, nullptr, 0ULL, 0, 0 },  // 351: inline:PlacedObjectNavmeshDoor
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 51, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 352: formid->KEYM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 629, 7, 0, 0, "LockData", Selector::None, nullptr, 0ULL, 0, 0 },  // 353: struct:LockData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 636, 2, 0, 0, "PlacedObjectActivateParents", Selector::None, nullptr, 0ULL, 0, 0 },  // 354: inline:PlacedObjectActivateParents
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 52, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 355: formid->ECZN
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 53, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 356: formid->LVLI
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 638, 2, 0, 0, "PlacedObjectLinkedRefsKeyed", Selector::None, nullptr, 0ULL, 0, 0 },  // 357: inline:PlacedObjectLinkedRefsKeyed
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 344, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 358: union:records/REFR.yaml member 41:PlacedObjectLinkedRefs
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 640, 2, 0, 0, "PlacedObjectMapMarkerType", Selector::None, nullptr, 0ULL, 0, 2 },  // 359: inline:PlacedObjectMapMarkerType
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 642, 2, 0, 0, "PlacedObjectAlpha", Selector::None, nullptr, 0ULL, 0, 2 },  // 360: inline:PlacedObjectAlpha
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 54, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 361: formid->ASTP
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 644, 7, 0, 0, "RelationshipData", Selector::None, nullptr, 0ULL, 0, 0 },  // 362: struct:RelationshipData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 651, 3, 0, 0, "VisualEffectData", Selector::None, nullptr, 0ULL, 0, 0 },  // 363: struct:VisualEffectData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 346, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 364: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 348, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 365: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 350, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 366: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 353, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 367: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 355, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 368: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 358, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 369: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 654, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 370: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 360, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 371: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 362, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 372: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 364, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 373: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 367, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 374: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 369, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 375: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 372, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 376: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 664, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 377: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 374, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 378: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 376, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 379: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 378, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 380: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 381, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 381: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 383, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 382: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 386, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 383: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 674, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 384: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 684, 9, 0, 0, "SpellData", Selector::None, nullptr, 0ULL, 0, 0 },  // 385: struct:SpellData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 388, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 386: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 390, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 387: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 392, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 388: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 395, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 389: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 397, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 390: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 400, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 391: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 693, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 392: inline:ConditionData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 703, 3, 0, 0, "ShoutWord", Selector::None, nullptr, 0ULL, 0, 0 },  // 393: struct:ShoutWord
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 402, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 394: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 404, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 395: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 406, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 396: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 409, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 397: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 411, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 398: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 414, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 399: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 706, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 400: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 416, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 401: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 418, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 402: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 420, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 403: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 423, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 404: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 425, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 405: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 428, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 406: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 716, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 407: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 430, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 408: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 432, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 409: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 434, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 410: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 437, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 411: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 439, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 412: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 442, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 413: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 726, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 414: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 55, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 415: formid->SOPM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 736, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0, 6 },  // 416: inline:SoundDescriptorValues
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 444, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 417: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 446, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 418: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 448, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 419: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 451, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 420: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 453, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 421: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 456, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 422: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 741, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 423: inline:ConditionData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 424: bytes:36:noids
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 458, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 425: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 460, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 426: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 462, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 427: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 465, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 428: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 467, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 429: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 470, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 430: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 751, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 431: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 56, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 432: formid->MATO
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 761, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0, 0 },  // 433: struct:StatData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 434: bytes:260:noids
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 765, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0, 0 },  // 435: inline:StaticLodNames
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 769, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0, 10 },  // 436: struct:WeaponBasic
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 772, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0, 100 },  // 437: struct:WeaponData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 802, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0, 0 },  // 438: struct:WeaponCrit
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 809, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0, 4 },  // 439: struct:WorldCenter
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 811, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0, 8 },  // 440: struct:WorldDefaults
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 813, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0, 8 },  // 441: struct:WorldCorner
 };
 inline constexpr FieldDef kFields[] = {
     { "r", 1, false },
@@ -2828,1693 +2828,1691 @@ inline constexpr MemberDef kMembers[] = {
 inline constexpr EntryDef kEntries[] = {
     { SigOf("EDID"), 0 },
     { SigOf("CNAM"), 1 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("NAME"), 2 },
-    { SigOf("XEZN"), 3 },
-    { SigOf("XRGD"), 4 },
-    { SigOf("XRGB"), 5 },
-    { SigOf("XLKR"), 6 },
-    { SigOf("XLCN"), 7 },
-    { SigOf("XLRT"), 8 },
-    { SigOf("XAPD"), 9 },
-    { SigOf("XAPR"), 10 },
-    { SigOf("XPRD"), 11 },
-    { SigOf("XPPA"), 12 },
-    { SigOf("INAM"), 13 },
-    { SigOf("PDTO"), 14 },
-    { SigOf("XHOR"), 15 },
     { SigOf("XIS2"), 16 },
-    { SigOf("XLCM"), 17 },
-    { SigOf("XOWN"), 18 },
-    { SigOf("XESP"), 19 },
-    { SigOf("XSCL"), 20 },
+    { SigOf("XPPA"), 12 },
     { SigOf("DATA"), 21 },
-    { SigOf("EDID"), 0 },
+    { SigOf("XRGB"), 5 },
     { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("PNAM"), 5 },
-    { SigOf("FNAM"), 6 },
-    { SigOf("RNAM"), 7 },
-    { SigOf("KSIZ"), 8 },
+    { SigOf("XRGD"), 4 },
+    { SigOf("EDID"), 0 },
+    { SigOf("XAPD"), 9 },
+    { SigOf("XPRD"), 11 },
+    { SigOf("NAME"), 2 },
+    { SigOf("XSCL"), 20 },
+    { SigOf("INAM"), 13 },
+    { SigOf("XLCM"), 17 },
+    { SigOf("XLCN"), 7 },
+    { SigOf("XOWN"), 18 },
+    { SigOf("XEZN"), 3 },
+    { SigOf("PDTO"), 14 },
+    { SigOf("XESP"), 19 },
+    { SigOf("XLKR"), 6 },
+    { SigOf("XHOR"), 15 },
+    { SigOf("XAPR"), 10 },
+    { SigOf("XLRT"), 8 },
     { SigOf("KWDA"), 9 },
-    { SigOf("DEST"), 10 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
     { SigOf("DSTD"), 10 },
-    { SigOf("DMDL"), 10 },
-    { SigOf("DMDT"), 10 },
-    { SigOf("DMDS"), 10 },
     { SigOf("DSTF"), 10 },
+    { SigOf("DMDL"), 10 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("FNAM"), 6 },
+    { SigOf("PNAM"), 5 },
+    { SigOf("RNAM"), 7 },
+    { SigOf("DMDS"), 10 },
+    { SigOf("MODS"), 4 },
+    { SigOf("DMDT"), 10 },
+    { SigOf("MODT"), 4 },
+    { SigOf("DEST"), 10 },
+    { SigOf("KSIZ"), 8 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("DEST"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("DSTD"), 1 },
-    { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 1 },
-    { SigOf("DMDS"), 1 },
     { SigOf("DSTF"), 1 },
-    { SigOf("DSTD"), 0 },
     { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 2 },
-    { SigOf("DMDS"), 3 },
+    { SigOf("DMDS"), 1 },
+    { SigOf("DMDT"), 1 },
+    { SigOf("DEST"), 0 },
+    { SigOf("DSTD"), 0 },
     { SigOf("DSTF"), 4 },
+    { SigOf("DMDL"), 1 },
+    { SigOf("DMDS"), 3 },
+    { SigOf("DMDT"), 2 },
+    { SigOf("DATA"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("MODL"), 2 },
-    { SigOf("MODT"), 2 },
-    { SigOf("MODS"), 2 },
-    { SigOf("DATA"), 3 },
-    { SigOf("SNAM"), 4 },
     { SigOf("DNAM"), 5 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
+    { SigOf("SNAM"), 4 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("KSIZ"), 3 },
-    { SigOf("KWDA"), 4 },
-    { SigOf("MODL"), 5 },
-    { SigOf("MODT"), 5 },
-    { SigOf("MODS"), 5 },
-    { SigOf("ICON"), 6 },
-    { SigOf("MICO"), 7 },
-    { SigOf("YNAM"), 8 },
-    { SigOf("ZNAM"), 9 },
-    { SigOf("DATA"), 10 },
-    { SigOf("ENIT"), 11 },
-    { SigOf("EFID"), 12 },
-    { SigOf("EFIT"), 13 },
-    { SigOf("CTDA"), 14 },
+    { SigOf("MODT"), 2 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 14 },
     { SigOf("CIS2"), 14 },
+    { SigOf("CTDA"), 14 },
+    { SigOf("KWDA"), 4 },
+    { SigOf("DATA"), 10 },
+    { SigOf("EDID"), 0 },
+    { SigOf("EFID"), 12 },
+    { SigOf("OBND"), 1 },
+    { SigOf("MODL"), 5 },
+    { SigOf("FULL"), 2 },
+    { SigOf("YNAM"), 8 },
+    { SigOf("ZNAM"), 9 },
+    { SigOf("ICON"), 6 },
+    { SigOf("MICO"), 7 },
+    { SigOf("MODS"), 5 },
+    { SigOf("MODT"), 5 },
+    { SigOf("EFIT"), 13 },
+    { SigOf("ENIT"), 11 },
+    { SigOf("KSIZ"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
-    { SigOf("ICON"), 4 },
-    { SigOf("MICO"), 5 },
-    { SigOf("YNAM"), 6 },
-    { SigOf("ZNAM"), 7 },
-    { SigOf("DESC"), 8 },
-    { SigOf("KSIZ"), 9 },
+    { SigOf("CTDA"), 0 },
     { SigOf("KWDA"), 10 },
     { SigOf("DATA"), 11 },
-    { SigOf("ONAM"), 12 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 1 },
-    { SigOf("BNAM"), 2 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
+    { SigOf("DESC"), 8 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
     { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
+    { SigOf("FULL"), 2 },
+    { SigOf("ONAM"), 12 },
+    { SigOf("YNAM"), 6 },
+    { SigOf("ZNAM"), 7 },
     { SigOf("ICON"), 4 },
+    { SigOf("MICO"), 5 },
+    { SigOf("MODS"), 3 },
+    { SigOf("MODT"), 3 },
+    { SigOf("KSIZ"), 9 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("MODL"), 1 },
+    { SigOf("BNAM"), 2 },
+    { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("DATA"), 9 },
+    { SigOf("DESC"), 8 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 1 },
+    { SigOf("QUAL"), 7 },
+    { SigOf("MODL"), 3 },
+    { SigOf("FULL"), 2 },
     { SigOf("YNAM"), 5 },
     { SigOf("ZNAM"), 6 },
-    { SigOf("QUAL"), 7 },
-    { SigOf("DESC"), 8 },
-    { SigOf("DATA"), 9 },
+    { SigOf("ICON"), 4 },
+    { SigOf("MODS"), 3 },
+    { SigOf("MODT"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("BOD2"), 1 },
-    { SigOf("RNAM"), 2 },
-    { SigOf("DNAM"), 3 },
-    { SigOf("MOD2"), 4 },
-    { SigOf("MO2T"), 4 },
-    { SigOf("MO2S"), 4 },
-    { SigOf("MOD3"), 5 },
-    { SigOf("MO3T"), 5 },
-    { SigOf("MO3S"), 5 },
-    { SigOf("MOD4"), 6 },
-    { SigOf("MO4T"), 6 },
-    { SigOf("MO4S"), 6 },
-    { SigOf("MOD5"), 7 },
-    { SigOf("MO5T"), 7 },
-    { SigOf("MO5S"), 7 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM0"), 8 },
     { SigOf("NAM1"), 9 },
+    { SigOf("BOD2"), 1 },
+    { SigOf("MOD2"), 4 },
     { SigOf("NAM2"), 10 },
+    { SigOf("MOD3"), 5 },
     { SigOf("NAM3"), 11 },
-    { SigOf("MODL"), 12 },
+    { SigOf("MOD4"), 6 },
+    { SigOf("MOD5"), 7 },
     { SigOf("SNDD"), 13 },
+    { SigOf("EDID"), 0 },
+    { SigOf("MODL"), 12 },
+    { SigOf("DNAM"), 3 },
     { SigOf("ONAM"), 14 },
+    { SigOf("RNAM"), 2 },
+    { SigOf("MO2S"), 4 },
+    { SigOf("MO3S"), 5 },
+    { SigOf("MO4S"), 6 },
+    { SigOf("MO5S"), 7 },
+    { SigOf("MO2T"), 4 },
+    { SigOf("MO3T"), 5 },
+    { SigOf("MO4T"), 6 },
+    { SigOf("MO5T"), 7 },
     { SigOf("BODT"), 15 },
     { SigOf("MOD2"), 0 },
-    { SigOf("MO2T"), 1 },
     { SigOf("MO2S"), 2 },
+    { SigOf("MO2T"), 1 },
     { SigOf("MOD3"), 0 },
-    { SigOf("MO3T"), 1 },
     { SigOf("MO3S"), 2 },
+    { SigOf("MO3T"), 1 },
     { SigOf("MOD4"), 0 },
-    { SigOf("MO4T"), 1 },
     { SigOf("MO4S"), 2 },
+    { SigOf("MO4T"), 1 },
     { SigOf("MOD5"), 0 },
-    { SigOf("MO5T"), 1 },
     { SigOf("MO5S"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("EITM"), 4 },
-    { SigOf("EAMT"), 5 },
-    { SigOf("MOD2"), 6 },
-    { SigOf("MO2T"), 6 },
-    { SigOf("MO2S"), 6 },
-    { SigOf("ICON"), 7 },
-    { SigOf("MICO"), 8 },
-    { SigOf("MOD4"), 9 },
-    { SigOf("MO4T"), 9 },
-    { SigOf("MO4S"), 9 },
-    { SigOf("ICO2"), 10 },
+    { SigOf("MO5T"), 1 },
     { SigOf("MIC2"), 11 },
     { SigOf("BOD2"), 12 },
-    { SigOf("BODT"), 13 },
+    { SigOf("MOD2"), 6 },
+    { SigOf("ICO2"), 10 },
+    { SigOf("MOD4"), 9 },
+    { SigOf("KWDA"), 22 },
+    { SigOf("DATA"), 25 },
+    { SigOf("DESC"), 23 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 24 },
+    { SigOf("FULL"), 3 },
+    { SigOf("DNAM"), 26 },
+    { SigOf("RNAM"), 20 },
+    { SigOf("TNAM"), 27 },
     { SigOf("YNAM"), 14 },
     { SigOf("ZNAM"), 15 },
-    { SigOf("BMCT"), 16 },
+    { SigOf("EITM"), 4 },
+    { SigOf("ICON"), 7 },
+    { SigOf("MICO"), 8 },
     { SigOf("ETYP"), 17 },
+    { SigOf("MO2S"), 6 },
+    { SigOf("MO4S"), 9 },
     { SigOf("BIDS"), 18 },
+    { SigOf("MO2T"), 6 },
+    { SigOf("MO4T"), 9 },
+    { SigOf("BMCT"), 16 },
+    { SigOf("BODT"), 13 },
     { SigOf("BAMT"), 19 },
-    { SigOf("RNAM"), 20 },
+    { SigOf("EAMT"), 5 },
     { SigOf("KSIZ"), 21 },
-    { SigOf("KWDA"), 22 },
-    { SigOf("DESC"), 23 },
-    { SigOf("MODL"), 24 },
-    { SigOf("DATA"), 25 },
-    { SigOf("DNAM"), 26 },
-    { SigOf("TNAM"), 27 },
     { SigOf("MOD2"), 0 },
-    { SigOf("MO2T"), 1 },
     { SigOf("MO2S"), 2 },
+    { SigOf("MO2T"), 1 },
     { SigOf("MOD4"), 0 },
-    { SigOf("MO4T"), 1 },
     { SigOf("MO4S"), 2 },
+    { SigOf("MO4T"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("MODL"), 2 },
-    { SigOf("MODT"), 2 },
-    { SigOf("MODS"), 2 },
     { SigOf("DNAM"), 3 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 2 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
+    { SigOf("BNAM"), 4 },
     { SigOf("SNAM"), 2 },
     { SigOf("RDAT"), 3 },
-    { SigOf("BNAM"), 4 },
-    { SigOf("EDID"), 0 },
-    { SigOf("MPRT"), 1 },
-    { SigOf("FPRT"), 2 },
-    { SigOf("MCHT"), 3 },
-    { SigOf("FCHT"), 4 },
     { SigOf("DATA"), 5 },
     { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
+    { SigOf("FCHT"), 4 },
+    { SigOf("MCHT"), 3 },
+    { SigOf("FPRT"), 2 },
+    { SigOf("MPRT"), 1 },
     { SigOf("DESC"), 2 },
-    { SigOf("ANAM"), 3 },
     { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
+    { SigOf("FULL"), 1 },
+    { SigOf("ANAM"), 3 },
+    { SigOf("KWDA"), 11 },
+    { SigOf("DATA"), 14 },
     { SigOf("DESC"), 5 },
-    { SigOf("ICON"), 6 },
-    { SigOf("MICO"), 7 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("CNAM"), 13 },
+    { SigOf("INAM"), 12 },
     { SigOf("YNAM"), 8 },
     { SigOf("ZNAM"), 9 },
+    { SigOf("ICON"), 6 },
+    { SigOf("MICO"), 7 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
     { SigOf("KSIZ"), 10 },
-    { SigOf("KWDA"), 11 },
-    { SigOf("INAM"), 12 },
-    { SigOf("CNAM"), 13 },
-    { SigOf("DATA"), 14 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("MODL"), 1 },
     { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 1 },
     { SigOf("DATA"), 2 },
-    { SigOf("MNAM"), 3 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
     { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
+    { SigOf("MODL"), 1 },
+    { SigOf("MNAM"), 3 },
+    { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("DATA"), 2 },
     { SigOf("XCLC"), 3 },
+    { SigOf("EDID"), 0 },
     { SigOf("XCLL"), 4 },
-    { SigOf("TVDT"), 5 },
-    { SigOf("MHDT"), 6 },
-    { SigOf("LNAM"), 7 },
-    { SigOf("XWCN"), 8 },
-    { SigOf("XWCS"), 9 },
-    { SigOf("XWCU"), 10 },
-    { SigOf("LTMP"), 11 },
-    { SigOf("XCLW"), 12 },
-    { SigOf("XNAM"), 13 },
-    { SigOf("XCLR"), 14 },
-    { SigOf("XLCN"), 15 },
-    { SigOf("XCWT"), 16 },
-    { SigOf("XOWN"), 17 },
     { SigOf("XILL"), 18 },
-    { SigOf("XWEM"), 19 },
+    { SigOf("FULL"), 1 },
+    { SigOf("LNAM"), 7 },
+    { SigOf("XNAM"), 13 },
     { SigOf("XCCM"), 20 },
-    { SigOf("XCAS"), 21 },
+    { SigOf("XWEM"), 19 },
+    { SigOf("XCIM"), 24 },
+    { SigOf("XLCN"), 15 },
+    { SigOf("XWCN"), 8 },
+    { SigOf("XOWN"), 17 },
     { SigOf("XEZN"), 22 },
     { SigOf("XCMO"), 23 },
-    { SigOf("XCIM"), 24 },
+    { SigOf("LTMP"), 11 },
+    { SigOf("XCLR"), 14 },
+    { SigOf("XCAS"), 21 },
+    { SigOf("XWCS"), 9 },
+    { SigOf("MHDT"), 6 },
+    { SigOf("TVDT"), 5 },
+    { SigOf("XCWT"), 16 },
+    { SigOf("XWCU"), 10 },
+    { SigOf("XCLW"), 12 },
+    { SigOf("DATA"), 4 },
+    { SigOf("DESC"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
-    { SigOf("DESC"), 2 },
     { SigOf("ICON"), 3 },
-    { SigOf("DATA"), 4 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
     { SigOf("CNAM"), 2 },
     { SigOf("FNAM"), 3 },
     { SigOf("EDID"), 0 },
-    { SigOf("WLST"), 1 },
+    { SigOf("MODL"), 4 },
     { SigOf("FNAM"), 2 },
     { SigOf("GNAM"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
     { SigOf("TNAM"), 5 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("WLST"), 1 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("COCT"), 1 },
-    { SigOf("CNTO"), 2 },
-    { SigOf("CNAM"), 3 },
-    { SigOf("BNAM"), 4 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM1"), 5 },
-    { SigOf("CTDA"), 6 },
     { SigOf("CIS1"), 6 },
     { SigOf("CIS2"), 6 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 6 },
+    { SigOf("EDID"), 0 },
+    { SigOf("BNAM"), 4 },
+    { SigOf("CNAM"), 3 },
+    { SigOf("CNTO"), 2 },
+    { SigOf("COCT"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("CTDA"), 0 },
     { SigOf("DESC"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("BNAM"), 2 },
+    { SigOf("CNAM"), 6 },
     { SigOf("FNAM"), 3 },
     { SigOf("GNAM"), 4 },
     { SigOf("MNAM"), 5 },
-    { SigOf("CNAM"), 6 },
     { SigOf("INTV"), 7 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
     { SigOf("DATA"), 5 },
-    { SigOf("COCT"), 6 },
-    { SigOf("CNTO"), 7 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
+    { SigOf("VMAD"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("ANAM"), 1 },
-    { SigOf("DATA"), 2 },
-    { SigOf("SNAM"), 3 },
-    { SigOf("CTDA"), 4 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("CNTO"), 7 },
+    { SigOf("MODS"), 4 },
+    { SigOf("COCT"), 6 },
+    { SigOf("MODT"), 4 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 4 },
     { SigOf("CIS2"), 4 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 4 },
+    { SigOf("DATA"), 2 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 1 },
+    { SigOf("SNAM"), 3 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("DATA"), 5 },
     { SigOf("CSGD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("CSMD"), 2 },
     { SigOf("CSME"), 3 },
     { SigOf("CSFL"), 4 },
-    { SigOf("DATA"), 5 },
     { SigOf("EDID"), 0 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("PNAM"), 2 },
-    { SigOf("BNAM"), 3 },
-    { SigOf("QNAM"), 4 },
     { SigOf("DATA"), 5 },
-    { SigOf("SNAM"), 6 },
     { SigOf("TIFC"), 7 },
     { SigOf("EDID"), 0 },
-    { SigOf("QNAM"), 1 },
-    { SigOf("TNAM"), 2 },
-    { SigOf("DNAM"), 3 },
-    { SigOf("SNAM"), 4 },
+    { SigOf("FULL"), 1 },
+    { SigOf("BNAM"), 3 },
+    { SigOf("PNAM"), 2 },
+    { SigOf("QNAM"), 4 },
+    { SigOf("SNAM"), 6 },
     { SigOf("EDID"), 0 },
+    { SigOf("DNAM"), 3 },
     { SigOf("QNAM"), 1 },
+    { SigOf("SNAM"), 4 },
+    { SigOf("TNAM"), 2 },
+    { SigOf("EDID"), 0 },
     { SigOf("BNAM"), 2 },
-    { SigOf("TNAM"), 3 },
     { SigOf("DNAM"), 4 },
     { SigOf("ENAM"), 5 },
+    { SigOf("QNAM"), 1 },
+    { SigOf("TNAM"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("DNAM"), 1 },
-    { SigOf("EDID"), 0 },
     { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("FNAM"), 5 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("FNAM"), 5 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("DATA"), 2 },
     { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 1 },
     { SigOf("DATA"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("ICON"), 1 },
     { SigOf("ICO2"), 2 },
     { SigOf("NAM7"), 3 },
     { SigOf("NAM8"), 4 },
     { SigOf("NAM9"), 5 },
     { SigOf("DATA"), 6 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("ENIT"), 3 },
-    { SigOf("EFID"), 4 },
-    { SigOf("EFIT"), 5 },
-    { SigOf("CTDA"), 6 },
+    { SigOf("ICON"), 1 },
     { SigOf("CIS1"), 6 },
     { SigOf("CIS2"), 6 },
-    { SigOf("CTDA"), 0 },
-    { SigOf("CIS1"), 1 },
-    { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 6 },
     { SigOf("EDID"), 0 },
-    { SigOf("PNAM"), 1 },
-    { SigOf("DATA"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("EFID"), 4 },
     { SigOf("OBND"), 1 },
     { SigOf("FULL"), 2 },
+    { SigOf("EFIT"), 5 },
+    { SigOf("ENIT"), 3 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("DATA"), 2 },
+    { SigOf("EDID"), 0 },
+    { SigOf("PNAM"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 1 },
     { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
-    { SigOf("EITM"), 4 },
+    { SigOf("FULL"), 2 },
     { SigOf("MNAM"), 5 },
+    { SigOf("EITM"), 4 },
+    { SigOf("MODS"), 3 },
+    { SigOf("MODT"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("DATA"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
     { SigOf("ICON"), 2 },
-    { SigOf("DATA"), 3 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("XNAM"), 2 },
-    { SigOf("DATA"), 3 },
-    { SigOf("JAIL"), 4 },
-    { SigOf("WAIT"), 5 },
-    { SigOf("STOL"), 6 },
-    { SigOf("PLCN"), 7 },
-    { SigOf("CRGR"), 8 },
-    { SigOf("JOUT"), 9 },
-    { SigOf("RNAM"), 10 },
-    { SigOf("MNAM"), 11 },
-    { SigOf("FNAM"), 12 },
-    { SigOf("VEND"), 13 },
-    { SigOf("VENC"), 14 },
-    { SigOf("VENV"), 15 },
-    { SigOf("CTDA"), 16 },
     { SigOf("CIS1"), 16 },
     { SigOf("CIS2"), 16 },
+    { SigOf("CTDA"), 16 },
+    { SigOf("DATA"), 3 },
     { SigOf("CRVA"), 17 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("VENC"), 14 },
+    { SigOf("EDID"), 0 },
+    { SigOf("VEND"), 13 },
+    { SigOf("JAIL"), 4 },
+    { SigOf("FULL"), 1 },
+    { SigOf("STOL"), 6 },
+    { SigOf("FNAM"), 12 },
+    { SigOf("MNAM"), 11 },
+    { SigOf("RNAM"), 10 },
+    { SigOf("XNAM"), 2 },
+    { SigOf("PLCN"), 7 },
+    { SigOf("CRGR"), 8 },
+    { SigOf("WAIT"), 5 },
+    { SigOf("JOUT"), 9 },
+    { SigOf("VENV"), 15 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("KSIZ"), 5 },
+    { SigOf("CTDA"), 0 },
     { SigOf("KWDA"), 6 },
-    { SigOf("RNAM"), 7 },
-    { SigOf("FNAM"), 8 },
-    { SigOf("PFIG"), 9 },
-    { SigOf("SNAM"), 10 },
     { SigOf("PFPC"), 11 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("PFIG"), 9 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("FNAM"), 8 },
+    { SigOf("RNAM"), 7 },
+    { SigOf("SNAM"), 10 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("KSIZ"), 5 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("LNAM"), 1 },
-    { SigOf("EDID"), 0 },
     { SigOf("DATA"), 1 },
-    { SigOf("ANAM"), 2 },
     { SigOf("EDID"), 0 },
-    { SigOf("XCNT"), 1 },
+    { SigOf("ANAM"), 2 },
     { SigOf("DATA"), 2 },
     { SigOf("EDID"), 0 },
+    { SigOf("XCNT"), 1 },
+    { SigOf("KWDA"), 12 },
     { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
+    { SigOf("DSTD"), 13 },
+    { SigOf("DSTF"), 13 },
+    { SigOf("DMDL"), 13 },
     { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
+    { SigOf("FULL"), 3 },
     { SigOf("FNAM"), 5 },
+    { SigOf("KNAM"), 10 },
     { SigOf("MNAM"), 6 },
     { SigOf("PNAM"), 7 },
-    { SigOf("WBDT"), 8 },
     { SigOf("FNPR"), 9 },
-    { SigOf("KNAM"), 10 },
-    { SigOf("KSIZ"), 11 },
-    { SigOf("KWDA"), 12 },
-    { SigOf("DEST"), 13 },
-    { SigOf("DSTD"), 13 },
-    { SigOf("DMDL"), 13 },
-    { SigOf("DMDT"), 13 },
     { SigOf("DMDS"), 13 },
-    { SigOf("DSTF"), 13 },
+    { SigOf("MODS"), 4 },
+    { SigOf("WBDT"), 8 },
+    { SigOf("DMDT"), 13 },
+    { SigOf("MODT"), 4 },
+    { SigOf("DEST"), 13 },
+    { SigOf("KSIZ"), 11 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("DEST"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("DSTD"), 1 },
-    { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 1 },
-    { SigOf("DMDS"), 1 },
     { SigOf("DSTF"), 1 },
-    { SigOf("DSTD"), 0 },
     { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 2 },
-    { SigOf("DMDS"), 3 },
+    { SigOf("DMDS"), 1 },
+    { SigOf("DMDT"), 1 },
+    { SigOf("DEST"), 0 },
+    { SigOf("DSTD"), 0 },
     { SigOf("DSTF"), 4 },
+    { SigOf("DMDL"), 1 },
+    { SigOf("DMDS"), 3 },
+    { SigOf("DMDT"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("FNAM"), 1 },
     { SigOf("FLTV"), 2 },
-    { SigOf("EDID"), 0 },
     { SigOf("DATA"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("MODL"), 2 },
-    { SigOf("MODT"), 2 },
-    { SigOf("MODS"), 2 },
     { SigOf("DATA"), 3 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
-    { SigOf("MNAM"), 4 },
+    { SigOf("MODL"), 2 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 2 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("DATA"), 5 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
     { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("MODL"), 2 },
-    { SigOf("MODT"), 2 },
+    { SigOf("OBND"), 1 },
+    { SigOf("MODL"), 3 },
+    { SigOf("FULL"), 2 },
+    { SigOf("MNAM"), 4 },
+    { SigOf("MODS"), 3 },
+    { SigOf("MODT"), 3 },
+    { SigOf("MODL"), 0 },
     { SigOf("MODS"), 2 },
-    { SigOf("DATA"), 3 },
-    { SigOf("PNAM"), 4 },
-    { SigOf("HNAM"), 5 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM0"), 6 },
     { SigOf("NAM1"), 6 },
-    { SigOf("TNAM"), 7 },
+    { SigOf("DATA"), 3 },
+    { SigOf("EDID"), 0 },
+    { SigOf("MODL"), 2 },
+    { SigOf("FULL"), 1 },
     { SigOf("CNAM"), 8 },
+    { SigOf("HNAM"), 5 },
+    { SigOf("PNAM"), 4 },
     { SigOf("RNAM"), 9 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
+    { SigOf("TNAM"), 7 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 2 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM0"), 0 },
     { SigOf("NAM1"), 1 },
-    { SigOf("EDID"), 0 },
-    { SigOf("ENAM"), 1 },
-    { SigOf("ANAM"), 2 },
-    { SigOf("DATA"), 3 },
-    { SigOf("CTDA"), 4 },
     { SigOf("CIS1"), 4 },
     { SigOf("CIS2"), 4 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 4 },
+    { SigOf("DATA"), 3 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 2 },
+    { SigOf("ENAM"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("IDLA"), 5 },
+    { SigOf("IDLC"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("IDLF"), 2 },
-    { SigOf("IDLC"), 3 },
     { SigOf("IDLT"), 4 },
-    { SigOf("IDLA"), 5 },
     { SigOf("EDID"), 0 },
     { SigOf("EDID"), 0 },
+    { SigOf("CNAM"), 3 },
+    { SigOf("DNAM"), 5 },
     { SigOf("ENAM"), 1 },
     { SigOf("HNAM"), 2 },
-    { SigOf("CNAM"), 3 },
     { SigOf("TNAM"), 4 },
-    { SigOf("DNAM"), 5 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("ENAM"), 2 },
-    { SigOf("PNAM"), 3 },
-    { SigOf("CNAM"), 4 },
-    { SigOf("TCLT"), 5 },
-    { SigOf("DNAM"), 6 },
-    { SigOf("TRDT"), 7 },
     { SigOf("NAM1"), 8 },
-    { SigOf("NAM2"), 9 },
-    { SigOf("NAM3"), 10 },
-    { SigOf("SNAM"), 11 },
-    { SigOf("LNAM"), 12 },
-    { SigOf("ANAM"), 13 },
-    { SigOf("TWAT"), 14 },
-    { SigOf("ONAM"), 15 },
-    { SigOf("RNAM"), 16 },
-    { SigOf("CTDA"), 17 },
     { SigOf("CIS1"), 17 },
+    { SigOf("NAM2"), 9 },
     { SigOf("CIS2"), 17 },
+    { SigOf("NAM3"), 10 },
+    { SigOf("CTDA"), 17 },
     { SigOf("DATA"), 18 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 13 },
+    { SigOf("CNAM"), 4 },
+    { SigOf("DNAM"), 6 },
+    { SigOf("ENAM"), 2 },
+    { SigOf("LNAM"), 12 },
+    { SigOf("ONAM"), 15 },
+    { SigOf("PNAM"), 3 },
     { SigOf("QNAM"), 19 },
+    { SigOf("RNAM"), 16 },
+    { SigOf("SNAM"), 11 },
     { SigOf("SCHR"), 20 },
+    { SigOf("TWAT"), 14 },
+    { SigOf("TRDT"), 7 },
+    { SigOf("TCLT"), 5 },
     { SigOf("NEXT"), 21 },
-    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("KSIZ"), 4 },
-    { SigOf("KWDA"), 5 },
-    { SigOf("MODL"), 6 },
-    { SigOf("MODT"), 6 },
-    { SigOf("MODS"), 6 },
-    { SigOf("ICON"), 7 },
-    { SigOf("YNAM"), 8 },
-    { SigOf("ZNAM"), 9 },
-    { SigOf("ETYP"), 10 },
-    { SigOf("DATA"), 11 },
-    { SigOf("ENIT"), 12 },
-    { SigOf("EFID"), 13 },
-    { SigOf("EFIT"), 14 },
-    { SigOf("CTDA"), 15 },
+    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 15 },
     { SigOf("CIS2"), 15 },
+    { SigOf("CTDA"), 15 },
+    { SigOf("KWDA"), 5 },
+    { SigOf("DATA"), 11 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("EFID"), 13 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 6 },
+    { SigOf("FULL"), 3 },
+    { SigOf("YNAM"), 8 },
+    { SigOf("ZNAM"), 9 },
+    { SigOf("ICON"), 7 },
+    { SigOf("ETYP"), 10 },
+    { SigOf("MODS"), 6 },
+    { SigOf("MODT"), 6 },
+    { SigOf("EFIT"), 14 },
+    { SigOf("ENIT"), 12 },
+    { SigOf("KSIZ"), 4 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("NAM1"), 7 },
+    { SigOf("NAM2"), 8 },
+    { SigOf("DATA"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 1 },
-    { SigOf("DATA"), 2 },
-    { SigOf("DODT"), 3 },
     { SigOf("DNAM"), 4 },
     { SigOf("ENAM"), 5 },
     { SigOf("SNAM"), 6 },
-    { SigOf("NAM1"), 7 },
-    { SigOf("NAM2"), 8 },
-    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 1 },
+    { SigOf("DODT"), 3 },
     { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 0 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("PNAM"), 1 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("ICON"), 5 },
-    { SigOf("MICO"), 6 },
-    { SigOf("YNAM"), 7 },
-    { SigOf("ZNAM"), 8 },
-    { SigOf("KSIZ"), 9 },
+    { SigOf("NAM0"), 14 },
     { SigOf("KWDA"), 10 },
     { SigOf("DATA"), 11 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
     { SigOf("SOUL"), 12 },
+    { SigOf("YNAM"), 7 },
+    { SigOf("ZNAM"), 8 },
+    { SigOf("ICON"), 5 },
+    { SigOf("MICO"), 6 },
     { SigOf("SLCP"), 13 },
-    { SigOf("NAM0"), 14 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("KSIZ"), 9 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("CNAM"), 1 },
     { SigOf("DATA"), 0 },
     { SigOf("VNML"), 1 },
-    { SigOf("VHGT"), 2 },
     { SigOf("VCLR"), 3 },
-    { SigOf("BTXT"), 4 },
+    { SigOf("VHGT"), 2 },
     { SigOf("ATXT"), 5 },
+    { SigOf("BTXT"), 4 },
     { SigOf("VTXT"), 6 },
     { SigOf("EDID"), 0 },
     { SigOf("CNAM"), 1 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("PNAM"), 2 },
     { SigOf("NAM1"), 3 },
-    { SigOf("FNAM"), 4 },
-    { SigOf("MNAM"), 5 },
-    { SigOf("RNAM"), 6 },
-    { SigOf("KSIZ"), 7 },
     { SigOf("KWDA"), 8 },
     { SigOf("EDID"), 0 },
+    { SigOf("FULL"), 1 },
+    { SigOf("FNAM"), 4 },
+    { SigOf("MNAM"), 5 },
+    { SigOf("PNAM"), 2 },
+    { SigOf("RNAM"), 6 },
+    { SigOf("KSIZ"), 7 },
     { SigOf("DATA"), 1 },
     { SigOf("DALC"), 2 },
     { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("FNAM"), 5 },
     { SigOf("DATA"), 6 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("FNAM"), 5 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("CIS1"), 3 },
+    { SigOf("MOD2"), 8 },
+    { SigOf("CIS2"), 3 },
+    { SigOf("CTDA"), 3 },
+    { SigOf("DESC"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("NNAM"), 1 },
-    { SigOf("DESC"), 2 },
-    { SigOf("CTDA"), 3 },
-    { SigOf("CIS1"), 3 },
-    { SigOf("CIS2"), 3 },
     { SigOf("ONAM"), 4 },
     { SigOf("RNAM"), 5 },
     { SigOf("SNAM"), 6 },
     { SigOf("XNAM"), 7 },
-    { SigOf("MOD2"), 8 },
-    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
     { SigOf("EDID"), 0 },
-    { SigOf("TNAM"), 1 },
-    { SigOf("MNAM"), 2 },
-    { SigOf("HNAM"), 3 },
-    { SigOf("SNAM"), 4 },
     { SigOf("GNAM"), 5 },
+    { SigOf("HNAM"), 3 },
+    { SigOf("MNAM"), 2 },
+    { SigOf("SNAM"), 4 },
+    { SigOf("TNAM"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
     { SigOf("LVLD"), 2 },
+    { SigOf("OBND"), 1 },
     { SigOf("LVLF"), 3 },
     { SigOf("LVLG"), 4 },
-    { SigOf("LLCT"), 5 },
-    { SigOf("LVLO"), 6 },
     { SigOf("MODL"), 7 },
-    { SigOf("MODT"), 7 },
+    { SigOf("LVLO"), 6 },
     { SigOf("MODS"), 7 },
+    { SigOf("LLCT"), 5 },
+    { SigOf("MODT"), 7 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
     { SigOf("LVLD"), 2 },
+    { SigOf("OBND"), 1 },
     { SigOf("LVLF"), 3 },
     { SigOf("LVLG"), 4 },
-    { SigOf("LLCT"), 5 },
-    { SigOf("LVLO"), 6 },
     { SigOf("MODL"), 7 },
-    { SigOf("MODT"), 7 },
+    { SigOf("LVLO"), 6 },
     { SigOf("MODS"), 7 },
+    { SigOf("LLCT"), 5 },
+    { SigOf("MODT"), 7 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
     { SigOf("LVLD"), 2 },
+    { SigOf("OBND"), 1 },
     { SigOf("LVLF"), 3 },
     { SigOf("LVLG"), 4 },
-    { SigOf("LLCT"), 5 },
-    { SigOf("LVLO"), 6 },
     { SigOf("MODL"), 7 },
-    { SigOf("MODT"), 7 },
+    { SigOf("LVLO"), 6 },
     { SigOf("MODS"), 7 },
+    { SigOf("LLCT"), 5 },
+    { SigOf("MODT"), 7 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("DATA"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("MODL"), 1 },
     { SigOf("DNAM"), 2 },
-    { SigOf("DATA"), 3 },
     { SigOf("EDID"), 0 },
-    { SigOf("PNAM"), 1 },
-    { SigOf("MNAM"), 2 },
-    { SigOf("CNAM"), 3 },
     { SigOf("BNAM"), 4 },
+    { SigOf("CNAM"), 3 },
     { SigOf("FNAM"), 5 },
     { SigOf("HNAM"), 6 },
-    { SigOf("EDID"), 0 },
+    { SigOf("MNAM"), 2 },
+    { SigOf("PNAM"), 1 },
+    { SigOf("CIS1"), 7 },
+    { SigOf("CIS2"), 7 },
+    { SigOf("CTDA"), 7 },
     { SigOf("DESC"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("FULL"), 2 },
-    { SigOf("QNAM"), 3 },
     { SigOf("DNAM"), 4 },
+    { SigOf("INAM"), 8 },
+    { SigOf("QNAM"), 3 },
     { SigOf("TNAM"), 5 },
     { SigOf("ITXT"), 6 },
-    { SigOf("CTDA"), 7 },
-    { SigOf("CIS1"), 7 },
-    { SigOf("CIS2"), 7 },
-    { SigOf("INAM"), 8 },
-    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("MDOB"), 3 },
-    { SigOf("KSIZ"), 4 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 7 },
+    { SigOf("CIS2"), 7 },
+    { SigOf("CTDA"), 7 },
     { SigOf("KWDA"), 5 },
-    { SigOf("DNAM"), 6 },
-    { SigOf("CTDA"), 7 },
-    { SigOf("CIS1"), 7 },
-    { SigOf("CIS2"), 7 },
     { SigOf("DATA"), 8 },
+    { SigOf("MDOB"), 3 },
+    { SigOf("VMAD"), 1 },
     { SigOf("SNDD"), 9 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("EDID"), 0 },
+    { SigOf("FULL"), 2 },
+    { SigOf("DNAM"), 6 },
+    { SigOf("KSIZ"), 4 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("ICON"), 5 },
-    { SigOf("MICO"), 6 },
-    { SigOf("YNAM"), 7 },
-    { SigOf("ZNAM"), 8 },
-    { SigOf("KSIZ"), 9 },
+    { SigOf("CTDA"), 0 },
     { SigOf("KWDA"), 10 },
     { SigOf("DATA"), 11 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 2 },
+    { SigOf("VMAD"), 1 },
     { SigOf("EDID"), 0 },
-    { SigOf("MNAM"), 1 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("YNAM"), 7 },
+    { SigOf("ZNAM"), 8 },
+    { SigOf("ICON"), 5 },
+    { SigOf("MICO"), 6 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("KSIZ"), 9 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("SPED"), 2 },
+    { SigOf("EDID"), 0 },
     { SigOf("INAM"), 3 },
+    { SigOf("MNAM"), 1 },
+    { SigOf("DATA"), 4 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
-    { SigOf("DATA"), 4 },
-    { SigOf("DEST"), 5 },
     { SigOf("DSTD"), 5 },
-    { SigOf("DMDL"), 5 },
-    { SigOf("DMDT"), 5 },
-    { SigOf("DMDS"), 5 },
     { SigOf("DSTF"), 5 },
+    { SigOf("DMDL"), 5 },
+    { SigOf("MODL"), 3 },
+    { SigOf("FULL"), 2 },
+    { SigOf("DMDS"), 5 },
+    { SigOf("MODS"), 3 },
+    { SigOf("DMDT"), 5 },
+    { SigOf("MODT"), 3 },
+    { SigOf("DEST"), 5 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("DEST"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("DSTD"), 1 },
-    { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 1 },
-    { SigOf("DMDS"), 1 },
     { SigOf("DSTF"), 1 },
-    { SigOf("DSTD"), 0 },
     { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 2 },
-    { SigOf("DMDS"), 3 },
+    { SigOf("DMDS"), 1 },
+    { SigOf("DMDT"), 1 },
+    { SigOf("DEST"), 0 },
+    { SigOf("DSTD"), 0 },
     { SigOf("DSTF"), 4 },
+    { SigOf("DMDL"), 1 },
+    { SigOf("DMDS"), 3 },
+    { SigOf("DMDT"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("FNAM"), 1 },
     { SigOf("PNAM"), 2 },
-    { SigOf("WNAM"), 3 },
     { SigOf("TNAM"), 4 },
-    { SigOf("EDID"), 0 },
-    { SigOf("CNAM"), 1 },
-    { SigOf("FLTV"), 2 },
-    { SigOf("DNAM"), 3 },
-    { SigOf("ANAM"), 4 },
-    { SigOf("BNAM"), 5 },
-    { SigOf("FNAM"), 6 },
-    { SigOf("LNAM"), 7 },
-    { SigOf("CITC"), 8 },
-    { SigOf("SNAM"), 9 },
-    { SigOf("CTDA"), 10 },
+    { SigOf("WNAM"), 3 },
     { SigOf("CIS1"), 10 },
     { SigOf("CIS2"), 10 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 10 },
+    { SigOf("CITC"), 8 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 4 },
+    { SigOf("BNAM"), 5 },
+    { SigOf("CNAM"), 1 },
+    { SigOf("DNAM"), 3 },
+    { SigOf("FNAM"), 6 },
+    { SigOf("LNAM"), 7 },
+    { SigOf("SNAM"), 9 },
+    { SigOf("FLTV"), 2 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
     { SigOf("NVER"), 0 },
     { SigOf("NVNM"), 0 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("ACBS"), 3 },
-    { SigOf("SNAM"), 4 },
-    { SigOf("INAM"), 5 },
-    { SigOf("VTCK"), 6 },
-    { SigOf("TPLT"), 7 },
-    { SigOf("RNAM"), 8 },
-    { SigOf("SPCT"), 9 },
-    { SigOf("SPLO"), 10 },
-    { SigOf("WNAM"), 11 },
-    { SigOf("ANAM"), 12 },
-    { SigOf("ATKR"), 13 },
-    { SigOf("ATKE"), 14 },
-    { SigOf("SPOR"), 15 },
-    { SigOf("OCOR"), 16 },
-    { SigOf("GWOR"), 17 },
-    { SigOf("ECOR"), 18 },
     { SigOf("NAM5"), 19 },
     { SigOf("NAM6"), 20 },
     { SigOf("NAM7"), 21 },
     { SigOf("NAM8"), 22 },
+    { SigOf("NAM9"), 33 },
+    { SigOf("KWDA"), 37 },
+    { SigOf("NAMA"), 34 },
+    { SigOf("DATA"), 47 },
+    { SigOf("TINC"), 35 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("PKID"), 43 },
+    { SigOf("OBND"), 2 },
+    { SigOf("DSTD"), 50 },
+    { SigOf("ATKE"), 14 },
+    { SigOf("CRIF"), 27 },
+    { SigOf("HCLF"), 30 },
+    { SigOf("DSTF"), 50 },
+    { SigOf("TINI"), 35 },
+    { SigOf("VTCK"), 6 },
+    { SigOf("DMDL"), 50 },
+    { SigOf("FULL"), 45 },
+    { SigOf("ANAM"), 12 },
+    { SigOf("CNAM"), 44 },
+    { SigOf("DNAM"), 48 },
+    { SigOf("GNAM"), 32 },
+    { SigOf("INAM"), 5 },
+    { SigOf("PNAM"), 29 },
+    { SigOf("QNAM"), 49 },
+    { SigOf("RNAM"), 8 },
+    { SigOf("SNAM"), 4 },
+    { SigOf("WNAM"), 11 },
+    { SigOf("ZNAM"), 31 },
+    { SigOf("SPLO"), 10 },
+    { SigOf("CNTO"), 41 },
     { SigOf("CSCR"), 23 },
+    { SigOf("PRKR"), 39 },
+    { SigOf("ATKR"), 13 },
+    { SigOf("ECOR"), 18 },
+    { SigOf("OCOR"), 16 },
+    { SigOf("SPOR"), 15 },
+    { SigOf("GWOR"), 17 },
+    { SigOf("TIAS"), 35 },
+    { SigOf("ACBS"), 3 },
+    { SigOf("DMDS"), 50 },
+    { SigOf("COCT"), 40 },
+    { SigOf("SPCT"), 9 },
+    { SigOf("AIDT"), 42 },
+    { SigOf("DMDT"), 50 },
     { SigOf("DOFT"), 24 },
     { SigOf("SOFT"), 25 },
     { SigOf("DPLT"), 26 },
-    { SigOf("CRIF"), 27 },
-    { SigOf("FTST"), 28 },
-    { SigOf("PNAM"), 29 },
-    { SigOf("HCLF"), 30 },
-    { SigOf("ZNAM"), 31 },
-    { SigOf("GNAM"), 32 },
-    { SigOf("NAM9"), 33 },
-    { SigOf("NAMA"), 34 },
-    { SigOf("TINI"), 35 },
-    { SigOf("TINC"), 35 },
-    { SigOf("TINV"), 35 },
-    { SigOf("TIAS"), 35 },
-    { SigOf("KSIZ"), 36 },
-    { SigOf("KWDA"), 37 },
-    { SigOf("PRKZ"), 38 },
-    { SigOf("PRKR"), 39 },
-    { SigOf("COCT"), 40 },
-    { SigOf("CNTO"), 41 },
-    { SigOf("AIDT"), 42 },
-    { SigOf("PKID"), 43 },
-    { SigOf("CNAM"), 44 },
-    { SigOf("FULL"), 45 },
+    { SigOf("TPLT"), 7 },
     { SigOf("SHRT"), 46 },
-    { SigOf("DATA"), 47 },
-    { SigOf("DNAM"), 48 },
-    { SigOf("QNAM"), 49 },
     { SigOf("DEST"), 50 },
-    { SigOf("DSTD"), 50 },
-    { SigOf("DMDL"), 50 },
-    { SigOf("DMDT"), 50 },
-    { SigOf("DMDS"), 50 },
-    { SigOf("DSTF"), 50 },
-    { SigOf("TINI"), 0 },
+    { SigOf("FTST"), 28 },
+    { SigOf("TINV"), 35 },
+    { SigOf("KSIZ"), 36 },
+    { SigOf("PRKZ"), 38 },
     { SigOf("TINC"), 1 },
-    { SigOf("TINV"), 2 },
+    { SigOf("TINI"), 0 },
     { SigOf("TIAS"), 3 },
-    { SigOf("DEST"), 0 },
+    { SigOf("TINV"), 2 },
     { SigOf("DSTD"), 1 },
-    { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 1 },
-    { SigOf("DMDS"), 1 },
     { SigOf("DSTF"), 1 },
-    { SigOf("DSTD"), 0 },
     { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 2 },
-    { SigOf("DMDS"), 3 },
+    { SigOf("DMDS"), 1 },
+    { SigOf("DMDT"), 1 },
+    { SigOf("DEST"), 0 },
+    { SigOf("DSTD"), 0 },
     { SigOf("DSTF"), 4 },
+    { SigOf("DMDL"), 1 },
+    { SigOf("DMDS"), 3 },
+    { SigOf("DMDT"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("INAM"), 1 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("PKDT"), 2 },
-    { SigOf("PSDT"), 3 },
-    { SigOf("CTDA"), 4 },
     { SigOf("CIS1"), 4 },
     { SigOf("CIS2"), 4 },
-    { SigOf("IDLF"), 5 },
-    { SigOf("IDLC"), 6 },
-    { SigOf("IDLT"), 7 },
+    { SigOf("POBA"), 15 },
+    { SigOf("POCA"), 17 },
+    { SigOf("CTDA"), 4 },
+    { SigOf("POEA"), 16 },
     { SigOf("IDLA"), 8 },
+    { SigOf("IDLC"), 6 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("IDLF"), 5 },
+    { SigOf("ANAM"), 12 },
     { SigOf("CNAM"), 9 },
     { SigOf("QNAM"), 10 },
-    { SigOf("PKCU"), 11 },
-    { SigOf("ANAM"), 12 },
-    { SigOf("XNAM"), 13 },
     { SigOf("UNAM"), 14 },
-    { SigOf("POBA"), 15 },
-    { SigOf("POEA"), 16 },
-    { SigOf("POCA"), 17 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("XNAM"), 13 },
+    { SigOf("PKDT"), 2 },
+    { SigOf("PSDT"), 3 },
+    { SigOf("IDLT"), 7 },
+    { SigOf("PKCU"), 11 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 7 },
+    { SigOf("PKC2"), 11 },
+    { SigOf("PFO2"), 13 },
+    { SigOf("CIS2"), 7 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("PTDA"), 3 },
+    { SigOf("PRCB"), 8 },
+    { SigOf("TPIC"), 4 },
+    { SigOf("CITC"), 6 },
     { SigOf("ANAM"), 0 },
     { SigOf("CNAM"), 1 },
-    { SigOf("PLDT"), 2 },
-    { SigOf("PTDA"), 3 },
-    { SigOf("TPIC"), 4 },
-    { SigOf("PDTO"), 5 },
-    { SigOf("CITC"), 6 },
-    { SigOf("CTDA"), 7 },
-    { SigOf("CIS1"), 7 },
-    { SigOf("CIS2"), 7 },
-    { SigOf("PRCB"), 8 },
-    { SigOf("PNAM"), 9 },
     { SigOf("FNAM"), 10 },
-    { SigOf("PKC2"), 11 },
+    { SigOf("PNAM"), 9 },
+    { SigOf("PDTO"), 5 },
     { SigOf("PFOR"), 12 },
-    { SigOf("PFO2"), 13 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("PLDT"), 2 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("UNAM"), 0 },
+    { SigOf("CTDA"), 0 },
     { SigOf("BNAM"), 1 },
     { SigOf("PNAM"), 2 },
+    { SigOf("UNAM"), 0 },
     { SigOf("POBA"), 0 },
     { SigOf("INAM"), 1 },
-    { SigOf("SCHR"), 2 },
-    { SigOf("SCTX"), 3 },
     { SigOf("QNAM"), 4 },
     { SigOf("TNAM"), 5 },
     { SigOf("PDTO"), 6 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
     { SigOf("POEA"), 0 },
     { SigOf("INAM"), 1 },
-    { SigOf("SCHR"), 2 },
-    { SigOf("SCTX"), 3 },
     { SigOf("QNAM"), 4 },
     { SigOf("TNAM"), 5 },
     { SigOf("PDTO"), 6 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
     { SigOf("POCA"), 0 },
     { SigOf("INAM"), 1 },
-    { SigOf("SCHR"), 2 },
-    { SigOf("SCTX"), 3 },
     { SigOf("QNAM"), 4 },
     { SigOf("TNAM"), 5 },
     { SigOf("PDTO"), 6 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("DESC"), 3 },
-    { SigOf("ICON"), 4 },
-    { SigOf("NNAM"), 5 },
-    { SigOf("CTDA"), 6 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("SCTX"), 3 },
     { SigOf("CIS1"), 6 },
     { SigOf("CIS2"), 6 },
+    { SigOf("CTDA"), 6 },
     { SigOf("DATA"), 7 },
+    { SigOf("DESC"), 3 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("PRKE"), 8 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("FULL"), 2 },
+    { SigOf("NNAM"), 5 },
+    { SigOf("ICON"), 4 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("PRKE"), 0 },
-    { SigOf("DATA"), 1 },
-    { SigOf("PRKC"), 2 },
-    { SigOf("EPFT"), 3 },
+    { SigOf("CTDA"), 0 },
     { SigOf("EPF2"), 4 },
     { SigOf("EPF3"), 5 },
+    { SigOf("DATA"), 1 },
+    { SigOf("PRKC"), 2 },
     { SigOf("EPFD"), 6 },
+    { SigOf("PRKE"), 0 },
     { SigOf("PRKF"), 7 },
-    { SigOf("PRKC"), 0 },
-    { SigOf("CTDA"), 1 },
+    { SigOf("EPFT"), 3 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 1 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("PRKC"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("DATA"), 5 },
     { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("NAME"), 2 },
     { SigOf("XSCL"), 3 },
     { SigOf("XESP"), 4 },
     { SigOf("DATA"), 5 },
-    { SigOf("EDID"), 0 },
     { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("NAME"), 2 },
     { SigOf("XSCL"), 3 },
     { SigOf("XESP"), 4 },
-    { SigOf("DATA"), 5 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
-    { SigOf("MODS"), 3 },
     { SigOf("NAM1"), 4 },
     { SigOf("NAM2"), 5 },
-    { SigOf("VNAM"), 6 },
-    { SigOf("DEST"), 7 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 1 },
     { SigOf("DSTD"), 7 },
-    { SigOf("DMDL"), 7 },
-    { SigOf("DMDT"), 7 },
-    { SigOf("DMDS"), 7 },
     { SigOf("DSTF"), 7 },
+    { SigOf("DMDL"), 7 },
+    { SigOf("MODL"), 3 },
+    { SigOf("FULL"), 2 },
+    { SigOf("VNAM"), 6 },
+    { SigOf("DMDS"), 7 },
+    { SigOf("MODS"), 3 },
+    { SigOf("DMDT"), 7 },
+    { SigOf("MODT"), 3 },
+    { SigOf("DEST"), 7 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("DEST"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("DSTD"), 1 },
-    { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 1 },
-    { SigOf("DMDS"), 1 },
     { SigOf("DSTF"), 1 },
-    { SigOf("DSTD"), 0 },
     { SigOf("DMDL"), 1 },
-    { SigOf("DMDT"), 2 },
-    { SigOf("DMDS"), 3 },
+    { SigOf("DMDS"), 1 },
+    { SigOf("DMDT"), 1 },
+    { SigOf("DEST"), 0 },
+    { SigOf("DSTD"), 0 },
     { SigOf("DSTF"), 4 },
+    { SigOf("DMDL"), 1 },
+    { SigOf("DMDS"), 3 },
+    { SigOf("DMDT"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("MODL"), 2 },
+    { SigOf("DNAM"), 3 },
+    { SigOf("MODS"), 2 },
     { SigOf("MODT"), 2 },
-    { SigOf("MODS"), 2 },
-    { SigOf("DNAM"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("DNAM"), 3 },
-    { SigOf("ENAM"), 4 },
-    { SigOf("QTGL"), 5 },
-    { SigOf("FLTR"), 6 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 7 },
     { SigOf("CIS2"), 7 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("QOBJ"), 10 },
+    { SigOf("QTGL"), 5 },
+    { SigOf("FULL"), 2 },
+    { SigOf("ANAM"), 11 },
+    { SigOf("DNAM"), 3 },
+    { SigOf("ENAM"), 4 },
+    { SigOf("FLTR"), 6 },
+    { SigOf("ALLS"), 13 },
+    { SigOf("ALST"), 12 },
     { SigOf("NEXT"), 8 },
     { SigOf("INDX"), 9 },
-    { SigOf("QOBJ"), 10 },
-    { SigOf("ANAM"), 11 },
-    { SigOf("ALST"), 12 },
-    { SigOf("ALLS"), 13 },
-    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("INDX"), 0 },
+    { SigOf("CTDA"), 0 },
     { SigOf("QSDT"), 1 },
-    { SigOf("QSDT"), 0 },
-    { SigOf("CTDA"), 1 },
+    { SigOf("INDX"), 0 },
+    { SigOf("NAM0"), 3 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 1 },
+    { SigOf("CTDA"), 1 },
     { SigOf("CNAM"), 2 },
-    { SigOf("NAM0"), 3 },
-    { SigOf("SCHR"), 4 },
-    { SigOf("SCTX"), 5 },
     { SigOf("QNAM"), 6 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("SCHR"), 4 },
+    { SigOf("QSDT"), 0 },
+    { SigOf("SCTX"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("QSTA"), 3 },
     { SigOf("QOBJ"), 0 },
     { SigOf("FNAM"), 1 },
     { SigOf("NNAM"), 2 },
-    { SigOf("QSTA"), 3 },
-    { SigOf("QSTA"), 0 },
-    { SigOf("CTDA"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 1 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 1 },
+    { SigOf("QSTA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 19 },
+    { SigOf("CIS2"), 19 },
+    { SigOf("ALCA"), 12 },
+    { SigOf("CTDA"), 19 },
+    { SigOf("KWDA"), 21 },
+    { SigOf("ALEA"), 10 },
+    { SigOf("ALFA"), 7 },
+    { SigOf("ALNA"), 14 },
+    { SigOf("ALUA"), 6 },
+    { SigOf("ALFC"), 28 },
+    { SigOf("ALPC"), 29 },
+    { SigOf("ALED"), 31 },
+    { SigOf("ALFD"), 17 },
+    { SigOf("ALID"), 1 },
+    { SigOf("ALFE"), 16 },
+    { SigOf("ALFI"), 3 },
+    { SigOf("VTCK"), 30 },
+    { SigOf("ALCL"), 13 },
+    { SigOf("ALFL"), 4 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("KNAM"), 18 },
+    { SigOf("ALDN"), 26 },
+    { SigOf("ALCO"), 11 },
+    { SigOf("CNTO"), 23 },
+    { SigOf("ALSP"), 27 },
+    { SigOf("ALEQ"), 9 },
+    { SigOf("ALFR"), 5 },
+    { SigOf("ECOR"), 25 },
+    { SigOf("SPOR"), 24 },
+    { SigOf("COCT"), 22 },
+    { SigOf("ALNT"), 15 },
+    { SigOf("ALRT"), 8 },
     { SigOf("ALST"), 0 },
-    { SigOf("ALID"), 1 },
-    { SigOf("FNAM"), 2 },
-    { SigOf("ALFI"), 3 },
-    { SigOf("ALFL"), 4 },
-    { SigOf("ALFR"), 5 },
-    { SigOf("ALUA"), 6 },
-    { SigOf("ALFA"), 7 },
-    { SigOf("ALRT"), 8 },
-    { SigOf("ALEQ"), 9 },
-    { SigOf("ALEA"), 10 },
-    { SigOf("ALCO"), 11 },
-    { SigOf("ALCA"), 12 },
-    { SigOf("ALCL"), 13 },
-    { SigOf("ALNA"), 14 },
-    { SigOf("ALNT"), 15 },
-    { SigOf("ALFE"), 16 },
-    { SigOf("ALFD"), 17 },
-    { SigOf("KNAM"), 18 },
-    { SigOf("CTDA"), 19 },
-    { SigOf("CIS1"), 19 },
-    { SigOf("CIS2"), 19 },
     { SigOf("KSIZ"), 20 },
-    { SigOf("KWDA"), 21 },
-    { SigOf("COCT"), 22 },
-    { SigOf("CNTO"), 23 },
-    { SigOf("SPOR"), 24 },
-    { SigOf("ECOR"), 25 },
-    { SigOf("ALDN"), 26 },
-    { SigOf("ALSP"), 27 },
-    { SigOf("ALFC"), 28 },
-    { SigOf("ALPC"), 29 },
-    { SigOf("VTCK"), 30 },
-    { SigOf("ALED"), 31 },
-    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("CIS1"), 19 },
+    { SigOf("CIS2"), 19 },
+    { SigOf("ALCA"), 12 },
+    { SigOf("CTDA"), 19 },
+    { SigOf("KWDA"), 21 },
+    { SigOf("ALEA"), 10 },
+    { SigOf("ALFA"), 7 },
+    { SigOf("ALNA"), 14 },
+    { SigOf("ALUA"), 6 },
+    { SigOf("ALFC"), 28 },
+    { SigOf("ALPC"), 29 },
+    { SigOf("ALED"), 31 },
+    { SigOf("ALFD"), 17 },
+    { SigOf("ALID"), 1 },
+    { SigOf("ALFE"), 16 },
+    { SigOf("ALFI"), 3 },
+    { SigOf("VTCK"), 30 },
+    { SigOf("ALCL"), 13 },
+    { SigOf("ALFL"), 4 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("KNAM"), 18 },
+    { SigOf("ALDN"), 26 },
+    { SigOf("ALCO"), 11 },
+    { SigOf("CNTO"), 23 },
+    { SigOf("ALSP"), 27 },
+    { SigOf("ALEQ"), 9 },
+    { SigOf("ALFR"), 5 },
+    { SigOf("ECOR"), 25 },
+    { SigOf("SPOR"), 24 },
     { SigOf("ALLS"), 0 },
-    { SigOf("ALID"), 1 },
-    { SigOf("FNAM"), 2 },
-    { SigOf("ALFI"), 3 },
-    { SigOf("ALFL"), 4 },
-    { SigOf("ALFR"), 5 },
-    { SigOf("ALUA"), 6 },
-    { SigOf("ALFA"), 7 },
-    { SigOf("ALRT"), 8 },
-    { SigOf("ALEQ"), 9 },
-    { SigOf("ALEA"), 10 },
-    { SigOf("ALCO"), 11 },
-    { SigOf("ALCA"), 12 },
-    { SigOf("ALCL"), 13 },
-    { SigOf("ALNA"), 14 },
-    { SigOf("ALNT"), 15 },
-    { SigOf("ALFE"), 16 },
-    { SigOf("ALFD"), 17 },
-    { SigOf("KNAM"), 18 },
-    { SigOf("CTDA"), 19 },
-    { SigOf("CIS1"), 19 },
-    { SigOf("CIS2"), 19 },
-    { SigOf("KSIZ"), 20 },
-    { SigOf("KWDA"), 21 },
     { SigOf("COCT"), 22 },
-    { SigOf("CNTO"), 23 },
-    { SigOf("SPOR"), 24 },
-    { SigOf("ECOR"), 25 },
-    { SigOf("ALDN"), 26 },
-    { SigOf("ALSP"), 27 },
-    { SigOf("ALFC"), 28 },
-    { SigOf("ALPC"), 29 },
-    { SigOf("VTCK"), 30 },
-    { SigOf("ALED"), 31 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("ALNT"), 15 },
+    { SigOf("ALRT"), 8 },
+    { SigOf("KSIZ"), 20 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("DESC"), 2 },
-    { SigOf("SPCT"), 3 },
-    { SigOf("SPLO"), 4 },
-    { SigOf("WNAM"), 5 },
-    { SigOf("BOD2"), 6 },
-    { SigOf("KSIZ"), 7 },
-    { SigOf("KWDA"), 8 },
-    { SigOf("MNAM"), 9 },
-    { SigOf("FNAM"), 10 },
-    { SigOf("MTNM"), 11 },
-    { SigOf("VTCK"), 12 },
-    { SigOf("DNAM"), 13 },
-    { SigOf("HCLF"), 14 },
-    { SigOf("TINL"), 15 },
-    { SigOf("PNAM"), 16 },
-    { SigOf("UNAM"), 17 },
-    { SigOf("ATKR"), 18 },
-    { SigOf("ATKE"), 19 },
+    { SigOf("CTDA"), 0 },
+    { SigOf("NAM0"), 40 },
     { SigOf("NAM1"), 20 },
+    { SigOf("BOD2"), 6 },
     { SigOf("NAM3"), 21 },
-    { SigOf("GNAM"), 22 },
     { SigOf("NAM4"), 23 },
     { SigOf("NAM5"), 24 },
     { SigOf("NAM7"), 25 },
-    { SigOf("ONAM"), 26 },
-    { SigOf("LNAM"), 27 },
+    { SigOf("KWDA"), 8 },
+    { SigOf("DESC"), 2 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ATKE"), 19 },
     { SigOf("NAME"), 28 },
-    { SigOf("MTYP"), 29 },
-    { SigOf("VNAM"), 30 },
+    { SigOf("HCLF"), 14 },
+    { SigOf("VTCK"), 12 },
+    { SigOf("FULL"), 1 },
+    { SigOf("TINL"), 15 },
+    { SigOf("DNAM"), 13 },
+    { SigOf("FNAM"), 10 },
+    { SigOf("GNAM"), 22 },
+    { SigOf("LNAM"), 27 },
+    { SigOf("MNAM"), 9 },
+    { SigOf("ONAM"), 26 },
+    { SigOf("PNAM"), 16 },
     { SigOf("QNAM"), 31 },
-    { SigOf("UNES"), 32 },
+    { SigOf("RNAM"), 41 },
+    { SigOf("UNAM"), 17 },
+    { SigOf("VNAM"), 30 },
+    { SigOf("WNAM"), 5 },
+    { SigOf("MTNM"), 11 },
     { SigOf("PHTN"), 33 },
+    { SigOf("SPLO"), 4 },
+    { SigOf("MTYP"), 29 },
+    { SigOf("ATKR"), 18 },
+    { SigOf("UNES"), 32 },
+    { SigOf("SPCT"), 3 },
     { SigOf("PHWT"), 34 },
     { SigOf("WKMV"), 35 },
+    { SigOf("FLMV"), 38 },
     { SigOf("RNMV"), 36 },
     { SigOf("SNMV"), 37 },
-    { SigOf("FLMV"), 38 },
     { SigOf("SPMV"), 39 },
-    { SigOf("NAM0"), 40 },
-    { SigOf("RNAM"), 41 },
+    { SigOf("KSIZ"), 7 },
+    { SigOf("ANAM"), 1 },
     { SigOf("MNAM"), 0 },
-    { SigOf("ANAM"), 1 },
     { SigOf("MODT"), 2 },
-    { SigOf("FNAM"), 0 },
     { SigOf("ANAM"), 1 },
+    { SigOf("FNAM"), 0 },
     { SigOf("MODT"), 2 },
     { SigOf("NAM1"), 0 },
-    { SigOf("MNAM"), 1 },
     { SigOf("FNAM"), 2 },
+    { SigOf("MNAM"), 1 },
+    { SigOf("MODL"), 1 },
     { SigOf("MNAM"), 0 },
+    { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("INDX"), 1 },
     { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("INDX"), 0 },
-    { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 1 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 1 },
     { SigOf("FNAM"), 0 },
+    { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("INDX"), 1 },
     { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("INDX"), 0 },
-    { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
-    { SigOf("MODS"), 1 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM3"), 0 },
-    { SigOf("MNAM"), 1 },
     { SigOf("FNAM"), 2 },
-    { SigOf("MNAM"), 0 },
+    { SigOf("MNAM"), 1 },
     { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
+    { SigOf("MNAM"), 0 },
     { SigOf("MODS"), 1 },
-    { SigOf("MODL"), 0 },
     { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 0 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 1 },
     { SigOf("FNAM"), 0 },
-    { SigOf("MODL"), 1 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 1 },
-    { SigOf("MODL"), 0 },
     { SigOf("MODT"), 1 },
+    { SigOf("MODL"), 0 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("NAM0"), 0 },
-    { SigOf("MNAM"), 1 },
     { SigOf("FNAM"), 2 },
-    { SigOf("MNAM"), 0 },
-    { SigOf("INDX"), 1 },
+    { SigOf("MNAM"), 1 },
+    { SigOf("TINC"), 7 },
     { SigOf("HEAD"), 1 },
+    { SigOf("TIND"), 7 },
     { SigOf("MPAI"), 2 },
-    { SigOf("MPAV"), 2 },
-    { SigOf("RPRM"), 3 },
+    { SigOf("TINI"), 7 },
+    { SigOf("MNAM"), 0 },
     { SigOf("AHCM"), 4 },
+    { SigOf("RPRM"), 3 },
     { SigOf("FTSM"), 5 },
     { SigOf("DFTM"), 6 },
-    { SigOf("TINI"), 7 },
-    { SigOf("TINT"), 7 },
     { SigOf("TINP"), 7 },
-    { SigOf("TIND"), 7 },
-    { SigOf("TINC"), 7 },
-    { SigOf("TINV"), 7 },
     { SigOf("TIRS"), 7 },
-    { SigOf("INDX"), 0 },
-    { SigOf("HEAD"), 1 },
-    { SigOf("MPAI"), 0 },
-    { SigOf("MPAV"), 1 },
-    { SigOf("TINI"), 0 },
-    { SigOf("TINT"), 1 },
-    { SigOf("TINP"), 2 },
-    { SigOf("TIND"), 3 },
-    { SigOf("TINC"), 4 },
-    { SigOf("TINV"), 4 },
-    { SigOf("TIRS"), 4 },
-    { SigOf("TINC"), 0 },
-    { SigOf("TINV"), 1 },
-    { SigOf("TIRS"), 2 },
-    { SigOf("FNAM"), 0 },
+    { SigOf("TINT"), 7 },
+    { SigOf("MPAV"), 2 },
+    { SigOf("TINV"), 7 },
     { SigOf("INDX"), 1 },
     { SigOf("HEAD"), 1 },
-    { SigOf("MPAI"), 2 },
-    { SigOf("MPAV"), 2 },
-    { SigOf("RPRF"), 3 },
-    { SigOf("AHCF"), 4 },
-    { SigOf("FTSF"), 5 },
-    { SigOf("DFTF"), 6 },
-    { SigOf("TINI"), 7 },
-    { SigOf("TINT"), 7 },
-    { SigOf("TINP"), 7 },
-    { SigOf("TIND"), 7 },
-    { SigOf("TINC"), 7 },
-    { SigOf("TINV"), 7 },
-    { SigOf("TIRS"), 7 },
     { SigOf("INDX"), 0 },
-    { SigOf("HEAD"), 1 },
     { SigOf("MPAI"), 0 },
     { SigOf("MPAV"), 1 },
-    { SigOf("TINI"), 0 },
-    { SigOf("TINT"), 1 },
-    { SigOf("TINP"), 2 },
-    { SigOf("TIND"), 3 },
     { SigOf("TINC"), 4 },
-    { SigOf("TINV"), 4 },
+    { SigOf("TIND"), 3 },
+    { SigOf("TINI"), 0 },
+    { SigOf("TINP"), 2 },
     { SigOf("TIRS"), 4 },
+    { SigOf("TINT"), 1 },
+    { SigOf("TINV"), 4 },
     { SigOf("TINC"), 0 },
-    { SigOf("TINV"), 1 },
     { SigOf("TIRS"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("TINV"), 1 },
+    { SigOf("TINC"), 7 },
+    { SigOf("HEAD"), 1 },
+    { SigOf("TIND"), 7 },
+    { SigOf("AHCF"), 4 },
+    { SigOf("RPRF"), 3 },
+    { SigOf("FTSF"), 5 },
+    { SigOf("DFTF"), 6 },
+    { SigOf("MPAI"), 2 },
+    { SigOf("TINI"), 7 },
+    { SigOf("FNAM"), 0 },
+    { SigOf("TINP"), 7 },
+    { SigOf("TIRS"), 7 },
+    { SigOf("TINT"), 7 },
+    { SigOf("MPAV"), 2 },
+    { SigOf("TINV"), 7 },
+    { SigOf("INDX"), 1 },
+    { SigOf("HEAD"), 1 },
+    { SigOf("INDX"), 0 },
+    { SigOf("MPAI"), 0 },
+    { SigOf("MPAV"), 1 },
+    { SigOf("TINC"), 4 },
+    { SigOf("TIND"), 3 },
+    { SigOf("TINI"), 0 },
+    { SigOf("TINP"), 2 },
+    { SigOf("TIRS"), 4 },
+    { SigOf("TINT"), 1 },
+    { SigOf("TINV"), 4 },
+    { SigOf("TINC"), 0 },
+    { SigOf("TIRS"), 2 },
+    { SigOf("TINV"), 1 },
+    { SigOf("XIS2"), 58 },
+    { SigOf("XPPA"), 43 },
+    { SigOf("DATA"), 60 },
+    { SigOf("XCZA"), 39 },
+    { SigOf("XRGB"), 53 },
+    { SigOf("XLIB"), 35 },
+    { SigOf("XLOC"), 23 },
+    { SigOf("XSPC"), 37 },
+    { SigOf("XFVC"), 55 },
+    { SigOf("XCZC"), 38 },
     { SigOf("VMAD"), 1 },
-    { SigOf("NAME"), 2 },
-    { SigOf("XMBO"), 3 },
-    { SigOf("XPRM"), 4 },
-    { SigOf("XOCP"), 5 },
+    { SigOf("XRGD"), 52 },
+    { SigOf("EDID"), 0 },
     { SigOf("XPOD"), 6 },
-    { SigOf("XRMR"), 7 },
-    { SigOf("XLRM"), 8 },
-    { SigOf("XMBP"), 9 },
-    { SigOf("XRDS"), 10 },
+    { SigOf("XAPD"), 24 },
+    { SigOf("XPRD"), 42 },
+    { SigOf("NAME"), 2 },
     { SigOf("XLIG"), 11 },
     { SigOf("XEMI"), 12 },
-    { SigOf("LNAM"), 13 },
-    { SigOf("INAM"), 14 },
-    { SigOf("XPWR"), 15 },
-    { SigOf("XLTW"), 16 },
-    { SigOf("XWCN"), 17 },
-    { SigOf("XWCU"), 18 },
-    { SigOf("XCVL"), 19 },
-    { SigOf("XTEL"), 20 },
-    { SigOf("XTNM"), 21 },
-    { SigOf("XNDP"), 22 },
-    { SigOf("XLOC"), 23 },
-    { SigOf("XAPD"), 24 },
-    { SigOf("XAPR"), 25 },
-    { SigOf("XACT"), 26 },
-    { SigOf("XATR"), 27 },
-    { SigOf("XESP"), 28 },
-    { SigOf("XOWN"), 29 },
-    { SigOf("XRNK"), 30 },
-    { SigOf("XEZN"), 31 },
-    { SigOf("XLCN"), 32 },
-    { SigOf("XLRT"), 33 },
-    { SigOf("XLCM"), 34 },
-    { SigOf("XLIB"), 35 },
-    { SigOf("XCNT"), 36 },
-    { SigOf("XSPC"), 37 },
-    { SigOf("XCZC"), 38 },
-    { SigOf("XCZA"), 39 },
-    { SigOf("XMBR"), 40 },
-    { SigOf("XLKR"), 41 },
-    { SigOf("XPRD"), 42 },
-    { SigOf("XPPA"), 43 },
-    { SigOf("PDTO"), 44 },
-    { SigOf("SCHR"), 45 },
-    { SigOf("SCTX"), 46 },
-    { SigOf("XMRK"), 47 },
-    { SigOf("FNAM"), 48 },
-    { SigOf("FULL"), 49 },
-    { SigOf("TNAM"), 50 },
-    { SigOf("XALP"), 51 },
-    { SigOf("XRGD"), 52 },
-    { SigOf("XRGB"), 53 },
-    { SigOf("XHTW"), 54 },
-    { SigOf("XFVC"), 55 },
     { SigOf("XTRI"), 56 },
-    { SigOf("ONAM"), 57 },
-    { SigOf("XIS2"), 58 },
+    { SigOf("XRNK"), 30 },
+    { SigOf("XMRK"), 47 },
     { SigOf("XSCL"), 59 },
-    { SigOf("DATA"), 60 },
+    { SigOf("XTEL"), 20 },
+    { SigOf("FULL"), 49 },
+    { SigOf("XCVL"), 19 },
+    { SigOf("FNAM"), 48 },
+    { SigOf("INAM"), 14 },
+    { SigOf("LNAM"), 13 },
+    { SigOf("ONAM"), 57 },
+    { SigOf("TNAM"), 50 },
+    { SigOf("XLCM"), 34 },
+    { SigOf("XTNM"), 21 },
+    { SigOf("XLRM"), 8 },
+    { SigOf("XPRM"), 4 },
+    { SigOf("XLCN"), 32 },
+    { SigOf("XWCN"), 17 },
+    { SigOf("XOWN"), 29 },
+    { SigOf("XEZN"), 31 },
+    { SigOf("XMBO"), 3 },
+    { SigOf("PDTO"), 44 },
+    { SigOf("XMBP"), 9 },
+    { SigOf("XOCP"), 5 },
+    { SigOf("XNDP"), 22 },
+    { SigOf("XALP"), 51 },
+    { SigOf("XESP"), 28 },
+    { SigOf("XMBR"), 40 },
+    { SigOf("SCHR"), 45 },
+    { SigOf("XLKR"), 41 },
+    { SigOf("XRMR"), 7 },
+    { SigOf("XAPR"), 25 },
+    { SigOf("XATR"), 27 },
+    { SigOf("XPWR"), 15 },
+    { SigOf("XRDS"), 10 },
+    { SigOf("XACT"), 26 },
+    { SigOf("XCNT"), 36 },
+    { SigOf("XLRT"), 33 },
+    { SigOf("XWCU"), 18 },
+    { SigOf("XHTW"), 54 },
+    { SigOf("XLTW"), 16 },
+    { SigOf("SCTX"), 46 },
     { SigOf("EDID"), 0 },
-    { SigOf("RCLR"), 1 },
-    { SigOf("WNAM"), 2 },
     { SigOf("RPLI"), 3 },
-    { SigOf("EDID"), 0 },
+    { SigOf("WNAM"), 2 },
+    { SigOf("RCLR"), 1 },
     { SigOf("DATA"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("DATA"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("DATA"), 1 },
     { SigOf("EDID"), 0 },
+    { SigOf("CIS1"), 13 },
+    { SigOf("CIS2"), 13 },
+    { SigOf("CTDA"), 13 },
     { SigOf("VMAD"), 1 },
-    { SigOf("FNAM"), 2 },
-    { SigOf("HNAM"), 3 },
+    { SigOf("EDID"), 0 },
     { SigOf("ALID"), 4 },
     { SigOf("ANAM"), 5 },
-    { SigOf("SCHR"), 6 },
-    { SigOf("SCTX"), 7 },
-    { SigOf("QNAM"), 8 },
-    { SigOf("NEXT"), 9 },
-    { SigOf("PNAM"), 10 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("HNAM"), 3 },
     { SigOf("INAM"), 11 },
+    { SigOf("PNAM"), 10 },
+    { SigOf("QNAM"), 8 },
     { SigOf("VNAM"), 12 },
-    { SigOf("CTDA"), 13 },
-    { SigOf("CIS1"), 13 },
-    { SigOf("CIS2"), 13 },
-    { SigOf("HNAM"), 0 },
+    { SigOf("SCHR"), 6 },
+    { SigOf("NEXT"), 9 },
+    { SigOf("SCTX"), 7 },
     { SigOf("NAM0"), 1 },
-    { SigOf("CTDA"), 2 },
     { SigOf("CIS1"), 2 },
     { SigOf("CIS2"), 2 },
-    { SigOf("NEXT"), 3 },
-    { SigOf("SCHR"), 4 },
-    { SigOf("SCTX"), 5 },
+    { SigOf("CTDA"), 2 },
+    { SigOf("HNAM"), 0 },
     { SigOf("QNAM"), 6 },
     { SigOf("WNAM"), 7 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("SCHR"), 4 },
+    { SigOf("NEXT"), 3 },
+    { SigOf("SCTX"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("NEXT"), 0 },
-    { SigOf("CTDA"), 1 },
+    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 1 },
-    { SigOf("SCHR"), 2 },
-    { SigOf("SCTX"), 3 },
+    { SigOf("CTDA"), 1 },
     { SigOf("QNAM"), 4 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("SCHR"), 2 },
+    { SigOf("NEXT"), 0 },
+    { SigOf("SCTX"), 3 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
     { SigOf("ALID"), 0 },
-    { SigOf("LNAM"), 1 },
     { SigOf("DNAM"), 2 },
-    { SigOf("ANAM"), 0 },
+    { SigOf("LNAM"), 1 },
     { SigOf("NAM0"), 1 },
-    { SigOf("ALID"), 2 },
-    { SigOf("INAM"), 3 },
-    { SigOf("FNAM"), 4 },
-    { SigOf("SNAM"), 5 },
-    { SigOf("ENAM"), 6 },
-    { SigOf("PNAM"), 7 },
     { SigOf("DATA"), 8 },
+    { SigOf("DEVA"), 13 },
+    { SigOf("ALID"), 2 },
     { SigOf("HTID"), 9 },
-    { SigOf("DMAX"), 10 },
+    { SigOf("ANAM"), 0 },
+    { SigOf("ENAM"), 6 },
+    { SigOf("FNAM"), 4 },
+    { SigOf("INAM"), 3 },
+    { SigOf("PNAM"), 7 },
+    { SigOf("QNAM"), 16 },
+    { SigOf("SNAM"), 5 },
     { SigOf("DMIN"), 11 },
     { SigOf("DEMO"), 12 },
-    { SigOf("DEVA"), 13 },
     { SigOf("SCHR"), 14 },
+    { SigOf("DMAX"), 10 },
     { SigOf("SCTX"), 15 },
-    { SigOf("QNAM"), 16 },
-    { SigOf("NEXT"), 0 },
-    { SigOf("SCHR"), 1 },
-    { SigOf("SCTX"), 2 },
     { SigOf("QNAM"), 3 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("SCHR"), 1 },
+    { SigOf("NEXT"), 0 },
+    { SigOf("SCTX"), 2 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("KSIZ"), 3 },
-    { SigOf("KWDA"), 4 },
-    { SigOf("MDOB"), 5 },
-    { SigOf("ETYP"), 6 },
-    { SigOf("DESC"), 7 },
-    { SigOf("MODL"), 8 },
-    { SigOf("MODT"), 8 },
-    { SigOf("MODS"), 8 },
-    { SigOf("DATA"), 9 },
-    { SigOf("SPIT"), 10 },
-    { SigOf("EFID"), 11 },
-    { SigOf("EFIT"), 12 },
-    { SigOf("CTDA"), 13 },
+    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 13 },
     { SigOf("CIS2"), 13 },
+    { SigOf("CTDA"), 13 },
+    { SigOf("KWDA"), 4 },
+    { SigOf("DATA"), 9 },
+    { SigOf("MDOB"), 5 },
+    { SigOf("DESC"), 7 },
+    { SigOf("EDID"), 0 },
+    { SigOf("EFID"), 11 },
+    { SigOf("OBND"), 1 },
+    { SigOf("MODL"), 8 },
+    { SigOf("FULL"), 2 },
+    { SigOf("ETYP"), 6 },
+    { SigOf("MODS"), 8 },
+    { SigOf("MODT"), 8 },
+    { SigOf("EFIT"), 12 },
+    { SigOf("SPIT"), 10 },
+    { SigOf("KSIZ"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
+    { SigOf("CTDA"), 0 },
     { SigOf("MDOB"), 2 },
     { SigOf("DESC"), 3 },
-    { SigOf("SNAM"), 4 },
     { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("ICON"), 5 },
-    { SigOf("MICO"), 6 },
-    { SigOf("YNAM"), 7 },
-    { SigOf("ZNAM"), 8 },
-    { SigOf("KSIZ"), 9 },
+    { SigOf("FULL"), 1 },
+    { SigOf("SNAM"), 4 },
+    { SigOf("NAM0"), 14 },
     { SigOf("KWDA"), 10 },
     { SigOf("DATA"), 11 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
     { SigOf("SOUL"), 12 },
+    { SigOf("YNAM"), 7 },
+    { SigOf("ZNAM"), 8 },
+    { SigOf("ICON"), 5 },
+    { SigOf("MICO"), 6 },
     { SigOf("SLCP"), 13 },
-    { SigOf("NAM0"), 14 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("KSIZ"), 9 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("PNAM"), 1 },
-    { SigOf("SNAM"), 2 },
-    { SigOf("CITC"), 3 },
-    { SigOf("DNAM"), 4 },
-    { SigOf("XNAM"), 5 },
-    { SigOf("QNAM"), 6 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 7 },
     { SigOf("CIS2"), 7 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("CITC"), 3 },
+    { SigOf("EDID"), 0 },
+    { SigOf("DNAM"), 4 },
+    { SigOf("PNAM"), 1 },
+    { SigOf("QNAM"), 6 },
+    { SigOf("SNAM"), 2 },
+    { SigOf("XNAM"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("PNAM"), 1 },
-    { SigOf("SNAM"), 2 },
-    { SigOf("CITC"), 3 },
-    { SigOf("DNAM"), 4 },
-    { SigOf("XNAM"), 5 },
-    { SigOf("QNAM"), 6 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 7 },
     { SigOf("CIS2"), 7 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("CITC"), 3 },
+    { SigOf("EDID"), 0 },
+    { SigOf("DNAM"), 4 },
+    { SigOf("PNAM"), 1 },
+    { SigOf("QNAM"), 6 },
+    { SigOf("SNAM"), 2 },
+    { SigOf("XNAM"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("PNAM"), 1 },
-    { SigOf("SNAM"), 2 },
-    { SigOf("CITC"), 3 },
-    { SigOf("DNAM"), 4 },
-    { SigOf("XNAM"), 5 },
-    { SigOf("QNAM"), 6 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("CTDA"), 0 },
     { SigOf("CIS1"), 7 },
     { SigOf("CIS2"), 7 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 7 },
+    { SigOf("CITC"), 3 },
+    { SigOf("EDID"), 0 },
+    { SigOf("DNAM"), 4 },
+    { SigOf("PNAM"), 1 },
+    { SigOf("QNAM"), 6 },
+    { SigOf("SNAM"), 2 },
+    { SigOf("XNAM"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
+    { SigOf("CTDA"), 0 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
     { SigOf("FNAM"), 2 },
     { SigOf("PNAM"), 3 },
-    { SigOf("VNAM"), 4 },
     { SigOf("UNAM"), 5 },
-    { SigOf("EDID"), 0 },
-    { SigOf("CNAM"), 1 },
-    { SigOf("GNAM"), 2 },
-    { SigOf("SNAM"), 3 },
-    { SigOf("ANAM"), 4 },
-    { SigOf("ONAM"), 5 },
-    { SigOf("LNAM"), 6 },
-    { SigOf("BNAM"), 7 },
-    { SigOf("CTDA"), 8 },
+    { SigOf("VNAM"), 4 },
     { SigOf("CIS1"), 8 },
     { SigOf("CIS2"), 8 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("CTDA"), 8 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 4 },
+    { SigOf("BNAM"), 7 },
+    { SigOf("CNAM"), 1 },
+    { SigOf("GNAM"), 2 },
+    { SigOf("LNAM"), 6 },
+    { SigOf("ONAM"), 5 },
+    { SigOf("SNAM"), 3 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("CTDA"), 0 },
     { SigOf("NAM1"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("ANAM"), 4 },
     { SigOf("MNAM"), 2 },
     { SigOf("ONAM"), 3 },
-    { SigOf("ANAM"), 4 },
+    { SigOf("SDSC"), 4 },
+    { SigOf("SNDD"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("FNAM"), 2 },
-    { SigOf("SNDD"), 3 },
-    { SigOf("SDSC"), 4 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
-    { SigOf("KSIZ"), 3 },
-    { SigOf("KWDA"), 4 },
-    { SigOf("MDOB"), 5 },
-    { SigOf("ETYP"), 6 },
-    { SigOf("DESC"), 7 },
-    { SigOf("MODL"), 8 },
-    { SigOf("MODT"), 8 },
-    { SigOf("MODS"), 8 },
-    { SigOf("DATA"), 9 },
-    { SigOf("SPIT"), 10 },
-    { SigOf("EFID"), 11 },
-    { SigOf("EFIT"), 12 },
-    { SigOf("CTDA"), 13 },
     { SigOf("CIS1"), 13 },
     { SigOf("CIS2"), 13 },
+    { SigOf("CTDA"), 13 },
+    { SigOf("KWDA"), 4 },
+    { SigOf("DATA"), 9 },
+    { SigOf("MDOB"), 5 },
+    { SigOf("DESC"), 7 },
+    { SigOf("EDID"), 0 },
+    { SigOf("EFID"), 11 },
+    { SigOf("OBND"), 1 },
+    { SigOf("MODL"), 8 },
+    { SigOf("FULL"), 2 },
+    { SigOf("ETYP"), 6 },
+    { SigOf("MODS"), 8 },
+    { SigOf("MODT"), 8 },
+    { SigOf("EFIT"), 12 },
+    { SigOf("SPIT"), 10 },
+    { SigOf("KSIZ"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("CTDA"), 0 },
+    { SigOf("MODT"), 1 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("CTDA"), 0 },
     { SigOf("DATA"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("ICON"), 2 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
     { SigOf("MODL"), 2 },
-    { SigOf("MODT"), 2 },
-    { SigOf("MODS"), 2 },
     { SigOf("DNAM"), 3 },
     { SigOf("MNAM"), 4 },
-    { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
+    { SigOf("MODT"), 2 },
+    { SigOf("MODL"), 0 },
+    { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
     { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
     { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
+    { SigOf("FULL"), 3 },
     { SigOf("FNAM"), 5 },
-    { SigOf("VNAM"), 6 },
     { SigOf("SNAM"), 7 },
+    { SigOf("VNAM"), 6 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("OBND"), 1 },
-    { SigOf("FULL"), 2 },
     { SigOf("MODL"), 3 },
-    { SigOf("MODT"), 3 },
+    { SigOf("FULL"), 2 },
     { SigOf("MODS"), 3 },
+    { SigOf("MODT"), 3 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("OBND"), 1 },
+    { SigOf("MODT"), 1 },
     { SigOf("TX00"), 2 },
     { SigOf("TX01"), 3 },
     { SigOf("TX02"), 4 },
@@ -4523,80 +4521,82 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("TX05"), 7 },
     { SigOf("TX06"), 8 },
     { SigOf("TX07"), 9 },
-    { SigOf("DODT"), 10 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 1 },
     { SigOf("DNAM"), 11 },
+    { SigOf("DODT"), 10 },
     { SigOf("EDID"), 0 },
     { SigOf("EDID"), 0 },
     { SigOf("DNAM"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
-    { SigOf("NNAM"), 2 },
     { SigOf("ANAM"), 3 },
+    { SigOf("DNAM"), 8 },
     { SigOf("FNAM"), 4 },
+    { SigOf("INAM"), 7 },
+    { SigOf("NNAM"), 2 },
     { SigOf("SNAM"), 5 },
     { SigOf("XNAM"), 6 },
-    { SigOf("INAM"), 7 },
-    { SigOf("DNAM"), 8 },
-    { SigOf("EDID"), 0 },
-    { SigOf("VMAD"), 1 },
-    { SigOf("OBND"), 2 },
-    { SigOf("FULL"), 3 },
-    { SigOf("MODL"), 4 },
-    { SigOf("MODT"), 4 },
-    { SigOf("MODS"), 4 },
-    { SigOf("EITM"), 5 },
-    { SigOf("EAMT"), 6 },
-    { SigOf("ETYP"), 7 },
-    { SigOf("BIDS"), 8 },
-    { SigOf("BAMT"), 9 },
-    { SigOf("YNAM"), 10 },
-    { SigOf("ZNAM"), 11 },
-    { SigOf("KSIZ"), 12 },
-    { SigOf("KWDA"), 13 },
-    { SigOf("DESC"), 14 },
-    { SigOf("INAM"), 15 },
-    { SigOf("WNAM"), 16 },
-    { SigOf("SNAM"), 17 },
-    { SigOf("XNAM"), 18 },
     { SigOf("NAM7"), 19 },
+    { SigOf("NAM8"), 23 },
+    { SigOf("NAM9"), 22 },
+    { SigOf("KWDA"), 13 },
+    { SigOf("DATA"), 24 },
+    { SigOf("DESC"), 14 },
+    { SigOf("VMAD"), 1 },
+    { SigOf("EDID"), 0 },
+    { SigOf("OBND"), 2 },
+    { SigOf("MODL"), 4 },
+    { SigOf("FULL"), 3 },
+    { SigOf("CNAM"), 28 },
+    { SigOf("DNAM"), 25 },
+    { SigOf("INAM"), 15 },
+    { SigOf("SNAM"), 17 },
     { SigOf("TNAM"), 20 },
     { SigOf("UNAM"), 21 },
-    { SigOf("NAM9"), 22 },
-    { SigOf("NAM8"), 23 },
-    { SigOf("DATA"), 24 },
-    { SigOf("DNAM"), 25 },
-    { SigOf("CRDT"), 26 },
     { SigOf("VNAM"), 27 },
-    { SigOf("CNAM"), 28 },
+    { SigOf("WNAM"), 16 },
+    { SigOf("XNAM"), 18 },
+    { SigOf("YNAM"), 10 },
+    { SigOf("ZNAM"), 11 },
+    { SigOf("EITM"), 5 },
+    { SigOf("ETYP"), 7 },
+    { SigOf("BIDS"), 8 },
+    { SigOf("MODS"), 4 },
+    { SigOf("MODT"), 4 },
+    { SigOf("CRDT"), 26 },
+    { SigOf("BAMT"), 9 },
+    { SigOf("EAMT"), 6 },
+    { SigOf("KSIZ"), 12 },
     { SigOf("MODL"), 0 },
-    { SigOf("MODT"), 1 },
     { SigOf("MODS"), 2 },
+    { SigOf("MODT"), 1 },
     { SigOf("EDID"), 0 },
     { SigOf("FULL"), 1 },
     { SigOf("TNAM"), 2 },
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("WCTR"), 2 },
-    { SigOf("LTMP"), 3 },
-    { SigOf("XEZN"), 4 },
-    { SigOf("XLCN"), 5 },
-    { SigOf("CNAM"), 6 },
+    { SigOf("NAM0"), 15 },
     { SigOf("NAM2"), 7 },
     { SigOf("NAM3"), 8 },
     { SigOf("NAM4"), 9 },
+    { SigOf("NAM9"), 16 },
+    { SigOf("NAMA"), 13 },
+    { SigOf("DATA"), 14 },
+    { SigOf("EDID"), 0 },
+    { SigOf("FULL"), 1 },
+    { SigOf("CNAM"), 6 },
     { SigOf("DNAM"), 10 },
     { SigOf("MNAM"), 11 },
     { SigOf("ONAM"), 12 },
-    { SigOf("NAMA"), 13 },
-    { SigOf("DATA"), 14 },
-    { SigOf("NAM0"), 15 },
-    { SigOf("NAM9"), 16 },
-    { SigOf("WNAM"), 17 },
     { SigOf("PNAM"), 18 },
-    { SigOf("ZNAM"), 19 },
     { SigOf("TNAM"), 20 },
     { SigOf("UNAM"), 21 },
+    { SigOf("WNAM"), 17 },
+    { SigOf("ZNAM"), 19 },
     { SigOf("XWEM"), 22 },
+    { SigOf("XLCN"), 5 },
+    { SigOf("XEZN"), 4 },
+    { SigOf("LTMP"), 3 },
+    { SigOf("WCTR"), 2 },
     { SigOf("OFST"), 23 },
     { SigOf("EDID"), 0 },
     { SigOf("GNAM"), 1 },

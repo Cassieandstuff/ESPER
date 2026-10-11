@@ -11,46 +11,46 @@ namespace esper_test::tables {
 using namespace ::esper::schema;
 
 inline constexpr TypeDef kTypes[] = {
-    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 0: zstring
-    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 1: lstring:strings
-    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 2: u32
-    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 3: f32
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 4: formid->TSTB
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 5, 0, 0, "Versioned", Selector::None, nullptr, 0ULL, 0 },  // 5: struct:Versioned
-    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 6: u16
-    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 7: i32
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, "Inner", Selector::None, nullptr, 0ULL, 0 },  // 8: struct:Inner
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 9: formid
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 2, 0, 0, "Outer", Selector::None, nullptr, 0ULL, 0 },  // 10: struct:Outer
-    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 6, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 11: u16[3]
-    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 2, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 12: u32[count: u16]
-    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 13: wstring
-    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 14: formid->TSTB[]
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 15: bytes
-    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 16: bytes:noids
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 4, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 17: bytes:4:noids
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 18: marker
-    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 19: u8
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData", Selector::None, nullptr, 0ULL, 0 },  // 20: inline:TestAlphaData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 0, 3, 0, 0, nullptr, Selector::Member, "functionType", 0ULL, 0 },  // 21: union:records/TSTE.yaml member 1 member 2:TestSiblingsEntriesFunctionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 3, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0 },  // 22: union:records/TSTU.yaml member 0:TestUnionsSized
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0 },  // 23: union:records/TSTU.yaml member 1 field 2 case 0:TestUnionsCondParamForm
-    { Kind::U32, LenKind::None, StrTable::None, 2, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 24: u32
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 7, 3, 0, 0, nullptr, Selector::Lookup, "fn", 0ULL, 0 },  // 25: union:records/TSTU.yaml member 1 field 2:TestUnionsCondParam
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 11, 3, 0, 0, "TestUnionsCond", Selector::None, nullptr, 0ULL, 0 },  // 26: inline:TestUnionsCond
-    { Kind::I16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 27: i16
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 10, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 28: if:records/TSTU.yaml member 2 field 1:TestUnionsVersionedStatus
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 12, 3, 0, 0, nullptr, Selector::Field, "kind", 0ULL, 0 },  // 29: union:structs/TestItem.yaml field 1:TestItemValue
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 15, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0 },  // 30: if:structs/TestItem.yaml field 2:TestItemFlag
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 14, 3, 0, 0, "TestItem", Selector::None, nullptr, 0ULL, 0 },  // 31: struct:TestItem
-    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 31, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0 },  // 32: struct:TestItem[count: u16]
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 17, 3, 0, 0, "TestUnionsVersioned", Selector::None, nullptr, 0ULL, 0 },  // 33: inline:TestUnionsVersioned
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 17, 2, 0, 0, nullptr, Selector::Record, nullptr, 0ULL, 0 },  // 34: union:records/TSTU.yaml member 3:TestUnionsPerRecord
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 19, 2, 0, 0, nullptr, Selector::FormVersion, nullptr, 0ULL, 0 },  // 35: union:records/TSTU.yaml member 4:TestUnionsByFormVersion
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 20, 2, 0, 0, "TestObjV1", Selector::None, nullptr, 0ULL, 0 },  // 36: inline:TestObjV1
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, "TestObjV2", Selector::None, nullptr, 0ULL, 0 },  // 37: inline:TestObjV2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 21, 2, 0, 0, "TestObj", Selector::Field, "objFmt", 0ULL, 0 },  // 38: union:structs/TestObj.yaml:TestObj
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, "TestUnionsObj", Selector::None, nullptr, 0ULL, 0 },  // 39: inline:TestUnionsObj
+    { Kind::ZString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 0: zstring
+    { Kind::LString, LenKind::None, StrTable::Strings, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 1: lstring:strings
+    { Kind::U32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 2: u32
+    { Kind::F32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 3: f32
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 4: formid->TSTB
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 0, 5, 0, 0, "Versioned", Selector::None, nullptr, 0ULL, 0, 0 },  // 5: struct:Versioned
+    { Kind::U16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 2 },  // 6: u16
+    { Kind::I32, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 4 },  // 7: i32
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, "Inner", Selector::None, nullptr, 0ULL, 0, 6 },  // 8: struct:Inner
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 9: formid
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 7, 2, 0, 0, "Outer", Selector::None, nullptr, 0ULL, 0, 0 },  // 10: struct:Outer
+    { Kind::Array, LenKind::Fixed, StrTable::None, 0, 3, 6, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 6 },  // 11: u16[3]
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 2, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 12: u32[count: u16]
+    { Kind::WString, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 13: wstring
+    { Kind::Array, LenKind::Rest, StrTable::None, 0, 0, 4, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 14: formid->TSTB[]
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 15: bytes
+    { Kind::Bytes, LenKind::Rest, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 16: bytes:noids
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 4, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 17: bytes:4:noids
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 18: marker
+    { Kind::U8, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 1 },  // 19: u8
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 9, 2, 0, 0, "TestAlphaData", Selector::None, nullptr, 0ULL, 0, 8 },  // 20: inline:TestAlphaData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 0, 3, 0, 0, nullptr, Selector::Member, "functionType", 0ULL, 0, 0 },  // 21: union:records/TSTE.yaml member 1 member 2:TestSiblingsEntriesFunctionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 3, 2, 0, 0, nullptr, Selector::Size, nullptr, 0ULL, 0, 0 },  // 22: union:records/TSTU.yaml member 0:TestUnionsSized
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 5, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 23: union:records/TSTU.yaml member 1 field 2 case 0:TestUnionsCondParamForm
+    { Kind::U32, LenKind::None, StrTable::None, 2, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 24: u32
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 7, 3, 0, 0, nullptr, Selector::Lookup, "fn", 0ULL, 0, 0 },  // 25: union:records/TSTU.yaml member 1 field 2:TestUnionsCondParam
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 11, 3, 0, 0, "TestUnionsCond", Selector::None, nullptr, 0ULL, 0, 0 },  // 26: inline:TestUnionsCond
+    { Kind::I16, LenKind::None, StrTable::None, 0, 0, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 2 },  // 27: i16
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 10, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0, 0 },  // 28: if:records/TSTU.yaml member 2 field 1:TestUnionsVersionedStatus
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 12, 3, 0, 0, nullptr, Selector::Field, "kind", 0ULL, 0, 0 },  // 29: union:structs/TestItem.yaml field 1:TestItemValue
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 15, 2, 0, 0, nullptr, Selector::Field, "version", 0ULL, 0, 0 },  // 30: if:structs/TestItem.yaml field 2:TestItemFlag
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 14, 3, 0, 0, "TestItem", Selector::None, nullptr, 0ULL, 0, 0 },  // 31: struct:TestItem
+    { Kind::Array, LenKind::Prefix16, StrTable::None, 0, 0, 31, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 32: struct:TestItem[count: u16]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 17, 3, 0, 0, "TestUnionsVersioned", Selector::None, nullptr, 0ULL, 0, 0 },  // 33: inline:TestUnionsVersioned
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 17, 2, 0, 0, nullptr, Selector::Record, nullptr, 0ULL, 0, 0 },  // 34: union:records/TSTU.yaml member 3:TestUnionsPerRecord
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 19, 2, 0, 0, nullptr, Selector::FormVersion, nullptr, 0ULL, 0, 0 },  // 35: union:records/TSTU.yaml member 4:TestUnionsByFormVersion
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 20, 2, 0, 0, "TestObjV1", Selector::None, nullptr, 0ULL, 0, 0 },  // 36: inline:TestObjV1
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, "TestObjV2", Selector::None, nullptr, 0ULL, 0, 0 },  // 37: inline:TestObjV2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 21, 2, 0, 0, "TestObj", Selector::Field, "objFmt", 0ULL, 0, 0 },  // 38: union:structs/TestObj.yaml:TestObj
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, "TestUnionsObj", Selector::None, nullptr, 0ULL, 0, 0 },  // 39: inline:TestUnionsObj
 };
 inline constexpr FieldDef kFields[] = {
     { "flags", 2, false },
@@ -149,35 +149,35 @@ inline constexpr MemberDef kMembers[] = {
     { "obj", SigOf("OBJS"), 39, 0, false, false, -1 },
 };
 inline constexpr EntryDef kEntries[] = {
-    { SigOf("EDID"), 0 },
-    { SigOf("FULL"), 1 },
-    { SigOf("VERS"), 2 },
-    { SigOf("OUTR"), 3 },
-    { SigOf("FIXD"), 4 },
-    { SigOf("PRFX"), 5 },
-    { SigOf("WSTR"), 6 },
-    { SigOf("KSIZ"), 7 },
+    { SigOf("PRA1"), 15 },
+    { SigOf("PRB1"), 16 },
+    { SigOf("PRA2"), 15 },
+    { SigOf("PRB2"), 16 },
     { SigOf("KWDA"), 8 },
-    { SigOf("REFS"), 9 },
+    { SigOf("DATA"), 17 },
     { SigOf("BLOB"), 10 },
+    { SigOf("EDID"), 0 },
+    { SigOf("FIXD"), 4 },
     { SigOf("HASH"), 11 },
-    { SigOf("FXSZ"), 12 },
     { SigOf("MARK"), 13 },
+    { SigOf("PVAL"), 14 },
+    { SigOf("FULL"), 1 },
+    { SigOf("PCOL"), 14 },
+    { SigOf("WSTR"), 6 },
+    { SigOf("OUTR"), 3 },
+    { SigOf("REFS"), 9 },
+    { SigOf("VERS"), 2 },
     { SigOf("LIDX"), 14 },
     { SigOf("LTEX"), 14 },
-    { SigOf("PCOL"), 14 },
-    { SigOf("PVAL"), 14 },
-    { SigOf("PRA1"), 15 },
-    { SigOf("PRA2"), 15 },
-    { SigOf("PRB1"), 16 },
-    { SigOf("PRB2"), 16 },
-    { SigOf("DATA"), 17 },
+    { SigOf("PRFX"), 5 },
+    { SigOf("KSIZ"), 7 },
+    { SigOf("FXSZ"), 12 },
+    { SigOf("PVAL"), 2 },
+    { SigOf("PCOL"), 2 },
     { SigOf("LIDX"), 0 },
     { SigOf("LTEX"), 1 },
-    { SigOf("PCOL"), 2 },
-    { SigOf("PVAL"), 2 },
-    { SigOf("PCOL"), 0 },
     { SigOf("PVAL"), 1 },
+    { SigOf("PCOL"), 0 },
     { SigOf("PRA1"), 0 },
     { SigOf("PRA2"), 1 },
     { SigOf("PRB1"), 0 },
@@ -185,38 +185,38 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("EDID"), 0 },
     { SigOf("EDID"), 0 },
     { SigOf("FNAM"), 1 },
+    { SigOf("ALLS"), 4 },
     { SigOf("ROOT"), 2 },
     { SigOf("ALST"), 3 },
-    { SigOf("ALLS"), 4 },
     { SigOf("INDX"), 5 },
-    { SigOf("ALST"), 0 },
-    { SigOf("ALID"), 1 },
-    { SigOf("FNAM"), 2 },
-    { SigOf("CTDA"), 3 },
     { SigOf("CIS1"), 3 },
+    { SigOf("CTDA"), 3 },
     { SigOf("ALED"), 4 },
-    { SigOf("CTDA"), 0 },
-    { SigOf("CIS1"), 1 },
-    { SigOf("ALLS"), 0 },
     { SigOf("ALID"), 1 },
     { SigOf("FNAM"), 2 },
+    { SigOf("ALST"), 0 },
+    { SigOf("CIS1"), 1 },
+    { SigOf("CTDA"), 0 },
     { SigOf("ALED"), 3 },
-    { SigOf("INDX"), 0 },
+    { SigOf("ALID"), 1 },
+    { SigOf("FNAM"), 2 },
+    { SigOf("ALLS"), 0 },
     { SigOf("CNAM"), 1 },
+    { SigOf("INDX"), 0 },
     { SigOf("EDID"), 0 },
     { SigOf("PRKE"), 1 },
     { SigOf("HNAM"), 2 },
-    { SigOf("PRKE"), 0 },
-    { SigOf("EPFT"), 1 },
     { SigOf("EPFD"), 2 },
+    { SigOf("PRKE"), 0 },
     { SigOf("PRKF"), 3 },
-    { SigOf("HNAM"), 0 },
+    { SigOf("EPFT"), 1 },
     { SigOf("NAM0"), 1 },
-    { SigOf("SIZE"), 0 },
-    { SigOf("COND"), 1 },
+    { SigOf("HNAM"), 0 },
     { SigOf("VER2"), 2 },
-    { SigOf("RECS"), 3 },
+    { SigOf("COND"), 1 },
+    { SigOf("SIZE"), 0 },
     { SigOf("FVER"), 4 },
+    { SigOf("RECS"), 3 },
     { SigOf("OBJS"), 5 },
 };
 inline constexpr GroupDef kGroups[] = {

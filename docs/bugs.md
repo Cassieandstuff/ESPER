@@ -5,7 +5,11 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
 
 ## Open
 
-### Decoding struct-heavy records is several times slower than the deleted typed path — OPEN
+None.
+
+## Fixed
+
+### Decoding struct-heavy records is several times slower than the deleted typed path — FIXED
 - **Symptom:** found 2026-10-10 porting SCT. Decoding one vanilla LAND takes about 150 µs
   (Skyrim.esm, 4,000 records), and SCT's terrain query costs about 0.45 ms per cell, against
   about 0.08 ms before the port. Loading every Tamriel cell would take about 5 s instead of
@@ -20,11 +24,27 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
   `VTXT` alpha cells (`LandAlphaCell[]`, thousands per record) dominate.
   ([Record.h](../include/ESPER/Record.h) `Value`;
   [Record.cpp](../cpp/engine/Record.cpp) `Parse`.)
-- **Fix direction:** a compact value representation. Candidates: store fixed-size, plain-number
-  structs packed like scalar arrays, with views reading fields by offset; or a lighter `Value`
-  with an arena or small-buffer storage. Measure with the per-type decode benchmark first.
+- **Fix:** three changes, measured on Skyrim.esm (decode, µs per record, before → after):
+  LAND 198 → 4.6, RACE 99 → 38, NPC_ 14.8 → 5.2, ARMO 3.9 → 1.9, QUST 26.6 → 14.6.
+  - **Packed plain arrays.** Any array whose element is plain (numbers, and fixed
+    structs/arrays of them; generator-computed `TypeDef::plainSize`) is stored as raw bytes.
+    Paths into one element still work: the engine unpacks the addressed part. Views read and
+    write such arrays as `std::vector` of generated packed value structs
+    (`view::value::LandAlphaCell`), copied straight from the bytes.
+  - **Per-instance index.** Each instance's nodes and child instances, in document order, are
+    rebuilt by Decode and after structural edits. Lookups touch their own instance instead of
+    scanning the record: RACE head data through views went from 13.7 to 0.37 µs. Lookups no
+    longer write any `mutable` state, so concurrent reads of one Record are safe again.
+  - **Decode loop.** Nodes are moved, not copied. Occurrence counts are a flat array, not a
+    hash map. The parse context is reused. Each scope's entry signatures are sorted
+    (schemagen) and binary-searched.
 
-## Fixed
+  Gate: identical totals, byte-exact; the full schema gate runs in 8.7 s. In SCT (sct-esm,
+  vanilla load order), single lookups are now faster than before the port. One NPC search
+  takes 50 ms against 131, and `GetNpc` 15 ms against 26. Terrain (3 vs 2 ms per 25 cells),
+  armor search and cells are at parity. Only listing every record is still slower: all NPCs
+  270 ms against 199, and all armor 17 ms against 7. Those decode each record in full, where
+  the old code read a few raw subrecords.
 
 ### Two different groups could generate one view class, silently dropping one — FIXED
 - **Symptom:** an inline group whose class name (record name + group name) equals a reusable

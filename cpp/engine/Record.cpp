@@ -314,12 +314,13 @@ void Write(const SchemaSet& s, uint16_t typeIdx, const Value& v, const DecodeCtx
     }
 }
 
+// A scope's entry signatures are sorted (schemagen), so this is a binary search.
 int EntryLookup(const SchemaSet& s, const schema::GroupDef& g, uint32_t sig) {
-    for (uint16_t i = 0; i < g.entryCount; ++i) {
-        const schema::EntryDef& e = s.entries[g.firstEntry + i];
-        if (e.sig == sig) return e.member;
-    }
-    return -1;
+    const schema::EntryDef* first = s.entries.data() + g.firstEntry;
+    const schema::EntryDef* last  = first + g.entryCount;
+    const schema::EntryDef* it = std::lower_bound(first, last, sig,
+        [](const schema::EntryDef& e, uint32_t k) { return e.sig < k; });
+    return (it != last && it->sig == sig) ? it->member : -1;
 }
 
 std::string SigText(uint32_t sig) {
@@ -408,8 +409,7 @@ bool HasUnsafeBytes(const SchemaSet& s, uint16_t typeIdx, const Value& v) {
         return false;
     }
     case Kind::Array:
-        if (schema::PackedElementWidth(s, t))
-            return !v.bytes.empty() && (s.types[t.ref].flags & schema::kRemapUnsafe);
+        if (schema::PackedElementWidth(s, t)) return false;   // plain: no FormIDs, nothing unsafe
         for (const Value& item : v.items)
             if (HasUnsafeBytes(s, t.ref, item)) return true;
         return false;
@@ -443,11 +443,21 @@ Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<cons
     // its opener may be placed in it (a later opener starts a new instance).
     struct Open { uint32_t inst; int32_t lastPos; bool fresh; };
     std::vector<Open> stack{ { 0, -1, false } };
-    // Occurrences per (scope instance, member): subrecord nodes or group instances.
-    std::unordered_map<uint64_t, uint32_t> counts;
-    auto key = [](uint32_t inst, int member) {
-        return (static_cast<uint64_t>(inst) << 16) | static_cast<uint16_t>(member);
+    // Occurrences per (scope instance, member): subrecord nodes or group
+    // instances. Flat: instance i's counters start at countBase[i].
+    std::vector<uint32_t> counts(set.groups[def->root].memberCount, 0);
+    std::vector<uint32_t> countBase{ 0 };
+    auto count = [&](uint32_t inst, int member) -> uint32_t& {
+        return counts[countBase[inst] + static_cast<uint32_t>(member)];
     };
+    {
+        size_t n = 0;
+        SubIterator pre(out.bytes_);
+        SubView s;
+        while (pre.Next(s)) ++n;
+        out.nodes_.reserve(n);
+    }
+    ParseCtx pc{ set, ctx, sig, {}, &out, 0 };
 
     SubIterator it(out.bytes_);
     SubView sub;
@@ -480,7 +490,7 @@ Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<cons
                 // The ordinal rule: a member at or before the last filled
                 // position means this instance is complete.
                 if (!(m > lastPos || (m == lastPos && md.repeat))) { --level; continue; }
-            } else if (!md.repeat && counts[key(scopeInst, m)] > 0) {
+            } else if (!md.repeat && count(scopeInst, m) > 0) {
                 break;                                           // singular duplicate → raw
             }
             stack.resize(static_cast<size_t>(level) + 1);        // close inner scopes
@@ -489,7 +499,9 @@ Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<cons
                 const uint32_t ni = static_cast<uint32_t>(out.insts_.size());
                 out.insts_.push_back(Inst{ md.group, static_cast<int32_t>(scopeInst),
                                            static_cast<uint16_t>(m) });
-                ++counts[key(scopeInst, m)];
+                ++count(scopeInst, m);
+                countBase.push_back(static_cast<uint32_t>(counts.size()));
+                counts.resize(counts.size() + set.groups[md.group].memberCount, 0);
                 stack.back().lastPos = m;
                 stack.back().fresh = false;
                 stack.push_back(Open{ ni, -1, true });
@@ -498,13 +510,14 @@ Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<cons
             }
             const uint8_t* p   = sub.data;
             const uint8_t* end = sub.data + sub.size;
-            ParseCtx pc{ set, ctx, sig, {}, &out, scopeInst };
+            pc.inst = scopeInst;
+            pc.frames.clear();
             Value v;
             if (Parse(pc, md.type, p, end, v) && p == end) {
                 n.value   = std::move(v);
                 n.decoded = true;
                 n.member  = static_cast<int16_t>(m);
-                ++counts[key(scopeInst, m)];
+                ++count(scopeInst, m);
                 stack.back().lastPos = m;
                 stack.back().fresh = false;
                 placed = true;
@@ -516,9 +529,10 @@ Result<Record> Record::Decode(const SchemaSet& set, uint32_t sig, std::span<cons
             break;
         }
         if (!placed && level < 0) n.inst = stack.back().inst;     // unknown here: raw
-        out.nodes_.push_back(n);
+        out.nodes_.push_back(std::move(n));
     }
     if (!it.ok()) return Fail("truncated/malformed subrecord stream in {}", SigText(sig));
+    out.RebuildIndex();
     return out;
 }
 
@@ -615,31 +629,53 @@ int32_t Record::ChildAtLevel(uint32_t nodeInst, uint32_t level) const {
     return -1;
 }
 
+void Record::RebuildIndex() {
+    const size_t ni = insts_.size();
+    // Nodes by instance (counting sort keeps document order).
+    nodeStart_.assign(ni + 1, 0);
+    for (const Node& n : nodes_) ++nodeStart_[n.inst + 1];
+    for (size_t i = 0; i < ni; ++i) nodeStart_[i + 1] += nodeStart_[i];
+    nodeIdx_.resize(nodes_.size());
+    std::vector<uint32_t> fill(nodeStart_.begin(), nodeStart_.end() - 1);
+    for (uint32_t k = 0; k < nodes_.size(); ++k) nodeIdx_[fill[nodes_[k].inst]++] = k;
+
+    // Child instances in document order: where each first holds a node (its
+    // own or a descendant's), then instances with no nodes yet.
+    std::vector<uint32_t> order;
+    order.reserve(ni);
+    std::vector<uint8_t> seen(ni, 0);
+    for (const Node& n : nodes_)
+        for (uint32_t c = n.inst; c != 0 && !seen[c]; c = static_cast<uint32_t>(insts_[c].parent)) {
+            seen[c] = 1;
+            order.push_back(c);
+        }
+    for (uint32_t i = 1; i < ni; ++i)
+        if (!seen[i]) order.push_back(i);
+    kidStart_.assign(ni + 1, 0);
+    for (uint32_t c : order) ++kidStart_[static_cast<size_t>(insts_[c].parent) + 1];
+    for (size_t i = 0; i < ni; ++i) kidStart_[i + 1] += kidStart_[i];
+    kidIdx_.resize(order.size());
+    fill.assign(kidStart_.begin(), kidStart_.end() - 1);
+    for (uint32_t c : order) kidIdx_[fill[static_cast<size_t>(insts_[c].parent)]++] = c;
+}
+
 std::vector<uint32_t> Record::InstancesOf(uint32_t parent, uint16_t slot) const {
     std::vector<uint32_t> out;
-    auto add = [&](uint32_t i) {
-        if (std::find(out.begin(), out.end(), i) == out.end()) out.push_back(i);
-    };
-    for (const Node& n : nodes_) {              // document order first
-        const int32_t c = ChildAtLevel(n.inst, parent);
-        if (c >= 0 && insts_[static_cast<size_t>(c)].slot == slot) add(static_cast<uint32_t>(c));
-    }
-    for (uint32_t i = 1; i < insts_.size(); ++i)   // then not-yet-populated instances
-        if (insts_[i].parent == static_cast<int32_t>(parent) && insts_[i].slot == slot) add(i);
+    if (static_cast<size_t>(parent) + 1 >= kidStart_.size()) return out;   // created since the index
+    for (uint32_t k = kidStart_[parent]; k < kidStart_[parent + 1]; ++k)
+        if (insts_[kidIdx_[k]].slot == slot) out.push_back(kidIdx_[k]);
     return out;
 }
 
 int32_t Record::FirstNode(uint32_t inst, uint16_t member) const {
-    for (size_t i = 0; i < nodes_.size(); ++i)
-        if (nodes_[i].inst == inst && nodes_[i].member == static_cast<int16_t>(member))
-            return static_cast<int32_t>(i);
-    return -1;
+    return NthNode(inst, member, 0);
 }
 
 int32_t Record::NthNode(uint32_t inst, uint16_t member, size_t n) const {
-    for (size_t i = 0; i < nodes_.size(); ++i)
-        if (nodes_[i].inst == inst && nodes_[i].member == static_cast<int16_t>(member) && n-- == 0)
-            return static_cast<int32_t>(i);
+    if (static_cast<size_t>(inst) + 1 >= nodeStart_.size()) return -1;  // created since the index
+    for (uint32_t k = nodeStart_[inst]; k < nodeStart_[inst + 1]; ++k)
+        if (nodes_[nodeIdx_[k]].member == static_cast<int16_t>(member) && n-- == 0)
+            return static_cast<int32_t>(nodeIdx_[k]);
     return -1;
 }
 
@@ -678,6 +714,7 @@ int32_t Record::WalkGroupsConst(uint32_t inst, const RelPath& p) const {
 int32_t Record::WalkGroups(uint32_t inst, const RelPath& p, bool create) {
     if (p.memberDepth == 0) return -1;
     uint32_t cur = inst;
+    bool created = false;
     for (uint8_t d = 0; d + 1 < p.memberDepth; ++d) {
         const std::vector<uint32_t> v = InstancesOf(cur, p.idx[d]);
         if (!v.empty()) {
@@ -688,7 +725,9 @@ int32_t Record::WalkGroups(uint32_t inst, const RelPath& p, bool create) {
         const schema::MemberDef& md = MemberOf(cur, p.idx[d]);
         insts_.push_back(Inst{ md.group, static_cast<int32_t>(cur), p.idx[d] });
         cur = static_cast<uint32_t>(insts_.size() - 1);
+        created = true;
     }
+    if (created) RebuildIndex();
     return static_cast<int32_t>(cur);
 }
 
@@ -733,7 +772,7 @@ const TypeDef* Record::TypeAt(uint32_t inst, const RelPath& p) const {
     return t;
 }
 
-const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p) const {
+const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p, Value* scratch) const {
     const Value* v = &root;
     const TypeDef* t = &set_->types[type];
     for (uint8_t d = p.memberDepth; d < p.depth; ++d) {
@@ -745,7 +784,13 @@ const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p)
             continue;
         }
         if (t->kind == Kind::Array) {
-            if (schema::PackedElementWidth(*set_, *t)) return nullptr;   // read the whole array
+            if (schema::PackedElementWidth(*set_, *t)) {
+                size_t off = 0;
+                uint16_t part = 0;
+                if (!scratch || !PackedOffset(*v, *t, p, d, off, part)) return nullptr;
+                *scratch = Unpack(*set_, part, v->bytes.data() + off);
+                return scratch;
+            }
             if (i >= v->items.size()) return nullptr;
             t = &set_->types[t->ref];
             v = &v->items[i];
@@ -758,6 +803,66 @@ const Value* Record::Descend(const Value& root, uint16_t type, const RelPath& p)
         v = &v->items[i];
     }
     return v;
+}
+
+bool Record::PackedOffset(const Value& arr, const TypeDef& arrType, const RelPath& p, uint8_t d,
+                          size_t& off, uint16_t& type) const {
+    const TypeDef* t = &arrType;
+    off = 0;
+    for (; d < p.depth; ++d) {
+        const uint16_t i = p.idx[d];
+        if (t->kind == Kind::Array) {
+            const size_t w = set_->types[t->ref].plainSize;
+            const size_t n = t == &arrType ? arr.bytes.size() / w : t->count;
+            if (w == 0 || i >= n) return false;
+            off += i * w;
+            t = &set_->types[t->ref];
+        } else if (t->kind == Kind::Struct) {
+            if (i >= t->refCount) return false;
+            for (uint16_t k = 0; k < i; ++k) off += FieldType(*t, k).plainSize;
+            t = &FieldType(*t, i);
+        } else {
+            return false;
+        }
+    }
+    type = static_cast<uint16_t>(t - set_->types.data());
+    return off + t->plainSize <= arr.bytes.size();
+}
+
+Value Record::Unpack(const SchemaSet& s, uint16_t type, const uint8_t* p) {
+    const TypeDef& t = s.types[type];
+    Value v;
+    if (const size_t w = ScalarWidth(t.kind)) {
+        for (size_t b = 0; b < w; ++b) v.bits |= static_cast<uint64_t>(p[b]) << (8 * b);
+    } else if (t.kind == Kind::Array) {
+        v.bytes.assign(p, p + t.plainSize);                       // nested arrays stay packed
+    } else if (t.kind == Kind::Struct) {
+        v.items.reserve(t.refCount);
+        size_t off = 0;
+        for (uint16_t i = 0; i < t.refCount; ++i) {
+            const uint16_t ft = s.fields[t.ref + i].type;
+            v.items.push_back(Unpack(s, ft, p + off));
+            off += s.types[ft].plainSize;
+        }
+    }
+    return v;
+}
+
+void Record::Pack(const SchemaSet& s, uint16_t type, const Value& v, uint8_t* out) {
+    const TypeDef& t = s.types[type];
+    if (const size_t w = ScalarWidth(t.kind)) {
+        for (size_t b = 0; b < w; ++b) out[b] = static_cast<uint8_t>(v.bits >> (8 * b));
+    } else if (t.kind == Kind::Array) {
+        for (size_t b = 0; b < t.plainSize; ++b) out[b] = b < v.bytes.size() ? v.bytes[b] : 0;
+    } else if (t.kind == Kind::Struct) {
+        size_t off = 0;
+        for (uint16_t i = 0; i < t.refCount; ++i) {
+            const uint16_t ft = s.fields[t.ref + i].type;
+            if (i < v.items.size()) Pack(s, ft, v.items[i], out + off);
+            else std::memset(out + off, 0, s.types[ft].plainSize);
+            off += s.types[ft].plainSize;
+        }
+    }
 }
 
 const Value* Record::LatestMemberValue(uint32_t inst, std::string_view name) const {
@@ -777,23 +882,28 @@ const Value* Record::LatestMemberValue(uint32_t inst, std::string_view name) con
     return nullptr;
 }
 
-const Value* Record::FindValue(uint32_t inst, const RelPath& p) const {
+const Value* Record::FindValue(uint32_t inst, const RelPath& p, Value* scratch) const {
     const int32_t scope = WalkGroupsConst(inst, p);
     if (scope < 0) return nullptr;
     const int32_t ni = NthNode(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1], p.occurrence);
     if (ni < 0) return nullptr;
     return Descend(NodeValue(nodes_[static_cast<size_t>(ni)]),
-                   MemberOf(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]).type, p);
+                   MemberOf(static_cast<uint32_t>(scope), p.idx[p.memberDepth - 1]).type, p, scratch);
 }
 
-std::vector<const Value*> Record::FindAllValues(uint32_t inst, const RelPath& p) const {
+std::vector<const Value*> Record::FindAllValues(uint32_t inst, const RelPath& p,
+                                                std::deque<Value>* scratch) const {
     std::vector<const Value*> out;
     const int32_t scope = WalkGroupsConst(inst, p);
     if (scope < 0) return out;
     const uint16_t m = p.idx[p.memberDepth - 1];
-    for (const Node& n : nodes_) {
-        if (n.inst != static_cast<uint32_t>(scope) || n.member != static_cast<int16_t>(m)) continue;
-        if (const Value* v = Descend(NodeValue(n), MemberOf(n.inst, m).type, p)) out.push_back(v);
+    const uint16_t type = MemberOf(static_cast<uint32_t>(scope), m).type;
+    for (size_t k = 0;; ++k) {
+        const int32_t ni = NthNode(static_cast<uint32_t>(scope), m, k);
+        if (ni < 0) break;
+        Value* slot = nullptr;
+        if (scratch) slot = &scratch->emplace_back();
+        if (const Value* v = Descend(NodeValue(nodes_[static_cast<size_t>(ni)]), type, p, slot)) out.push_back(v);
     }
     return out;
 }
@@ -847,6 +957,7 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
     if (p.depth == p.memberDepth) {
         whole = std::move(v);
     } else {
+        bool packedWrite = false;
         Value* cur = &whole;
         const TypeDef* t = &set_->types[md.type];
         for (uint8_t d = p.memberDepth; d < p.depth; ++d) {
@@ -864,7 +975,14 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
                 continue;
             }
             if (t->kind == Kind::Array) {
-                if (schema::PackedElementWidth(*set_, *t)) return;   // set the whole array
+                if (schema::PackedElementWidth(*set_, *t)) {
+                    size_t off = 0;
+                    uint16_t type = 0;
+                    if (!PackedOffset(*cur, *t, p, d, off, type)) return;
+                    Pack(*set_, type, v, cur->bytes.data() + off);
+                    packedWrite = true;
+                    break;
+                }
                 if (i >= cur->items.size()) return;
                 cur = &cur->items[i];
                 t = &set_->types[t->ref];
@@ -882,7 +1000,7 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
             cur = &cur->items[i];
             t = &ft;
         }
-        *cur = std::move(v);
+        if (!packedWrite) *cur = std::move(v);
     }
 
     if (ni >= 0) {
@@ -900,6 +1018,7 @@ void Record::StoreValue(uint32_t inst, const RelPath& p, Value v) {
         n.value   = std::move(whole);
         const size_t pos = InsertPos(s, m);
         nodes_.insert(nodes_.begin() + static_cast<std::ptrdiff_t>(pos), std::move(n));
+        RebuildIndex();
     }
     UpdateCount(s, m);
 }
@@ -937,6 +1056,7 @@ void Record::StoreAll(uint32_t inst, const RelPath& p, std::vector<Value> vs) {
         n.value   = std::move(vs[i]);
         nodes_.insert(nodes_.begin() + static_cast<std::ptrdiff_t>(pos++), std::move(n));
     }
+    if (have.size() != vs.size()) RebuildIndex();
     UpdateCount(s, m);
 }
 
@@ -949,6 +1069,7 @@ void Record::ClearAt(uint32_t inst, const RelPath& p) {
     std::erase_if(nodes_, [&](const Node& n) {
         return n.inst == static_cast<uint32_t>(scope) && n.member == static_cast<int16_t>(m);
     });
+    RebuildIndex();
     UpdateCount(static_cast<uint32_t>(scope), m);
 }
 
@@ -982,6 +1103,7 @@ size_t Record::AppendAt(uint32_t inst, const RelPath& p) {
     n.decoded = true;
     n.value   = DefaultValue(md.type);
     nodes_.insert(nodes_.begin() + static_cast<std::ptrdiff_t>(pos), std::move(n));
+    RebuildIndex();
     UpdateCount(s, m);
     return count;
 }
@@ -1058,6 +1180,7 @@ Cursor Record::AddGroupAt(uint32_t inst, const RelPath& p) {
     const schema::MemberDef& md = MemberOf(static_cast<uint32_t>(parent), m);
     if (!md.isGroup) return Cursor{ this, inst };
     insts_.push_back(Inst{ md.group, parent, m });
+    RebuildIndex();
     return Cursor{ this, static_cast<uint32_t>(insts_.size() - 1) };
 }
 

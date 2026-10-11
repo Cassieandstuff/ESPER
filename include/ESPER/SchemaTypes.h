@@ -85,6 +85,10 @@ struct TypeDef {
     const char* selField  = nullptr;  // Field / Lookup: the key field's name; Member: the member's
     uint64_t    selMask   = 0;        // Field: AND mask (0 = none)
     uint16_t    lookup    = 0;        // Lookup: LookupDef
+    // Bytes, when the type is made only of plain numbers (no FormIDs, strings,
+    // bytes, unions, breaks or remapUnsafe values); 0 otherwise. The engine
+    // stores an array of plain elements packed.
+    uint32_t    plainSize = 0;
 };
 
 struct CaseDef {
@@ -211,19 +215,12 @@ struct SchemaSet {
     }
 };
 
-// The element width of an array the engine stores packed: an array whose
-// element is a plain number (not a FormID, string or composite) keeps its
-// elements as raw little-endian bytes in Value::bytes instead of one Value per
-// element. 0 when `arrayType` isn't such an array.
+// The element size of an array the engine stores packed: an array whose
+// element is plain (TypeDef::plainSize: numbers, and fixed structs/arrays of
+// them) keeps its elements as raw little-endian bytes in Value::bytes instead
+// of one Value per element. 0 when `arrayType` isn't such an array.
 constexpr size_t PackedElementWidth(const SchemaSet& s, const TypeDef& arrayType) {
-    if (arrayType.kind != Kind::Array) return 0;
-    switch (s.types[arrayType.ref].kind) {
-    case Kind::U8:  case Kind::I8:  return 1;
-    case Kind::U16: case Kind::I16: return 2;
-    case Kind::U32: case Kind::I32: case Kind::F32: case Kind::Sig4: return 4;
-    case Kind::U64: case Kind::I64: return 8;
-    default: return 0;
-    }
+    return arrayType.kind == Kind::Array ? s.types[arrayType.ref].plainSize : 0;
 }
 
 // constexpr signature helper for generated code: SigOf("ARMO").

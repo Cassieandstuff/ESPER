@@ -4,12 +4,495 @@
 
 #include <ESPER/Record.h>
 
+#include <array>
+#include <bit>
 #include <cstdint>
 #include <optional>
 #include <string>
 #include <vector>
 
 namespace esper::view {
+
+static_assert(std::endian::native == std::endian::little,
+              "value structs mirror the little-endian packed layout");
+namespace value {
+#pragma pack(push, 1)
+struct ColorRgba {
+    static constexpr size_t kPlainSize = 4;
+    uint8_t r{};
+    uint8_t g{};
+    uint8_t b{};
+    uint8_t a{};
+};
+static_assert(sizeof(ColorRgba) == 4);
+struct RagdollBone {
+    static constexpr size_t kPlainSize = 28;
+    std::array<uint8_t, 4> header{};
+    std::array<float, 3> position{};
+    std::array<float, 3> rotation{};
+};
+static_assert(sizeof(RagdollBone) == 28);
+struct Placement {
+    static constexpr size_t kPlainSize = 24;
+    float posX{};
+    float posY{};
+    float posZ{};
+    float rotX{};
+    float rotY{};
+    float rotZ{};
+};
+static_assert(sizeof(Placement) == 24);
+struct ObjectBounds {
+    static constexpr size_t kPlainSize = 12;
+    int16_t x1{};
+    int16_t y1{};
+    int16_t z1{};
+    int16_t x2{};
+    int16_t y2{};
+    int16_t z2{};
+};
+static_assert(sizeof(ObjectBounds) == 12);
+struct DestructibleHeader {
+    static constexpr size_t kPlainSize = 8;
+    int32_t health{};
+    uint8_t stageCount{};
+    uint8_t flags{};
+    uint16_t unknown{};
+};
+static_assert(sizeof(DestructibleHeader) == 8);
+struct AddonFlags {
+    static constexpr size_t kPlainSize = 4;
+    uint16_t masterParticleCap{};
+    uint16_t flags{};
+};
+static_assert(sizeof(AddonFlags) == 4);
+struct EffectItem {
+    static constexpr size_t kPlainSize = 12;
+    float magnitude{};
+    uint32_t area{};
+    uint32_t duration{};
+};
+static_assert(sizeof(EffectItem) == 12);
+struct ItemValueWeight {
+    static constexpr size_t kPlainSize = 8;
+    int32_t value{};
+    float weight{};
+};
+static_assert(sizeof(ItemValueWeight) == 8);
+struct BipedBodyTemplate {
+    static constexpr size_t kPlainSize = 8;
+    uint32_t bipedFlags{};
+    uint32_t armorType{};
+};
+static_assert(sizeof(BipedBodyTemplate) == 8);
+struct ArmaDnam {
+    static constexpr size_t kPlainSize = 12;
+    uint8_t malePriority{};
+    uint8_t femalePriority{};
+    uint8_t weightSliderMale{};
+    uint8_t weightSliderFemale{};
+    uint16_t unknown{};
+    uint8_t detectionSound{};
+    uint8_t pad{};
+    float weaponAdjust{};
+};
+static_assert(sizeof(ArmaDnam) == 12);
+struct CellGrid {
+    static constexpr size_t kPlainSize = 12;
+    int32_t x{};
+    int32_t y{};
+    uint32_t flags{};
+};
+static_assert(sizeof(CellGrid) == 12);
+struct CellMaxHeight {
+    static constexpr size_t kPlainSize = 1028;
+    float offset{};
+    std::array<uint8_t, 1024> heights{};
+};
+static_assert(sizeof(CellMaxHeight) == 1028);
+struct ContainerData {
+    static constexpr size_t kPlainSize = 5;
+    uint8_t flags{};
+    float weight{};
+};
+static_assert(sizeof(ContainerData) == 5);
+struct DialData {
+    static constexpr size_t kPlainSize = 4;
+    uint8_t unknown{};
+    uint8_t category{};
+    uint16_t subtype{};
+};
+static_assert(sizeof(DialData) == 4);
+struct VendorValues {
+    static constexpr size_t kPlainSize = 12;
+    uint16_t startHour{};
+    uint16_t endHour{};
+    uint32_t radius{};
+    uint8_t buysStolen{};
+    uint8_t notSellBuy{};
+    uint16_t unused{};
+};
+static_assert(sizeof(VendorValues) == 12);
+struct FurnitureWorkbench {
+    static constexpr size_t kPlainSize = 2;
+    uint8_t benchType{};
+    int8_t usesSkill{};
+};
+static_assert(sizeof(FurnitureWorkbench) == 2);
+struct FurnitureMarkerEntries {
+    static constexpr size_t kPlainSize = 4;
+    uint16_t markerType{};
+    uint16_t entryPoints{};
+};
+static_assert(sizeof(FurnitureMarkerEntries) == 4);
+struct GrassData {
+    static constexpr size_t kPlainSize = 32;
+    uint8_t density{};
+    uint8_t minSlope{};
+    uint8_t maxSlope{};
+    uint8_t pad{};
+    uint16_t distanceFromWater{};
+    uint16_t pad2{};
+    uint32_t waterOp{};
+    float positionRange{};
+    float heightRange{};
+    float colorRange{};
+    float wavePeriod{};
+    uint8_t flags{};
+    std::array<uint8_t, 3> pad3{};
+};
+static_assert(sizeof(GrassData) == 32);
+struct IdleAnimationData {
+    static constexpr size_t kPlainSize = 6;
+    uint8_t loopMin{};
+    uint8_t loopMax{};
+    uint8_t flags{};
+    uint8_t animGroupSection{};
+    uint16_t replayDelay{};
+};
+static_assert(sizeof(IdleAnimationData) == 6);
+struct InfoFlags {
+    static constexpr size_t kPlainSize = 4;
+    uint16_t flags{};
+    uint16_t resetHours{};
+};
+static_assert(sizeof(InfoFlags) == 4);
+struct DialogResponsesData {
+    static constexpr size_t kPlainSize = 8;
+    uint16_t unknown0{};
+    uint16_t unknown2{};
+    uint32_t unknown4{};
+};
+static_assert(sizeof(DialogResponsesData) == 8);
+struct IngredientData {
+    static constexpr size_t kPlainSize = 8;
+    int32_t value{};
+    uint32_t flags{};
+};
+static_assert(sizeof(IngredientData) == 8);
+struct ImpactData {
+    static constexpr size_t kPlainSize = 24;
+    float effectDuration{};
+    uint32_t orientation{};
+    float angleThreshold{};
+    float placementRadius{};
+    uint32_t soundLevel{};
+    uint8_t flags{};
+    uint8_t impactResult{};
+    uint16_t pad{};
+};
+static_assert(sizeof(ImpactData) == 24);
+struct DecalData {
+    static constexpr size_t kPlainSize = 36;
+    float minWidth{};
+    float maxWidth{};
+    float minHeight{};
+    float maxHeight{};
+    float depth{};
+    float shininess{};
+    float parallaxScale{};
+    uint8_t parallaxPasses{};
+    uint8_t flags{};
+    uint16_t pad{};
+    uint32_t color{};
+};
+static_assert(sizeof(DecalData) == 36);
+struct LandVertexTriples {
+    static constexpr size_t kPlainSize = 3267;
+    std::array<uint8_t, 3267> v{};
+};
+static_assert(sizeof(LandVertexTriples) == 3267);
+struct LandHeights {
+    static constexpr size_t kPlainSize = 1096;
+    float offset{};
+    std::array<int8_t, 1089> deltas{};
+    std::array<uint8_t, 3> pad{};
+};
+static_assert(sizeof(LandHeights) == 1096);
+struct LandAlphaCell {
+    static constexpr size_t kPlainSize = 8;
+    uint16_t position{};
+    std::array<uint8_t, 2> pad{};
+    float opacity{};
+};
+static_assert(sizeof(LandAlphaCell) == 8);
+struct LightData {
+    static constexpr size_t kPlainSize = 48;
+    int32_t time{};
+    uint32_t radius{};
+    ::esper::view::value::ColorRgba color{};
+    uint32_t flags{};
+    float falloff{};
+    float fov{};
+    float nearClip{};
+    float period{};
+    float intensityAmplitude{};
+    float movementAmplitude{};
+    uint32_t value{};
+    float weight{};
+};
+static_assert(sizeof(LightData) == 48);
+struct LoadScreenRotationLimits {
+    static constexpr size_t kPlainSize = 4;
+    int16_t min{};
+    int16_t max{};
+};
+static_assert(sizeof(LoadScreenRotationLimits) == 4);
+struct LtexHavok {
+    static constexpr size_t kPlainSize = 2;
+    uint8_t friction{};
+    uint8_t restitution{};
+};
+static_assert(sizeof(LtexHavok) == 2);
+struct MovementSpeeds {
+    static constexpr size_t kPlainSize = 44;
+    std::array<float, 11> values{};
+};
+static_assert(sizeof(MovementSpeeds) == 44);
+struct MusicPriority {
+    static constexpr size_t kPlainSize = 4;
+    uint16_t priority{};
+    uint16_t ducking{};
+};
+static_assert(sizeof(MusicPriority) == 4);
+struct AcbsData {
+    static constexpr size_t kPlainSize = 24;
+    uint32_t flags{};
+    uint16_t magickaOffset{};
+    uint16_t staminaOffset{};
+    uint16_t level{};
+    uint16_t calcMin{};
+    uint16_t calcMax{};
+    uint16_t speedMultiplier{};
+    uint16_t dispositionBase{};
+    uint16_t templateFlags{};
+    uint16_t healthOffset{};
+    uint16_t bleedoutOverride{};
+};
+static_assert(sizeof(AcbsData) == 24);
+struct FaceMorphs {
+    static constexpr size_t kPlainSize = 76;
+    std::array<float, 19> values{};
+};
+static_assert(sizeof(FaceMorphs) == 76);
+struct FaceParts {
+    static constexpr size_t kPlainSize = 16;
+    int32_t nose{};
+    int32_t unknown{};
+    int32_t eyes{};
+    int32_t mouth{};
+};
+static_assert(sizeof(FaceParts) == 16);
+struct TintColor {
+    static constexpr size_t kPlainSize = 4;
+    uint8_t r{};
+    uint8_t g{};
+    uint8_t b{};
+    uint8_t a{};
+};
+static_assert(sizeof(TintColor) == 4);
+struct AiData {
+    static constexpr size_t kPlainSize = 20;
+    uint8_t aggression{};
+    uint8_t confidence{};
+    uint8_t energy{};
+    uint8_t morality{};
+    uint8_t mood{};
+    uint8_t assistance{};
+    uint8_t flags{};
+    uint8_t pad{};
+    uint32_t warn{};
+    uint32_t warnAttack{};
+    uint32_t attack{};
+};
+static_assert(sizeof(AiData) == 20);
+struct NpcSkills {
+    static constexpr size_t kPlainSize = 52;
+    std::array<uint8_t, 18> skillValues{};
+    std::array<uint8_t, 18> skillOffsets{};
+    uint16_t health{};
+    uint16_t magicka{};
+    uint16_t stamina{};
+    uint16_t pad{};
+    float lightingLevel{};
+    uint16_t attackAngle{};
+    uint16_t pad2{};
+};
+static_assert(sizeof(NpcSkills) == 52);
+struct SkinTone {
+    static constexpr size_t kPlainSize = 12;
+    float r{};
+    float g{};
+    float b{};
+};
+static_assert(sizeof(SkinTone) == 12);
+struct PackageSectionsBranch {
+    static constexpr size_t kPlainSize = 8;
+    uint32_t subBranchCount{};
+    uint32_t flags{};
+};
+static_assert(sizeof(PackageSectionsBranch) == 8);
+struct PerkData {
+    static constexpr size_t kPlainSize = 5;
+    uint8_t trait{};
+    uint8_t level{};
+    uint8_t numRanks{};
+    uint8_t playable{};
+    uint8_t hidden{};
+};
+static_assert(sizeof(PerkData) == 5);
+struct PerkEntriesHeader {
+    static constexpr size_t kPlainSize = 3;
+    uint8_t type{};
+    uint8_t rank{};
+    uint8_t priority{};
+};
+static_assert(sizeof(PerkEntriesHeader) == 3);
+struct PerkEntriesDataEntryPoint {
+    static constexpr size_t kPlainSize = 3;
+    uint8_t entryPoint{};
+    uint8_t function{};
+    uint8_t conditionTabCount{};
+};
+static_assert(sizeof(PerkEntriesDataEntryPoint) == 3);
+struct QuestData {
+    static constexpr size_t kPlainSize = 12;
+    uint16_t flags{};
+    uint8_t priority{};
+    uint8_t unknown3{};
+    uint32_t unknown4{};
+    uint32_t type{};
+};
+static_assert(sizeof(QuestData) == 12);
+struct QuestStageIndex {
+    static constexpr size_t kPlainSize = 4;
+    uint16_t index{};
+    uint8_t flags{};
+    uint8_t unknown{};
+};
+static_assert(sizeof(QuestStageIndex) == 4);
+struct QuestObjectivesTargetsTarget {
+    static constexpr size_t kPlainSize = 8;
+    int32_t alias{};
+    uint32_t flags{};
+};
+static_assert(sizeof(QuestObjectivesTargetsTarget) == 8);
+struct PlacedObjectPrimitive {
+    static constexpr size_t kPlainSize = 32;
+    std::array<float, 3> bounds{};
+    std::array<float, 3> color{};
+    float unknown{};
+    uint32_t type{};
+};
+static_assert(sizeof(PlacedObjectPrimitive) == 32);
+struct PlacedObjectRoomMarker {
+    static constexpr size_t kPlainSize = 4;
+    uint8_t linkedRooms{};
+    std::array<uint8_t, 3> unknown{};
+};
+static_assert(sizeof(PlacedObjectRoomMarker) == 4);
+struct PlacedObjectMapMarkerType {
+    static constexpr size_t kPlainSize = 2;
+    uint8_t type{};
+    uint8_t unused{};
+};
+static_assert(sizeof(PlacedObjectMapMarkerType) == 2);
+struct PlacedObjectAlpha {
+    static constexpr size_t kPlainSize = 2;
+    uint8_t cutoff{};
+    uint8_t base{};
+};
+static_assert(sizeof(PlacedObjectAlpha) == 2);
+struct SoundDescriptorValues {
+    static constexpr size_t kPlainSize = 6;
+    int8_t frequencyShift{};
+    int8_t frequencyVariance{};
+    uint8_t priority{};
+    uint8_t dbVariance{};
+    uint16_t staticAttenuation{};
+};
+static_assert(sizeof(SoundDescriptorValues) == 6);
+struct WeaponBasic {
+    static constexpr size_t kPlainSize = 10;
+    int32_t value{};
+    float weight{};
+    int16_t damage{};
+};
+static_assert(sizeof(WeaponBasic) == 10);
+struct WeaponData {
+    static constexpr size_t kPlainSize = 100;
+    uint8_t animationType{};
+    std::array<uint8_t, 3> pad1{};
+    float speed{};
+    float reach{};
+    uint16_t flags{};
+    uint16_t unknown14{};
+    float sightFov{};
+    uint32_t unknown20{};
+    uint8_t vatsToHitChance{};
+    uint8_t attackAnimation{};
+    uint8_t projectileCount{};
+    uint8_t embeddedWeaponAv{};
+    float minRange{};
+    float maxRange{};
+    uint32_t unknown36{};
+    uint32_t flags2{};
+    float unknown44{};
+    float unknown48{};
+    float unknown52{};
+    float unknown56{};
+    float unknown60{};
+    uint32_t unknown64{};
+    uint32_t unknown68{};
+    uint32_t unknown72{};
+    int32_t skill{};
+    uint32_t unknown80{};
+    uint32_t unknown84{};
+    int32_t resist{};
+    uint32_t unknown92{};
+    float stagger{};
+};
+static_assert(sizeof(WeaponData) == 100);
+struct WorldCenter {
+    static constexpr size_t kPlainSize = 4;
+    int16_t x{};
+    int16_t y{};
+};
+static_assert(sizeof(WorldCenter) == 4);
+struct WorldDefaults {
+    static constexpr size_t kPlainSize = 8;
+    float landHeight{};
+    float waterHeight{};
+};
+static_assert(sizeof(WorldDefaults) == 8);
+struct WorldCorner {
+    static constexpr size_t kPlainSize = 8;
+    float x{};
+    float y{};
+};
+static_assert(sizeof(WorldCorner) == 8);
+#pragma pack(pop)
+} // namespace value
 
 class AcbsData;
 class AcousticSpace;
@@ -805,7 +1288,8 @@ public:
     void SetFogClipDistance(const float& v) const { s_.at.Set<float>(s_.Field(8), v); }
     std::optional<float> FogPower() const { return s_.at.Get<float>(s_.Field(9)); }
     void SetFogPower(const float& v) const { s_.at.Set<float>(s_.Field(9), v); }
-    std::vector<::esper::view::ColorRgba> DirectionalAmbient() const { std::vector<::esper::view::ColorRgba> o; const size_t n = s_.at.Size(s_.Field(10)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(10), static_cast<uint16_t>(i)) }); return o; }
+    std::optional<std::vector<::esper::view::value::ColorRgba>> DirectionalAmbient() const { return s_.at.Get<std::vector<::esper::view::value::ColorRgba>>(s_.Field(10)); }
+    void SetDirectionalAmbient(const std::vector<::esper::view::value::ColorRgba>& v) const { s_.at.Set<std::vector<::esper::view::value::ColorRgba>>(s_.Field(10), v); }
     ::esper::view::ColorRgba Specular() const { return ::esper::view::ColorRgba(::esper::StructCursor{ s_.at, s_.Field(11) }); }
     std::optional<float> FresnelPower() const { return s_.at.Get<float>(s_.Field(12)); }
     void SetFresnelPower(const float& v) const { s_.at.Set<float>(s_.Field(12), v); }
@@ -2751,9 +3235,8 @@ public:
     bool HasAlphaTextures() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
     void ClearAlphaTextures() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
     // VTXT (repeated)
-    std::vector<std::vector<::esper::view::LandAlphaCell>> AlphaCells() const;
-    std::vector<::esper::view::LandAlphaCell> AddAlphaCells(size_t n) const;
-    bool HasAlphaCells() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
+    std::vector<std::vector<::esper::view::value::LandAlphaCell>> AlphaCells() const { return c_.GetAll<std::vector<::esper::view::value::LandAlphaCell>>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetAlphaCells(const std::vector<std::vector<::esper::view::value::LandAlphaCell>>& v) const { c_.SetAll<std::vector<::esper::view::value::LandAlphaCell>>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
     void ClearAlphaCells() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
@@ -6673,9 +7156,8 @@ public:
     bool HasAlpha() const { return c_.Has(::esper::RelPath{ { 51 }, 1, 1 }); }
     void ClearAlpha() const { c_.Clear(::esper::RelPath{ { 51 }, 1, 1 }); }
     // XRGD
-    std::vector<::esper::view::RagdollBone> RagdollData() const;
-    void ResizeRagdollData(size_t n) const { c_.Resize(::esper::RelPath{ { 52 }, 1, 1 }, n); }
-    bool HasRagdollData() const { return c_.Has(::esper::RelPath{ { 52 }, 1, 1 }); }
+    std::optional<std::vector<::esper::view::value::RagdollBone>> RagdollData() const { return c_.Get<std::vector<::esper::view::value::RagdollBone>>(::esper::RelPath{ { 52 }, 1, 1 }); }
+    void SetRagdollData(const std::vector<::esper::view::value::RagdollBone>& v) const { c_.Set<std::vector<::esper::view::value::RagdollBone>>(::esper::RelPath{ { 52 }, 1, 1 }, v); }
     void ClearRagdollData() const { c_.Clear(::esper::RelPath{ { 52 }, 1, 1 }); }
     // XRGB
     std::optional<std::vector<float>> RagdollBiped() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 53 }, 1, 1 }); }
@@ -6809,9 +7291,8 @@ public:
     void SetEncounterZone(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
     void ClearEncounterZone() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // XRGD
-    std::vector<::esper::view::RagdollBone> RagdollData() const;
-    void ResizeRagdollData(size_t n) const { c_.Resize(::esper::RelPath{ { 4 }, 1, 1 }, n); }
-    bool HasRagdollData() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
+    std::optional<std::vector<::esper::view::value::RagdollBone>> RagdollData() const { return c_.Get<std::vector<::esper::view::value::RagdollBone>>(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void SetRagdollData(const std::vector<::esper::view::value::RagdollBone>& v) const { c_.Set<std::vector<::esper::view::value::RagdollBone>>(::esper::RelPath{ { 4 }, 1, 1 }, v); }
     void ClearRagdollData() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // XRGB
     std::optional<std::vector<float>> RagdollBiped() const { return c_.Get<std::vector<float>>(::esper::RelPath{ { 5 }, 1, 1 }); }
@@ -8627,8 +9108,6 @@ inline std::vector<::esper::view::LandBaseTexture> Landscape::BaseTextures() con
 inline ::esper::view::LandBaseTexture Landscape::AddBaseTextures() const { return ::esper::view::LandBaseTexture(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 4 }, 1, 1 }, c_.Append(::esper::RelPath{ { 4 }, 1, 1 })) }); }
 inline std::vector<::esper::view::LandAlphaTexture> Landscape::AlphaTextures() const { std::vector<::esper::view::LandAlphaTexture> o; const size_t n = c_.Count(::esper::RelPath{ { 5 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, k) }); return o; }
 inline ::esper::view::LandAlphaTexture Landscape::AddAlphaTextures() const { return ::esper::view::LandAlphaTexture(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 5 }, 1, 1 }, c_.Append(::esper::RelPath{ { 5 }, 1, 1 })) }); }
-inline std::vector<std::vector<::esper::view::LandAlphaCell>> Landscape::AlphaCells() const { std::vector<std::vector<::esper::view::LandAlphaCell>> o; const size_t n = c_.Count(::esper::RelPath{ { 6 }, 1, 1 }); for (size_t k = 0; k < n; ++k) { const ::esper::RelPath p = ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, k); std::vector<::esper::view::LandAlphaCell> e; const size_t m = c_.Size(p); for (size_t i = 0; i < m; ++i) e.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(p, static_cast<uint16_t>(i)) }); o.push_back(std::move(e)); } return o; }
-inline std::vector<::esper::view::LandAlphaCell> Landscape::AddAlphaCells(size_t n) const { const ::esper::RelPath p = ::esper::AtOccurrence(::esper::RelPath{ { 6 }, 1, 1 }, c_.Append(::esper::RelPath{ { 6 }, 1, 1 })); c_.Resize(p, n); std::vector<::esper::view::LandAlphaCell> e; for (size_t i = 0; i < n; ++i) e.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(p, static_cast<uint16_t>(i)) }); return e; }
 inline ::esper::view::ColorRgba Keyword::Color() const { return ::esper::view::ColorRgba(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Hazard::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::HazardData Hazard::Data() const { return ::esper::view::HazardData(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
@@ -8759,7 +9238,6 @@ inline ::esper::view::EnableParent PlacedObject::EnableParent() const { return :
 inline ::esper::view::TopicData PlacedObject::PatrolTopic() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 44 }, 1, 1 } }); }
 inline ::esper::view::PlacedObjectMapMarkerType PlacedObject::MapMarkerType() const { return ::esper::view::PlacedObjectMapMarkerType(::esper::StructCursor{ c_, ::esper::RelPath{ { 50 }, 1, 1 } }); }
 inline ::esper::view::PlacedObjectAlpha PlacedObject::Alpha() const { return ::esper::view::PlacedObjectAlpha(::esper::StructCursor{ c_, ::esper::RelPath{ { 51 }, 1, 1 } }); }
-inline std::vector<::esper::view::RagdollBone> PlacedObject::RagdollData() const { std::vector<::esper::view::RagdollBone> o; const size_t n = c_.Size(::esper::RelPath{ { 52 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 52 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline ::esper::view::Placement PlacedObject::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 60 }, 1, 1 } }); }
 inline ::esper::view::Vmad Ingredient::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Ingredient::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
@@ -8768,7 +9246,6 @@ inline ::esper::view::IngredientData Ingredient::Data() const { return ::esper::
 inline std::vector<::esper::view::EffectItem> Ingredient::EffectItems() const { std::vector<::esper::view::EffectItem> o; const size_t n = c_.Count(::esper::RelPath{ { 14 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 14 }, 1, 1 }, k) }); return o; }
 inline ::esper::view::EffectItem Ingredient::AddEffectItems() const { return ::esper::view::EffectItem(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 14 }, 1, 1 }, c_.Append(::esper::RelPath{ { 14 }, 1, 1 })) }); }
 inline ::esper::view::Vmad PlacedNpc::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
-inline std::vector<::esper::view::RagdollBone> PlacedNpc::RagdollData() const { std::vector<::esper::view::RagdollBone> o; const size_t n = c_.Size(::esper::RelPath{ { 4 }, 1, 1 }); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ c_, ::esper::Extend(::esper::RelPath{ { 4 }, 1, 1 }, static_cast<uint16_t>(i)) }); return o; }
 inline std::vector<::esper::view::PlacedNpcActivateParents> PlacedNpc::ActivateParents() const { std::vector<::esper::view::PlacedNpcActivateParents> o; const size_t n = c_.Count(::esper::RelPath{ { 10 }, 1, 1 }); for (size_t k = 0; k < n; ++k) o.emplace_back(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 10 }, 1, 1 }, k) }); return o; }
 inline ::esper::view::PlacedNpcActivateParents PlacedNpc::AddActivateParents() const { return ::esper::view::PlacedNpcActivateParents(::esper::StructCursor{ c_, ::esper::AtOccurrence(::esper::RelPath{ { 10 }, 1, 1 }, c_.Append(::esper::RelPath{ { 10 }, 1, 1 })) }); }
 inline ::esper::view::TopicData PlacedNpc::PatrolTopic() const { return ::esper::view::TopicData(::esper::StructCursor{ c_, ::esper::RelPath{ { 14 }, 1, 1 } }); }

@@ -692,12 +692,18 @@ void TestRepeatedStructs() {
         CHECK(base[1].Quadrant() == uint8_t(3));
         base[1].SetQuadrant(2);                                  // writes the second occurrence only
     }
-    const auto cells = land.AlphaCells();
+    // VTXT is a repeated array of plain structs: stored packed, read and
+    // written as value structs.
+    auto cells = land.AlphaCells();
     CHECK(cells.size() == 1 && cells[0].size() == 2);
     if (cells.size() == 1 && cells[0].size() == 2) {
-        CHECK(cells[0][1].Position() == uint16_t(6) && cells[0][1].Opacity() == 0.5f);
-        cells[0][0].SetOpacity(1.0f);
+        CHECK(cells[0][1].position == 6 && cells[0][1].opacity == 0.5f);
+        cells[0][0].opacity = 1.0f;
+        land.SetAlphaCells(cells);
     }
+    // A path still reaches one field of one packed element (VTXT is member 6).
+    CHECK(rec.Root().Get<float>(esper::RelPath{ { 6, 1, 2 }, 1, 3 }) == 0.5f);
+    CHECK(!rec.Root().Get<float>(esper::RelPath{ { 6, 2, 2 }, 1, 3 }).has_value());   // past the end
     Payload want;
     want.Sub("BTXT", Cat({ U32(0x01000A01), Bytes{ 0, 0 }, Bytes{ 0, 0 } }))
         .Sub("BTXT", Cat({ U32(0x01000A02), Bytes{ 2, 0 }, Bytes{ 0, 0 } }))
@@ -709,15 +715,15 @@ void TestRepeatedStructs() {
     esper::Record made;
     CHECK(Into(esper::Record::Create(esper::schema::Main(), Sig("LAND"), {}), made));
     auto mv = *esper::view::As<esper::view::Landscape>(made);
-    auto cellsMade = mv.AddAlphaCells(1);
-    CHECK(cellsMade.size() == 1);
-    if (!cellsMade.empty()) cellsMade[0].SetPosition(7);
+    mv.SetAlphaCells({ { esper::view::value::LandAlphaCell{ 7, {}, 0.0f } } });
     mv.AddBaseTextures().SetQuadrant(1);
     mv.AddBaseTextures().SetQuadrant(2);
     CHECK((SigsOf(made.Encode()) == std::vector<uint32_t>{ Sig("BTXT"), Sig("BTXT"), Sig("VTXT") }));
     const auto madeBase = mv.BaseTextures();
     CHECK(madeBase.size() == 2 && madeBase[0].Quadrant() == uint8_t(1) && madeBase[1].Quadrant() == uint8_t(2));
-    CHECK(mv.AlphaCells().size() == 1 && mv.AlphaCells()[0][0].Position() == uint16_t(7));
+    CHECK(mv.AlphaCells().size() == 1 && mv.AlphaCells()[0][0].position == 7);
+    made.Root().Set<float>(esper::RelPath{ { 6, 0, 2 }, 1, 3 }, 0.75f);         // write one field by path
+    CHECK(mv.AlphaCells()[0][0].opacity == 0.75f && mv.AlphaCells()[0][0].position == 7);
 }
 
 } // namespace

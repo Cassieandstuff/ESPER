@@ -54,6 +54,20 @@ VALUE_OPTS = {"type", "fields", "union", "if", "table", "size", "formIds", "to",
 
 RESERVED = {"record", "cursor", "self"}
 
+# Field names of generated value structs (view::value::*) must be valid C++.
+CPP_KEYWORDS = set("""alignas alignof and and_eq asm auto bitand bitor bool break case catch char
+char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast
+continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum
+explicit export extern false float for friend goto if inline int long mutable namespace new
+noexcept not not_eq nullptr operator or or_eq private protected public register
+reinterpret_cast requires return short signed sizeof static static_assert static_cast struct
+switch template this thread_local throw true try typedef typeid typename union unsigned using
+virtual void volatile wchar_t while xor xor_eq""".split())
+
+
+def ident(name: str) -> str:
+    return name + "_" if name in CPP_KEYWORDS else name
+
 
 class SchemaError(Exception):
     pass
@@ -803,14 +817,41 @@ def c_str(s: str | None) -> str:
     return "nullptr" if s is None else json.dumps(s)
 
 
+PLAIN_WIDTH = {"U8": 1, "I8": 1, "U16": 2, "I16": 2, "U32": 4, "I32": 4, "F32": 4, "Sig4": 4,
+               "U64": 8, "I64": 8}
+
+
+def plain_size(schema: Schema, tidx: int, memo: dict[int, int]) -> int:
+    """Bytes of a type made only of plain numbers (no FormIDs, strings, bytes,
+    unions, breaks or remapUnsafe values), else 0. The engine stores arrays of
+    plain elements packed."""
+    if tidx in memo:
+        return memo[tidx]
+    t = schema.types[tidx]
+    size = 0
+    if t.flags & FLAG_REMAP_UNSAFE:
+        size = 0
+    elif t.kind in PLAIN_WIDTH:
+        size = PLAIN_WIDTH[t.kind]
+    elif t.kind == "Array" and t.len == "Fixed":
+        size = plain_size(schema, t.ref, memo) * t.count
+    elif t.kind == "Struct" and not t.has_break and t.struct_fields:
+        parts = [plain_size(schema, ft, memo) for _, ft, brk in t.struct_fields if not brk]
+        size = sum(parts) if all(parts) else 0
+    memo[tidx] = size
+    return size
+
+
 def flatten(schema: Schema):
     """Assign flat table indices."""
     fields, links, cases, case_values = [], [], [], []
     type_rows = []
-    for t in schema.types:
+    plain: dict[int, int] = {}
+    for ti, t in enumerate(schema.types):
         row = dict(kind=t.kind, len=t.len, table=t.table, flags=t.flags, count=t.count,
                    ref=t.ref, refCount=0, linkFirst=0, linkCount=0, name=t.name,
-                   selector=t.selector, selField=t.sel_field, selMask=t.sel_mask, lookup=t.lookup)
+                   selector=t.selector, selField=t.sel_field, selMask=t.sel_mask, lookup=t.lookup,
+                   plainSize=plain_size(schema, ti, plain))
         if t.kind == "Struct":
             row["ref"] = len(fields)
             row["refCount"] = len(t.struct_fields)
@@ -836,7 +877,7 @@ def flatten(schema: Schema):
                                firstEntry=len(entries), entryCount=len(g.entries),
                                ordered=g.ordered, open=g.open_sig, end=g.end_sig))
         members.extend(g.members)
-        entries.extend(g.entries)
+        entries.extend(sorted(g.entries, key=lambda e: sig_int(e[0])))   # binary-searched by the engine
     lookups, lookup_rows = [], []
     for table, column in schema.lookups:
         t = schema.table_defs[table]
@@ -883,7 +924,7 @@ def emit_tables(schema: Schema, ns: str) -> str:
         f"    {{ Kind::{r['kind']}, LenKind::{r['len']}, StrTable::{r['table']}, {r['flags']}, "
         f"{r['count']}, {r['ref']}, {r['refCount']}, {r['linkFirst']}, {r['linkCount']}, "
         f"{c_str(r['name'])}, Selector::{r['selector']}, {c_str(r['selField'])}, "
-        f"{r['selMask']}ULL, {r['lookup']} }},  // {i}: {schema.types[i].spec}"
+        f"{r['selMask']}ULL, {r['lookup']}, {r['plainSize']} }},  // {i}: {schema.types[i].spec}"
         for i, r in enumerate(f["types"])], "{}")
     arr("FieldDef", "kFields", [f"    {{ {c_str(n)}, {t}, {'true' if b else 'false'} }},"
                                 for n, t, b in f["fields"]], "{ nullptr, 0, false }")
@@ -996,9 +1037,70 @@ def emit_views(schema: Schema, ns: str) -> str:
         return f"::{ns}::{name}"
 
     out = ["#pragma once", HEADER, "#include <ESPER/Record.h>", "",
-           "#include <cstdint>", "#include <optional>", "#include <string>", "#include <vector>", "",
+           "#include <array>", "#include <bit>", "#include <cstdint>", "#include <optional>",
+           "#include <string>", "#include <vector>", "",
            f"namespace {ns} {{", ""]
     struct_types = [i for i, t in enumerate(schema.types) if t.kind == "Struct" and t.name]
+
+    # ── Value structs: plain structs (numbers only, fixed size) as packed C++
+    # structs. An array of them reads and writes as std::vector<value::S>,
+    # copied straight from the engine's packed bytes.
+    plain_memo: dict[int, int] = {}
+    SCALAR_CPP = {"U8": "uint8_t", "I8": "int8_t", "U16": "uint16_t", "I16": "int16_t",
+                  "U32": "uint32_t", "I32": "int32_t", "U64": "uint64_t", "I64": "int64_t",
+                  "F32": "float", "Sig4": "uint32_t"}
+
+    def value_cpp(tidx: int) -> str | None:
+        """The value-struct field type for a plain type, or None."""
+        t = schema.types[tidx]
+        if plain_size(schema, tidx, plain_memo) == 0:
+            return None
+        if t.kind in SCALAR_CPP:
+            return SCALAR_CPP[t.kind]
+        if t.kind == "Array":
+            inner = value_cpp(t.ref)
+            return f"std::array<{inner}, {t.count}>" if inner else None
+        if t.kind == "Struct" and t.name and value_struct_ok(tidx):
+            return q(f"value::{t.name}")
+        return None
+
+    def value_struct_ok(tidx: int) -> bool:
+        t = schema.types[tidx]
+        return (t.kind == "Struct" and bool(t.name) and plain_size(schema, tidx, plain_memo) > 0 and
+                all(value_cpp(ft) for _, ft, brk in t.struct_fields if not brk))
+
+    value_done: set[int] = set()
+    value_out: list[str] = []
+
+    def emit_value_struct(tidx: int):
+        if tidx in value_done:
+            return
+        value_done.add(tidx)
+        t = schema.types[tidx]
+        for _, ft, _ in t.struct_fields:                 # nested value structs first
+            ftt = schema.types[ft]
+            inner = ft
+            while schema.types[inner].kind == "Array":
+                inner = schema.types[inner].ref
+            if schema.types[inner].kind == "Struct":
+                emit_value_struct(inner)
+        size = plain_size(schema, tidx, plain_memo)
+        value_out.append(f"struct {t.name} {{")
+        value_out.append(f"    static constexpr size_t kPlainSize = {size};")
+        for fname, ft, brk in t.struct_fields:
+            if not brk:
+                value_out.append(f"    {value_cpp(ft)} {ident(fname)}{{}};")
+        value_out.append("};")
+        value_out.append(f"static_assert(sizeof({t.name}) == {size});")
+
+    for i in struct_types:
+        if value_struct_ok(i):
+            emit_value_struct(i)
+    if value_out:
+        out += ["static_assert(std::endian::native == std::endian::little,",
+                "              \"value structs mirror the little-endian packed layout\");",
+                "namespace value {", "#pragma pack(push, 1)"] + value_out + ["#pragma pack(pop)",
+                "} // namespace value", ""]
     names = sorted({name for _, name, _ in schema.records} |
                    {schema.types[i].name for i in struct_types} |
                    {g.name for g in schema.groups if g.ordered})
@@ -1019,6 +1121,8 @@ def emit_views(schema: Schema, ns: str) -> str:
             elv = link_view(schema.types[t.ref])
             if elv:
                 return f"std::vector<::esper::Link<{elv}>>"
+            if value_struct_ok(t.ref):
+                return f"std::vector<{q('value::' + schema.types[t.ref].name)}>"
         return t.cpp
 
     deferred: list[str] = []
@@ -1074,7 +1178,7 @@ def emit_views(schema: Schema, ns: str) -> str:
                             f"::esper::AtOccurrence({pe}, c_.Append({pe})) }}); }}")
             return
         et = schema.types[t.ref] if t.kind == "Array" else None
-        if et is not None and et.kind == "Struct" and et.name:
+        if et is not None and et.kind == "Struct" and et.name and not value_struct_ok(t.ref):
             # An array of structs: element views (and a resize for the variable-length ones).
             ev = q(et.name)
             at = "c_" if kind == "lit" else "s_.at"

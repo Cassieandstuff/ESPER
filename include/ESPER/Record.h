@@ -24,7 +24,9 @@
 
 #include <array>
 #include <bit>
+#include <deque>
 #include <cstdint>
+#include <cstring>
 #include <functional>
 #include <optional>
 #include <span>
@@ -65,8 +67,10 @@ struct LocalizedString {
 // A decoded value. Scalars, FormIDs, f32 bits and lstring ids live in `bits`
 // (floats are stored as their raw bits so NaN payloads survive); strings in
 // `str`; opaque bytes in `bytes`; struct fields and array elements in `items`.
-// An array of plain numbers (schema::PackedElementWidth) is stored packed: its
-// elements are the little-endian bytes in `bytes`, and `items` stays empty.
+// An array of plain elements (numbers, and fixed structs/arrays of them:
+// schema::PackedElementWidth) is stored packed: its elements are their
+// little-endian bytes in `bytes`, and `items` stays empty. Paths into an element
+// still work; the engine unpacks the addressed part on access.
 // A struct decoded from a truncated (break) form has `present` < its field count.
 struct Value {
     static constexpr uint16_t kAll = 0xFFFF;
@@ -183,6 +187,8 @@ public:
 
     // ── Untyped access (tools/UIs): "editorId", "maleModel/path", "data/weight"
     std::optional<RelPath> Find(std::string_view path) const;
+    // The value at `p`, or nullptr. A path into one element of a packed array
+    // has no stored Value: read the whole array, or use the typed views.
     const Value*           GetValue(const RelPath& p) const { return FindValue(0, p); }
 
     // ── FormIDs ─────────────────────────────────────────────────────────────
@@ -212,7 +218,10 @@ public:
     template <class T> std::vector<T>   GetAllAt(uint32_t inst, const RelPath& p) const;
     template <class T> void             SetAt(uint32_t inst, const RelPath& p, const T& v);
     template <class T> void             SetAllAt(uint32_t inst, const RelPath& p, const std::vector<T>& v);
-    bool                HasAt(uint32_t inst, const RelPath& p) const { return FindValue(inst, p) != nullptr; }
+    bool                HasAt(uint32_t inst, const RelPath& p) const {
+        Value scratch;
+        return FindValue(inst, p, &scratch) != nullptr;
+    }
     void                ClearAt(uint32_t inst, const RelPath& p);
     size_t              CountAt(uint32_t inst, const RelPath& p) const;
     size_t              AppendAt(uint32_t inst, const RelPath& p);
@@ -221,11 +230,15 @@ public:
     Cursor              EnsureGroupAt(uint32_t inst, const RelPath& p);
     Cursor              AddGroupAt(uint32_t inst, const RelPath& p);
 
-    const Value*                     FindValue(uint32_t inst, const RelPath& p) const;
+    // `scratch` receives a value unpacked from a packed array (a path into one
+    // element); without it such paths return nullptr. Lookups never modify the
+    // record, so concurrent reads of one Record are safe.
+    const Value*                     FindValue(uint32_t inst, const RelPath& p, Value* scratch = nullptr) const;
     // The value of the latest subrecord member named `name` in instance `inst`,
     // or else in its enclosing instances (nearest first); nullptr if none.
     const Value*                     LatestMemberValue(uint32_t inst, std::string_view name) const;
-    std::vector<const Value*>        FindAllValues(uint32_t inst, const RelPath& p) const;
+    std::vector<const Value*>        FindAllValues(uint32_t inst, const RelPath& p,
+                                                   std::deque<Value>* scratch = nullptr) const;
     const schema::TypeDef*           TypeAt(uint32_t inst, const RelPath& p) const;
     // Replaces the value at `p` (creating groups/subrecord as needed). A no-op
     // when the value is unchanged, so untouched bytes stay verbatim.
@@ -233,6 +246,10 @@ public:
     // Replaces every occurrence of a repeated subrecord member.
     void                             StoreAll(uint32_t inst, const RelPath& p, std::vector<Value> vs);
 
+    // A plain value (TypeDef::plainSize bytes at `p`) as a Value, and back: the
+    // packed form of an array element. Nested arrays stay packed.
+    static Value Unpack(const schema::SchemaSet& s, uint16_t type, const uint8_t* p);
+    static void  Pack(const schema::SchemaSet& s, uint16_t type, const Value& v, uint8_t* out);
     // T <-> Value given the TypeDef the value lives in.
     template <class T> static T     FromValue(const Value& v, const schema::TypeDef& t, const schema::SchemaSet& s);
     template <class T> static Value ToValue(const T& x, const schema::TypeDef& t, const schema::SchemaSet& s);
@@ -258,7 +275,14 @@ private:
     const schema::GroupDef&  GroupOf(uint32_t inst) const;
     const schema::MemberDef& MemberOf(uint32_t inst, uint16_t m) const;
     const Value&             NodeValue(const Node& n) const;
-    const Value*             Descend(const Value& root, uint16_t type, const RelPath& p) const;
+    const Value*             Descend(const Value& root, uint16_t type, const RelPath& p, Value* scratch) const;
+    // The per-instance index (CSR): each instance's nodes and child instances,
+    // in document order. Rebuilt by Decode and after every structural edit.
+    void                     RebuildIndex();
+    // The byte offset and type that steps d.. of `p` address inside the packed
+    // array `arr` (of type `arrType`); false when out of range.
+    bool                     PackedOffset(const Value& arr, const schema::TypeDef& arrType,
+                                          const RelPath& p, uint8_t d, size_t& off, uint16_t& type) const;
     int32_t                  ChildAtLevel(uint32_t nodeInst, uint32_t level) const;
     std::vector<uint32_t>    InstancesOf(uint32_t parent, uint16_t slot) const;
     int32_t                  FirstNode(uint32_t inst, uint16_t member) const;
@@ -278,6 +302,8 @@ private:
     std::vector<uint8_t>     bytes_;
     std::vector<Node>        nodes_;
     std::vector<Inst>        insts_;
+    std::vector<uint32_t>    nodeStart_, nodeIdx_;   // inst → its node indices
+    std::vector<uint32_t>    kidStart_, kidIdx_;     // inst → its child instances
 
     friend struct RecordAccess;
 };
@@ -289,6 +315,11 @@ template <class T> struct IsVector : std::false_type {};
 template <class T> struct IsVector<std::vector<T>> : std::true_type { using Elem = T; };
 template <class T> struct IsLink : std::false_type {};
 template <class V> struct IsLink<Link<V>> : std::true_type {};
+// std::vector of a generated value struct (view::value::*): copied to and from
+// the packed bytes of an array of plain structs.
+template <class T> struct IsValueStructVector : std::false_type {};
+template <class E> requires requires { E::kPlainSize; }
+struct IsValueStructVector<std::vector<E>> : std::true_type {};
 
 inline uint64_t MaskFor(schema::Kind k) {
     switch (k) {
@@ -316,6 +347,13 @@ T Record::FromValue(const Value& v, const schema::TypeDef& t, const schema::Sche
         return v.str;
     } else if constexpr (std::is_same_v<T, LocalizedString>) {
         return LocalizedString{ static_cast<uint32_t>(v.bits), v.str, t.table };
+    } else if constexpr (record_detail::IsValueStructVector<T>::value) {
+        using E = typename T::value_type;
+        T out;
+        if (schema::PackedElementWidth(s, t) != sizeof(E)) return out;
+        out.resize(v.bytes.size() / sizeof(E));
+        if (!out.empty()) std::memcpy(out.data(), v.bytes.data(), out.size() * sizeof(E));
+        return out;
     } else if constexpr (record_detail::IsVector<T>::value) {
         using E = typename record_detail::IsVector<T>::Elem;
         T out;
@@ -326,12 +364,8 @@ T Record::FromValue(const Value& v, const schema::TypeDef& t, const schema::Sche
         const schema::TypeDef& et = s.types[t.ref];
         if (const size_t w = schema::PackedElementWidth(s, t)) {
             out.reserve(v.bytes.size() / w);
-            Value item;
-            for (size_t at = 0; at + w <= v.bytes.size(); at += w) {
-                item.bits = 0;
-                for (size_t b = 0; b < w; ++b) item.bits |= static_cast<uint64_t>(v.bytes[at + b]) << (8 * b);
-                out.push_back(FromValue<E>(item, et, s));
-            }
+            for (size_t at = 0; at + w <= v.bytes.size(); at += w)
+                out.push_back(FromValue<E>(Unpack(s, t.ref, v.bytes.data() + at), et, s));
             return out;
         }
         out.reserve(v.items.size());
@@ -360,6 +394,11 @@ Value Record::ToValue(const T& x, const schema::TypeDef& t, const schema::Schema
     } else if constexpr (std::is_same_v<T, LocalizedString>) {
         v.bits = x.id;
         v.str  = x.text;
+    } else if constexpr (record_detail::IsValueStructVector<T>::value) {
+        using E = typename T::value_type;
+        if (schema::PackedElementWidth(s, t) != sizeof(E)) return v;
+        v.bytes.resize(x.size() * sizeof(E));
+        if (!x.empty()) std::memcpy(v.bytes.data(), x.data(), v.bytes.size());
     } else if constexpr (record_detail::IsVector<T>::value) {
         using E = typename record_detail::IsVector<T>::Elem;
         if (t.kind == schema::Kind::Bytes) {
@@ -368,11 +407,8 @@ Value Record::ToValue(const T& x, const schema::TypeDef& t, const schema::Schema
         }
         const schema::TypeDef& et = s.types[t.ref];
         if (const size_t w = schema::PackedElementWidth(s, t)) {
-            v.bytes.reserve(x.size() * w);
-            for (const E& e : x) {
-                const uint64_t bits = ToValue<E>(e, et, s).bits;
-                for (size_t b = 0; b < w; ++b) v.bytes.push_back(static_cast<uint8_t>(bits >> (8 * b)));
-            }
+            v.bytes.assign(x.size() * w, 0);
+            for (size_t i = 0; i < x.size(); ++i) Pack(s, t.ref, ToValue<E>(x[i], et, s), v.bytes.data() + i * w);
             return v;
         }
         v.items.reserve(x.size());
@@ -385,7 +421,8 @@ Value Record::ToValue(const T& x, const schema::TypeDef& t, const schema::Schema
 
 template <class T>
 std::optional<T> Record::GetAt(uint32_t inst, const RelPath& p) const {
-    const Value* v = FindValue(inst, p);
+    Value scratch;
+    const Value* v = FindValue(inst, p, &scratch);
     if (!v) return std::nullopt;
     return FromValue<T>(*v, *TypeAt(inst, p), *set_);
 }
@@ -395,7 +432,8 @@ std::vector<T> Record::GetAllAt(uint32_t inst, const RelPath& p) const {
     std::vector<T> out;
     const schema::TypeDef* t = TypeAt(inst, p);
     if (!t) return out;
-    for (const Value* v : FindAllValues(inst, p)) out.push_back(FromValue<T>(*v, *t, *set_));
+    std::deque<Value> scratch;
+    for (const Value* v : FindAllValues(inst, p, &scratch)) out.push_back(FromValue<T>(*v, *t, *set_));
     return out;
 }
 
@@ -425,7 +463,8 @@ inline void                Cursor::Clear(const RelPath& p) const { rec->ClearAt(
 inline size_t              Cursor::Count(const RelPath& p) const { return rec->CountAt(inst, p); }
 inline size_t              Cursor::Append(const RelPath& p) const { return rec->AppendAt(inst, p); }
 inline size_t              Cursor::Size(const RelPath& p) const {
-    const Value* v = rec->FindValue(inst, p);
+    Value scratch;
+    const Value* v = rec->FindValue(inst, p, &scratch);
     if (!v) return 0;
     const schema::TypeDef* t = rec->TypeAt(inst, p);
     const size_t w = t ? schema::PackedElementWidth(rec->Schema(), *t) : 0;

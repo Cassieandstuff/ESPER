@@ -342,6 +342,14 @@ These go in the spec, because anyone else's engine has to behave the same way:
   A group instance is a range of nodes. Encode order is node order. A decoded value is cached on its
   node, so repeated access doesn't re-decode. (Mutagen's overlays re-decode on every access.)
 - **Value kinds:** `int`, `uint`, `float`, `string`, `formid`, `lstring`, `bytes`, `struct`, `array`.
+- **Packed arrays.** An array of plain elements (numbers, and fixed structs/arrays of them; the
+  generator's `TypeDef::plainSize`) is stored as its raw bytes, not one value per element. Views
+  return such arrays as vectors: of numbers, or of generated packed value structs
+  (`view::value::*`). Plain types never hold FormIDs or strings, so FormID visitation and
+  relocalization skip them safely.
+- **Index.** Each group instance's nodes and child instances are indexed in document order, so
+  a lookup touches only its own instance. The index is rebuilt by Decode and after structural
+  edits. Lookups never modify the record.
 - **API conventions** (from the API pass, 2026-10-10):
   - **Errors:** every fallible call returns `esper::Result<T>`, which is
     `std::expected<T, esper::Error>`. There are no `char*` error buffers and no bool plus
