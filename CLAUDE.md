@@ -14,7 +14,9 @@ namespace) with fresh history. GPL-3.0-or-later.
   `view::As<View>(record)`, which checks the record type.
 - The library never sets `CMAKE_MSVC_RUNTIME_LIBRARY`; it must build under the consumer's choice
   (static-CRT SKSE plugins and dynamic-CRT desktop tools both consume it).
-- Stay a dependency-free leaf. miniz is vendored and exported as `esper::miniz`.
+- Stay a dependency-free leaf. miniz is vendored and exported as `esper::miniz`. A consumer that
+  compiles its own miniz can supply it with `ESPER_MINIZ_INCLUDE_DIR` / `ESPER_MINIZ_TARGET`. Its
+  default (both unset) must stay byte-for-byte the vendored build.
 - `esper::loadorder` (`<ESPER/LoadOrder.h>`, `cpp/loadorder/`) is the optional load-order layer
   (`LoadOrderDocument`). It builds on the core and never the other way round.
 
