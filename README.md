@@ -111,6 +111,8 @@ ctest --test-dir build -C RelWithDebInfo
 | `ESPER_BUILD_LOADORDER` | ON | `esper::loadorder` (LoadOrderDocument) |
 | `ESPER_BUILD_TOOLS` | OFF | `roundtrip-gate` (the real-data gate), `esm-dump` (a read-only record dumper) and `loadorder-smoke` |
 
+| `ESPER_BUILD_SQLITE` | OFF | `esper-sqlite`, which exports a load order into a relational SQLite database ([docs/sql-examples.md](docs/sql-examples.md)). The one target with a dependency: with vcpkg's toolchain, the option selects vcpkg.json's `sqlite` feature |
+
 `roundtrip-gate <Data folder>` parses the five vanilla masters and requires each to re-emit
 byte-identically; it needs a local game install, so it is not part of CTest.
 

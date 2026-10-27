@@ -17,6 +17,14 @@
 
 cmake_minimum_required(VERSION 3.28)
 
+# esper-sqlite is the one target with a third-party dependency. With vcpkg's
+# toolchain, the option selects vcpkg.json's `sqlite` feature; it must be set
+# before project(), where the toolchain installs the manifest.
+option(ESPER_BUILD_SQLITE "Build esper-sqlite (load order -> SQLite; needs SQLite3)" OFF)
+if(ESPER_BUILD_SQLITE)
+    list(APPEND VCPKG_MANIFEST_FEATURES "sqlite")
+endif()
+
 project(ESPER
     VERSION 0.1.0
     DESCRIPTION "Clean-room C++23 Bethesda plugin (ESM/ESP/ESL) reader/writer"
@@ -178,4 +186,21 @@ if(ESPER_BUILD_TOOLS)
             target_compile_options(${_tool} PRIVATE /utf-8)
         endif()
     endforeach()
+endif()
+
+#   esper-sqlite   — exports a load order into a relational SQLite database
+if(ESPER_BUILD_SQLITE)
+    if(NOT ESPER_BUILD_LOADORDER)
+        message(FATAL_ERROR "ESPER_BUILD_SQLITE needs ESPER_BUILD_LOADORDER")
+    endif()
+    find_package(SQLite3 REQUIRED)
+    add_executable(esper-sqlite tools/esper_sqlite.cpp)
+    if(TARGET SQLite3::SQLite3)          # CMake 4.1+ name
+        target_link_libraries(esper-sqlite PRIVATE esper::loadorder SQLite3::SQLite3)
+    else()
+        target_link_libraries(esper-sqlite PRIVATE esper::loadorder SQLite::SQLite3)
+    endif()
+    if(MSVC)
+        target_compile_options(esper-sqlite PRIVATE /W4 /wd4100 /utf-8)
+    endif()
 endif()
