@@ -18967,14 +18967,23 @@
           "name": "parent",
           "sig": "PNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMEN"
+            ]
           }
         },
         {
-          "name": "child",
+          "name": "nextSibling",
           "sig": "SNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMQN",
+              "SMEN"
+            ]
           }
         },
         {
@@ -18996,13 +19005,6 @@
           "sig": "XNAM",
           "type": {
             "kind": "u32"
-          }
-        },
-        {
-          "name": "quest",
-          "sig": "QNAM",
-          "type": {
-            "kind": "formid"
           }
         },
         {
@@ -20976,14 +20978,23 @@
           "name": "parent",
           "sig": "PNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMEN"
+            ]
           }
         },
         {
-          "name": "child",
+          "name": "nextSibling",
           "sig": "SNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMQN",
+              "SMEN"
+            ]
           }
         },
         {
@@ -21008,10 +21019,10 @@
           }
         },
         {
-          "name": "quest",
-          "sig": "QNAM",
+          "name": "event",
+          "sig": "ENAM",
           "type": {
-            "kind": "formid"
+            "kind": "sig4"
           }
         },
         {
@@ -21517,14 +21528,23 @@
           "name": "parent",
           "sig": "PNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMEN"
+            ]
           }
         },
         {
-          "name": "child",
+          "name": "nextSibling",
           "sig": "SNAM",
           "type": {
-            "kind": "formid"
+            "kind": "formid",
+            "to": [
+              "SMBN",
+              "SMQN",
+              "SMEN"
+            ]
           }
         },
         {
@@ -21549,11 +21569,50 @@
           }
         },
         {
-          "name": "quest",
+          "name": "maxConcurrentQuests",
+          "sig": "MNAM",
+          "type": {
+            "kind": "u32"
+          }
+        },
+        {
+          "name": "questCount",
           "sig": "QNAM",
           "type": {
-            "kind": "formid"
+            "kind": "u32"
           }
+        },
+        {
+          "name": "quests",
+          "group": "StoryManagerQuestNodeQuests",
+          "members": [
+            {
+              "name": "quest",
+              "sig": "NNAM",
+              "type": {
+                "kind": "formid",
+                "to": [
+                  "QUST"
+                ]
+              }
+            },
+            {
+              "name": "flags",
+              "sig": "FNAM",
+              "type": {
+                "kind": "u32"
+              }
+            },
+            {
+              "name": "hoursUntilReset",
+              "sig": "RNAM",
+              "type": {
+                "kind": "f32"
+              }
+            }
+          ],
+          "open": "NNAM",
+          "repeat": true
         },
         {
           "name": "conditions",

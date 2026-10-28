@@ -405,54 +405,56 @@ inline constexpr TypeDef kTypes[] = {
     { Kind::Union, LenKind::None, StrTable::None, 0, 0, 400, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 391: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 693, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 392: inline:ConditionData
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 703, 3, 0, 0, "ShoutWord", Selector::None, nullptr, 0ULL, 0, 0 },  // 393: struct:ShoutWord
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 402, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 394: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 404, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 395: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 406, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 396: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 409, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 397: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 411, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 398: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 414, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 399: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 706, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 400: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 416, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 401: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 418, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 402: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 420, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 403: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 423, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 404: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 425, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 405: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 428, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 406: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 716, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 407: inline:ConditionData
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 430, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 408: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 432, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 409: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 434, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 410: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 437, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 411: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 439, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 412: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 442, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 413: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 726, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 414: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 55, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 415: formid->SOPM
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 736, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0, 6 },  // 416: inline:SoundDescriptorValues
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 444, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 417: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 446, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 418: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 448, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 419: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 451, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 420: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 453, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 421: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 456, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 422: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 741, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 423: inline:ConditionData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 424: bytes:36:noids
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 458, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 425: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 460, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 426: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 462, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 427: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 465, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 428: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 467, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 429: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
-    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 470, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 430: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 751, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 431: inline:ConditionData
-    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 56, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 432: formid->MATO
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 761, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0, 0 },  // 433: struct:StatData
-    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 434: bytes:260:noids
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 765, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0, 0 },  // 435: inline:StaticLodNames
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 769, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0, 10 },  // 436: struct:WeaponBasic
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 772, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0, 100 },  // 437: struct:WeaponData
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 802, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0, 0 },  // 438: struct:WeaponCrit
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 809, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0, 4 },  // 439: struct:WorldCenter
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 811, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0, 8 },  // 440: struct:WorldDefaults
-    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 813, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0, 8 },  // 441: struct:WorldCorner
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 55, 2, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 394: formid->SMBN,SMEN
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 57, 3, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 395: formid->SMBN,SMQN,SMEN
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 402, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 396: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 404, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 397: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 406, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 398: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 409, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 399: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 411, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 400: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 414, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 401: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 706, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 402: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 416, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 403: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 418, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 404: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 420, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 405: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 423, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 406: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 425, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 407: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 428, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 408: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 716, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 409: inline:ConditionData
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 430, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 410: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 432, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 411: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 434, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 412: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 437, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 413: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 439, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 414: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 442, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 415: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 726, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 416: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 60, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 417: formid->SOPM
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 736, 5, 0, 0, "SoundDescriptorValues", Selector::None, nullptr, 0ULL, 0, 6 },  // 418: inline:SoundDescriptorValues
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 444, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 419: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 446, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 420: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 448, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 421: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 451, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 422: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 453, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 423: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 456, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 424: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 741, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 425: inline:ConditionData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 36, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 426: bytes:36:noids
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 458, 2, 0, 0, nullptr, Selector::Field, "op", 4ULL, 0, 0 },  // 427: union:groups/Condition.yaml member 0 field 2:ConditionDataComparison
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 460, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 428: union:groups/Condition.yaml member 0 field 5 case 0:ConditionDataParam1Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 462, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 0, 0 },  // 429: union:groups/Condition.yaml member 0 field 5:ConditionDataParam1
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 465, 2, 0, 0, nullptr, Selector::Field, "op", 2ULL, 0, 0 },  // 430: union:groups/Condition.yaml member 0 field 6 case 0:ConditionDataParam2Form
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 467, 3, 0, 0, nullptr, Selector::Lookup, "functionIndex", 0ULL, 1, 0 },  // 431: union:groups/Condition.yaml member 0 field 6:ConditionDataParam2
+    { Kind::Union, LenKind::None, StrTable::None, 0, 0, 470, 2, 0, 0, nullptr, Selector::Field, "runOnType", 0ULL, 0, 0 },  // 432: union:groups/Condition.yaml member 0 field 8:ConditionDataReference
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 751, 10, 0, 0, "ConditionData", Selector::None, nullptr, 0ULL, 0, 0 },  // 433: inline:ConditionData
+    { Kind::FormId, LenKind::None, StrTable::None, 0, 0, 0, 0, 61, 1, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 434: formid->MATO
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 761, 4, 0, 0, "StatData", Selector::None, nullptr, 0ULL, 0, 0 },  // 435: struct:StatData
+    { Kind::Bytes, LenKind::Fixed, StrTable::None, 1, 260, 0, 0, 0, 0, nullptr, Selector::None, nullptr, 0ULL, 0, 0 },  // 436: bytes:260:noids
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 765, 4, 0, 0, "StaticLodNames", Selector::None, nullptr, 0ULL, 0, 0 },  // 437: inline:StaticLodNames
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 769, 3, 0, 0, "WeaponBasic", Selector::None, nullptr, 0ULL, 0, 10 },  // 438: struct:WeaponBasic
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 772, 30, 0, 0, "WeaponData", Selector::None, nullptr, 0ULL, 0, 100 },  // 439: struct:WeaponData
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 802, 7, 0, 0, "WeaponCrit", Selector::None, nullptr, 0ULL, 0, 0 },  // 440: struct:WeaponCrit
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 809, 2, 0, 0, "WorldCenter", Selector::None, nullptr, 0ULL, 0, 4 },  // 441: struct:WorldCenter
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 811, 2, 0, 0, "WorldDefaults", Selector::None, nullptr, 0ULL, 0, 8 },  // 442: struct:WorldDefaults
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 813, 2, 0, 0, "WorldCorner", Selector::None, nullptr, 0ULL, 0, 8 },  // 443: struct:WorldCorner
 };
 inline constexpr FieldDef kFields[] = {
     { "r", 1, false },
@@ -1163,33 +1165,33 @@ inline constexpr FieldDef kFields[] = {
     { "recoveryTime", 13, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 394, false },
+    { "comparison", 396, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 396, false },
-    { "param2", 398, false },
+    { "param1", 398, false },
+    { "param2", 400, false },
     { "runOnType", 43, false },
-    { "reference", 399, false },
+    { "reference", 401, false },
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 401, false },
+    { "comparison", 403, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 403, false },
-    { "param2", 405, false },
+    { "param1", 405, false },
+    { "param2", 407, false },
     { "runOnType", 43, false },
-    { "reference", 406, false },
+    { "reference", 408, false },
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 408, false },
+    { "comparison", 410, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 410, false },
-    { "param2", 412, false },
+    { "param1", 412, false },
+    { "param2", 414, false },
     { "runOnType", 43, false },
-    { "reference", 413, false },
+    { "reference", 415, false },
     { "param3", 12, false },
     { "frequencyShift", 122, false },
     { "frequencyVariance", 122, false },
@@ -1198,32 +1200,32 @@ inline constexpr FieldDef kFields[] = {
     { "staticAttenuation", 8, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 417, false },
+    { "comparison", 419, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 419, false },
-    { "param2", 421, false },
+    { "param1", 421, false },
+    { "param2", 423, false },
     { "runOnType", 43, false },
-    { "reference", 422, false },
+    { "reference", 424, false },
     { "param3", 12, false },
     { "op", 1, false },
     { "unknown", 66, false },
-    { "comparison", 425, false },
+    { "comparison", 427, false },
     { "functionIndex", 8, false },
     { "pad", 69, false },
-    { "param1", 427, false },
-    { "param2", 429, false },
+    { "param1", 429, false },
+    { "param2", 431, false },
     { "runOnType", 43, false },
-    { "reference", 430, false },
+    { "reference", 432, false },
     { "param3", 12, false },
     { "maxAngle", 13, false },
-    { "material", 432, false },
+    { "material", 434, false },
     { nullptr, 0, true },
     { "unknown", 43, false },
-    { "lod0", 434, false },
-    { "lod1", 434, false },
-    { "lod2", 434, false },
-    { "lod3", 434, false },
+    { "lod0", 436, false },
+    { "lod1", 436, false },
+    { "lod2", 436, false },
+    { "lod3", 436, false },
     { "value", 12, false },
     { "weight", 13, false },
     { "damage", 3, false },
@@ -1272,7 +1274,7 @@ inline constexpr FieldDef kFields[] = {
     { "y", 13, false },
 };
 inline constexpr uint32_t kLinks[] = {
-    SigOf("KYWD"), SigOf("REFR"), SigOf("ACHR"), SigOf("PGRE"), SigOf("PHZD"), SigOf("LCTN"), SigOf("LCRT"), SigOf("REFR"), SigOf("ACHR"), SigOf("IMGS"), SigOf("DIAL"), SigOf("ACHR"), SigOf("TXST"), SigOf("EXPL"), SigOf("DEBR"), SigOf("GLOB"), SigOf("ENCH"), SigOf("SNDR"), SigOf("EQUP"), SigOf("IPDS"), SigOf("MATT"), SigOf("RACE"), SigOf("ARMA"), SigOf("ARMO"), SigOf("SPEL"), SigOf("FACT"), SigOf("NPC_"), SigOf("QUST"), SigOf("LIGH"), SigOf("EFSH"), SigOf("PROJ"), SigOf("ARTO"), SigOf("DUAL"), SigOf("IMAD"), SigOf("PERK"), SigOf("IDLE"), SigOf("CSTY"), SigOf("CELL"), SigOf("NPC_"), SigOf("FLST"), SigOf("MESG"), SigOf("FACT"), SigOf("PACK"), SigOf("FLST"), SigOf("VTYP"), SigOf("NPC_"), SigOf("HDPT"), SigOf("CLFM"), SigOf("REFR"), SigOf("LGTM"), SigOf("NAVM"), SigOf("KEYM"), SigOf("ECZN"), SigOf("LVLI"), SigOf("ASTP"), SigOf("SOPM"), SigOf("MATO"),
+    SigOf("KYWD"), SigOf("REFR"), SigOf("ACHR"), SigOf("PGRE"), SigOf("PHZD"), SigOf("LCTN"), SigOf("LCRT"), SigOf("REFR"), SigOf("ACHR"), SigOf("IMGS"), SigOf("DIAL"), SigOf("ACHR"), SigOf("TXST"), SigOf("EXPL"), SigOf("DEBR"), SigOf("GLOB"), SigOf("ENCH"), SigOf("SNDR"), SigOf("EQUP"), SigOf("IPDS"), SigOf("MATT"), SigOf("RACE"), SigOf("ARMA"), SigOf("ARMO"), SigOf("SPEL"), SigOf("FACT"), SigOf("NPC_"), SigOf("QUST"), SigOf("LIGH"), SigOf("EFSH"), SigOf("PROJ"), SigOf("ARTO"), SigOf("DUAL"), SigOf("IMAD"), SigOf("PERK"), SigOf("IDLE"), SigOf("CSTY"), SigOf("CELL"), SigOf("NPC_"), SigOf("FLST"), SigOf("MESG"), SigOf("FACT"), SigOf("PACK"), SigOf("FLST"), SigOf("VTYP"), SigOf("NPC_"), SigOf("HDPT"), SigOf("CLFM"), SigOf("REFR"), SigOf("LGTM"), SigOf("NAVM"), SigOf("KEYM"), SigOf("ECZN"), SigOf("LVLI"), SigOf("ASTP"), SigOf("SMBN"), SigOf("SMEN"), SigOf("SMBN"), SigOf("SMQN"), SigOf("SMEN"), SigOf("SOPM"), SigOf("MATO"),
 };
 inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2629,36 +2631,40 @@ inline constexpr MemberDef kMembers[] = {
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
-    { "parent", SigOf("PNAM"), 7, 0, false, false, -1 },
-    { "child", SigOf("SNAM"), 7, 0, false, false, -1 },
+    { "parent", SigOf("PNAM"), 394, 0, false, false, -1 },
+    { "nextSibling", SigOf("SNAM"), 395, 0, false, false, -1 },
     { "conditionCount", SigOf("CITC"), 43, 0, false, false, -1 },
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
-    { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
     { "conditions", 0, 0, 219, true, true, -1 },
-    { "data", SigOf("CTDA"), 400, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 402, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
-    { "parent", SigOf("PNAM"), 7, 0, false, false, -1 },
-    { "child", SigOf("SNAM"), 7, 0, false, false, -1 },
+    { "parent", SigOf("PNAM"), 394, 0, false, false, -1 },
+    { "nextSibling", SigOf("SNAM"), 395, 0, false, false, -1 },
     { "conditionCount", SigOf("CITC"), 43, 0, false, false, -1 },
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
-    { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
+    { "event", SigOf("ENAM"), 45, 0, false, false, -1 },
     { "conditions", 0, 0, 221, true, true, -1 },
-    { "data", SigOf("CTDA"), 407, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 409, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
-    { "parent", SigOf("PNAM"), 7, 0, false, false, -1 },
-    { "child", SigOf("SNAM"), 7, 0, false, false, -1 },
+    { "parent", SigOf("PNAM"), 394, 0, false, false, -1 },
+    { "nextSibling", SigOf("SNAM"), 395, 0, false, false, -1 },
     { "conditionCount", SigOf("CITC"), 43, 0, false, false, -1 },
     { "flags", SigOf("DNAM"), 43, 0, false, false, -1 },
     { "maxAcrossType", SigOf("XNAM"), 43, 0, false, false, -1 },
-    { "quest", SigOf("QNAM"), 7, 0, false, false, -1 },
-    { "conditions", 0, 0, 223, true, true, -1 },
-    { "data", SigOf("CTDA"), 414, 0, false, false, -1 },
+    { "maxConcurrentQuests", SigOf("MNAM"), 43, 0, false, false, -1 },
+    { "questCount", SigOf("QNAM"), 43, 0, false, false, -1 },
+    { "quests", 0, 0, 223, true, true, -1 },
+    { "conditions", 0, 0, 224, true, true, -1 },
+    { "quest", SigOf("NNAM"), 169, 0, false, false, -1 },
+    { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
+    { "hoursUntilReset", SigOf("RNAM"), 13, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 416, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2672,11 +2678,11 @@ inline constexpr MemberDef kMembers[] = {
     { "category", SigOf("GNAM"), 7, 0, false, false, -1 },
     { "altSound", SigOf("SNAM"), 7, 0, false, false, -1 },
     { "soundFiles", SigOf("ANAM"), 0, 0, false, true, -1 },
-    { "outputModel", SigOf("ONAM"), 415, 0, false, false, -1 },
+    { "outputModel", SigOf("ONAM"), 417, 0, false, false, -1 },
     { "flags", SigOf("LNAM"), 43, 0, false, false, -1 },
-    { "values", SigOf("BNAM"), 416, 0, false, false, -1 },
-    { "conditions", 0, 0, 226, true, true, -1 },
-    { "data", SigOf("CTDA"), 423, 0, false, false, -1 },
+    { "values", SigOf("BNAM"), 418, 0, false, false, -1 },
+    { "conditions", 0, 0, 227, true, true, -1 },
+    { "data", SigOf("CTDA"), 425, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2687,7 +2693,7 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "soundFile", SigOf("FNAM"), 0, 0, false, false, -1 },
-    { "soundData", SigOf("SNDD"), 424, 0, false, false, -1 },
+    { "soundData", SigOf("SNDD"), 426, 0, false, false, -1 },
     { "descriptor", SigOf("SDSC"), 7, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
@@ -2697,16 +2703,16 @@ inline constexpr MemberDef kMembers[] = {
     { "menuDisplayObject", SigOf("MDOB"), 7, 0, false, false, -1 },
     { "equipType", SigOf("ETYP"), 7, 0, false, false, -1 },
     { "description", SigOf("DESC"), 77, 0, false, false, -1 },
-    { "model", 0, 0, 230, true, false, -1 },
+    { "model", 0, 0, 231, true, false, -1 },
     { "valueWeight", SigOf("DATA"), 79, 0, false, false, -1 },
     { "spit", SigOf("SPIT"), 385, 0, false, false, -1 },
     { "effects", SigOf("EFID"), 7, 0, false, true, -1 },
     { "effectItems", SigOf("EFIT"), 65, 0, false, true, -1 },
-    { "conditions", 0, 0, 231, true, true, -1 },
+    { "conditions", 0, 0, 232, true, true, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
-    { "data", SigOf("CTDA"), 431, 0, false, false, -1 },
+    { "data", SigOf("CTDA"), 433, 0, false, false, -1 },
     { "stringParam1", SigOf("CIS1"), 0, 0, false, false, -1 },
     { "stringParam2", SigOf("CIS2"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
@@ -2714,9 +2720,9 @@ inline constexpr MemberDef kMembers[] = {
     { "particleTexture", SigOf("ICON"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
-    { "model", 0, 0, 234, true, false, -1 },
-    { "data", SigOf("DNAM"), 433, 0, false, false, -1 },
-    { "lodNames", SigOf("MNAM"), 435, 0, false, false, -1 },
+    { "model", 0, 0, 235, true, false, -1 },
+    { "data", SigOf("DNAM"), 435, 0, false, false, -1 },
+    { "lodNames", SigOf("MNAM"), 437, 0, false, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
@@ -2724,7 +2730,7 @@ inline constexpr MemberDef kMembers[] = {
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 236, true, false, -1 },
+    { "model", 0, 0, 237, true, false, -1 },
     { "flags", SigOf("FNAM"), 43, 0, false, false, -1 },
     { "voiceType", SigOf("VNAM"), 7, 0, false, false, -1 },
     { "loopSound", SigOf("SNAM"), 7, 0, false, false, -1 },
@@ -2734,7 +2740,7 @@ inline constexpr MemberDef kMembers[] = {
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 238, true, false, -1 },
+    { "model", 0, 0, 239, true, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
     { "data", SigOf("MODT"), 53, 0, false, false, -1 },
     { "swap", SigOf("MODS"), 56, 0, false, false, -1 },
@@ -2766,7 +2772,7 @@ inline constexpr MemberDef kMembers[] = {
     { "vmad", SigOf("VMAD"), 28, 0, false, false, -1 },
     { "bounds", SigOf("OBND"), 51, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "model", 0, 0, 244, true, false, -1 },
+    { "model", 0, 0, 245, true, false, -1 },
     { "enchantment", SigOf("EITM"), 7, 0, false, false, -1 },
     { "enchantAmount", SigOf("EAMT"), 8, 0, false, false, -1 },
     { "equipType", SigOf("ETYP"), 7, 0, false, false, -1 },
@@ -2786,9 +2792,9 @@ inline constexpr MemberDef kMembers[] = {
     { "idleSound", SigOf("UNAM"), 7, 0, false, false, -1 },
     { "equipSound", SigOf("NAM9"), 7, 0, false, false, -1 },
     { "unequipSound", SigOf("NAM8"), 7, 0, false, false, -1 },
-    { "basic", SigOf("DATA"), 436, 0, false, false, -1 },
-    { "weaponData", SigOf("DNAM"), 437, 0, false, false, -1 },
-    { "crit", SigOf("CRDT"), 438, 0, false, false, -1 },
+    { "basic", SigOf("DATA"), 438, 0, false, false, -1 },
+    { "weaponData", SigOf("DNAM"), 439, 0, false, false, -1 },
+    { "crit", SigOf("CRDT"), 440, 0, false, false, -1 },
     { "detectionLevel", SigOf("VNAM"), 43, 0, false, false, -1 },
     { "templateWeapon", SigOf("CNAM"), 7, 0, false, false, -1 },
     { "path", SigOf("MODL"), 0, 0, false, false, -1 },
@@ -2799,7 +2805,7 @@ inline constexpr MemberDef kMembers[] = {
     { "translation", SigOf("TNAM"), 52, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
     { "fullName", SigOf("FULL"), 52, 0, false, false, -1 },
-    { "center", SigOf("WCTR"), 439, 0, false, false, -1 },
+    { "center", SigOf("WCTR"), 441, 0, false, false, -1 },
     { "interiorLighting", SigOf("LTMP"), 7, 0, false, false, -1 },
     { "encounterZone", SigOf("XEZN"), 7, 0, false, false, -1 },
     { "location", SigOf("XLCN"), 7, 0, false, false, -1 },
@@ -2807,13 +2813,13 @@ inline constexpr MemberDef kMembers[] = {
     { "water", SigOf("NAM2"), 7, 0, false, false, -1 },
     { "lodWaterType", SigOf("NAM3"), 7, 0, false, false, -1 },
     { "lodWaterHeight", SigOf("NAM4"), 13, 0, false, false, -1 },
-    { "defaults", SigOf("DNAM"), 440, 0, false, false, -1 },
+    { "defaults", SigOf("DNAM"), 442, 0, false, false, -1 },
     { "mapData", SigOf("MNAM"), 24, 0, false, false, -1 },
     { "mapOffset", SigOf("ONAM"), 24, 0, false, false, -1 },
     { "distantLodMult", SigOf("NAMA"), 13, 0, false, false, -1 },
     { "flags", SigOf("DATA"), 1, 0, false, false, -1 },
-    { "boundsMin", SigOf("NAM0"), 441, 0, false, false, -1 },
-    { "boundsMax", SigOf("NAM9"), 441, 0, false, false, -1 },
+    { "boundsMin", SigOf("NAM0"), 443, 0, false, false, -1 },
+    { "boundsMax", SigOf("NAM9"), 443, 0, false, false, -1 },
     { "parentWorld", SigOf("WNAM"), 7, 0, false, false, -1 },
     { "parentFlags", SigOf("PNAM"), 8, 0, false, false, -1 },
     { "music", SigOf("ZNAM"), 7, 0, false, false, -1 },
@@ -4385,14 +4391,13 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("MODL"), 0 },
     { SigOf("MODS"), 2 },
     { SigOf("MODT"), 1 },
-    { SigOf("CIS1"), 7 },
-    { SigOf("CIS2"), 7 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("CIS1"), 6 },
+    { SigOf("CIS2"), 6 },
+    { SigOf("CTDA"), 6 },
     { SigOf("CITC"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("DNAM"), 4 },
     { SigOf("PNAM"), 1 },
-    { SigOf("QNAM"), 6 },
     { SigOf("SNAM"), 2 },
     { SigOf("XNAM"), 5 },
     { SigOf("CIS1"), 1 },
@@ -4404,23 +4409,28 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("CITC"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("DNAM"), 4 },
+    { SigOf("ENAM"), 6 },
     { SigOf("PNAM"), 1 },
-    { SigOf("QNAM"), 6 },
     { SigOf("SNAM"), 2 },
     { SigOf("XNAM"), 5 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
     { SigOf("CTDA"), 0 },
-    { SigOf("CIS1"), 7 },
-    { SigOf("CIS2"), 7 },
-    { SigOf("CTDA"), 7 },
+    { SigOf("CIS1"), 9 },
+    { SigOf("CIS2"), 9 },
+    { SigOf("CTDA"), 9 },
     { SigOf("CITC"), 3 },
     { SigOf("EDID"), 0 },
     { SigOf("DNAM"), 4 },
+    { SigOf("MNAM"), 6 },
+    { SigOf("NNAM"), 8 },
     { SigOf("PNAM"), 1 },
-    { SigOf("QNAM"), 6 },
+    { SigOf("QNAM"), 7 },
     { SigOf("SNAM"), 2 },
     { SigOf("XNAM"), 5 },
+    { SigOf("FNAM"), 1 },
+    { SigOf("NNAM"), 0 },
+    { SigOf("RNAM"), 2 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
     { SigOf("CTDA"), 0 },
@@ -4821,36 +4831,37 @@ inline constexpr GroupDef kGroups[] = {
     { "Shout", 1330, 5, 1534, 5, false, 0, 0 },  // 215
     { "SoulGem", 1335, 15, 1539, 17, false, 0, 0 },  // 216
     { "Model", 1350, 3, 1556, 3, true, 0, 0 },  // 217
-    { "StoryManagerBranchNode", 1353, 8, 1559, 10, false, 0, 0 },  // 218
-    { "Condition", 1361, 3, 1569, 3, true, 0, 0 },  // 219
-    { "StoryManagerEventNode", 1364, 8, 1572, 10, false, 0, 0 },  // 220
-    { "Condition", 1372, 3, 1582, 3, true, 0, 0 },  // 221
-    { "StoryManagerQuestNode", 1375, 8, 1585, 10, false, 0, 0 },  // 222
-    { "Condition", 1383, 3, 1595, 3, true, 0, 0 },  // 223
-    { "SoundCategory", 1386, 6, 1598, 6, false, 0, 0 },  // 224
-    { "SoundDescriptor", 1392, 9, 1604, 11, false, 0, 0 },  // 225
-    { "Condition", 1401, 3, 1615, 3, true, 0, 0 },  // 226
-    { "SoundOutputModel", 1404, 5, 1618, 5, false, 0, 0 },  // 227
-    { "SoundMarker", 1409, 5, 1623, 5, false, 0, 0 },  // 228
-    { "Spell", 1414, 14, 1628, 18, false, 0, 0 },  // 229
-    { "Model", 1428, 3, 1646, 3, true, 0, 0 },  // 230
-    { "Condition", 1431, 3, 1649, 3, true, 0, 0 },  // 231
-    { "ShaderParticleGeometry", 1434, 3, 1652, 3, false, 0, 0 },  // 232
-    { "Static", 1437, 5, 1655, 7, false, 0, 0 },  // 233
-    { "Model", 1442, 3, 1662, 3, true, 0, 0 },  // 234
-    { "TalkingActivator", 1445, 8, 1665, 10, false, 0, 0 },  // 235
-    { "Model", 1453, 3, 1675, 3, true, 0, 0 },  // 236
-    { "Tree", 1456, 4, 1678, 6, false, 0, 0 },  // 237
-    { "Model", 1460, 3, 1684, 3, true, 0, 0 },  // 238
-    { "TextureSet", 1463, 12, 1687, 12, false, 0, 0 },  // 239
-    { "VolumetricLighting", 1475, 1, 1699, 1, false, 0, 0 },  // 240
-    { "VoiceType", 1476, 2, 1700, 2, false, 0, 0 },  // 241
-    { "Water", 1478, 9, 1702, 9, false, 0, 0 },  // 242
-    { "Weapon", 1487, 29, 1711, 31, false, 0, 0 },  // 243
-    { "Model", 1516, 3, 1742, 3, true, 0, 0 },  // 244
-    { "WordOfPower", 1519, 3, 1745, 3, false, 0, 0 },  // 245
-    { "Worldspace", 1522, 24, 1748, 24, false, 0, 0 },  // 246
-    { "Weather", 1546, 3, 1772, 3, false, 0, 0 },  // 247
+    { "StoryManagerBranchNode", 1353, 7, 1559, 9, false, 0, 0 },  // 218
+    { "Condition", 1360, 3, 1568, 3, true, 0, 0 },  // 219
+    { "StoryManagerEventNode", 1363, 8, 1571, 10, false, 0, 0 },  // 220
+    { "Condition", 1371, 3, 1581, 3, true, 0, 0 },  // 221
+    { "StoryManagerQuestNode", 1374, 10, 1584, 12, false, 0, 0 },  // 222
+    { "StoryManagerQuestNodeQuests", 1384, 3, 1596, 3, false, SigOf("NNAM"), 0 },  // 223
+    { "Condition", 1387, 3, 1599, 3, true, 0, 0 },  // 224
+    { "SoundCategory", 1390, 6, 1602, 6, false, 0, 0 },  // 225
+    { "SoundDescriptor", 1396, 9, 1608, 11, false, 0, 0 },  // 226
+    { "Condition", 1405, 3, 1619, 3, true, 0, 0 },  // 227
+    { "SoundOutputModel", 1408, 5, 1622, 5, false, 0, 0 },  // 228
+    { "SoundMarker", 1413, 5, 1627, 5, false, 0, 0 },  // 229
+    { "Spell", 1418, 14, 1632, 18, false, 0, 0 },  // 230
+    { "Model", 1432, 3, 1650, 3, true, 0, 0 },  // 231
+    { "Condition", 1435, 3, 1653, 3, true, 0, 0 },  // 232
+    { "ShaderParticleGeometry", 1438, 3, 1656, 3, false, 0, 0 },  // 233
+    { "Static", 1441, 5, 1659, 7, false, 0, 0 },  // 234
+    { "Model", 1446, 3, 1666, 3, true, 0, 0 },  // 235
+    { "TalkingActivator", 1449, 8, 1669, 10, false, 0, 0 },  // 236
+    { "Model", 1457, 3, 1679, 3, true, 0, 0 },  // 237
+    { "Tree", 1460, 4, 1682, 6, false, 0, 0 },  // 238
+    { "Model", 1464, 3, 1688, 3, true, 0, 0 },  // 239
+    { "TextureSet", 1467, 12, 1691, 12, false, 0, 0 },  // 240
+    { "VolumetricLighting", 1479, 1, 1703, 1, false, 0, 0 },  // 241
+    { "VoiceType", 1480, 2, 1704, 2, false, 0, 0 },  // 242
+    { "Water", 1482, 9, 1706, 9, false, 0, 0 },  // 243
+    { "Weapon", 1491, 29, 1715, 31, false, 0, 0 },  // 244
+    { "Model", 1520, 3, 1746, 3, true, 0, 0 },  // 245
+    { "WordOfPower", 1523, 3, 1749, 3, false, 0, 0 },  // 246
+    { "Worldspace", 1526, 24, 1752, 24, false, 0, 0 },  // 247
+    { "Weather", 1550, 3, 1776, 3, false, 0, 0 },  // 248
 };
 inline constexpr RecordDef kRecords[] = {
     { SigOf("RELA"), "Relationship", 200 },
@@ -4862,15 +4873,15 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("MISC"), "MiscItem", 122 },
     { SigOf("MUSC"), "MusicType", 129 },
     { SigOf("IMAD"), "ImageSpaceAdapter", 88 },
-    { SigOf("SPGD"), "ShaderParticleGeometry", 232 },
-    { SigOf("WRLD"), "Worldspace", 246 },
+    { SigOf("SPGD"), "ShaderParticleGeometry", 233 },
+    { SigOf("WRLD"), "Worldspace", 247 },
     { SigOf("LAND"), "Landscape", 101 },
     { SigOf("BPTD"), "BodyPartData", 32 },
     { SigOf("KYWD"), "Keyword", 100 },
     { SigOf("HAZD"), "Hazard", 80 },
     { SigOf("PHZD"), "PlacedHazard", 153 },
     { SigOf("RACE"), "Race", 172 },
-    { SigOf("TREE"), "Tree", 237 },
+    { SigOf("TREE"), "Tree", 238 },
     { SigOf("IDLE"), "IdleAnimation", 85 },
     { SigOf("PGRE"), "PlacedGrenade", 152 },
     { SigOf("MGEF"), "MagicEffect", 120 },
@@ -4881,7 +4892,7 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("LIGH"), "Light", 105 },
     { SigOf("EFSH"), "EffectShader", 58 },
     { SigOf("CPTH"), "CameraPath", 46 },
-    { SigOf("VOLI"), "VolumetricLighting", 240 },
+    { SigOf("VOLI"), "VolumetricLighting", 241 },
     { SigOf("LVLI"), "LeveledItem", 110 },
     { SigOf("ACTI"), "Activator", 2 },
     { SigOf("NAVI"), "NavigationMeshInfoMap", 132 },
@@ -4893,7 +4904,7 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("PERK"), "Perk", 147 },
     { SigOf("DIAL"), "DialogTopic", 50 },
     { SigOf("DUAL"), "DualCastData", 56 },
-    { SigOf("SPEL"), "Spell", 229 },
+    { SigOf("SPEL"), "Spell", 230 },
     { SigOf("CELL"), "Cell", 36 },
     { SigOf("COLL"), "CollisionLayer", 43 },
     { SigOf("EXPL"), "Explosion", 62 },
@@ -4901,7 +4912,7 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("CLFM"), "ColorForm", 38 },
     { SigOf("SLGM"), "SoulGem", 216 },
     { SigOf("IDLM"), "IdleMarker", 87 },
-    { SigOf("SOPM"), "SoundOutputModel", 227 },
+    { SigOf("SOPM"), "SoundOutputModel", 228 },
     { SigOf("LGTM"), "LightingTemplate", 104 },
     { SigOf("NAVM"), "NavigationMesh", 133 },
     { SigOf("KEYM"), "Key", 98 },
@@ -4914,7 +4925,7 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("SMQN"), "StoryManagerQuestNode", 222 },
     { SigOf("FURN"), "Furniture", 72 },
     { SigOf("LCTN"), "Location", 103 },
-    { SigOf("SOUN"), "SoundMarker", 228 },
+    { SigOf("SOUN"), "SoundMarker", 229 },
     { SigOf("ECZN"), "EncounterZone", 57 },
     { SigOf("INFO"), "DialogResponses", 90 },
     { SigOf("ANIO"), "AnimatedObject", 13 },
@@ -4922,24 +4933,24 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("ARMO"), "Armor", 22 },
     { SigOf("MATO"), "MaterialObject", 116 },
     { SigOf("ARTO"), "ArtObject", 25 },
-    { SigOf("WEAP"), "Weapon", 243 },
-    { SigOf("WOOP"), "WordOfPower", 245 },
+    { SigOf("WEAP"), "Weapon", 244 },
+    { SigOf("WOOP"), "WordOfPower", 246 },
     { SigOf("LVSP"), "LeveledSpell", 114 },
     { SigOf("ASTP"), "AssociationType", 28 },
     { SigOf("FSTP"), "Footstep", 70 },
     { SigOf("EQUP"), "EquipType", 61 },
-    { SigOf("VTYP"), "VoiceType", 241 },
+    { SigOf("VTYP"), "VoiceType", 242 },
     { SigOf("DEBR"), "Debris", 49 },
     { SigOf("DLBR"), "DialogBranch", 51 },
     { SigOf("LSCR"), "LoadScreen", 107 },
-    { SigOf("SNDR"), "SoundDescriptor", 225 },
+    { SigOf("SNDR"), "SoundDescriptor", 226 },
     { SigOf("REFR"), "PlacedObject", 198 },
     { SigOf("INGR"), "Ingredient", 92 },
     { SigOf("ACHR"), "PlacedNpc", 1 },
-    { SigOf("WTHR"), "Weather", 247 },
+    { SigOf("WTHR"), "Weather", 248 },
     { SigOf("FLOR"), "Flora", 67 },
     { SigOf("DOOR"), "Door", 54 },
-    { SigOf("WATR"), "Water", 242 },
+    { SigOf("WATR"), "Water", 243 },
     { SigOf("CLAS"), "Class", 37 },
     { SigOf("GRAS"), "Grass", 78 },
     { SigOf("IPDS"), "ImpactDataSet", 97 },
@@ -4947,13 +4958,13 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("IMGS"), "ImageSpace", 89 },
     { SigOf("CAMS"), "CameraShot", 34 },
     { SigOf("FSTS"), "FootstepSet", 71 },
-    { SigOf("STAT"), "Static", 233 },
+    { SigOf("STAT"), "Static", 234 },
     { SigOf("PWAT"), "PlaceableWater", 158 },
     { SigOf("AACT"), "Action", 0 },
     { SigOf("FACT"), "Faction", 65 },
-    { SigOf("TACT"), "TalkingActivator", 235 },
+    { SigOf("TACT"), "TalkingActivator", 236 },
     { SigOf("RFCT"), "VisualEffect", 202 },
-    { SigOf("SNCT"), "SoundCategory", 224 },
+    { SigOf("SNCT"), "SoundCategory", 225 },
     { SigOf("IPCT"), "Impact", 95 },
     { SigOf("OTFT"), "Outfit", 138 },
     { SigOf("CLMT"), "Climate", 39 },
@@ -4964,7 +4975,7 @@ inline constexpr RecordDef kRecords[] = {
     { SigOf("GMST"), "GameSetting", 77 },
     { SigOf("MUST"), "MusicTrack", 130 },
     { SigOf("QUST"), "Quest", 160 },
-    { SigOf("TXST"), "TextureSet", 239 },
+    { SigOf("TXST"), "TextureSet", 240 },
     { SigOf("MATT"), "MaterialType", 117 },
     { SigOf("MSTT"), "MoveableStatic", 125 },
     { SigOf("MOVT"), "MovementType", 124 },
@@ -5381,12 +5392,12 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 305, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 305, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 306, 0 },
-    { "form", 395, false, false, false, 0LL, 0LL, 306, 1 },
+    { "form", 397, false, false, false, 0LL, 0LL, 306, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 307, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 309, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 309, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 310, 0 },
-    { "form", 397, false, false, false, 0LL, 0LL, 310, 1 },
+    { "form", 399, false, false, false, 0LL, 0LL, 310, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 311, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 313, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 313, 1 },
@@ -5395,12 +5406,12 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 315, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 315, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 316, 0 },
-    { "form", 402, false, false, false, 0LL, 0LL, 316, 1 },
+    { "form", 404, false, false, false, 0LL, 0LL, 316, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 317, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 319, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 319, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 320, 0 },
-    { "form", 404, false, false, false, 0LL, 0LL, 320, 1 },
+    { "form", 406, false, false, false, 0LL, 0LL, 320, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 321, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 323, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 323, 1 },
@@ -5409,12 +5420,12 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 325, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 325, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 326, 0 },
-    { "form", 409, false, false, false, 0LL, 0LL, 326, 1 },
+    { "form", 411, false, false, false, 0LL, 0LL, 326, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 327, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 329, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 329, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 330, 0 },
-    { "form", 411, false, false, false, 0LL, 0LL, 330, 1 },
+    { "form", 413, false, false, false, 0LL, 0LL, 330, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 331, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 333, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 333, 1 },
@@ -5423,12 +5434,12 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 335, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 335, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 336, 0 },
-    { "form", 418, false, false, false, 0LL, 0LL, 336, 1 },
+    { "form", 420, false, false, false, 0LL, 0LL, 336, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 337, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 339, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 339, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 340, 0 },
-    { "form", 420, false, false, false, 0LL, 0LL, 340, 1 },
+    { "form", 422, false, false, false, 0LL, 0LL, 340, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 341, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 343, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 343, 1 },
@@ -5437,12 +5448,12 @@ inline constexpr CaseDef kCases[] = {
     { "value", 13, false, true, false, 0LL, 0LL, 345, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 345, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 346, 0 },
-    { "form", 426, false, false, false, 0LL, 0LL, 346, 1 },
+    { "form", 428, false, false, false, 0LL, 0LL, 346, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 347, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 349, 0 },
     { "alias", 12, false, false, false, 0LL, 0LL, 349, 1 },
     { "ref", 7, false, true, false, 0LL, 0LL, 350, 0 },
-    { "form", 428, false, false, false, 0LL, 0LL, 350, 1 },
+    { "form", 430, false, false, false, 0LL, 0LL, 350, 1 },
     { "value", 43, false, false, false, 0LL, 0LL, 351, 2 },
     { "unclassified", 71, false, true, false, 0LL, 0LL, 353, 0 },
     { "ref", 7, false, false, false, 0LL, 0LL, 353, 1 },
@@ -5999,7 +6010,7 @@ inline constexpr const char* kTableCells[] = {
 inline constexpr SchemaSet kSchema{
     kTypes,
     std::span<const FieldDef>(kFields, 815),
-    std::span<const uint32_t>(kLinks, 57),
+    std::span<const uint32_t>(kLinks, 62),
     kMembers, kEntries, kGroups, kRecords,
     std::span<const CaseDef>(kCases, 472),
     std::span<const uint64_t>(kCaseValues, 354),
