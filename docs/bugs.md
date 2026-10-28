@@ -237,3 +237,14 @@ None.
   [GroupTree.h](../include/ESPER/GroupTree.h)). Verified by the
   round-trip gate: all five vanilla masters + AE CC ESLs re-emit byte-identically
   ([roundtrip_gate.cpp](../tools/roundtrip_gate.cpp)).
+
+### Story Manager nodes: SNAM read as `child`, SMQN quest list and SMEN event undecoded — FIXED
+- **Symptom:** SMBN/SMQN/SMEN shared one copy-pasted shape. SNAM was named `child` but is the NEXT SIBLING (0 ends the
+  chain; a parent's children are the nodes whose PNAM names it: WhiterunConvoScenes 0x18958 and RoriksteadConvoScenes
+  0x39C8A share PNAM 0x340C4). SMQN's QNAM was typed a FormID but is a quest COUNT; the quests (NNAM, with optional FNAM
+  flags and RNAM f32 hours until reset) and MNAM were raw, so a node's quests were not decodable. SMEN's ENAM (event code)
+  was missing. SMBN carried a QNAM it never has.
+- **Root cause:** shapes seeded in migration step 2 and never checked against the data.
+- **Fix:** per-record descriptors ([SMBN](../schema/records/SMBN.yaml), SMEN, SMQN with a `quests` group opened by NNAM),
+  `to:` links on PNAM/SNAM/NNAM. Gate on the five vanilla masters: 0 raw subrecords in all three, 0 wrong links
+  (SMQN 2865 checked); SMQN remap-safe 20 -> 374 of 535, SMEN 0 -> 28 of 28.

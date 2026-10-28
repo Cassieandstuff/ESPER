@@ -1,12 +1,21 @@
-# Seeded from the typed path (SmNodeRec, include/ESPER/Records*.h) in migration step 2.
+# Story Manager quest node. QNAM counts the quests that follow; each is an NNAM, optionally with its flags (FNAM)
+# and hours until it may start again (RNAM, f32). Tree links as in SMBN.
 record: SMQN
 name: StoryManagerQuestNode
 members:
-  - { sig: EDID, name: editorId, type: zstring }   # EDID
-  - { sig: PNAM, name: parent, type: formid }   # PNAM
-  - { sig: SNAM, name: child, type: formid }   # SNAM
-  - { sig: CITC, name: conditionCount, type: u32 }   # CITC
-  - { sig: DNAM, name: flags, type: u32 }   # DNAM
-  - { sig: XNAM, name: maxAcrossType, type: u32 }   # XNAM
-  - { sig: QNAM, name: quest, type: formid }   # NNAM? / QNAM (SMQN)
+  - { sig: EDID, name: editorId, type: zstring }
+  - { sig: PNAM, name: parent, type: formid, to: [SMBN, SMEN] }
+  - { sig: SNAM, name: nextSibling, type: formid, to: [SMBN, SMQN, SMEN] }
+  - { sig: CITC, name: conditionCount, type: u32 }
+  - { sig: DNAM, name: flags, type: u32 }
+  - { sig: XNAM, name: maxAcrossType, type: u32 }
+  - { sig: MNAM, name: maxConcurrentQuests, type: u32 }
+  - { sig: QNAM, name: questCount, type: u32 }
+  - group: quests
+    repeat: true
+    open: NNAM
+    members:
+      - { sig: NNAM, name: quest, type: formid, to: [QUST] }
+      - { sig: FNAM, name: flags, type: u32 }
+      - { sig: RNAM, name: hoursUntilReset, type: f32 }
   - { use: Condition, name: conditions, repeat: true }

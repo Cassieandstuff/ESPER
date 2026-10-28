@@ -5534,9 +5534,9 @@ public:
     void SetParent(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearParent() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // SNAM
-    std::optional<::esper::FormId> Child() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetChild(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
-    void ClearChild() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    std::optional<::esper::FormId> NextSibling() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetNextSibling(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearNextSibling() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // CITC
     std::optional<uint32_t> ConditionCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
     void SetConditionCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
@@ -5549,13 +5549,9 @@ public:
     std::optional<uint32_t> MaxAcrossType() const { return c_.Get<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
     void SetMaxAcrossType(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearMaxAcrossType() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
-    // QNAM
-    std::optional<::esper::FormId> Quest() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }); }
-    void SetQuest(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
-    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 7 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 7 }, 1, 1 })); }
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 6 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 6 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -5871,9 +5867,9 @@ public:
     void SetParent(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearParent() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // SNAM
-    std::optional<::esper::FormId> Child() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetChild(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
-    void ClearChild() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    std::optional<::esper::FormId> NextSibling() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetNextSibling(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearNextSibling() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // CITC
     std::optional<uint32_t> ConditionCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
     void SetConditionCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
@@ -5886,10 +5882,10 @@ public:
     std::optional<uint32_t> MaxAcrossType() const { return c_.Get<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
     void SetMaxAcrossType(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearMaxAcrossType() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
-    // QNAM
-    std::optional<::esper::FormId> Quest() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }); }
-    void SetQuest(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
-    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    // ENAM
+    std::optional<uint32_t> Event() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetEvent(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearEvent() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // group conditions
     std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 7 }, 1, 1 })) o.emplace_back(c); return o; }
     ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 7 }, 1, 1 })); }
@@ -5965,6 +5961,27 @@ private:
     ::esper::Cursor c_;
 };
 
+class StoryManagerQuestNodeQuests {
+public:
+    explicit StoryManagerQuestNodeQuests(::esper::Cursor c) : c_(c) {}
+    ::esper::Record& record() const { return *c_.rec; }
+    ::esper::Cursor cursor() const { return c_; }
+    // NNAM
+    std::optional<::esper::Link<::esper::view::Quest>> Quest() const { return c_.Get<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 0 }, 1, 1 }); }
+    void SetQuest(const ::esper::Link<::esper::view::Quest>& v) const { c_.Set<::esper::Link<::esper::view::Quest>>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
+    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // FNAM
+    std::optional<uint32_t> Flags() const { return c_.Get<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetFlags(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearFlags() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    // RNAM
+    std::optional<float> HoursUntilReset() const { return c_.Get<float>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetHoursUntilReset(const float& v) const { c_.Set<float>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearHoursUntilReset() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+private:
+    ::esper::Cursor c_;
+};
+
 class StoryManagerQuestNode {
 public:
     static constexpr uint32_t kSig = ::esper::schema::SigOf("SMQN");
@@ -5980,9 +5997,9 @@ public:
     void SetParent(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
     void ClearParent() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // SNAM
-    std::optional<::esper::FormId> Child() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetChild(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
-    void ClearChild() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    std::optional<::esper::FormId> NextSibling() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetNextSibling(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearNextSibling() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // CITC
     std::optional<uint32_t> ConditionCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }); }
     void SetConditionCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
@@ -5995,13 +6012,20 @@ public:
     std::optional<uint32_t> MaxAcrossType() const { return c_.Get<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }); }
     void SetMaxAcrossType(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 5 }, 1, 1 }, v); }
     void ClearMaxAcrossType() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // MNAM
+    std::optional<uint32_t> MaxConcurrentQuests() const { return c_.Get<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void SetMaxConcurrentQuests(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
+    void ClearMaxConcurrentQuests() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
     // QNAM
-    std::optional<::esper::FormId> Quest() const { return c_.Get<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }); }
-    void SetQuest(const ::esper::FormId& v) const { c_.Set<::esper::FormId>(::esper::RelPath{ { 6 }, 1, 1 }, v); }
-    void ClearQuest() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
+    std::optional<uint32_t> QuestCount() const { return c_.Get<uint32_t>(::esper::RelPath{ { 7 }, 1, 1 }); }
+    void SetQuestCount(const uint32_t& v) const { c_.Set<uint32_t>(::esper::RelPath{ { 7 }, 1, 1 }, v); }
+    void ClearQuestCount() const { c_.Clear(::esper::RelPath{ { 7 }, 1, 1 }); }
+    // group quests
+    std::vector<::esper::view::StoryManagerQuestNodeQuests> Quests() const { std::vector<::esper::view::StoryManagerQuestNodeQuests> o; for (auto c : c_.Groups(::esper::RelPath{ { 8 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::StoryManagerQuestNodeQuests AddQuests() const { return ::esper::view::StoryManagerQuestNodeQuests(c_.AddGroup(::esper::RelPath{ { 8 }, 1, 1 })); }
     // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 7 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 7 }, 1, 1 })); }
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 9 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 9 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
