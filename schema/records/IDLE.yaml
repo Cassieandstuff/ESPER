@@ -3,6 +3,7 @@ record: IDLE
 name: IdleAnimation
 members:
   - { sig: EDID, name: editorId, type: zstring }   # EDID
+  - { sig: DNAM, name: behaviorGraph, type: zstring }   # DNAM: the behavior graph file the idle belongs to (as the record spells it)
   - { sig: ENAM, name: animEvent, type: zstring }   # ENAM
   - { sig: ANAM, name: related, type: "formid[]" }   # ANAM (parent + previous)
   - { sig: DATA, name: data, fields: [ { name: loopMin, type: u8 }, { name: loopMax, type: u8 }, { name: flags, type: u8 }, { name: animGroupSection, type: u8 }, { name: replayDelay, type: u16 } ] }

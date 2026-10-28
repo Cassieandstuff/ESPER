@@ -3820,21 +3820,25 @@ public:
     std::optional<std::string> EditorId() const { return c_.Get<std::string>(::esper::RelPath{ { 0 }, 1, 1 }); }
     void SetEditorId(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 0 }, 1, 1 }, v); }
     void ClearEditorId() const { c_.Clear(::esper::RelPath{ { 0 }, 1, 1 }); }
+    // DNAM
+    std::optional<std::string> BehaviorGraph() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
+    void SetBehaviorGraph(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
+    void ClearBehaviorGraph() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
     // ENAM
-    std::optional<std::string> AnimEvent() const { return c_.Get<std::string>(::esper::RelPath{ { 1 }, 1, 1 }); }
-    void SetAnimEvent(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 1 }, 1, 1 }, v); }
-    void ClearAnimEvent() const { c_.Clear(::esper::RelPath{ { 1 }, 1, 1 }); }
+    std::optional<std::string> AnimEvent() const { return c_.Get<std::string>(::esper::RelPath{ { 2 }, 1, 1 }); }
+    void SetAnimEvent(const std::string& v) const { c_.Set<std::string>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
+    void ClearAnimEvent() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
     // ANAM
-    std::optional<std::vector<::esper::FormId>> Related() const { return c_.Get<std::vector<::esper::FormId>>(::esper::RelPath{ { 2 }, 1, 1 }); }
-    void SetRelated(const std::vector<::esper::FormId>& v) const { c_.Set<std::vector<::esper::FormId>>(::esper::RelPath{ { 2 }, 1, 1 }, v); }
-    void ClearRelated() const { c_.Clear(::esper::RelPath{ { 2 }, 1, 1 }); }
+    std::optional<std::vector<::esper::FormId>> Related() const { return c_.Get<std::vector<::esper::FormId>>(::esper::RelPath{ { 3 }, 1, 1 }); }
+    void SetRelated(const std::vector<::esper::FormId>& v) const { c_.Set<std::vector<::esper::FormId>>(::esper::RelPath{ { 3 }, 1, 1 }, v); }
+    void ClearRelated() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
     // DATA
     ::esper::view::IdleAnimationData Data() const;
-    bool HasData() const { return c_.Has(::esper::RelPath{ { 3 }, 1, 1 }); }
-    void ClearData() const { c_.Clear(::esper::RelPath{ { 3 }, 1, 1 }); }
+    bool HasData() const { return c_.Has(::esper::RelPath{ { 4 }, 1, 1 }); }
+    void ClearData() const { c_.Clear(::esper::RelPath{ { 4 }, 1, 1 }); }
     // group conditions
-    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 4 }, 1, 1 })) o.emplace_back(c); return o; }
-    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 4 }, 1, 1 })); }
+    std::vector<::esper::view::Condition> Conditions() const { std::vector<::esper::view::Condition> o; for (auto c : c_.Groups(::esper::RelPath{ { 5 }, 1, 1 })) o.emplace_back(c); return o; }
+    ::esper::view::Condition AddConditions() const { return ::esper::view::Condition(c_.AddGroup(::esper::RelPath{ { 5 }, 1, 1 })); }
 private:
     ::esper::Cursor c_;
 };
@@ -9141,7 +9145,7 @@ inline ::esper::view::Placement PlacedHazard::Placement() const { return ::esper
 inline ::esper::view::BipedBodyTemplate Race::Biped() const { return ::esper::view::BipedBodyTemplate(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 inline ::esper::view::ObjectBounds Tree::Bounds() const { return ::esper::view::ObjectBounds(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::ConditionData Condition::Data() const { return ::esper::view::ConditionData(::esper::StructCursor{ c_, ::esper::RelPath{ { 0 }, 1, 1 } }); }
-inline ::esper::view::IdleAnimationData IdleAnimation::Data() const { return ::esper::view::IdleAnimationData(::esper::StructCursor{ c_, ::esper::RelPath{ { 3 }, 1, 1 } }); }
+inline ::esper::view::IdleAnimationData IdleAnimation::Data() const { return ::esper::view::IdleAnimationData(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::Vmad PlacedGrenade::Vmad() const { return ::esper::view::Vmad(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper::view::EnableParent PlacedGrenade::EnableParent() const { return ::esper::view::EnableParent(::esper::StructCursor{ c_, ::esper::RelPath{ { 4 }, 1, 1 } }); }
 inline ::esper::view::Placement PlacedGrenade::Placement() const { return ::esper::view::Placement(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }

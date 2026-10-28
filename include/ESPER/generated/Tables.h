@@ -1761,6 +1761,7 @@ inline constexpr MemberDef kMembers[] = {
     { "type", SigOf("NAM0"), 43, 0, false, false, -1 },
     { "file", SigOf("NAM1"), 0, 0, false, false, -1 },
     { "editorId", SigOf("EDID"), 0, 0, false, false, -1 },
+    { "behaviorGraph", SigOf("DNAM"), 0, 0, false, false, -1 },
     { "animEvent", SigOf("ENAM"), 0, 0, false, false, -1 },
     { "related", SigOf("ANAM"), 63, 0, false, false, -1 },
     { "data", SigOf("DATA"), 147, 0, false, false, -1 },
@@ -3394,13 +3395,14 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("MODT"), 1 },
     { SigOf("NAM0"), 0 },
     { SigOf("NAM1"), 1 },
-    { SigOf("CIS1"), 4 },
-    { SigOf("CIS2"), 4 },
-    { SigOf("CTDA"), 4 },
-    { SigOf("DATA"), 3 },
+    { SigOf("CIS1"), 5 },
+    { SigOf("CIS2"), 5 },
+    { SigOf("CTDA"), 5 },
+    { SigOf("DATA"), 4 },
     { SigOf("EDID"), 0 },
-    { SigOf("ANAM"), 2 },
-    { SigOf("ENAM"), 1 },
+    { SigOf("ANAM"), 3 },
+    { SigOf("DNAM"), 1 },
+    { SigOf("ENAM"), 2 },
     { SigOf("CIS1"), 1 },
     { SigOf("CIS2"), 2 },
     { SigOf("CTDA"), 0 },
@@ -4698,170 +4700,170 @@ inline constexpr GroupDef kGroups[] = {
     { "HeadPart", 468, 10, 544, 13, false, 0, 0 },  // 82
     { "Model", 478, 3, 557, 3, true, 0, 0 },  // 83
     { "HeadPartParts", 481, 2, 560, 2, true, 0, 0 },  // 84
-    { "IdleAnimation", 483, 5, 562, 7, false, 0, 0 },  // 85
-    { "Condition", 488, 3, 569, 3, true, 0, 0 },  // 86
-    { "IdleMarker", 491, 6, 572, 6, false, 0, 0 },  // 87
-    { "ImageSpaceAdapter", 497, 1, 578, 1, false, 0, 0 },  // 88
-    { "ImageSpace", 498, 6, 579, 6, false, 0, 0 },  // 89
-    { "DialogResponses", 504, 22, 585, 24, false, 0, 0 },  // 90
-    { "Condition", 526, 3, 609, 3, true, 0, 0 },  // 91
-    { "Ingredient", 529, 16, 612, 20, false, 0, 0 },  // 92
-    { "Model", 545, 3, 632, 3, true, 0, 0 },  // 93
-    { "Condition", 548, 3, 635, 3, true, 0, 0 },  // 94
-    { "Impact", 551, 9, 638, 11, false, 0, 0 },  // 95
-    { "Model", 560, 3, 649, 3, true, 0, 0 },  // 96
-    { "ImpactDataSet", 563, 2, 652, 2, false, 0, 0 },  // 97
-    { "Key", 565, 15, 654, 17, false, 0, 0 },  // 98
-    { "Model", 580, 3, 671, 3, true, 0, 0 },  // 99
-    { "Keyword", 583, 2, 674, 2, false, 0, 0 },  // 100
-    { "Landscape", 585, 7, 676, 7, false, 0, 0 },  // 101
-    { "LocationReferenceType", 592, 2, 683, 2, false, 0, 0 },  // 102
-    { "Location", 594, 9, 685, 9, false, 0, 0 },  // 103
-    { "LightingTemplate", 603, 3, 694, 3, false, 0, 0 },  // 104
-    { "Light", 606, 7, 697, 9, false, 0, 0 },  // 105
-    { "Model", 613, 3, 706, 3, true, 0, 0 },  // 106
-    { "LoadScreen", 616, 9, 709, 11, false, 0, 0 },  // 107
-    { "Condition", 625, 3, 720, 3, true, 0, 0 },  // 108
-    { "LandscapeTexture", 628, 6, 723, 6, false, 0, 0 },  // 109
-    { "LeveledItem", 634, 8, 729, 10, false, 0, 0 },  // 110
-    { "Model", 642, 3, 739, 3, true, 0, 0 },  // 111
-    { "LeveledNpc", 645, 8, 742, 10, false, 0, 0 },  // 112
-    { "Model", 653, 3, 752, 3, true, 0, 0 },  // 113
-    { "LeveledSpell", 656, 8, 755, 10, false, 0, 0 },  // 114
-    { "Model", 664, 3, 765, 3, true, 0, 0 },  // 115
-    { "MaterialObject", 667, 4, 768, 4, false, 0, 0 },  // 116
-    { "MaterialType", 671, 7, 772, 7, false, 0, 0 },  // 117
-    { "Message", 678, 9, 779, 11, false, 0, 0 },  // 118
-    { "Condition", 687, 3, 790, 3, true, 0, 0 },  // 119
-    { "MagicEffect", 690, 10, 793, 12, false, 0, 0 },  // 120
-    { "Condition", 700, 3, 805, 3, true, 0, 0 },  // 121
-    { "MiscItem", 703, 12, 808, 14, false, 0, 0 },  // 122
-    { "Model", 715, 3, 822, 3, true, 0, 0 },  // 123
-    { "MovementType", 718, 4, 825, 4, false, 0, 0 },  // 124
-    { "MoveableStatic", 722, 6, 829, 13, false, 0, 0 },  // 125
-    { "Model", 728, 3, 842, 3, true, 0, 0 },  // 126
-    { "Destructible", 731, 2, 845, 6, true, 0, 0 },  // 127
-    { "DestructibleStages", 733, 5, 851, 5, true, 0, 0 },  // 128
-    { "MusicType", 738, 5, 856, 5, false, 0, 0 },  // 129
-    { "MusicTrack", 743, 11, 861, 13, false, 0, 0 },  // 130
-    { "Condition", 754, 3, 874, 3, true, 0, 0 },  // 131
-    { "NavigationMeshInfoMap", 757, 1, 877, 1, false, 0, 0 },  // 132
-    { "NavigationMesh", 758, 1, 878, 1, false, 0, 0 },  // 133
-    { "Npc", 759, 51, 879, 59, false, 0, 0 },  // 134
-    { "NpcTintLayers", 810, 4, 938, 4, true, 0, 0 },  // 135
-    { "Destructible", 814, 2, 942, 6, true, 0, 0 },  // 136
-    { "DestructibleStages", 816, 5, 948, 5, true, 0, 0 },  // 137
-    { "Outfit", 821, 2, 953, 2, false, 0, 0 },  // 138
-    { "Package", 823, 18, 955, 20, false, 0, 0 },  // 139
-    { "Condition", 841, 3, 975, 3, true, 0, 0 },  // 140
-    { "PackageSections", 844, 14, 978, 16, false, SigOf("ANAM"), 0 },  // 141
-    { "Condition", 858, 3, 994, 3, true, 0, 0 },  // 142
-    { "PackageInputs", 861, 3, 997, 3, false, SigOf("UNAM"), 0 },  // 143
-    { "PackageEvent", 864, 7, 1000, 7, false, SigOf("POBA"), 0 },  // 144
-    { "PackageEvent", 871, 7, 1007, 7, false, SigOf("POEA"), 0 },  // 145
-    { "PackageEvent", 878, 7, 1014, 7, false, SigOf("POCA"), 0 },  // 146
-    { "Perk", 885, 9, 1021, 11, false, 0, 0 },  // 147
-    { "Condition", 894, 3, 1032, 3, true, 0, 0 },  // 148
-    { "PerkEntries", 897, 8, 1035, 8, false, SigOf("PRKE"), SigOf("PRKF") },  // 149
-    { "PerkEntriesConditionTabs", 905, 2, 1043, 4, false, SigOf("PRKC"), 0 },  // 150
-    { "Condition", 907, 3, 1047, 3, true, 0, 0 },  // 151
-    { "PlacedGrenade", 910, 6, 1050, 6, false, 0, 0 },  // 152
-    { "PlacedHazard", 916, 6, 1056, 6, false, 0, 0 },  // 153
-    { "Projectile", 922, 8, 1062, 15, false, 0, 0 },  // 154
-    { "Model", 930, 3, 1077, 3, true, 0, 0 },  // 155
-    { "Destructible", 933, 2, 1080, 6, true, 0, 0 },  // 156
-    { "DestructibleStages", 935, 5, 1086, 5, true, 0, 0 },  // 157
-    { "PlaceableWater", 940, 4, 1091, 6, false, 0, 0 },  // 158
-    { "Model", 944, 3, 1097, 3, true, 0, 0 },  // 159
-    { "Quest", 947, 14, 1100, 16, false, 0, 0 },  // 160
-    { "Condition", 961, 3, 1116, 3, true, 0, 0 },  // 161
-    { "QuestStages", 964, 2, 1119, 2, false, SigOf("INDX"), 0 },  // 162
-    { "QuestStagesLogEntries", 966, 7, 1121, 9, false, SigOf("QSDT"), 0 },  // 163
-    { "Condition", 973, 3, 1130, 3, true, 0, 0 },  // 164
-    { "QuestObjectives", 976, 4, 1133, 4, false, SigOf("QOBJ"), 0 },  // 165
-    { "QuestObjectivesTargets", 980, 2, 1137, 4, false, SigOf("QSTA"), 0 },  // 166
-    { "Condition", 982, 3, 1141, 3, true, 0, 0 },  // 167
-    { "QuestAlias", 985, 32, 1144, 34, false, SigOf("ALST"), SigOf("ALED") },  // 168
-    { "Condition", 1017, 3, 1178, 3, true, 0, 0 },  // 169
-    { "QuestAlias", 1020, 32, 1181, 34, false, SigOf("ALLS"), SigOf("ALED") },  // 170
-    { "Condition", 1052, 3, 1215, 3, true, 0, 0 },  // 171
-    { "Race", 1055, 42, 1218, 42, false, 0, 0 },  // 172
-    { "RaceSkeleton", 1097, 3, 1260, 3, false, SigOf("MNAM"), 0 },  // 173
-    { "RaceSkeleton", 1100, 3, 1263, 3, false, SigOf("FNAM"), 0 },  // 174
-    { "RaceBodyData", 1103, 3, 1266, 3, false, SigOf("NAM1"), 0 },  // 175
-    { "RaceBodyParts", 1106, 2, 1269, 5, false, SigOf("MNAM"), 0 },  // 176
-    { "RaceBodyPartsParts", 1108, 2, 1274, 4, true, 0, 0 },  // 177
-    { "Model", 1110, 3, 1278, 3, true, 0, 0 },  // 178
-    { "RaceBodyParts", 1113, 2, 1281, 5, false, SigOf("FNAM"), 0 },  // 179
-    { "RaceBodyPartsParts", 1115, 2, 1286, 4, true, 0, 0 },  // 180
-    { "Model", 1117, 3, 1290, 3, true, 0, 0 },  // 181
-    { "RaceBehaviorGraph", 1120, 3, 1293, 3, false, SigOf("NAM3"), 0 },  // 182
-    { "RaceModel", 1123, 2, 1296, 4, false, SigOf("MNAM"), 0 },  // 183
-    { "Model", 1125, 3, 1300, 3, true, 0, 0 },  // 184
-    { "RaceModel", 1128, 2, 1303, 4, false, SigOf("FNAM"), 0 },  // 185
-    { "Model", 1130, 3, 1307, 3, true, 0, 0 },  // 186
-    { "RaceHeadData", 1133, 3, 1310, 3, false, SigOf("NAM0"), 0 },  // 187
-    { "RaceHead", 1136, 8, 1313, 16, false, SigOf("MNAM"), 0 },  // 188
-    { "RaceHeadHeadParts", 1144, 2, 1329, 2, true, 0, 0 },  // 189
-    { "RaceHeadMorphs", 1146, 2, 1331, 2, true, 0, 0 },  // 190
-    { "RaceTintLayer", 1148, 5, 1333, 7, true, 0, 0 },  // 191
-    { "RaceTintLayerPresets", 1153, 3, 1340, 3, true, 0, 0 },  // 192
-    { "RaceHead", 1156, 8, 1343, 16, false, SigOf("FNAM"), 0 },  // 193
-    { "RaceHeadHeadParts", 1164, 2, 1359, 2, true, 0, 0 },  // 194
-    { "RaceHeadMorphs", 1166, 2, 1361, 2, true, 0, 0 },  // 195
-    { "RaceTintLayer", 1168, 5, 1363, 7, true, 0, 0 },  // 196
-    { "RaceTintLayerPresets", 1173, 3, 1370, 3, true, 0, 0 },  // 197
-    { "PlacedObject", 1176, 61, 1373, 61, false, 0, 0 },  // 198
-    { "Region", 1237, 4, 1434, 4, false, 0, 0 },  // 199
-    { "Relationship", 1241, 2, 1438, 2, false, 0, 0 },  // 200
-    { "ReverbParameters", 1243, 2, 1440, 2, false, 0, 0 },  // 201
-    { "VisualEffect", 1245, 2, 1442, 2, false, 0, 0 },  // 202
-    { "Scene", 1247, 14, 1444, 16, false, 0, 0 },  // 203
-    { "ScenePhases", 1261, 9, 1460, 10, false, SigOf("HNAM"), SigOf("HNAM") },  // 204
-    { "Condition", 1270, 3, 1470, 3, true, 0, 0 },  // 205
-    { "ScenePhasesCompletion", 1273, 6, 1473, 7, false, SigOf("NEXT"), SigOf("NEXT") },  // 206
-    { "Condition", 1279, 3, 1480, 3, true, 0, 0 },  // 207
-    { "SceneActors", 1282, 3, 1483, 3, false, SigOf("ALID"), 0 },  // 208
-    { "SceneActions", 1285, 18, 1486, 17, false, SigOf("ANAM"), SigOf("ANAM") },  // 209
-    { "SceneEndScript", 1303, 4, 1503, 4, false, SigOf("NEXT"), 0 },  // 210
-    { "Condition", 1307, 3, 1507, 3, true, 0, 0 },  // 211
-    { "Scroll", 1310, 14, 1510, 18, false, 0, 0 },  // 212
-    { "Model", 1324, 3, 1528, 3, true, 0, 0 },  // 213
-    { "Condition", 1327, 3, 1531, 3, true, 0, 0 },  // 214
-    { "Shout", 1330, 5, 1534, 5, false, 0, 0 },  // 215
-    { "SoulGem", 1335, 15, 1539, 17, false, 0, 0 },  // 216
-    { "Model", 1350, 3, 1556, 3, true, 0, 0 },  // 217
-    { "StoryManagerBranchNode", 1353, 7, 1559, 9, false, 0, 0 },  // 218
-    { "Condition", 1360, 3, 1568, 3, true, 0, 0 },  // 219
-    { "StoryManagerEventNode", 1363, 8, 1571, 10, false, 0, 0 },  // 220
-    { "Condition", 1371, 3, 1581, 3, true, 0, 0 },  // 221
-    { "StoryManagerQuestNode", 1374, 10, 1584, 12, false, 0, 0 },  // 222
-    { "StoryManagerQuestNodeQuests", 1384, 3, 1596, 3, false, SigOf("NNAM"), 0 },  // 223
-    { "Condition", 1387, 3, 1599, 3, true, 0, 0 },  // 224
-    { "SoundCategory", 1390, 6, 1602, 6, false, 0, 0 },  // 225
-    { "SoundDescriptor", 1396, 9, 1608, 11, false, 0, 0 },  // 226
-    { "Condition", 1405, 3, 1619, 3, true, 0, 0 },  // 227
-    { "SoundOutputModel", 1408, 5, 1622, 5, false, 0, 0 },  // 228
-    { "SoundMarker", 1413, 5, 1627, 5, false, 0, 0 },  // 229
-    { "Spell", 1418, 14, 1632, 18, false, 0, 0 },  // 230
-    { "Model", 1432, 3, 1650, 3, true, 0, 0 },  // 231
-    { "Condition", 1435, 3, 1653, 3, true, 0, 0 },  // 232
-    { "ShaderParticleGeometry", 1438, 3, 1656, 3, false, 0, 0 },  // 233
-    { "Static", 1441, 5, 1659, 7, false, 0, 0 },  // 234
-    { "Model", 1446, 3, 1666, 3, true, 0, 0 },  // 235
-    { "TalkingActivator", 1449, 8, 1669, 10, false, 0, 0 },  // 236
-    { "Model", 1457, 3, 1679, 3, true, 0, 0 },  // 237
-    { "Tree", 1460, 4, 1682, 6, false, 0, 0 },  // 238
-    { "Model", 1464, 3, 1688, 3, true, 0, 0 },  // 239
-    { "TextureSet", 1467, 12, 1691, 12, false, 0, 0 },  // 240
-    { "VolumetricLighting", 1479, 1, 1703, 1, false, 0, 0 },  // 241
-    { "VoiceType", 1480, 2, 1704, 2, false, 0, 0 },  // 242
-    { "Water", 1482, 9, 1706, 9, false, 0, 0 },  // 243
-    { "Weapon", 1491, 29, 1715, 31, false, 0, 0 },  // 244
-    { "Model", 1520, 3, 1746, 3, true, 0, 0 },  // 245
-    { "WordOfPower", 1523, 3, 1749, 3, false, 0, 0 },  // 246
-    { "Worldspace", 1526, 24, 1752, 24, false, 0, 0 },  // 247
-    { "Weather", 1550, 3, 1776, 3, false, 0, 0 },  // 248
+    { "IdleAnimation", 483, 6, 562, 8, false, 0, 0 },  // 85
+    { "Condition", 489, 3, 570, 3, true, 0, 0 },  // 86
+    { "IdleMarker", 492, 6, 573, 6, false, 0, 0 },  // 87
+    { "ImageSpaceAdapter", 498, 1, 579, 1, false, 0, 0 },  // 88
+    { "ImageSpace", 499, 6, 580, 6, false, 0, 0 },  // 89
+    { "DialogResponses", 505, 22, 586, 24, false, 0, 0 },  // 90
+    { "Condition", 527, 3, 610, 3, true, 0, 0 },  // 91
+    { "Ingredient", 530, 16, 613, 20, false, 0, 0 },  // 92
+    { "Model", 546, 3, 633, 3, true, 0, 0 },  // 93
+    { "Condition", 549, 3, 636, 3, true, 0, 0 },  // 94
+    { "Impact", 552, 9, 639, 11, false, 0, 0 },  // 95
+    { "Model", 561, 3, 650, 3, true, 0, 0 },  // 96
+    { "ImpactDataSet", 564, 2, 653, 2, false, 0, 0 },  // 97
+    { "Key", 566, 15, 655, 17, false, 0, 0 },  // 98
+    { "Model", 581, 3, 672, 3, true, 0, 0 },  // 99
+    { "Keyword", 584, 2, 675, 2, false, 0, 0 },  // 100
+    { "Landscape", 586, 7, 677, 7, false, 0, 0 },  // 101
+    { "LocationReferenceType", 593, 2, 684, 2, false, 0, 0 },  // 102
+    { "Location", 595, 9, 686, 9, false, 0, 0 },  // 103
+    { "LightingTemplate", 604, 3, 695, 3, false, 0, 0 },  // 104
+    { "Light", 607, 7, 698, 9, false, 0, 0 },  // 105
+    { "Model", 614, 3, 707, 3, true, 0, 0 },  // 106
+    { "LoadScreen", 617, 9, 710, 11, false, 0, 0 },  // 107
+    { "Condition", 626, 3, 721, 3, true, 0, 0 },  // 108
+    { "LandscapeTexture", 629, 6, 724, 6, false, 0, 0 },  // 109
+    { "LeveledItem", 635, 8, 730, 10, false, 0, 0 },  // 110
+    { "Model", 643, 3, 740, 3, true, 0, 0 },  // 111
+    { "LeveledNpc", 646, 8, 743, 10, false, 0, 0 },  // 112
+    { "Model", 654, 3, 753, 3, true, 0, 0 },  // 113
+    { "LeveledSpell", 657, 8, 756, 10, false, 0, 0 },  // 114
+    { "Model", 665, 3, 766, 3, true, 0, 0 },  // 115
+    { "MaterialObject", 668, 4, 769, 4, false, 0, 0 },  // 116
+    { "MaterialType", 672, 7, 773, 7, false, 0, 0 },  // 117
+    { "Message", 679, 9, 780, 11, false, 0, 0 },  // 118
+    { "Condition", 688, 3, 791, 3, true, 0, 0 },  // 119
+    { "MagicEffect", 691, 10, 794, 12, false, 0, 0 },  // 120
+    { "Condition", 701, 3, 806, 3, true, 0, 0 },  // 121
+    { "MiscItem", 704, 12, 809, 14, false, 0, 0 },  // 122
+    { "Model", 716, 3, 823, 3, true, 0, 0 },  // 123
+    { "MovementType", 719, 4, 826, 4, false, 0, 0 },  // 124
+    { "MoveableStatic", 723, 6, 830, 13, false, 0, 0 },  // 125
+    { "Model", 729, 3, 843, 3, true, 0, 0 },  // 126
+    { "Destructible", 732, 2, 846, 6, true, 0, 0 },  // 127
+    { "DestructibleStages", 734, 5, 852, 5, true, 0, 0 },  // 128
+    { "MusicType", 739, 5, 857, 5, false, 0, 0 },  // 129
+    { "MusicTrack", 744, 11, 862, 13, false, 0, 0 },  // 130
+    { "Condition", 755, 3, 875, 3, true, 0, 0 },  // 131
+    { "NavigationMeshInfoMap", 758, 1, 878, 1, false, 0, 0 },  // 132
+    { "NavigationMesh", 759, 1, 879, 1, false, 0, 0 },  // 133
+    { "Npc", 760, 51, 880, 59, false, 0, 0 },  // 134
+    { "NpcTintLayers", 811, 4, 939, 4, true, 0, 0 },  // 135
+    { "Destructible", 815, 2, 943, 6, true, 0, 0 },  // 136
+    { "DestructibleStages", 817, 5, 949, 5, true, 0, 0 },  // 137
+    { "Outfit", 822, 2, 954, 2, false, 0, 0 },  // 138
+    { "Package", 824, 18, 956, 20, false, 0, 0 },  // 139
+    { "Condition", 842, 3, 976, 3, true, 0, 0 },  // 140
+    { "PackageSections", 845, 14, 979, 16, false, SigOf("ANAM"), 0 },  // 141
+    { "Condition", 859, 3, 995, 3, true, 0, 0 },  // 142
+    { "PackageInputs", 862, 3, 998, 3, false, SigOf("UNAM"), 0 },  // 143
+    { "PackageEvent", 865, 7, 1001, 7, false, SigOf("POBA"), 0 },  // 144
+    { "PackageEvent", 872, 7, 1008, 7, false, SigOf("POEA"), 0 },  // 145
+    { "PackageEvent", 879, 7, 1015, 7, false, SigOf("POCA"), 0 },  // 146
+    { "Perk", 886, 9, 1022, 11, false, 0, 0 },  // 147
+    { "Condition", 895, 3, 1033, 3, true, 0, 0 },  // 148
+    { "PerkEntries", 898, 8, 1036, 8, false, SigOf("PRKE"), SigOf("PRKF") },  // 149
+    { "PerkEntriesConditionTabs", 906, 2, 1044, 4, false, SigOf("PRKC"), 0 },  // 150
+    { "Condition", 908, 3, 1048, 3, true, 0, 0 },  // 151
+    { "PlacedGrenade", 911, 6, 1051, 6, false, 0, 0 },  // 152
+    { "PlacedHazard", 917, 6, 1057, 6, false, 0, 0 },  // 153
+    { "Projectile", 923, 8, 1063, 15, false, 0, 0 },  // 154
+    { "Model", 931, 3, 1078, 3, true, 0, 0 },  // 155
+    { "Destructible", 934, 2, 1081, 6, true, 0, 0 },  // 156
+    { "DestructibleStages", 936, 5, 1087, 5, true, 0, 0 },  // 157
+    { "PlaceableWater", 941, 4, 1092, 6, false, 0, 0 },  // 158
+    { "Model", 945, 3, 1098, 3, true, 0, 0 },  // 159
+    { "Quest", 948, 14, 1101, 16, false, 0, 0 },  // 160
+    { "Condition", 962, 3, 1117, 3, true, 0, 0 },  // 161
+    { "QuestStages", 965, 2, 1120, 2, false, SigOf("INDX"), 0 },  // 162
+    { "QuestStagesLogEntries", 967, 7, 1122, 9, false, SigOf("QSDT"), 0 },  // 163
+    { "Condition", 974, 3, 1131, 3, true, 0, 0 },  // 164
+    { "QuestObjectives", 977, 4, 1134, 4, false, SigOf("QOBJ"), 0 },  // 165
+    { "QuestObjectivesTargets", 981, 2, 1138, 4, false, SigOf("QSTA"), 0 },  // 166
+    { "Condition", 983, 3, 1142, 3, true, 0, 0 },  // 167
+    { "QuestAlias", 986, 32, 1145, 34, false, SigOf("ALST"), SigOf("ALED") },  // 168
+    { "Condition", 1018, 3, 1179, 3, true, 0, 0 },  // 169
+    { "QuestAlias", 1021, 32, 1182, 34, false, SigOf("ALLS"), SigOf("ALED") },  // 170
+    { "Condition", 1053, 3, 1216, 3, true, 0, 0 },  // 171
+    { "Race", 1056, 42, 1219, 42, false, 0, 0 },  // 172
+    { "RaceSkeleton", 1098, 3, 1261, 3, false, SigOf("MNAM"), 0 },  // 173
+    { "RaceSkeleton", 1101, 3, 1264, 3, false, SigOf("FNAM"), 0 },  // 174
+    { "RaceBodyData", 1104, 3, 1267, 3, false, SigOf("NAM1"), 0 },  // 175
+    { "RaceBodyParts", 1107, 2, 1270, 5, false, SigOf("MNAM"), 0 },  // 176
+    { "RaceBodyPartsParts", 1109, 2, 1275, 4, true, 0, 0 },  // 177
+    { "Model", 1111, 3, 1279, 3, true, 0, 0 },  // 178
+    { "RaceBodyParts", 1114, 2, 1282, 5, false, SigOf("FNAM"), 0 },  // 179
+    { "RaceBodyPartsParts", 1116, 2, 1287, 4, true, 0, 0 },  // 180
+    { "Model", 1118, 3, 1291, 3, true, 0, 0 },  // 181
+    { "RaceBehaviorGraph", 1121, 3, 1294, 3, false, SigOf("NAM3"), 0 },  // 182
+    { "RaceModel", 1124, 2, 1297, 4, false, SigOf("MNAM"), 0 },  // 183
+    { "Model", 1126, 3, 1301, 3, true, 0, 0 },  // 184
+    { "RaceModel", 1129, 2, 1304, 4, false, SigOf("FNAM"), 0 },  // 185
+    { "Model", 1131, 3, 1308, 3, true, 0, 0 },  // 186
+    { "RaceHeadData", 1134, 3, 1311, 3, false, SigOf("NAM0"), 0 },  // 187
+    { "RaceHead", 1137, 8, 1314, 16, false, SigOf("MNAM"), 0 },  // 188
+    { "RaceHeadHeadParts", 1145, 2, 1330, 2, true, 0, 0 },  // 189
+    { "RaceHeadMorphs", 1147, 2, 1332, 2, true, 0, 0 },  // 190
+    { "RaceTintLayer", 1149, 5, 1334, 7, true, 0, 0 },  // 191
+    { "RaceTintLayerPresets", 1154, 3, 1341, 3, true, 0, 0 },  // 192
+    { "RaceHead", 1157, 8, 1344, 16, false, SigOf("FNAM"), 0 },  // 193
+    { "RaceHeadHeadParts", 1165, 2, 1360, 2, true, 0, 0 },  // 194
+    { "RaceHeadMorphs", 1167, 2, 1362, 2, true, 0, 0 },  // 195
+    { "RaceTintLayer", 1169, 5, 1364, 7, true, 0, 0 },  // 196
+    { "RaceTintLayerPresets", 1174, 3, 1371, 3, true, 0, 0 },  // 197
+    { "PlacedObject", 1177, 61, 1374, 61, false, 0, 0 },  // 198
+    { "Region", 1238, 4, 1435, 4, false, 0, 0 },  // 199
+    { "Relationship", 1242, 2, 1439, 2, false, 0, 0 },  // 200
+    { "ReverbParameters", 1244, 2, 1441, 2, false, 0, 0 },  // 201
+    { "VisualEffect", 1246, 2, 1443, 2, false, 0, 0 },  // 202
+    { "Scene", 1248, 14, 1445, 16, false, 0, 0 },  // 203
+    { "ScenePhases", 1262, 9, 1461, 10, false, SigOf("HNAM"), SigOf("HNAM") },  // 204
+    { "Condition", 1271, 3, 1471, 3, true, 0, 0 },  // 205
+    { "ScenePhasesCompletion", 1274, 6, 1474, 7, false, SigOf("NEXT"), SigOf("NEXT") },  // 206
+    { "Condition", 1280, 3, 1481, 3, true, 0, 0 },  // 207
+    { "SceneActors", 1283, 3, 1484, 3, false, SigOf("ALID"), 0 },  // 208
+    { "SceneActions", 1286, 18, 1487, 17, false, SigOf("ANAM"), SigOf("ANAM") },  // 209
+    { "SceneEndScript", 1304, 4, 1504, 4, false, SigOf("NEXT"), 0 },  // 210
+    { "Condition", 1308, 3, 1508, 3, true, 0, 0 },  // 211
+    { "Scroll", 1311, 14, 1511, 18, false, 0, 0 },  // 212
+    { "Model", 1325, 3, 1529, 3, true, 0, 0 },  // 213
+    { "Condition", 1328, 3, 1532, 3, true, 0, 0 },  // 214
+    { "Shout", 1331, 5, 1535, 5, false, 0, 0 },  // 215
+    { "SoulGem", 1336, 15, 1540, 17, false, 0, 0 },  // 216
+    { "Model", 1351, 3, 1557, 3, true, 0, 0 },  // 217
+    { "StoryManagerBranchNode", 1354, 7, 1560, 9, false, 0, 0 },  // 218
+    { "Condition", 1361, 3, 1569, 3, true, 0, 0 },  // 219
+    { "StoryManagerEventNode", 1364, 8, 1572, 10, false, 0, 0 },  // 220
+    { "Condition", 1372, 3, 1582, 3, true, 0, 0 },  // 221
+    { "StoryManagerQuestNode", 1375, 10, 1585, 12, false, 0, 0 },  // 222
+    { "StoryManagerQuestNodeQuests", 1385, 3, 1597, 3, false, SigOf("NNAM"), 0 },  // 223
+    { "Condition", 1388, 3, 1600, 3, true, 0, 0 },  // 224
+    { "SoundCategory", 1391, 6, 1603, 6, false, 0, 0 },  // 225
+    { "SoundDescriptor", 1397, 9, 1609, 11, false, 0, 0 },  // 226
+    { "Condition", 1406, 3, 1620, 3, true, 0, 0 },  // 227
+    { "SoundOutputModel", 1409, 5, 1623, 5, false, 0, 0 },  // 228
+    { "SoundMarker", 1414, 5, 1628, 5, false, 0, 0 },  // 229
+    { "Spell", 1419, 14, 1633, 18, false, 0, 0 },  // 230
+    { "Model", 1433, 3, 1651, 3, true, 0, 0 },  // 231
+    { "Condition", 1436, 3, 1654, 3, true, 0, 0 },  // 232
+    { "ShaderParticleGeometry", 1439, 3, 1657, 3, false, 0, 0 },  // 233
+    { "Static", 1442, 5, 1660, 7, false, 0, 0 },  // 234
+    { "Model", 1447, 3, 1667, 3, true, 0, 0 },  // 235
+    { "TalkingActivator", 1450, 8, 1670, 10, false, 0, 0 },  // 236
+    { "Model", 1458, 3, 1680, 3, true, 0, 0 },  // 237
+    { "Tree", 1461, 4, 1683, 6, false, 0, 0 },  // 238
+    { "Model", 1465, 3, 1689, 3, true, 0, 0 },  // 239
+    { "TextureSet", 1468, 12, 1692, 12, false, 0, 0 },  // 240
+    { "VolumetricLighting", 1480, 1, 1704, 1, false, 0, 0 },  // 241
+    { "VoiceType", 1481, 2, 1705, 2, false, 0, 0 },  // 242
+    { "Water", 1483, 9, 1707, 9, false, 0, 0 },  // 243
+    { "Weapon", 1492, 29, 1716, 31, false, 0, 0 },  // 244
+    { "Model", 1521, 3, 1747, 3, true, 0, 0 },  // 245
+    { "WordOfPower", 1524, 3, 1750, 3, false, 0, 0 },  // 246
+    { "Worldspace", 1527, 24, 1753, 24, false, 0, 0 },  // 247
+    { "Weather", 1551, 3, 1777, 3, false, 0, 0 },  // 248
 };
 inline constexpr RecordDef kRecords[] = {
     { SigOf("RELA"), "Relationship", 200 },

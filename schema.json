@@ -6372,6 +6372,13 @@
           }
         },
         {
+          "name": "behaviorGraph",
+          "sig": "DNAM",
+          "type": {
+            "kind": "zstring"
+          }
+        },
+        {
           "name": "animEvent",
           "sig": "ENAM",
           "type": {
