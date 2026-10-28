@@ -11,6 +11,11 @@
 #   cpp/                     — the impl
 #   third_party/miniz        — vendored zlib (exposed as esper::miniz)
 #
+# A consumer that already compiles miniz sets ESPER_MINIZ_INCLUDE_DIR (its
+# miniz.h) and/or ESPER_MINIZ_TARGET (the target carrying its mz_* symbols)
+# before adding ESPER; ESPER then builds no miniz of its own and esper::miniz
+# points at the consumer's copy. Unset (the default), the vendored copy builds.
+#
 # Dependency-free LEAF library. The MSVC runtime (static /MT vs dynamic /MD) is
 # deliberately NOT set here — it inherits CMAKE_MSVC_RUNTIME_LIBRARY from the
 # consuming project, so the same source serves SKSE plugins and desktop apps.
@@ -40,16 +45,46 @@ option(ESPER_BUILD_TESTS "Build ESPER tests" ${PROJECT_IS_TOP_LEVEL})
 option(ESPER_BUILD_TOOLS "Build ESPER tools (roundtrip-gate)" OFF)
 option(ESPER_BUILD_LOADORDER "Build esper::loadorder (LoadOrderDocument)" ON)
 
-# ── Vendored miniz (zlib inflate/deflate) ─────────────────────────────────────
+# ── miniz (zlib inflate/deflate) ──────────────────────────────────────────────
 # Its own target so consumers that also need zlib (zip writers, test fixtures)
 # link this one copy instead of compiling a second miniz.c into the same image.
-add_library(esper_miniz STATIC third_party/miniz/miniz.c)
-add_library(esper::miniz ALIAS esper_miniz)
-target_include_directories(esper_miniz PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party/miniz>)
-if(MSVC)
-    target_compile_options(esper_miniz PRIVATE /w)
+#
+# A consumer that already compiles miniz itself supplies it instead, so the
+# image keeps one set of mz_* symbols. Setting either variable selects this
+# external mode, and esper::miniz becomes an INTERFACE target over the
+# consumer's copy:
+#   ESPER_MINIZ_INCLUDE_DIR — the directory holding that copy's miniz.h
+#   ESPER_MINIZ_TARGET      — the target whose link provides its mz_* symbols
+# Leave the target empty when the symbols reach the final link some other way.
+set(ESPER_MINIZ_INCLUDE_DIR "" CACHE PATH
+    "Directory with the consumer's miniz.h (external miniz; empty = vendored)")
+set(ESPER_MINIZ_TARGET "" CACHE STRING
+    "Target providing the consumer's miniz symbols (external miniz; empty = vendored)")
+
+if(ESPER_MINIZ_INCLUDE_DIR OR ESPER_MINIZ_TARGET)
+    add_library(esper_miniz INTERFACE)
+    if(ESPER_MINIZ_INCLUDE_DIR)
+        if(NOT EXISTS "${ESPER_MINIZ_INCLUDE_DIR}/miniz.h")
+            message(FATAL_ERROR
+                "ESPER_MINIZ_INCLUDE_DIR has no miniz.h: ${ESPER_MINIZ_INCLUDE_DIR}")
+        endif()
+        target_include_directories(esper_miniz INTERFACE
+            $<BUILD_INTERFACE:${ESPER_MINIZ_INCLUDE_DIR}>)
+    endif()
+    if(ESPER_MINIZ_TARGET)
+        target_link_libraries(esper_miniz INTERFACE ${ESPER_MINIZ_TARGET})
+    endif()
+    message(STATUS "ESPER: external miniz (include: '${ESPER_MINIZ_INCLUDE_DIR}', "
+                   "target: '${ESPER_MINIZ_TARGET}')")
+else()
+    add_library(esper_miniz STATIC third_party/miniz/miniz.c)
+    target_include_directories(esper_miniz PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party/miniz>)
+    if(MSVC)
+        target_compile_options(esper_miniz PRIVATE /w)
+    endif()
 endif()
+add_library(esper::miniz ALIAS esper_miniz)
 
 # ── esper ─────────────────────────────────────────────────────────────────────
 file(GLOB_RECURSE ESPER_SOURCES CONFIGURE_DEPENDS

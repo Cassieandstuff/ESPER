@@ -60,6 +60,23 @@ tools. CMake 3.28+ and a C++23 compiler are required.
 `esper::miniz` is also exported, so a consumer that needs zlib itself can link that copy
 instead of compiling a second one.
 
+If your project already compiles its own miniz, point ESPER at it instead, so the image
+carries one set of `mz_*` symbols. Set either variable before adding ESPER:
+
+```cmake
+set(ESPER_MINIZ_INCLUDE_DIR "${dep_SOURCE_DIR}/path/to/miniz")  # the directory holding miniz.h
+set(ESPER_MINIZ_TARGET      dep::lib)                           # the target that compiles miniz.c
+FetchContent_MakeAvailable(ESPER)
+```
+
+ESPER then builds no miniz of its own, and `esper::miniz` becomes an interface target over
+yours, so anything already linking it keeps working. Set the include directory when the
+target doesn't expose `miniz.h` as a bare include (miniz compiled inside a bigger library).
+Leave the target unset if the symbols reach your final link some other way. ESPER calls
+only the zlib-style API (`mz_compress`, `mz_compressBound`, `mz_uncompress`, `mz_error`),
+so your copy must not be built with `MINIZ_NO_ZLIB_APIS`. With both variables unset (the
+default), the vendored copy builds as before.
+
 ### The load order (optional)
 
 Link `esper::loadorder` and include `<ESPER/LoadOrder.h>` to work with a whole load order:
