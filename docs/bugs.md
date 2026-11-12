@@ -5,7 +5,19 @@ Keep in sync in the SAME change as the code (CLAUDE.md directive).
 
 ## Open
 
-None.
+### Generated views build paths deeper than `RelPath` holds, and index past its array — OPEN
+- **Symptom:** found 2026-11-11 in Behavior Kit's tests: reading a QUST's VMAD script properties through
+  `esper::view` (`Quest::Vmad().BodySupportedScripts().Scripts()[i].Properties()[j].Name()`) trips the MSVC
+  Debug check "array subscript out of range" in `<array>`; in Release it writes past the array (undefined behavior).
+- **Ruled out:** the data. The same record decodes cleanly, and reading the `Value` tree directly works.
+- **Root cause:** `RelPath::idx` is a `std::array<uint16_t, 8>` ([Record.h](../include/ESPER/Record.h) `RelPath`), and
+  `Extend` writes `idx[depth++]` with no bound ([Record.h](../include/ESPER/Record.h) `Extend`). A VMAD property's value
+  is nine steps deep: the member, `body`, two union cases, `scripts`, a script, `properties`, a property, the field. QUST's
+  alias scripts (language 0.6) go deeper still. The generator emits such accessors without checking the depth.
+- **Fix options:** grow `RelPath` (16 steps covers every path today); or have `schemagen` compute each accessor's depth
+  and fail generation past the bound. Either way, `Extend` should refuse rather than write past the end.
+- **Workaround:** read deep values off `Record::GetValue` of the member (Behavior Kit's `story::TriggerOf` does).
+- **Status:** OPEN.
 
 ## Fixed
 
