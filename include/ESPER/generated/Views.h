@@ -715,10 +715,13 @@ class VendorValues;
 class VisualEffect;
 class VisualEffectData;
 class Vmad;
+class VmadAliasScripts;
 class VmadBodySupportedScripts;
 class VmadObjectV1;
 class VmadObjectV2;
 class VmadProperty;
+class VmadQuestFragment;
+class VmadQuestFragments;
 class VmadScript;
 class VoiceType;
 class VolumetricLighting;
@@ -842,14 +845,81 @@ private:
     ::esper::StructCursor s_;
 };
 
+class VmadQuestFragment {
+public:
+    explicit VmadQuestFragment(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint16_t> Stage() const { return s_.at.Get<uint16_t>(s_.Field(0)); }
+    void SetStage(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(0), v); }
+    std::optional<uint16_t> Unknown() const { return s_.at.Get<uint16_t>(s_.Field(1)); }
+    void SetUnknown(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(1), v); }
+    std::optional<int32_t> LogEntry() const { return s_.at.Get<int32_t>(s_.Field(2)); }
+    void SetLogEntry(const int32_t& v) const { s_.at.Set<int32_t>(s_.Field(2), v); }
+    std::optional<uint8_t> Unknown2() const { return s_.at.Get<uint8_t>(s_.Field(3)); }
+    void SetUnknown2(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(3), v); }
+    std::optional<std::string> ScriptName() const { return s_.at.Get<std::string>(s_.Field(4)); }
+    void SetScriptName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(4), v); }
+    std::optional<std::string> FragmentName() const { return s_.at.Get<std::string>(s_.Field(5)); }
+    void SetFragmentName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(5), v); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadAliasScripts {
+public:
+    explicit VmadAliasScripts(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    enum class AliasKind : uint16_t { V1 = 0, V2 = 1 };
+    std::optional<AliasKind> AliasCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(0)); if (!v) return std::nullopt; return static_cast<AliasKind>(v->bits); }
+    bool AliasIsV1() const { return AliasCase() == AliasKind::V1; }
+    ::esper::view::VmadObjectV1 AliasV1() const { return ::esper::view::VmadObjectV1(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(0), 0) }); }
+    bool AliasIsV2() const { return AliasCase() == AliasKind::V2; }
+    ::esper::view::VmadObjectV2 AliasV2() const { return ::esper::view::VmadObjectV2(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(0), 1) }); }
+    std::optional<int16_t> Version() const { return s_.at.Get<int16_t>(s_.Field(1)); }
+    void SetVersion(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(1), v); }
+    std::optional<int16_t> ObjFormat() const { return s_.at.Get<int16_t>(s_.Field(2)); }
+    void SetObjFormat(const int16_t& v) const { s_.at.Set<int16_t>(s_.Field(2), v); }
+    std::vector<::esper::view::VmadScript> Scripts() const { std::vector<::esper::view::VmadScript> o; const size_t n = s_.at.Size(s_.Field(3)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(3), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeScripts(size_t n) const { s_.at.Resize(s_.Field(3), n); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class VmadQuestFragments {
+public:
+    explicit VmadQuestFragments(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint8_t> Extra() const { return s_.at.Get<uint8_t>(s_.Field(0)); }
+    void SetExtra(const uint8_t& v) const { s_.at.Set<uint8_t>(s_.Field(0), v); }
+    std::optional<uint16_t> FragmentCount() const { return s_.at.Get<uint16_t>(s_.Field(1)); }
+    void SetFragmentCount(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(1), v); }
+    std::optional<std::string> FileName() const { return s_.at.Get<std::string>(s_.Field(2)); }
+    void SetFileName(const std::string& v) const { s_.at.Set<std::string>(s_.Field(2), v); }
+    std::vector<::esper::view::VmadQuestFragment> Fragments() const { std::vector<::esper::view::VmadQuestFragment> o; const size_t n = s_.at.Size(s_.Field(3)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(3), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeFragments(size_t n) const { s_.at.Resize(s_.Field(3), n); }
+    std::vector<::esper::view::VmadAliasScripts> Aliases() const { std::vector<::esper::view::VmadAliasScripts> o; const size_t n = s_.at.Size(s_.Field(4)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(4), static_cast<uint16_t>(i)) }); return o; }
+    void ResizeAliases(size_t n) const { s_.at.Resize(s_.Field(4), n); }
+private:
+    ::esper::StructCursor s_;
+};
+
 class VmadBodySupportedScripts {
 public:
     explicit VmadBodySupportedScripts(::esper::StructCursor s) : s_(s) {}
     bool IsPresent() const { return s_.Has(); }
     std::vector<::esper::view::VmadScript> Scripts() const { std::vector<::esper::view::VmadScript> o; const size_t n = s_.at.Size(s_.Field(0)); for (size_t i = 0; i < n; ++i) o.emplace_back(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(0), static_cast<uint16_t>(i)) }); return o; }
     void ResizeScripts(size_t n) const { s_.at.Resize(s_.Field(0), n); }
-    std::optional<std::vector<uint8_t>> Fragments() const { return s_.at.Get<std::vector<uint8_t>>(s_.Field(1)); }
-    void SetFragments(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(s_.Field(1), v); }
+    enum class FragmentsKind : uint16_t { Quest = 0, Other = 1 };
+    std::optional<FragmentsKind> FragmentsCase() const { auto v = s_.at.Get<::esper::Value>(s_.Field(1)); if (!v) return std::nullopt; return static_cast<FragmentsKind>(v->bits); }
+    bool FragmentsIsQuest() const { return FragmentsCase() == FragmentsKind::Quest; }
+    enum class FragmentsQuestKind : uint16_t { None = 0, Fragments = 1 };
+    std::optional<FragmentsQuestKind> FragmentsQuestCase() const { auto v = s_.at.Get<::esper::Value>(::esper::Extend(s_.Field(1), 0)); if (!v) return std::nullopt; return static_cast<FragmentsQuestKind>(v->bits); }
+    bool FragmentsQuestIsNone() const { return FragmentsQuestCase() == FragmentsQuestKind::None; }
+    bool FragmentsQuestIsFragments() const { return FragmentsQuestCase() == FragmentsQuestKind::Fragments; }
+    ::esper::view::VmadQuestFragments FragmentsQuestFragments() const { return ::esper::view::VmadQuestFragments(::esper::StructCursor{ s_.at, ::esper::Extend(::esper::Extend(s_.Field(1), 0), 1) }); }
+    bool FragmentsIsOther() const { return FragmentsCase() == FragmentsKind::Other; }
+    std::optional<std::vector<uint8_t>> FragmentsOther() const { return s_.at.Get<std::vector<uint8_t>>(::esper::Extend(s_.Field(1), 1)); }
+    void SetFragmentsOther(const std::vector<uint8_t>& v) const { s_.at.Set<std::vector<uint8_t>>(::esper::Extend(s_.Field(1), 1), v); }
 private:
     ::esper::StructCursor s_;
 };

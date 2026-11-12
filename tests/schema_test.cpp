@@ -542,6 +542,46 @@ void TestUnions() {
     }
 }
 
+void TestFieldCount() {
+    std::printf("T18 arrays counted by an earlier field (language 0.6)\n");
+    auto fcnt = [](uint16_t n, std::initializer_list<uint32_t> values, std::initializer_list<const char*> words) {
+        Bytes body = Cat({ U16(n), U16(2), Bytes{ 'h', 'i' } });
+        for (uint32_t v : values) body = Cat({ body, U32(v) });
+        for (const char* w : words) body = Cat({ body, U16(uint16_t(std::strlen(w))), Bytes(w, w + std::strlen(w)) });
+        Payload p;
+        p.Sub("FCNT", body);
+        return p.bytes();
+    };
+    {
+        const Bytes   ok = fcnt(2, { 7, 9 }, { "ab", "cde" });
+        esper::Record rec;
+        CHECK(DecodeU(ok, rec));
+        CHECK(rec.RawCount() == 0);
+        CheckRoundTrip(rec, ok);
+        const auto values = rec.Find("fieldCounted/values");
+        const auto words  = rec.Find("fieldCounted/words");
+        CHECK(values && words);
+        if (values && words) {
+            const esper::Value* v = rec.GetValue(*values);
+            const esper::Value* w = rec.GetValue(*words);
+            CHECK(v && v->bytes.size() == 8);                   // two u32s, packed
+            CHECK(w && w->items.size() == 2 && w->items[1].str == "cde");
+        }
+    }
+    {
+        // Zero elements, and counts that disagree with the bytes: refused, kept raw.
+        const Bytes   none = fcnt(0, {}, {});
+        const Bytes   few  = fcnt(3, { 7, 9 }, { "ab", "cde" });   // runs out
+        const Bytes   many = fcnt(1, { 7, 9 }, { "ab", "cde" });   // bytes left over
+        esper::Record r0, rf, rm;
+        CHECK(DecodeU(none, r0) && DecodeU(few, rf) && DecodeU(many, rm));
+        CHECK(r0.RawCount() == 0 && rf.RawCount() == 1 && rm.RawCount() == 1);
+        CheckRoundTrip(r0, none);
+        CheckRoundTrip(rf, few);
+        CheckRoundTrip(rm, many);
+    }
+}
+
 void TestDelimited() {
     std::printf("T15 delimited groups: open/end markers, shared member sigs, reopening\n");
     auto decode = [](const Bytes& payload, esper::Record& rec) {
@@ -671,6 +711,62 @@ void TestRealSchema() {
 
 }
 
+void TestQuestVmad() {
+    std::printf("T19 QUST's VMAD trailer: stage fragments and alias scripts, FormIDs visible\n");
+    auto ws = [](const char* s) { return Cat({ U16(uint16_t(std::strlen(s))), Bytes(s, s + std::strlen(s)) }); };
+    auto obj = [](int16_t alias, uint32_t id) { return Cat({ U16(0), U16(uint16_t(alias)), U32(id) }); };   // objFormat 2
+    const Bytes scripts = Cat({ U16(5), U16(2), U16(1), ws("QuestScript"), U8(0), U16(0) });
+    const Bytes trailer = Cat({ U8(2), U16(1), ws("QF_X_01000ABC"),
+                                U16(10), U16(0), U32(0), U8(1), ws("QF_X_01000ABC"), ws("Fragment_0"),
+                                U16(1), obj(3, 0x01000ABC), U16(5), U16(2), U16(1), ws("AliasScript"), U8(0),
+                                U16(1), ws("Target"), U8(1), U8(1), obj(-1, 0x01000DEF) });
+    auto decode = [](const char* sig, const Bytes& payload, esper::Record& rec) {
+        return Into(esper::Record::Decode(esper::schema::Main(), Sig(sig), payload, {}), rec);
+    };
+    {
+        Payload p;
+        p.Sub("VMAD", Cat({ scripts, trailer }));
+        esper::Record rec;
+        CHECK(decode("QUST", p.bytes(), rec));
+        CHECK(rec.RawCount() == 0);
+        CheckRoundTrip(rec, p.bytes());
+        CHECK(rec.RemapSafe());
+        std::vector<uint32_t> ids;
+        rec.ForEachFormId([&](esper::FormId id, std::span<const uint32_t>) { ids.push_back(id.raw); });
+        CHECK((ids == std::vector<uint32_t>{ 0x01000ABCu, 0x01000DEFu }));   // the alias's quest, its script's property
+        CHECK(rec.VisitFormIds([](esper::FormId& id) { id.raw = (id.raw & 0x00FFFFFFu) | 0x02000000u; }));
+        const Bytes moved = rec.Encode();
+        CHECK(moved.size() == p.bytes().size());
+        esper::Record back;
+        CHECK(decode("QUST", moved, back) && back.RawCount() == 0);
+        ids.clear();
+        back.ForEachFormId([&](esper::FormId id, std::span<const uint32_t>) { ids.push_back(id.raw); });
+        CHECK((ids == std::vector<uint32_t>{ 0x02000ABCu, 0x02000DEFu }));
+    }
+    {
+        // No trailer at all, and a trailer that stops short: the first decodes, the second is kept raw.
+        Payload none, cut;
+        none.Sub("VMAD", scripts);
+        cut.Sub("VMAD", Cat({ scripts, Bytes(trailer.begin(), trailer.end() - 3) }));
+        esper::Record rn, rc;
+        CHECK(decode("QUST", none.bytes(), rn) && decode("QUST", cut.bytes(), rc));
+        CHECK(rn.RawCount() == 0 && rn.RemapSafe());
+        CHECK(rc.RawCount() == 1);
+        CheckRoundTrip(rn, none.bytes());
+        CheckRoundTrip(rc, cut.bytes());
+    }
+    {
+        // Another record's trailer stays opaque: it decodes, but blocks remap.
+        Payload p;
+        p.Sub("VMAD", Cat({ scripts, Bytes{ 2, 1, 0, 0 } }));
+        esper::Record rec;
+        CHECK(decode("PERK", p.bytes(), rec));
+        CHECK(rec.RawCount() == 0);
+        CHECK(!rec.RemapSafe());
+        CheckRoundTrip(rec, p.bytes());
+    }
+}
+
 void TestRepeatedStructs() {
     std::printf("T17 views over repeated structs and arrays of structs (LAND)\n");
     // BTXT is a repeated struct member; VTXT a repeated array of structs.
@@ -742,10 +838,12 @@ int main() {
     TestXxxx();
     TestMarker();
     TestUnions();
+    TestFieldCount();
     TestDelimited();
     TestSiblings();
     TestRealSchema();
     TestRepeatedStructs();
+    TestQuestVmad();
     if (g_failures == 0) {
         std::printf("RESULT: PASS\n");
         return 0;

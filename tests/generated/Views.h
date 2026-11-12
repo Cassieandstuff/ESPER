@@ -48,6 +48,7 @@ class TestObjV2;
 class TestSiblings;
 class TestUnions;
 class TestUnionsCond;
+class TestUnionsFieldCounted;
 class TestUnionsObj;
 class TestUnionsVersioned;
 class Versioned;
@@ -205,6 +206,22 @@ public:
     ::esper_test::view::TestObjV1 TargetV1() const { return ::esper_test::view::TestObjV1(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(1), 0) }); }
     bool TargetIsV2() const { return TargetCase() == TargetKind::V2; }
     ::esper_test::view::TestObjV2 TargetV2() const { return ::esper_test::view::TestObjV2(::esper::StructCursor{ s_.at, ::esper::Extend(s_.Field(1), 1) }); }
+private:
+    ::esper::StructCursor s_;
+};
+
+class TestUnionsFieldCounted {
+public:
+    explicit TestUnionsFieldCounted(::esper::StructCursor s) : s_(s) {}
+    bool IsPresent() const { return s_.Has(); }
+    std::optional<uint16_t> N() const { return s_.at.Get<uint16_t>(s_.Field(0)); }
+    void SetN(const uint16_t& v) const { s_.at.Set<uint16_t>(s_.Field(0), v); }
+    std::optional<std::string> Label() const { return s_.at.Get<std::string>(s_.Field(1)); }
+    void SetLabel(const std::string& v) const { s_.at.Set<std::string>(s_.Field(1), v); }
+    std::optional<std::vector<uint32_t>> Values() const { return s_.at.Get<std::vector<uint32_t>>(s_.Field(2)); }
+    void SetValues(const std::vector<uint32_t>& v) const { s_.at.Set<std::vector<uint32_t>>(s_.Field(2), v); }
+    std::optional<std::vector<std::string>> Words() const { return s_.at.Get<std::vector<std::string>>(s_.Field(3)); }
+    void SetWords(const std::vector<std::string>& v) const { s_.at.Set<std::vector<std::string>>(s_.Field(3), v); }
 private:
     ::esper::StructCursor s_;
 };
@@ -597,6 +614,10 @@ public:
     ::esper_test::view::TestUnionsObj Obj() const;
     bool HasObj() const { return c_.Has(::esper::RelPath{ { 5 }, 1, 1 }); }
     void ClearObj() const { c_.Clear(::esper::RelPath{ { 5 }, 1, 1 }); }
+    // FCNT
+    ::esper_test::view::TestUnionsFieldCounted FieldCounted() const;
+    bool HasFieldCounted() const { return c_.Has(::esper::RelPath{ { 6 }, 1, 1 }); }
+    void ClearFieldCounted() const { c_.Clear(::esper::RelPath{ { 6 }, 1, 1 }); }
 private:
     ::esper::Cursor c_;
 };
@@ -607,6 +628,7 @@ inline ::esper_test::view::TestAlphaData TestAlpha::Data() const { return ::espe
 inline ::esper_test::view::TestUnionsCond TestUnions::Cond() const { return ::esper_test::view::TestUnionsCond(::esper::StructCursor{ c_, ::esper::RelPath{ { 1 }, 1, 1 } }); }
 inline ::esper_test::view::TestUnionsVersioned TestUnions::Versioned() const { return ::esper_test::view::TestUnionsVersioned(::esper::StructCursor{ c_, ::esper::RelPath{ { 2 }, 1, 1 } }); }
 inline ::esper_test::view::TestUnionsObj TestUnions::Obj() const { return ::esper_test::view::TestUnionsObj(::esper::StructCursor{ c_, ::esper::RelPath{ { 5 }, 1, 1 } }); }
+inline ::esper_test::view::TestUnionsFieldCounted TestUnions::FieldCounted() const { return ::esper_test::view::TestUnionsFieldCounted(::esper::StructCursor{ c_, ::esper::RelPath{ { 6 }, 1, 1 } }); }
 
 // The typed view of a record, or nullopt when it's another record type:
 //   if (auto armor = As<Armor>(rec)) armor->SetEditorId("X");

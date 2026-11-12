@@ -59,7 +59,8 @@ and its current step. Spec: [docs/schema-language.md](docs/schema-language.md).
 - **Claims about data:** `to:` and `formIds: none` describe the data, so add them only when the
   gate confirms them on the vanilla masters. Clean-room: never take layouts from xEdit or
   Mutagen definitions.
-- **Layout research** uses `schema-probe` (`-DESPER_BUILD_TOOLS=ON`). Declare a FormID only when
+- **Layout research** uses `schema-probe` (`-DESPER_BUILD_TOOLS=ON`), and `vmad-probe` for the bytes after a
+  VMAD's scripts (a record's fragment trailer). Declare a FormID only when
   all of these hold:
   - at least 95% of its non-zero vanilla values resolve as big references;
   - the target types fit the field's meaning;

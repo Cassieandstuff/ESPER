@@ -205,7 +205,7 @@ endif()
 #   loadorder-smoke — LoadOrderDocument over a real Data folder
 #   schema-probe   — clean-room layout research: per-column profile of a subrecord
 if(ESPER_BUILD_TOOLS)
-    set(_esper_tools roundtrip-gate esm-dump schema-probe)
+    set(_esper_tools roundtrip-gate esm-dump schema-probe vmad-probe)
     if(ESPER_BUILD_LOADORDER)
         list(APPEND _esper_tools loadorder-smoke)
     endif()

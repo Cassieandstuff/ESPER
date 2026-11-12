@@ -547,7 +547,7 @@ Each step ships on its own. The typed `Records*.h` path kept working until step 
    **Remaining, which needs new format research** because the typed path never modeled it:
    - QUST alias, stage and objective sections (needs `open:`/`end:` markers);
    - NPC_ `CSDT`, PERK sections, PACK data trees, IMAD keyframes;
-   - VMAD fragment trailers;
+   - VMAD fragment trailers of INFO, PACK, PERK and SCEN (QUST's is modeled: language 0.6, below);
    - the size-variant blobs: `XCLL`, WRLD `MNAM`, EXPL/PROJ `DATA`, ECZN `DATA`, FACT
      `CRVA`/`PLVD`;
    - the largest opaque blockers: `MHDT`, `NVNM`, `TVDT`.
@@ -603,6 +603,19 @@ Each step ships on its own. The typed `Records*.h` path kept working until step 
    - remap refusals unchanged at 29,119.
 
    Still opaque: NAVM `NVNM`, CELL `TVDT`, INFO response data, and the long tail.
+
+   **QUST's VMAD trailer (2026-11-11), language 0.6.** Derived with `vmad-probe` (a new research
+   tool: it decodes each record's VMAD with the engine and dumps the bytes left after the scripts).
+   All 1,226 vanilla QUST trailers read as: `u8` (2 in all), the fragment count (`u16`), the
+   fragment script's file name (`wstring`), that many stage fragments (stage `u16`, `u16` 0,
+   log entry `i32`, `u8` 1, script `wstring`, function `wstring`), then the aliases' scripts
+   (`u16` count; each an alias object, a VMAD version and object format, and a script list).
+   The count comes before the file name, so the language grew arrays counted by an earlier field
+   (`T[count: name]`). `fragments` is now a union by record: QUST's layout, an empty case for a
+   VMAD with none, and opaque bytes for every other record.
+
+   Gate result: QUST keeps 0 raw subrecords; its visible FormIDs rise from 65,175 to 72,704 and
+   its remap-safe records from 1,157 to 2,314 (all of them but the 77 a CTDA keeps unsafe).
 5. **Done (2026-10-09). `esper::loadorder`.** `LoadOrderDocument` wraps
    `LoadOrderReader`/`LoadOrderIndex`/`WorldIndex`. It adds:
    - `Resolve` (winner/origin) and `Follow` (FormIDs and typed links);

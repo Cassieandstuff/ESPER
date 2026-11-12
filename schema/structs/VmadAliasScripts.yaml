@@ -1,0 +1,9 @@
+# One quest alias's scripts in QUST's VMAD trailer: the alias (an object value,
+# laid out by the VMAD's objFormat, the quest itself with the alias id), then a
+# script list with its own version and object format.
+struct: VmadAliasScripts
+fields:
+  - { name: alias,     type: VmadObject }
+  - { name: version,   type: i16 }
+  - { name: objFormat, type: i16 }
+  - { name: scripts,   type: "VmadScript[count: u16]" }

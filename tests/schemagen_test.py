@@ -215,8 +215,9 @@ class Rejects(unittest.TestCase):
                 - { name: v, type: V }
         """, {"structs/V.yaml": "struct: V\nfields:\n  - { name: a, type: u8 }\n  - { break: true }\n  - { name: b, type: u8 }\n"})
 
-    def test_field_count_arrays_not_in_language_01(self):
-        self.rejects("counts from a field", '- { sig: DATA, name: d, type: "u8[count: n]" }')
+    def test_field_count_names_a_field(self):
+        self.rejects("isn't a field anywhere", '- { sig: DATA, name: d, type: "u8[count: n]" }')
+        self.rejects("a count is u8, u16, u32", '- { sig: DATA, name: d, type: "u8[count: N]" }')
 
     def test_reserved_names(self):
         self.rejects("reserved", "- { sig: EDID, name: self, type: zstring }")
@@ -256,6 +257,19 @@ class Accepts(unittest.TestCase):
             - { use: G, name: b, sigs: { MODL: MOD2 } }
         """, {"groups/G.yaml": "group: G\nmembers:\n  - { sig: MODL, name: path, type: zstring }\n"})
         self.assertEqual(len(s.records), 1)
+
+    def test_array_counted_by_an_earlier_field(self):
+        s = record("""
+            - sig: DATA
+              name: d
+              fields:
+                - { name: n, type: u16 }
+                - { name: label, type: wstring }
+                - { name: values, type: "u32[count: n]" }
+        """)
+        arrays = [t for t in s.types if t.kind == "Array"]
+        self.assertEqual([(t.len, t.sel_field) for t in arrays], [("Field", "n")])
+        self.assertIn('countField', schemagen.emit_json(s))
 
     def test_outputs_are_deterministic(self):
         files = {"records/TEST.yaml": "record: TEST\nname: Test\nmembers:\n  - { sig: EDID, name: e, type: zstring }\n"}
