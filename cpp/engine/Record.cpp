@@ -197,6 +197,12 @@ bool Parse(ParseCtx& pc, uint16_t typeIdx, const uint8_t*& p, const uint8_t* end
         case LenKind::Prefix8:  if (!ReadLE(p, end, 1, count)) return false; break;
         case LenKind::Prefix16: if (!ReadLE(p, end, 2, count)) return false; break;
         case LenKind::Prefix32: if (!ReadLE(p, end, 4, count)) return false; break;
+        case LenKind::Field: {                     // counted by an earlier field (written there, not here)
+            const Value* n = FieldByName(pc, t.selField);
+            if (!n) return false;
+            count = n->bits;
+            break;
+        }
         case LenKind::Rest:
             if (packed) {                          // whole elements to the end
                 if (static_cast<size_t>(end - p) % packed != 0) return false;

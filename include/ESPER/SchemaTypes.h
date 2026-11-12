@@ -62,6 +62,7 @@ enum class LenKind : uint8_t {
     Prefix8,    // Array: element count read from a leading u8 / u16 / u32
     Prefix16,
     Prefix32,
+    Field,      // Array: element count is the value of an earlier field, named by TypeDef::selField
 };
 
 enum class StrTable : uint8_t { None, Strings, DLStrings, ILStrings };
@@ -82,7 +83,7 @@ struct TypeDef {
     const char* name      = nullptr;  // named struct type, for diagnostics
     // Union only (ref/refCount = the CaseDef range):
     Selector    selector  = Selector::None;
-    const char* selField  = nullptr;  // Field / Lookup: the key field's name; Member: the member's
+    const char* selField  = nullptr;  // Field / Lookup: the key field's name; Member: the member's; LenKind::Field arrays: the count's
     uint64_t    selMask   = 0;        // Field: AND mask (0 = none)
     uint16_t    lookup    = 0;        // Lookup: LookupDef
     // Bytes, when the type is made only of plain numbers (no FormIDs, strings,

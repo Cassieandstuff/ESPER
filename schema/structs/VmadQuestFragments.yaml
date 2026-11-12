@@ -1,0 +1,12 @@
+# QUST's VMAD trailer, after the scripts. Layout from vmad-probe over the vanilla
+# masters (every QUST trailer, 1,226 of them, starts with 02): the fragment
+# script's file name and its stage fragments, then each reference alias's own
+# scripts. The fragment count comes before the file name, so the fragments are
+# counted by that field.
+struct: VmadQuestFragments
+fields:
+  - { name: extra,         type: u8 }        # 2 in every vanilla trailer
+  - { name: fragmentCount, type: u16 }
+  - { name: fileName,      type: wstring }   # the fragment script, QF_<EditorID>_<FormID>
+  - { name: fragments,     type: "VmadQuestFragment[count: fragmentCount]" }
+  - { name: aliases,       type: "VmadAliasScripts[count: u16]" }

@@ -1,6 +1,6 @@
 # ESPER schema language — specification
 
-**Language version 0.5.** This document is normative. It defines what a descriptor in `schema/`
+**Language version 0.6.** This document is normative. It defines what a descriptor in `schema/`
 means, so that any implementation can decode and encode Skyrim SE/AE plugin records exactly as
 ESPER's engine does. When this document and the code disagree, that is a bug in one of them.
 `tools/schemagen` is the reference validator, and `esper::Record` is the reference engine. The
@@ -69,6 +69,7 @@ A value (a member, a struct field, or a union case) is described by exactly one 
 | `T[]` | elements to the end of the subrecord |
 | `T[N]` | exactly N elements |
 | `T[count: u8]`, `T[count: u16]`, `T[count: u32]` | an element count of that width, then the elements |
+| `T[count: name]` | as many elements as the earlier field `name` holds (resolved as a union's field selector is, §4.2); the count is that field's, written there, not before the elements. QUST's VMAD fragments need it: their count precedes a file name |
 
 The member's options (for example `to:` on `"formid[]"`) apply to the element type. An element
 that consumes zero bytes is an error at decode time. Without that rule, a `T[]` array would loop
@@ -362,6 +363,8 @@ reproduce the original bytes. It is ESPER's real-data gate.
   for any other fields of the case. Changing the field a selector reads does **not** re-choose
   cases in values that were already decoded. Keeping a value consistent with its selectors is
   the editor's job.
+- **Field counts:** changing the length of a `T[count: name]` array doesn't rewrite `name`, and setting `name`
+  doesn't resize the array. Keeping them equal is the editor's job, as with union selectors.
 - **Ambiguous data:** the format itself can be ambiguous. For example, two instances of a
   repeating group with no member in common read back as one instance. Encoding writes what it
   is given; it doesn't disambiguate.
@@ -391,7 +394,7 @@ consumers never run the generator.
 
 | Output | Content |
 |---|---|
-| `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. A union type is `{ kind: union, by, cases: [{ when \| default, name?, type? }] }`. `remapUnsafe` appears where set. `tables` holds every table. Reusable groups and named structs appear expanded at each use. |
+| `schema.json` | The resolved schema for data consumers: `schemaVersion`, `languageVersion`, and `records[]` with `sig`, `name` and `members`. Every member has its `name` plus either a `group` (view type name and nested `members`) or a `sig` and a fully resolved `type` (`kind`, and `fields`, `element`, `count`, `countPrefix`, `countField`, `table`, `size`, `formIds`, `to` as applicable), and optionally `repeat`, `optional` and `countOf`. A union type is `{ kind: union, by, cases: [{ when \| default, name?, type? }] }`. `remapUnsafe` appears where set. `tables` holds every table. Reusable groups and named structs appear expanded at each use. |
 | `include/ESPER/generated/Tables.h` | the engine's constexpr tables (`esper::schema::SchemaSet`) |
 | `include/ESPER/generated/Views.h` | typed views (`esper::view::<Name>`, made with `esper::view::As<Name>(record)`): accessors only, over the generic engine. A union gets an `<Acc>Kind` enum of its cases, `<Acc>Case()` and `<Acc>Is<Case>()`. A *plain* struct (fixed size, numbers only: no FormIDs, strings, bytes, unions or breaks) also gets a packed value struct `esper::view::value::<Name>`; an array of plain structs reads and writes as `std::vector` of it. |
 
@@ -402,7 +405,6 @@ language version rejects them by name.
 
 | Construct | Purpose |
 |---|---|
-| `T[count: <field>]` | an array counted by an earlier field |
 | `enum:`, `flags:`, `unit:` and `enum` descriptors | rendering hints |
 
 ## 11. Versioning
@@ -420,3 +422,4 @@ language version rejects them by name.
 | 0.3 | adds unions (`size`, `formVersion`, `record`, `field`, `field` + `mask` and `lookup` selectors), `if:`, `remapUnsafe`, `table` descriptors, and named union structs |
 | 0.5 | adds the `member` selector, and `open`/`end` sharing a signature |
 | 0.4 | adds delimited groups (`open:` / `end:`) |
+| 0.6 | adds arrays counted by an earlier field (`T[count: name]`) |

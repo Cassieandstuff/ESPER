@@ -51,3 +51,10 @@ members:
     fields:
       - { name: objFmt, type: u16 }
       - { name: target, type: TestObj }
+  - sig: FCNT
+    name: fieldCounted
+    fields:
+      - { name: n,      type: u16 }
+      - { name: label,  type: wstring }
+      - { name: values, type: "u32[count: n]" }
+      - { name: words,  type: "wstring[count: n]" }

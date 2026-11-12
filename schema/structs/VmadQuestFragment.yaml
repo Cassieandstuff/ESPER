@@ -1,0 +1,9 @@
+# One stage fragment of a quest's fragment script (VmadQuestFragments).
+struct: VmadQuestFragment
+fields:
+  - { name: stage,        type: u16 }
+  - { name: unknown,      type: u16 }       # 0 in vanilla
+  - { name: logEntry,     type: i32 }       # the stage's log entry the fragment runs on
+  - { name: unknown2,     type: u8 }        # 1 in vanilla
+  - { name: scriptName,   type: wstring }   # the fragment script again
+  - { name: fragmentName, type: wstring }   # its function, Fragment_<n>

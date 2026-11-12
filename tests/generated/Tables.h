@@ -51,6 +51,9 @@ inline constexpr TypeDef kTypes[] = {
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 22, 2, 0, 0, "TestObjV2", Selector::None, nullptr, 0ULL, 0, 0 },  // 37: inline:TestObjV2
     { Kind::Union, LenKind::None, StrTable::None, 0, 0, 21, 2, 0, 0, "TestObj", Selector::Field, "objFmt", 0ULL, 0, 0 },  // 38: union:structs/TestObj.yaml:TestObj
     { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 24, 2, 0, 0, "TestUnionsObj", Selector::None, nullptr, 0ULL, 0, 0 },  // 39: inline:TestUnionsObj
+    { Kind::Array, LenKind::Field, StrTable::None, 0, 0, 2, 0, 0, 0, nullptr, Selector::None, "n", 0ULL, 0, 0 },  // 40: u32[count: n]
+    { Kind::Array, LenKind::Field, StrTable::None, 0, 0, 13, 0, 0, 0, nullptr, Selector::None, "n", 0ULL, 0, 0 },  // 41: wstring[count: n]
+    { Kind::Struct, LenKind::None, StrTable::None, 0, 0, 26, 4, 0, 0, "TestUnionsFieldCounted", Selector::None, nullptr, 0ULL, 0, 0 },  // 42: inline:TestUnionsFieldCounted
 };
 inline constexpr FieldDef kFields[] = {
     { "flags", 2, false },
@@ -79,6 +82,10 @@ inline constexpr FieldDef kFields[] = {
     { "id", 9, false },
     { "objFmt", 6, false },
     { "target", 38, false },
+    { "n", 6, false },
+    { "label", 13, false },
+    { "values", 40, false },
+    { "words", 41, false },
 };
 inline constexpr uint32_t kLinks[] = {
     SigOf("TSTB"),
@@ -147,6 +154,7 @@ inline constexpr MemberDef kMembers[] = {
     { "perRecord", SigOf("RECS"), 34, 0, false, false, -1 },
     { "byFormVersion", SigOf("FVER"), 35, 0, false, false, -1 },
     { "obj", SigOf("OBJS"), 39, 0, false, false, -1 },
+    { "fieldCounted", SigOf("FCNT"), 42, 0, false, false, -1 },
 };
 inline constexpr EntryDef kEntries[] = {
     { SigOf("PRA1"), 15 },
@@ -218,6 +226,7 @@ inline constexpr EntryDef kEntries[] = {
     { SigOf("FVER"), 4 },
     { SigOf("RECS"), 3 },
     { SigOf("OBJS"), 5 },
+    { SigOf("FCNT"), 6 },
 };
 inline constexpr GroupDef kGroups[] = {
     { "TestAlpha", 0, 18, 0, 23, false, 0, 0 },  // 0
@@ -234,7 +243,7 @@ inline constexpr GroupDef kGroups[] = {
     { "TestSiblings", 47, 3, 54, 3, false, 0, 0 },  // 11
     { "TestSiblingsEntries", 50, 4, 57, 4, false, SigOf("PRKE"), SigOf("PRKF") },  // 12
     { "TestSiblingsPhases", 54, 3, 61, 2, false, SigOf("HNAM"), SigOf("HNAM") },  // 13
-    { "TestUnions", 57, 6, 63, 6, false, 0, 0 },  // 14
+    { "TestUnions", 57, 7, 63, 7, false, 0, 0 },  // 14
 };
 inline constexpr RecordDef kRecords[] = {
     { SigOf("TSTA"), "TestAlpha", 0 },
@@ -294,7 +303,7 @@ inline constexpr const char* kTableCells[] = {
 
 inline constexpr SchemaSet kSchema{
     kTypes,
-    std::span<const FieldDef>(kFields, 26),
+    std::span<const FieldDef>(kFields, 30),
     std::span<const uint32_t>(kLinks, 1),
     kMembers, kEntries, kGroups, kRecords,
     std::span<const CaseDef>(kCases, 23),
@@ -305,7 +314,7 @@ inline constexpr SchemaSet kSchema{
     std::span<const char* const>(kTableColumns, 3),
     std::span<const uint32_t>(kTableKeys, 3),
     std::span<const char* const>(kTableCells, 9),
-    "0.0.1", "0.5",
+    "0.0.1", "0.6",
 };
 
 } // namespace esper_test::tables

@@ -28,7 +28,7 @@ try:
 except ImportError:  # pragma: no cover
     sys.exit("schemagen: PyYAML is required (pip install pyyaml)")
 
-LANGUAGE_VERSION = "0.5"
+LANGUAGE_VERSION = "0.6"
 
 SCALAR_KINDS = {
     "u8": ("U8", "uint8_t"), "u16": ("U16", "uint16_t"), "u32": ("U32", "uint32_t"),
@@ -356,10 +356,15 @@ class Schema:
             if not cm:
                 fail(where, f"bad array length [{arr}]")
             prefix = {"u8": "Prefix8", "u16": "Prefix16", "u32": "Prefix32"}.get(cm.group(1))
-            if prefix is None:
-                fail(where, f"[count: {cm.group(1)}] — counts from a field are not supported in "
-                            f"language {LANGUAGE_VERSION}; use u8, u16 or u32")
-            node.len = prefix
+            if prefix is not None:
+                node.len = prefix
+            else:
+                # Counted by an earlier field (QUST's VMAD fragments: the count precedes a file name).
+                fname = cm.group(1)
+                if not re.fullmatch(r"[a-z][A-Za-z0-9]*", fname):
+                    fail(where, f"[count: {fname}] — a count is u8, u16, u32 or an earlier field's name")
+                node.len = "Field"
+                node.sel_field = self.field_ref(where, fname)
         node.spec = f"{et.spec}[{arr}]"
         return self.intern(node)
 
@@ -1345,6 +1350,8 @@ def emit_json(schema: Schema) -> str:
                 d["count"] = t.count
             elif t.len.startswith("Prefix"):
                 d["countPrefix"] = {"Prefix8": "u8", "Prefix16": "u16", "Prefix32": "u32"}[t.len]
+            elif t.len == "Field":
+                d["countField"] = t.sel_field
             return d
         base = t.spec.split(":")[0].split("->")[0]
         d = {"kind": base}
